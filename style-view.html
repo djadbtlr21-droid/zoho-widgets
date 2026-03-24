@@ -174,14 +174,52 @@ return null}
 
 function getAllImgUrls(r,field){
 var i=r[field];if(!i)return[];
-if(Array.isArray(i))return i.filter(function(x){return typeof x==="string"&&x.length>5});
+// Handle real Array
+if(Array.isArray(i)){return i.filter(function(x){return x&&typeof x==="string"&&x.length>5})}
+// Handle array-like object (Zoho sometimes returns {0:"url1", 1:"url2"})
+if(typeof i==="object"&&!Array.isArray(i)){
+    var urls=[];
+    var keys=Object.keys(i);
+    // Check if keys are numeric (array-like)
+    for(var k=0;k<keys.length;k++){
+        var val=i[keys[k]];
+        if(val&&typeof val==="string"&&val.length>5)urls.push(val);
+        else if(val&&typeof val==="object"&&val.display_value)urls.push(val.display_value);
+    }
+    if(urls.length)return urls;
+    // Single object with display_value
+    if(i.display_value&&typeof i.display_value==="string")return[i.display_value];
+}
+// Handle single string
 if(typeof i==="string"&&i.length>5)return[i];
 return[]}
 
 function loadImages(){document.querySelectorAll("[data-img]").forEach(function(el){loadSI(el,el.getAttribute("data-img"))})}
 function loadSI(el,url){if(!url||url==="-")return;var img=document.createElement("img");img.style.cssText="width:100%;height:100%;object-fit:cover";
-try{ZOHO.CREATOR.UTIL.setImageData(img,url,function(){if(img.src&&img.src.length>10){el.innerHTML="";el.appendChild(img)}else tryDirect(el,url)});setTimeout(function(){if(!el.querySelector("img"))tryDirect(el,url)},3000)}catch(e){tryDirect(el,url)}}
-function tryDirect(el,url){var img=document.createElement("img");img.style.cssText="width:100%;height:100%;object-fit:cover";var fu=url.indexOf("/api/")===0?"https://creatorapp.zoho.com"+url:url;img.src=fu;img.onload=function(){el.innerHTML="";el.appendChild(img)};img.onerror=function(){el.innerHTML="📷"}}
+// Method 1: Zoho SDK
+var loaded=false;
+try{
+ZOHO.CREATOR.UTIL.setImageData(img,url,function(){
+    loaded=true;
+    if(img.src&&img.src.length>10&&img.src!=="about:blank"){el.innerHTML="";el.appendChild(img)}
+    else{tryDirect(el,url)}
+});
+}catch(e){tryDirect(el,url);return}
+// Fallback after 5 seconds if SDK didn't work
+setTimeout(function(){if(!loaded&&!el.querySelector("img")){tryDirect(el,url)}},5000)}
+function tryDirect(el,url){var img=document.createElement("img");img.style.cssText="width:100%;height:100%;object-fit:cover";
+var fu=url;
+if(url.indexOf("/api/")===0)fu="https://creatorapp.zoho.com"+url;
+img.src=fu;img.onload=function(){el.innerHTML="";el.appendChild(img)};
+img.onerror=function(){
+    // Try alternate domain
+    if(url.indexOf("/api/")===0){
+        var img2=document.createElement("img");img2.style.cssText="width:100%;height:100%;object-fit:cover";
+        img2.src="https://creator.zoho.com"+url;
+        img2.onload=function(){el.innerHTML="";el.appendChild(img2)};
+        img2.onerror=function(){el.innerHTML="📷"}
+    } else {el.innerHTML="📷"}
+}}
 function loadImg(id,url){var el=document.getElementById(id);if(el)loadSI(el,url)}
 
 function isOrdered(sku){return moSkuSet.has(sku)}
@@ -281,23 +319,28 @@ var sku=g(rec,"Style_SKU"),name=g(rec,"Style_Name");
 document.getElementById("modalTitle").textContent=sku;
 document.getElementById("modalSubtitle").textContent=name;
 
-// ★ Reset & load header image fresh for THIS record
+// ★ Header thumbnail = first Style Image
 var te=document.getElementById("modalThumb");
 te.innerHTML="👕";
-var iu=getImgUrl(rec);
-if(iu){
-    var fi=document.createElement("img");
-    fi.style.cssText="width:100%;height:100%;object-fit:cover";
-    try{ZOHO.CREATOR.UTIL.setImageData(fi,iu,function(){te.innerHTML="";te.appendChild(fi)})}
-    catch(e){fi.src=(iu.indexOf("/api/")===0?"https://creatorapp.zoho.com":"")+iu;fi.onload=function(){te.innerHTML="";te.appendChild(fi)}}
+var allStyleImgs=getAllImgUrls(rec,"Style_Image");
+if(allStyleImgs.length>0){
+    loadSI(te, allStyleImgs[0]);
 }
 
 // ★ NO getRecordById! All data from getAllRecords (Quick View has all fields now)
 document.getElementById("modalBody").innerHTML=buildDetailHtml(rec);
 document.getElementById("modalOverlay").classList.add("active");
 
-// Load modal images
-setTimeout(function(){loadModalImages(rec)},200);
+// Load all modal images with staggered timing to avoid overload
+setTimeout(function(){
+    var styleImgs=getAllImgUrls(rec,"Style_Image");
+    var flatImgs=getAllImgUrls(rec,"Flat_Sketch");
+    var sampleImgs=getAllImgUrls(rec,"Sample_Images");
+    var delay=0;
+    styleImgs.forEach(function(u,i){setTimeout(function(){loadImg("sImg"+i,u)},delay);delay+=300});
+    flatImgs.forEach(function(u,i){setTimeout(function(){loadImg("fImg"+i,u)},delay);delay+=300});
+    sampleImgs.forEach(function(u,i){setTimeout(function(){loadImg("smImg"+i,u)},delay);delay+=300});
+},200);
 }
 
 function buildDetailHtml(d){
@@ -375,9 +418,10 @@ h+='</div>'}
 return h}
 
 function loadModalImages(d){
-getAllImgUrls(d,"Style_Image").forEach(function(u,i){loadImg("sImg"+i,u)});
-getAllImgUrls(d,"Flat_Sketch").forEach(function(u,i){loadImg("fImg"+i,u)});
-getAllImgUrls(d,"Sample_Images").forEach(function(u,i){loadImg("smImg"+i,u)})}
+var delay=0;
+getAllImgUrls(d,"Style_Image").forEach(function(u,i){setTimeout(function(){loadImg("sImg"+i,u)},delay);delay+=300});
+getAllImgUrls(d,"Flat_Sketch").forEach(function(u,i){setTimeout(function(){loadImg("fImg"+i,u)},delay);delay+=300});
+getAllImgUrls(d,"Sample_Images").forEach(function(u,i){setTimeout(function(){loadImg("smImg"+i,u)},delay);delay+=300})}
 
 function closeModal(){document.getElementById("modalOverlay").classList.remove("active")}
 document.getElementById("modalClose").addEventListener("click",closeModal);
