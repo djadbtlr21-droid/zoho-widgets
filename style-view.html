@@ -259,7 +259,32 @@ img.onerror=function(){
     }else{el.innerHTML="📷";if(callback)callback()}
 }}
 
-function loadImg(id,url){var el=document.getElementById(id);if(el)queueImageLoad(el,url)}
+var _imgLoadCounter=0;
+function loadImg(id,url){
+// ★ Modal images: each image gets its own delayed SDK call
+var el=document.getElementById(id);if(!el||!url||url==="-")return;
+var myDelay=_imgLoadCounter*1000; // 1 second apart
+_imgLoadCounter++;
+
+setTimeout(function(){
+    var img=document.createElement("img");
+    img.style.cssText="width:100%;height:100%;object-fit:contain;cursor:pointer";
+    img.onclick=function(){openLightbox(this.src)};
+    var loaded=false;
+    try{
+        ZOHO.CREATOR.UTIL.setImageData(img,url,function(){
+            loaded=true;
+            if(img.src&&img.src.length>20&&img.src!=="about:blank"){
+                el.innerHTML="";el.appendChild(img)}
+            else{el.innerHTML="📷"}
+        });
+    }catch(e){el.innerHTML="📷"}
+    // Fallback if SDK doesn't respond in 6 seconds
+    setTimeout(function(){
+        if(!loaded&&!el.querySelector("img")){el.innerHTML="📷"}
+    },6000);
+}, myDelay);
+}
 
 // ★★★ Lightbox (이미지 확대 보기) ★★★
 function openLightbox(src){
@@ -382,16 +407,13 @@ if(allStyleImgs.length>0){
 document.getElementById("modalBody").innerHTML=buildDetailHtml(rec);
 document.getElementById("modalOverlay").classList.add("active");
 
-// Load all modal images via queue (sequential)
+// Load all modal images (each loadImg handles its own timing)
+_imgLoadCounter=0; // reset counter for this modal
 setTimeout(function(){
-    var styleImgs=getAllImgUrls(rec,"Style_Image");
-    var flatImgs=getAllImgUrls(rec,"Flat_Sketch");
-    var sampleImgs=getAllImgUrls(rec,"Sample_Images");
-    imgQueue=[];imgQueueRunning=false; // reset queue
-    styleImgs.forEach(function(u,i){loadImg("sImg"+i,u)});
-    flatImgs.forEach(function(u,i){loadImg("fImg"+i,u)});
-    sampleImgs.forEach(function(u,i){loadImg("smImg"+i,u)});
-},300);
+    getAllImgUrls(rec,"Style_Image").forEach(function(u,i){loadImg("sImg"+i,u)});
+    getAllImgUrls(rec,"Flat_Sketch").forEach(function(u,i){loadImg("fImg"+i,u)});
+    getAllImgUrls(rec,"Sample_Images").forEach(function(u,i){loadImg("smImg"+i,u)});
+},200);
 }
 
 function buildDetailHtml(d){
@@ -455,21 +477,21 @@ if(styleImgs.length||flatImgs.length||sampleImgs.length){
 h+='<div class="modal-section"><div class="modal-section-title">📸 이미지 / Images / 图片</div>';
 if(styleImgs.length){
 h+='<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin-bottom:6px">Style Images ('+styleImgs.length+')</div><div class="modal-images">';
-styleImgs.forEach(function(u,i){h+='<div class="modal-img-wrap"><div class="modal-img-box" id="sImg'+i+'">📷</div><div class="modal-img-label">Style '+(i+1)+'</div></div>'});
+styleImgs.forEach(function(u,i){h+='<div class="modal-img-wrap"><div class="modal-img-box" id="sImg'+i+'"><div class="spinner-sm"></div></div><div class="modal-img-label">Style '+(i+1)+'</div></div>'});
 h+='</div>'}
 if(flatImgs.length){
 h+='<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin:10px 0 6px">Flat Sketch ('+flatImgs.length+')</div><div class="modal-images">';
-flatImgs.forEach(function(u,i){h+='<div class="modal-img-wrap"><div class="modal-img-box" id="fImg'+i+'">📷</div><div class="modal-img-label">Sketch '+(i+1)+'</div></div>'});
+flatImgs.forEach(function(u,i){h+='<div class="modal-img-wrap"><div class="modal-img-box" id="fImg'+i+'"><div class="spinner-sm"></div></div><div class="modal-img-label">Sketch '+(i+1)+'</div></div>'});
 h+='</div>'}
 if(sampleImgs.length){
 h+='<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin:10px 0 6px">Sample Images ('+sampleImgs.length+')</div><div class="modal-images">';
-sampleImgs.forEach(function(u,i){h+='<div class="modal-img-wrap"><div class="modal-img-box" id="smImg'+i+'">📷</div><div class="modal-img-label">Sample '+(i+1)+'</div></div>'});
+sampleImgs.forEach(function(u,i){h+='<div class="modal-img-wrap"><div class="modal-img-box" id="smImg'+i+'"><div class="spinner-sm"></div></div><div class="modal-img-label">Sample '+(i+1)+'</div></div>'});
 h+='</div>'}
 h+='</div>'}
 return h}
 
 function loadModalImages(d){
-imgQueue=[];imgQueueRunning=false;
+_imgLoadCounter=0;
 getAllImgUrls(d,"Style_Image").forEach(function(u,i){loadImg("sImg"+i,u)});
 getAllImgUrls(d,"Flat_Sketch").forEach(function(u,i){loadImg("fImg"+i,u)});
 getAllImgUrls(d,"Sample_Images").forEach(function(u,i){loadImg("smImg"+i,u)})}
