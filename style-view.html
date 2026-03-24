@@ -3,121 +3,467 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Style View - Field Debug</title>
+<title>Style View Widget</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-body { background: #F1F5F9; padding: 20px; }
-h1 { font-size: 18px; margin-bottom: 16px; color: #1E3A8A; }
-.debug-box { background: white; border: 2px solid #3B82F6; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
-.debug-title { font-size: 14px; font-weight: 800; color: #1E3A8A; margin-bottom: 12px; border-bottom: 2px solid #E2E8F0; padding-bottom: 8px; }
-.field-list { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-.field-item { font-size: 12px; padding: 6px 10px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 4px; }
-.field-name { font-weight: 800; color: #1E3A8A; }
-.field-value { color: #64748B; font-size: 11px; margin-top: 2px; word-break: break-all; }
-.loading { text-align: center; padding: 40px; color: #64748B; }
-.error { background: #FEF2F2; border-color: #EF4444; color: #B91C1C; }
+:root {
+    --z-primary: #1E3A8A;
+    --z-accent: #3B82F6;
+    --z-bg: #F1F5F9;
+    --z-border: #E2E8F0;
+    --z-text-main: #0F172A;
+    --z-text-muted: #64748B;
+    --z-card-bg: #FFFFFF;
+    --st-draft: #94A3B8;
+    --st-prog: #F59E0B;
+    --st-review: #8B5CF6;
+    --st-appr: #10B981;
+    --st-danger: #EF4444;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', -apple-system, sans-serif; }
+body { background: var(--z-bg); padding: 16px; min-height: 100vh; }
+
+.loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px; gap: 16px; }
+.spinner { width: 40px; height: 40px; border: 4px solid var(--z-border); border-top-color: var(--z-accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 13px; color: var(--z-text-muted); font-weight: 600; }
+
+/* Page Header */
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+.page-header h1 { font-size: 17px; font-weight: 900; color: var(--z-text-main); display: flex; align-items: center; gap: 8px; }
+.page-header h1 .icon-s { width: 26px; height: 26px; background: var(--z-primary); border-radius: 5px; display: inline-flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 900; }
+.season-badge { background: #EFF6FF; color: var(--z-primary); border: 1px solid #BFDBFE; padding: 5px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+
+/* KPI Cards */
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.kpi-card { background: var(--z-card-bg); border: 1px solid var(--z-border); border-radius: 8px; padding: 14px 16px; position: relative; overflow: hidden; }
+.kpi-card::before { content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 3px; }
+.kpi-total::before { background: var(--z-primary); }
+.kpi-active::before { background: var(--st-appr); }
+.kpi-sampling::before { background: var(--st-prog); }
+.kpi-inactive::before { background: var(--st-draft); }
+.kpi-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.kpi-label { font-size: 11px; font-weight: 700; color: var(--z-text-muted); }
+.kpi-val { font-size: 28px; font-weight: 900; letter-spacing: -0.5px; }
+.kpi-total .kpi-val { color: var(--z-primary); }
+.kpi-active .kpi-val { color: var(--st-appr); }
+.kpi-sampling .kpi-val { color: var(--st-prog); }
+.kpi-inactive .kpi-val { color: var(--st-draft); }
+
+/* Table Card */
+.table-card { background: var(--z-card-bg); border: 1px solid var(--z-border); border-radius: 8px; overflow: hidden; }
+.table-toolbar { padding: 10px 16px; background: #F8FAFC; border-bottom: 1px solid var(--z-border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.toolbar-left { display: flex; align-items: center; gap: 8px; }
+.toolbar-title { font-size: 13px; font-weight: 800; color: var(--z-text-main); }
+.rec-count { font-size: 11px; color: var(--z-text-muted); font-weight: 600; background: #F1F5F9; padding: 2px 8px; border-radius: 10px; border: 1px solid #CBD5E1; }
+.toolbar-right { display: flex; align-items: center; gap: 8px; }
+.search-box { background: white; border: 1px solid var(--z-border); border-radius: 6px; padding: 5px 10px; font-size: 11px; width: 220px; outline: none; font-family: inherit; }
+.search-box:focus { border-color: var(--z-accent); box-shadow: 0 0 0 2px rgba(59,130,246,0.1); }
+.filter-select { background: white; border: 1px solid var(--z-border); border-radius: 6px; padding: 5px 8px; font-size: 11px; outline: none; font-family: inherit; cursor: pointer; }
+
+.table-scroll { max-height: 520px; overflow-y: auto; }
+.z-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+.z-table th { background: #F1F5F9; padding: 10px 12px; color: var(--z-text-muted); font-weight: 800; font-size: 11px; border-bottom: 1px solid var(--z-border); white-space: nowrap; position: sticky; top: 0; z-index: 5; cursor: pointer; user-select: none; }
+.z-table th:hover { background: #E8EEF4; }
+.z-table th .sort-icon { font-size: 9px; margin-left: 3px; opacity: 0.4; }
+.z-table th.sorted .sort-icon { opacity: 1; color: var(--z-accent); }
+.z-table td { padding: 10px 12px; border-bottom: 1px solid #F1F5F9; color: var(--z-text-main); vertical-align: middle; }
+.z-table tr { cursor: pointer; transition: background 0.1s; }
+.z-table tbody tr:hover td { background: #EFF6FF; }
+
+.style-info { display: flex; align-items: center; gap: 10px; }
+.style-thumb { width: 40px; height: 40px; background: #F1F5F9; border: 1px solid #E2E8F0; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #94A3B8; flex-shrink: 0; overflow: hidden; }
+.style-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.style-code { font-weight: 800; color: var(--z-primary); font-size: 12px; display: block; }
+.style-name { font-size: 10px; color: var(--z-text-muted); display: block; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.tag { padding: 3px 10px; border-radius: 4px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; min-width: 60px; white-space: nowrap; }
+.tag-draft { background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1; }
+.tag-prog { background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A; }
+.tag-rev { background: #EDE9FE; color: #5B21B6; border: 1px solid #DDD6FE; }
+.tag-appr { background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0; }
+.tag-fail { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
+
+.vendor-tag { font-size: 10px; font-weight: 700; color: var(--z-text-muted); background: #F8FAFC; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--z-border); }
+.no-data { text-align: center; padding: 40px; color: var(--z-text-muted); font-size: 13px; }
+
+/* Modal */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
+.modal-overlay.active { display: flex; }
+.modal-box { background: white; border-radius: 12px; width: 92%; max-width: 720px; max-height: 88vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); animation: modalIn 0.25s ease-out; }
+@keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.modal-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--z-border); display: flex; justify-content: space-between; align-items: flex-start; position: sticky; top: 0; background: white; z-index: 10; border-radius: 12px 12px 0 0; }
+.modal-header-left { display: flex; align-items: center; gap: 14px; }
+.modal-thumb-lg { width: 56px; height: 56px; background: #F1F5F9; border: 1px solid #E2E8F0; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+.modal-thumb-lg img { width: 100%; height: 100%; object-fit: cover; }
+.modal-title { font-size: 18px; font-weight: 900; color: var(--z-primary); }
+.modal-subtitle { font-size: 12px; color: var(--z-text-muted); margin-top: 2px; }
+.modal-close { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--z-border); background: #F8FAFC; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--z-text-muted); transition: all 0.15s; flex-shrink: 0; }
+.modal-close:hover { background: #FEF2F2; color: var(--st-danger); border-color: #FECACA; }
+.modal-body { padding: 20px 24px; }
+.modal-section { margin-bottom: 20px; }
+.modal-section-title { font-size: 11px; font-weight: 800; color: var(--z-text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px dashed var(--z-border); }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.detail-item { display: flex; flex-direction: column; gap: 2px; }
+.detail-label { font-size: 10px; font-weight: 700; color: var(--z-text-muted); }
+.detail-value { font-size: 13px; font-weight: 600; color: var(--z-text-main); }
+
+.error-box { background: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px; padding: 20px; text-align: center; color: #B91C1C; margin: 20px 0; }
+
+@media (max-width: 768px) {
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .detail-grid { grid-template-columns: 1fr 1fr; }
+    .page-header { flex-direction: column; align-items: flex-start; }
+}
 </style>
 </head>
 <body>
 
-<h1>🔍 Style View — 필드명 디버그</h1>
-
-<div class="debug-box">
-    <div class="debug-title">설정 정보</div>
-    <p style="font-size:12px; color:#64748B;">App: <strong id="appName">eom</strong> | Report: <strong id="reportName">All_Styles</strong></p>
-    <p style="font-size:11px; color:#94A3B8; margin-top:4px;">※ Report 이름이 틀리면 에러가 납니다. 실제 리포트 이름에 맞게 수정하세요.</p>
+<div id="loadingScreen" class="loading-screen">
+    <div class="spinner"></div>
+    <div class="loading-text">스타일 데이터를 불러오는 중...</div>
 </div>
 
-<div id="output" class="loading">데이터를 불러오는 중...</div>
+<div id="mainContent" style="display:none;">
+    <div class="page-header">
+        <h1><span class="icon-s">S</span> 시즌 기획 및 스타일 라이프사이클 관리</h1>
+        <span class="season-badge" id="seasonBadge">All Seasons</span>
+    </div>
+    <div class="kpi-row" id="kpiRow"></div>
+    <div class="table-card">
+        <div class="table-toolbar">
+            <div class="toolbar-left">
+                <span class="toolbar-title">📋 Style Lifecycle Matrix</span>
+                <span class="rec-count" id="recCount">0 styles</span>
+            </div>
+            <div class="toolbar-right">
+                <input type="text" class="search-box" id="searchBox" placeholder="🔍 SKU, 스타일명, 공장 검색...">
+                <select class="filter-select" id="filterSeason"><option value="">All Season</option></select>
+                <select class="filter-select" id="filterCategory"><option value="">All Category</option></select>
+                <select class="filter-select" id="filterStatus"><option value="">All Status</option></select>
+            </div>
+        </div>
+        <div class="table-scroll">
+            <table class="z-table">
+                <thead>
+                    <tr>
+                        <th data-sort="Style_SKU" width="24%">Style Info <span class="sort-icon">▼</span></th>
+                        <th data-sort="Season" width="8%">Season <span class="sort-icon">▼</span></th>
+                        <th data-sort="Plan_Month" width="8%">Plan <span class="sort-icon">▼</span></th>
+                        <th data-sort="Category" width="8%">Category <span class="sort-icon">▼</span></th>
+                        <th data-sort="Style_Status" width="10%">Style Status <span class="sort-icon">▼</span></th>
+                        <th data-sort="Sample_Status" width="10%">Sample <span class="sort-icon">▼</span></th>
+                        <th data-sort="Business_Entity" width="8%">Vendor <span class="sort-icon">▼</span></th>
+                        <th data-sort="Target_Cost" width="8%">Cost <span class="sort-icon">▼</span></th>
+                    </tr>
+                </thead>
+                <tbody id="styleTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="errorScreen" style="display:none;">
+    <div class="error-box">
+        <div style="font-weight:800;font-size:14px;margin-bottom:8px;">데이터를 불러올 수 없습니다</div>
+        <div id="errorMsg" style="font-size:12px;"></div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <div class="modal-header-left">
+                <div class="modal-thumb-lg" id="modalThumb">👕</div>
+                <div>
+                    <div class="modal-title" id="modalTitle">-</div>
+                    <div class="modal-subtitle" id="modalSubtitle">-</div>
+                </div>
+            </div>
+            <div class="modal-close" id="modalClose">✕</div>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+    </div>
+</div>
 
 <script>
 var APP_NAME = "eom";
 var REPORT_NAME = "All_Styles";
 
+var allRecords = [];
+var filteredRecords = [];
+var sortField = "";
+var sortAsc = true;
+
 ZOHO.CREATOR.init().then(function() {
-    var config = {
-        appName: APP_NAME,
-        reportName: REPORT_NAME,
-        page: 1,
-        pageSize: 5
-    };
+    loadData();
+});
 
+function loadData() {
+    var config = { appName: APP_NAME, reportName: REPORT_NAME, page: 1, pageSize: 200 };
     ZOHO.CREATOR.API.getAllRecords(config).then(function(response) {
-        var html = "";
-
-        if (response && response.code === 3000 && response.data && response.data.length > 0) {
-            var records = response.data;
-
-            // 1. 전체 필드명 목록
-            html += '<div class="debug-box">';
-            html += '<div class="debug-title">📋 발견된 필드명 (총 ' + Object.keys(records[0]).length + '개)</div>';
-            html += '<div class="field-list">';
-            
-            var keys = Object.keys(records[0]).sort();
-            keys.forEach(function(key) {
-                var val = records[0][key];
-                var displayVal = "";
-                if (val === null || val === undefined) {
-                    displayVal = "(빈값)";
-                } else if (typeof val === "object") {
-                    if (val.display_value) displayVal = val.display_value;
-                    else displayVal = JSON.stringify(val).substring(0, 80);
-                } else {
-                    displayVal = String(val).substring(0, 80);
-                }
-                html += '<div class="field-item"><div class="field-name">' + key + '</div><div class="field-value">' + displayVal + '</div></div>';
-            });
-            
-            html += '</div></div>';
-
-            // 2. 처음 3개 레코드 전체 데이터
-            html += '<div class="debug-box">';
-            html += '<div class="debug-title">📊 처음 3개 레코드 데이터</div>';
-            
-            var showCount = Math.min(3, records.length);
-            for (var i = 0; i < showCount; i++) {
-                html += '<div style="margin-bottom:12px; padding:10px; background:#F8FAFC; border-radius:6px; border:1px solid #E2E8F0;">';
-                html += '<div style="font-weight:800; font-size:12px; color:#1E3A8A; margin-bottom:6px;">Record ' + (i+1) + '</div>';
-                
-                keys.forEach(function(key) {
-                    var val = records[i][key];
-                    var displayVal = "";
-                    if (val === null || val === undefined || val === "") {
-                        displayVal = '<span style="color:#CBD5E1;">(빈값)</span>';
-                    } else if (typeof val === "object") {
-                        if (val.display_value) displayVal = val.display_value;
-                        else displayVal = JSON.stringify(val).substring(0, 100);
-                    } else {
-                        displayVal = String(val);
-                    }
-                    html += '<div style="font-size:11px; padding:2px 0; border-bottom:1px solid #F1F5F9;"><strong style="color:#475569;">' + key + ':</strong> ' + displayVal + '</div>';
-                });
-                
-                html += '</div>';
-            }
-            html += '</div>';
-
-            // 3. 총 레코드 수
-            html += '<div class="debug-box"><div class="debug-title">ℹ️ 요약</div>';
-            html += '<p style="font-size:13px;">총 레코드 수: <strong>' + records.length + '</strong>개 (최대 5개만 조회)</p>';
-            html += '<p style="font-size:13px;">총 필드 수: <strong>' + keys.length + '</strong>개</p>';
-            html += '</div>';
-
+        if (response && response.code === 3000 && response.data) {
+            allRecords = response.data;
+            filteredRecords = allRecords.slice();
+            renderKPI();
+            buildFilterOptions();
+            renderTable();
+            document.getElementById("loadingScreen").style.display = "none";
+            document.getElementById("mainContent").style.display = "block";
         } else {
-            html = '<div class="debug-box error"><div class="debug-title">❌ 에러</div>';
-            html += '<p>리포트에서 데이터를 가져올 수 없습니다.</p>';
-            html += '<p style="margin-top:8px;">Response: ' + JSON.stringify(response) + '</p>';
-            html += '<p style="margin-top:8px;">확인사항: App 이름이 "' + APP_NAME + '"이고 리포트 이름이 "' + REPORT_NAME + '"인지 확인하세요.</p>';
-            html += '</div>';
+            showError("리포트 데이터를 가져올 수 없습니다: " + REPORT_NAME);
         }
-
-        document.getElementById("output").innerHTML = html;
-
     }).catch(function(err) {
-        document.getElementById("output").innerHTML = '<div class="debug-box error"><div class="debug-title">❌ API 에러</div><p>' + JSON.stringify(err) + '</p></div>';
+        showError("API 호출 실패: " + JSON.stringify(err));
+    });
+}
+
+function showError(msg) {
+    document.getElementById("loadingScreen").style.display = "none";
+    document.getElementById("errorScreen").style.display = "block";
+    document.getElementById("errorMsg").textContent = msg;
+}
+
+// ── Utility ──
+function g(rec, field) {
+    var v = rec[field];
+    if (v === undefined || v === null || v === "") return "-";
+    if (typeof v === "object" && v.display_value) return v.display_value;
+    return String(v);
+}
+
+function getTagClass(status) {
+    var s = (status || "").toLowerCase();
+    if (s.indexOf("active") >= 0 || s.indexOf("approved") >= 0 || s.indexOf("confirmed") >= 0 || s.indexOf("완성") >= 0) return "tag-appr";
+    if (s.indexOf("progress") >= 0 || s.indexOf("sampling") >= 0 || s.indexOf("진행") >= 0 || s.indexOf("활성") >= 0) return "tag-prog";
+    if (s.indexOf("review") >= 0 || s.indexOf("pending") >= 0) return "tag-rev";
+    if (s.indexOf("rejected") >= 0 || s.indexOf("cancel") >= 0 || s.indexOf("fail") >= 0) return "tag-fail";
+    return "tag-draft";
+}
+
+function escHtml(str) { var d = document.createElement("div"); d.textContent = str; return d.innerHTML; }
+
+function getImageUrl(rec) {
+    var img = rec["Style_Image"];
+    if (!img) return null;
+    if (typeof img === "string" && img.indexOf("/api/") === 0) return img;
+    if (typeof img === "string" && img.indexOf("http") === 0) return img;
+    return null;
+}
+
+// ── KPI ──
+function renderKPI() {
+    var total = allRecords.length;
+    var active = allRecords.filter(function(r) { var s = g(r,"Style_Status").toLowerCase(); return s.indexOf("active") >= 0 || s.indexOf("활성") >= 0; }).length;
+    var sampling = allRecords.filter(function(r) { var s = g(r,"Sample_Status").toLowerCase(); return s.indexOf("progress") >= 0 || s.indexOf("진행") >= 0 || s.indexOf("sampling") >= 0; }).length;
+    var inactive = total - active;
+
+    document.getElementById("kpiRow").innerHTML =
+        '<div class="kpi-card kpi-total"><div class="kpi-label">총 스타일 수</div><div class="kpi-val">' + total + '</div></div>' +
+        '<div class="kpi-card kpi-active"><div class="kpi-label">Active 스타일</div><div class="kpi-val">' + active + '</div></div>' +
+        '<div class="kpi-card kpi-sampling"><div class="kpi-label">샘플 진행중</div><div class="kpi-val">' + sampling + '</div></div>' +
+        '<div class="kpi-card kpi-inactive"><div class="kpi-label">비활성 / 기타</div><div class="kpi-val">' + inactive + '</div></div>';
+}
+
+// ── Filter Options ──
+function buildFilterOptions() {
+    var seasons = {}, categories = {}, statuses = {};
+    allRecords.forEach(function(r) {
+        var se = g(r,"Season"); if (se !== "-") seasons[se] = true;
+        var ca = g(r,"Category"); if (ca !== "-") categories[ca] = true;
+        var st = g(r,"Style_Status"); if (st !== "-") statuses[st] = true;
+    });
+    var seasonSel = document.getElementById("filterSeason");
+    Object.keys(seasons).sort().forEach(function(s) { seasonSel.innerHTML += '<option value="'+s+'">'+s+'</option>'; });
+    var catSel = document.getElementById("filterCategory");
+    Object.keys(categories).sort().forEach(function(c) { catSel.innerHTML += '<option value="'+c+'">'+c+'</option>'; });
+    var statusSel = document.getElementById("filterStatus");
+    Object.keys(statuses).sort().forEach(function(s) { statusSel.innerHTML += '<option value="'+s+'">'+s+'</option>'; });
+}
+
+// ── Table ──
+function renderTable() {
+    var html = "";
+    if (filteredRecords.length === 0) {
+        html = '<tr><td colspan="8" class="no-data">조건에 맞는 스타일이 없습니다.</td></tr>';
+    } else {
+        filteredRecords.forEach(function(rec, idx) {
+            var sku = g(rec,"Style_SKU");
+            var name = g(rec,"Style_Name");
+            var season = g(rec,"Season");
+            var plan = g(rec,"Plan_Month");
+            var category = g(rec,"Category");
+            var styleStatus = g(rec,"Style_Status");
+            var sampleStatus = g(rec,"Sample_Status");
+            var vendor = g(rec,"Business_Entity");
+            var cost = g(rec,"Target_Cost");
+
+            var thumbHtml = '👕';
+            var imgUrl = getImageUrl(rec);
+            if (imgUrl) {
+                thumbHtml = '<img src="' + imgUrl + '" onerror="this.parentNode.innerHTML=\'👕\'">';
+            }
+
+            html += '<tr data-idx="' + idx + '">';
+            html += '<td><div class="style-info"><div class="style-thumb">' + thumbHtml + '</div><div><span class="style-code">' + escHtml(sku) + '</span><span class="style-name">' + escHtml(name) + '</span></div></div></td>';
+            html += '<td>' + escHtml(season) + '</td>';
+            html += '<td>' + escHtml(plan) + '</td>';
+            html += '<td>' + escHtml(category) + '</td>';
+            html += '<td><span class="tag ' + getTagClass(styleStatus) + '">' + escHtml(styleStatus) + '</span></td>';
+            html += '<td><span class="tag ' + getTagClass(sampleStatus) + '">' + escHtml(sampleStatus) + '</span></td>';
+            html += '<td><span class="vendor-tag">' + escHtml(vendor) + '</span></td>';
+            html += '<td style="text-align:right;font-weight:700;">' + escHtml(cost) + '</td>';
+            html += '</tr>';
+        });
+    }
+    document.getElementById("styleTableBody").innerHTML = html;
+    document.getElementById("recCount").textContent = filteredRecords.length + " styles";
+
+    document.querySelectorAll("#styleTableBody tr[data-idx]").forEach(function(row) {
+        row.addEventListener("click", function() {
+            openModal(filteredRecords[parseInt(this.getAttribute("data-idx"))]);
+        });
+    });
+}
+
+// ── Search & Filter ──
+document.getElementById("searchBox").addEventListener("input", applyFilters);
+document.getElementById("filterSeason").addEventListener("change", applyFilters);
+document.getElementById("filterCategory").addEventListener("change", applyFilters);
+document.getElementById("filterStatus").addEventListener("change", applyFilters);
+
+function applyFilters() {
+    var q = document.getElementById("searchBox").value.toLowerCase().trim();
+    var fSeason = document.getElementById("filterSeason").value;
+    var fCat = document.getElementById("filterCategory").value;
+    var fStatus = document.getElementById("filterStatus").value;
+
+    filteredRecords = allRecords.filter(function(rec) {
+        if (q) {
+            var hay = (g(rec,"Style_SKU") + " " + g(rec,"Style_Name") + " " + g(rec,"Business_Entity") + " " + g(rec,"Style_Number")).toLowerCase();
+            if (hay.indexOf(q) < 0) return false;
+        }
+        if (fSeason && g(rec,"Season") !== fSeason) return false;
+        if (fCat && g(rec,"Category") !== fCat) return false;
+        if (fStatus && g(rec,"Style_Status") !== fStatus) return false;
+        return true;
+    });
+    if (sortField) doSort(sortField, false);
+    renderTable();
+}
+
+// ── Sort ──
+document.querySelectorAll(".z-table th[data-sort]").forEach(function(th) {
+    th.addEventListener("click", function() {
+        doSort(this.getAttribute("data-sort"), true);
+        renderTable();
+        document.querySelectorAll(".z-table th").forEach(function(h) { h.classList.remove("sorted"); });
+        this.classList.add("sorted");
+        this.querySelector(".sort-icon").textContent = sortAsc ? "▲" : "▼";
     });
 });
+
+function doSort(field, toggle) {
+    if (toggle) { if (sortField === field) sortAsc = !sortAsc; else { sortField = field; sortAsc = true; } }
+    filteredRecords.sort(function(a, b) {
+        var va = g(a, field).toLowerCase(), vb = g(b, field).toLowerCase();
+        if (va < vb) return sortAsc ? -1 : 1;
+        if (va > vb) return sortAsc ? 1 : -1;
+        return 0;
+    });
+}
+
+// ── Modal ──
+function openModal(rec) {
+    var sku = g(rec,"Style_SKU");
+    var name = g(rec,"Style_Name");
+    document.getElementById("modalTitle").textContent = sku;
+    document.getElementById("modalSubtitle").textContent = name;
+
+    var thumbEl = document.getElementById("modalThumb");
+    var imgUrl = getImageUrl(rec);
+    if (imgUrl) {
+        thumbEl.innerHTML = '<img src="' + imgUrl + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentNode.innerHTML=\'👕\'">';
+    } else {
+        thumbEl.innerHTML = '👕';
+    }
+
+    var html = '';
+
+    // Identity
+    html += '<div class="modal-section"><div class="modal-section-title">기본 정보 / Identity</div><div class="detail-grid">';
+    var identity = [
+        ["Style SKU", g(rec,"Style_SKU")],
+        ["Style Name", g(rec,"Style_Name")],
+        ["Style Number", g(rec,"Style_Number")],
+        ["Business Entity", g(rec,"Business_Entity")],
+        ["Season", g(rec,"Season")],
+        ["Plan Year", g(rec,"Plan_Year")],
+        ["Plan Month", g(rec,"Plan_Month")],
+        ["Style Status", g(rec,"Style_Status")],
+        ["Category", g(rec,"Category")]
+    ];
+    identity.forEach(function(d) {
+        var isTag = d[0].indexOf("Status") >= 0;
+        var val = isTag ? '<span class="tag ' + getTagClass(d[1]) + '">' + escHtml(d[1]) + '</span>' : escHtml(d[1]);
+        html += '<div class="detail-item"><span class="detail-label">' + d[0] + '</span><span class="detail-value">' + val + '</span></div>';
+    });
+    html += '</div></div>';
+
+    // Product Details
+    html += '<div class="modal-section"><div class="modal-section-title">제품 상세 / Product Definition</div><div class="detail-grid">';
+    var product = [
+        ["Gender", g(rec,"Gender")],
+        ["Fit", g(rec,"Fit")],
+        ["Top Type", g(rec,"Top_Type")],
+        ["Bottom Type", g(rec,"Bottom_Type")],
+        ["Bottom Length", g(rec,"Bottom_Length")],
+        ["Sleeve", g(rec,"Sleeve")],
+        ["Lining Type", g(rec,"Lining_Type")],
+        ["Details", g(rec,"Details")],
+        ["Material Type", g(rec,"Material_Type")],
+        ["Available Colors", g(rec,"Available_Colors")],
+        ["Available Sizes", g(rec,"Available_Sizes")]
+    ];
+    product.forEach(function(d) {
+        html += '<div class="detail-item"><span class="detail-label">' + d[0] + '</span><span class="detail-value">' + escHtml(d[1]) + '</span></div>';
+    });
+    html += '</div></div>';
+
+    // Sample & Costing
+    html += '<div class="modal-section"><div class="modal-section-title">샘플 & 원가 / Sample & Costing</div><div class="detail-grid">';
+    var sampleCost = [
+        ["Sample Status", g(rec,"Sample_Status")],
+        ["Sample Date", g(rec,"Sample_Date")],
+        ["Target Cost", g(rec,"Target_Cost")],
+        ["Final Cost", g(rec,"Final_Cost")],
+        ["Total BOM Cost", g(rec,"Total_BOM_Cost")],
+        ["Cost Notes", g(rec,"Cost_Notes")]
+    ];
+    sampleCost.forEach(function(d) {
+        var isTag = d[0].indexOf("Status") >= 0;
+        var val = isTag ? '<span class="tag ' + getTagClass(d[1]) + '">' + escHtml(d[1]) + '</span>' : escHtml(d[1]);
+        html += '<div class="detail-item"><span class="detail-label">' + d[0] + '</span><span class="detail-value">' + val + '</span></div>';
+    });
+    html += '</div></div>';
+
+    // Sample Notes
+    var sn = g(rec,"Sample_Notes");
+    if (sn !== "-") {
+        html += '<div class="modal-section"><div class="modal-section-title">샘플 메모</div><div style="font-size:12px;color:var(--z-text-main);line-height:1.6;background:#F8FAFC;padding:10px;border-radius:6px;">' + escHtml(sn) + '</div></div>';
+    }
+
+    document.getElementById("modalBody").innerHTML = html;
+    document.getElementById("modalOverlay").classList.add("active");
+}
+
+function closeModal() { document.getElementById("modalOverlay").classList.remove("active"); }
+document.getElementById("modalClose").addEventListener("click", closeModal);
+document.getElementById("modalOverlay").addEventListener("click", function(e) { if (e.target === this) closeModal(); });
+document.addEventListener("keydown", function(e) { if (e.key === "Escape") closeModal(); });
 </script>
 </body>
 </html>
