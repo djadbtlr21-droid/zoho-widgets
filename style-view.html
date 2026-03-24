@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Style View Widget</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<!-- Zoho Creator Widget SDK -->
+<script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
+<style>
+/* ============================================================
+   STYLE VIEW v1 — PLM Dashboard Widget
+   ============================================================ */
+:root {
+    --z-primary: #1E3A8A;
+    --z-accent: #3B82F6;
+    --z-bg: #F1F5F9;
+    --z-border: #E2E8F0;
+    --z-text-main: #0F172A;
+    --z-text-muted: #64748B;
+    --z-card-bg: #FFFFFF;
+    --st-draft: #94A3B8;
+    --st-prog: #F59E0B;
+    --st-review: #8B5CF6;
+    --st-appr: #10B981;
+    --st-danger: #EF4444;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', -apple-system, sans-serif; }
+body { background: var(--z-bg); padding: 16px; min-height: 100vh; }
+
+/* Loading State */
+.loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px; gap: 16px; }
+.spinner { width: 40px; height: 40px; border: 4px solid var(--z-border); border-top-color: var(--z-accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 13px; color: var(--z-text-muted); font-weight: 600; }
+
+/* Page Header */
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+.page-header h1 { font-size: 17px; font-weight: 900; color: var(--z-text-main); display: flex; align-items: center; gap: 8px; }
+.page-header h1 .icon-s { width: 26px; height: 26px; background: var(--z-primary); border-radius: 5px; display: inline-flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 900; }
+.header-right { display: flex; align-items: center; gap: 8px; }
+.season-badge { background: #EFF6FF; color: var(--z-primary); border: 1px solid #BFDBFE; padding: 5px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.btn { background: white; border: 1px solid var(--z-border); padding: 6px 14px; border-radius: 6px; font-size: 11px; font-weight: 700; color: var(--z-text-main); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s; }
+.btn:hover { background: #F8FAFC; border-color: #CBD5E1; }
+
+/* KPI Cards */
+.kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+.kpi-card { background: var(--z-card-bg); border: 1px solid var(--z-border); border-radius: 8px; padding: 14px 16px; position: relative; overflow: hidden; transition: box-shadow 0.2s; }
+.kpi-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+.kpi-card::before { content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 3px; }
+.kpi-1::before { background: var(--z-primary); }
+.kpi-2::before { background: var(--z-accent); }
+.kpi-3::before { background: var(--st-prog); }
+.kpi-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.kpi-label { font-size: 12px; font-weight: 800; color: var(--z-text-main); display: flex; align-items: center; gap: 6px; }
+.kpi-label .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.kpi-1 .dot { background: var(--z-primary); }
+.kpi-2 .dot { background: var(--z-accent); }
+.kpi-3 .dot { background: var(--st-prog); }
+.drop-badge { background: #F1F5F9; color: #475569; font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 700; border: 1px solid #CBD5E1; }
+.kpi-val { font-size: 28px; font-weight: 900; color: var(--z-primary); letter-spacing: -0.5px; }
+.kpi-val span { font-size: 12px; font-weight: 600; color: var(--z-text-muted); margin-left: 4px; }
+.kpi-divider { border-bottom: 1px dashed var(--z-border); margin: 8px 0; }
+.kpi-footer { display: flex; justify-content: space-between; align-items: center; }
+.kpi-footer-label { font-size: 11px; color: var(--z-text-muted); font-weight: 600; }
+.kpi-footer-val { font-size: 12px; font-weight: 800; padding: 2px 10px; border-radius: 4px; }
+.kpi-footer-val.ok { color: #065F46; background: #ECFDF5; border: 1px solid #A7F3D0; }
+.kpi-footer-val.warn { color: #B45309; background: #FFFBEB; border: 1px solid #FDE68A; }
+
+/* Table Card */
+.table-card { background: var(--z-card-bg); border: 1px solid var(--z-border); border-radius: 8px; overflow: hidden; }
+
+/* Toolbar */
+.table-toolbar { padding: 10px 16px; background: #F8FAFC; border-bottom: 1px solid var(--z-border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.toolbar-left { display: flex; align-items: center; gap: 8px; }
+.toolbar-title { font-size: 13px; font-weight: 800; color: var(--z-text-main); }
+.rec-count { font-size: 11px; color: var(--z-text-muted); font-weight: 600; background: #F1F5F9; padding: 2px 8px; border-radius: 10px; border: 1px solid #CBD5E1; }
+.toolbar-right { display: flex; align-items: center; gap: 8px; }
+.search-box { background: white; border: 1px solid var(--z-border); border-radius: 6px; padding: 5px 10px; font-size: 11px; width: 200px; outline: none; font-family: inherit; }
+.search-box:focus { border-color: var(--z-accent); box-shadow: 0 0 0 2px rgba(59,130,246,0.1); }
+.filter-select { background: white; border: 1px solid var(--z-border); border-radius: 6px; padding: 5px 8px; font-size: 11px; outline: none; font-family: inherit; cursor: pointer; }
+
+.legend { display: flex; align-items: center; gap: 10px; font-size: 10px; color: var(--z-text-muted); font-weight: 600; }
+.legend-item { display: flex; align-items: center; gap: 3px; }
+.legend-dot { width: 8px; height: 4px; border-radius: 2px; display: inline-block; }
+.legend-dot.done { background: var(--st-appr); }
+.legend-dot.curr { background: var(--z-accent); }
+.legend-dot.fail { background: var(--st-danger); }
+.legend-dot.wait { background: #E2E8F0; }
+
+/* Table */
+.table-scroll { max-height: 500px; overflow-y: auto; }
+.z-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+.z-table th { background: #F1F5F9; padding: 10px 12px; color: var(--z-text-muted); font-weight: 800; font-size: 11px; border-bottom: 1px solid var(--z-border); white-space: nowrap; position: sticky; top: 0; z-index: 5; cursor: pointer; user-select: none; }
+.z-table th:hover { background: #E8EEF4; }
+.z-table th .sort-icon { font-size: 9px; margin-left: 3px; opacity: 0.4; }
+.z-table th.sorted .sort-icon { opacity: 1; color: var(--z-accent); }
+.z-table td { padding: 10px 12px; border-bottom: 1px solid #F1F5F9; color: var(--z-text-main); vertical-align: middle; }
+.z-table tr { cursor: pointer; transition: background 0.1s; }
+.z-table tbody tr:hover td { background: #EFF6FF; }
+
+.style-info { display: flex; align-items: center; gap: 10px; }
+.style-icon { width: 36px; height: 36px; background: #F1F5F9; border: 1px dashed #CBD5E1; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #94A3B8; flex-shrink: 0; }
+.style-icon.fail { background: #FEF2F2; border-color: #FECACA; color: var(--st-danger); }
+.style-code { font-weight: 800; color: var(--z-primary); font-size: 12px; display: block; }
+.style-name { font-size: 10px; color: var(--z-text-muted); display: block; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.tag { padding: 3px 10px; border-radius: 4px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; min-width: 65px; white-space: nowrap; }
+.tag-draft { background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1; }
+.tag-prog { background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A; }
+.tag-rev { background: #EDE9FE; color: #5B21B6; border: 1px solid #DDD6FE; }
+.tag-appr { background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0; }
+.tag-fail { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
+
+.lc-bar { display: flex; align-items: center; gap: 3px; width: 80px; }
+.lc-step { height: 5px; flex: 1; background: #E2E8F0; border-radius: 3px; }
+.lc-step.done { background: var(--st-appr); }
+.lc-step.curr { background: var(--z-accent); }
+.lc-step.fail { background: var(--st-danger); }
+
+.vendor-tag { font-size: 10px; font-weight: 700; color: var(--z-text-muted); background: #F8FAFC; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--z-border); }
+
+.no-data { text-align: center; padding: 40px; color: var(--z-text-muted); font-size: 13px; }
+
+/* ===================== Modal ===================== */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
+.modal-overlay.active { display: flex; }
+.modal-box { background: white; border-radius: 12px; width: 90%; max-width: 680px; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); animation: modalIn 0.25s ease-out; position: relative; }
+@keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.modal-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--z-border); display: flex; justify-content: space-between; align-items: flex-start; position: sticky; top: 0; background: white; z-index: 10; border-radius: 12px 12px 0 0; }
+.modal-title { font-size: 18px; font-weight: 900; color: var(--z-primary); }
+.modal-subtitle { font-size: 12px; color: var(--z-text-muted); margin-top: 2px; }
+.modal-close { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--z-border); background: #F8FAFC; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--z-text-muted); transition: all 0.15s; }
+.modal-close:hover { background: #FEF2F2; color: var(--st-danger); border-color: #FECACA; }
+
+.modal-body { padding: 20px 24px; }
+.modal-section { margin-bottom: 20px; }
+.modal-section-title { font-size: 11px; font-weight: 800; color: var(--z-text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px dashed var(--z-border); }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.detail-item { display: flex; flex-direction: column; gap: 2px; }
+.detail-label { font-size: 10px; font-weight: 700; color: var(--z-text-muted); }
+.detail-value { font-size: 13px; font-weight: 600; color: var(--z-text-main); }
+
+/* Progress Steps in Modal */
+.progress-steps { display: flex; gap: 0; margin-top: 8px; }
+.p-step { flex: 1; text-align: center; position: relative; }
+.p-step-dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #E2E8F0; background: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 4px; font-size: 11px; font-weight: 800; color: var(--z-text-muted); position: relative; z-index: 2; }
+.p-step.done .p-step-dot { background: var(--st-appr); border-color: var(--st-appr); color: white; }
+.p-step.curr .p-step-dot { background: var(--z-accent); border-color: var(--z-accent); color: white; }
+.p-step.fail .p-step-dot { background: var(--st-danger); border-color: var(--st-danger); color: white; }
+.p-step-label { font-size: 9px; font-weight: 700; color: var(--z-text-muted); }
+.p-step.done .p-step-label { color: var(--st-appr); }
+.p-step.curr .p-step-label { color: var(--z-accent); }
+.p-step.fail .p-step-label { color: var(--st-danger); }
+.p-step-line { position: absolute; top: 14px; left: 50%; width: 100%; height: 2px; background: #E2E8F0; z-index: 1; }
+.p-step.done .p-step-line { background: var(--st-appr); }
+.p-step:last-child .p-step-line { display: none; }
+
+/* Error State */
+.error-box { background: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px; padding: 20px; text-align: center; color: #B91C1C; margin: 20px 0; }
+.error-box .error-title { font-weight: 800; font-size: 14px; margin-bottom: 8px; }
+.error-box .error-msg { font-size: 12px; color: #DC2626; }
+
+@media (max-width: 768px) {
+    .kpi-row { grid-template-columns: 1fr; }
+    .detail-grid { grid-template-columns: 1fr; }
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .table-toolbar { flex-direction: column; align-items: flex-start; }
+    .toolbar-right { width: 100%; }
+    .search-box { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div id="loadingScreen" class="loading-screen">
+    <div class="spinner"></div>
+    <div class="loading-text">스타일 데이터를 불러오는 중...</div>
+</div>
+
+<!-- Main Content (hidden until loaded) -->
+<div id="mainContent" style="display:none;">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>
+            <span class="icon-s">S</span>
+            시즌 기획 및 스타일 라이프사이클 관리
+        </h1>
+        <div class="header-right">
+            <span class="season-badge" id="seasonBadge">SS26</span>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-row" id="kpiRow"></div>
+
+    <!-- Style Table -->
+    <div class="table-card">
+        <div class="table-toolbar">
+            <div class="toolbar-left">
+                <span class="toolbar-title">📋 Style Lifecycle Matrix</span>
+                <span class="rec-count" id="recCount">0 styles</span>
+            </div>
+            <div class="toolbar-right">
+                <input type="text" class="search-box" id="searchBox" placeholder="🔍 Style Code, 스타일명, Vendor 검색...">
+                <select class="filter-select" id="filterStatus">
+                    <option value="">All Status</option>
+                    <option value="Approved">Approved</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Drafting">Drafting</option>
+                    <option value="Under Review">Under Review</option>
+                    <option value="Rejected">Rejected</option>
+                    <option value="Not Started">Not Started</option>
+                </select>
+            </div>
+        </div>
+        <div style="padding:4px 16px; background:#FAFBFC; border-bottom:1px solid var(--z-border);">
+            <div class="legend">
+                <span class="legend-item"><span class="legend-dot done"></span> 승인</span>
+                <span class="legend-item"><span class="legend-dot curr"></span> 진행중</span>
+                <span class="legend-item"><span class="legend-dot fail"></span> 반려</span>
+                <span class="legend-item"><span class="legend-dot wait"></span> 대기</span>
+            </div>
+        </div>
+        <div class="table-scroll">
+            <table class="z-table">
+                <thead>
+                    <tr>
+                        <th data-sort="code" width="22%">Style Info <span class="sort-icon">▼</span></th>
+                        <th data-sort="month" width="9%">Target <span class="sort-icon">▼</span></th>
+                        <th data-sort="tp" width="12%">Tech Pack <span class="sort-icon">▼</span></th>
+                        <th data-sort="sample" width="14%">Sample <span class="sort-icon">▼</span></th>
+                        <th data-sort="cost" width="12%">Costing <span class="sort-icon">▼</span></th>
+                        <th data-sort="appr" width="10%">Approval <span class="sort-icon">▼</span></th>
+                        <th data-sort="vendor" width="8%">Vendor <span class="sort-icon">▼</span></th>
+                        <th width="13%">Progress</th>
+                    </tr>
+                </thead>
+                <tbody id="styleTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Error Screen -->
+<div id="errorScreen" style="display:none;">
+    <div class="error-box">
+        <div class="error-title">데이터를 불러올 수 없습니다</div>
+        <div class="error-msg" id="errorMsg"></div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <div>
+                <div class="modal-title" id="modalTitle">-</div>
+                <div class="modal-subtitle" id="modalSubtitle">-</div>
+            </div>
+            <div class="modal-close" id="modalClose">✕</div>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+// ================================================================
+// ★★★ 필드 매핑 설정 — 실제 폼 필드명에 맞게 수정하세요 ★★★
+// ================================================================
+var FIELD_MAP = {
+    styleCode:    "Style_Code",       // 스타일 코드
+    styleName:    "Style_Name",       // 스타일명
+    targetMonth:  "Target_Month",     // 목표 월 (예: "2026-03" 또는 "3월")
+    techPack:     "Tech_Pack_Status", // 테크팩 상태
+    sample:       "Sample_Status",    // 샘플 상태
+    costing:      "Costing_Status",   // 원가 상태
+    approval:     "Main_Approval",    // 최종 승인 상태
+    vendor:       "Vendor",           // 벤더/공장
+    season:       "Season",           // 시즌 (예: "SS26")
+    category:     "Category",         // 카테고리
+    designer:     "Designer",         // 디자이너
+    fabric:       "Fabric",           // 원단
+    color:        "Color",            // 색상
+    costValue:    "Cost_Value"        // 원가 금액
+};
+
+// 앱 이름과 리포트 이름 (Widget Config에서 매핑되거나 여기서 직접 설정)
+var APP_NAME = "eom";                   // ← 실제 앱 이름으로 변경
+var REPORT_NAME = "All_Styles";         // ← 실제 리포트 이름으로 변경
+
+// 월별 KPI 설정
+var KPI_MONTHS = [
+    { key: "2026-03", label: "26년 3월 진행 스타일", drop: "Drop 1", cssClass: "kpi-1" },
+    { key: "2026-04", label: "26년 4월 진행 스타일", drop: "Drop 2", cssClass: "kpi-2" },
+    { key: "2026-05", label: "26년 5월 진행 스타일", drop: "Drop 3", cssClass: "kpi-3" }
+];
+
+// ================================================================
+// 전역 변수
+// ================================================================
+var allRecords = [];
+var filteredRecords = [];
+var sortField = "";
+var sortAsc = true;
+
+// ================================================================
+// 초기화
+// ================================================================
+ZOHO.CREATOR.init().then(function() {
+    // Widget config에서 앱/리포트 이름 가져오기 시도
+    try {
+        var params = ZOHO.CREATOR.UTIL.getQueryParams();
+        if (params && params.App) APP_NAME = params.App;
+        if (params && params.StyleReport) REPORT_NAME = params.StyleReport;
+    } catch(e) {}
+
+    loadData();
+});
+
+function loadData() {
+    var config = {
+        appName: APP_NAME,
+        reportName: REPORT_NAME,
+        page: 1,
+        pageSize: 200
+    };
+
+    ZOHO.CREATOR.API.getAllRecords(config).then(function(response) {
+        if (response && response.code === 3000 && response.data) {
+            allRecords = response.data;
+            filteredRecords = allRecords.slice();
+            renderKPI();
+            renderTable();
+            document.getElementById("loadingScreen").style.display = "none";
+            document.getElementById("mainContent").style.display = "block";
+        } else {
+            showError("리포트에서 데이터를 가져올 수 없습니다. 리포트 이름을 확인하세요: " + REPORT_NAME);
+        }
+    }).catch(function(err) {
+        showError("API 호출 실패: " + JSON.stringify(err));
+    });
+}
+
+function showError(msg) {
+    document.getElementById("loadingScreen").style.display = "none";
+    document.getElementById("errorScreen").style.display = "block";
+    document.getElementById("errorMsg").textContent = msg;
+}
+
+// ================================================================
+// 유틸리티 함수
+// ================================================================
+function getVal(rec, key) {
+    var fieldName = FIELD_MAP[key];
+    if (!fieldName) return "-";
+    var val = rec[fieldName];
+    if (val === undefined || val === null || val === "") return "-";
+    if (typeof val === "object" && val.display_value) return val.display_value;
+    return String(val);
+}
+
+function getTagClass(status) {
+    var s = (status || "").toLowerCase();
+    if (s.indexOf("approved") >= 0 || s === "confirmed" || s === "ready") return "tag-appr";
+    if (s.indexOf("progress") >= 0 || s === "drafting") return "tag-prog";
+    if (s.indexOf("review") >= 0) return "tag-rev";
+    if (s.indexOf("rejected") >= 0 || s.indexOf("fail") >= 0) return "tag-fail";
+    return "tag-draft";
+}
+
+function calcStep(rec) {
+    var tp = getVal(rec, "techPack");
+    var sm = getVal(rec, "sample");
+    var cs = getVal(rec, "costing");
+    var ap = getVal(rec, "approval");
+    var step = 0;
+    var isFail = false;
+
+    if (tp !== "-" && tp.toLowerCase() !== "not started") step = 1;
+    if (sm.toLowerCase().indexOf("approved") >= 0 || sm.toLowerCase().indexOf("progress") >= 0 || sm.toLowerCase().indexOf("rejected") >= 0) step = 2;
+    if (sm.toLowerCase().indexOf("rejected") >= 0) isFail = true;
+    if (cs.toLowerCase() === "confirmed" || cs.toLowerCase().indexOf("approved") >= 0) step = 3;
+    if (ap.toLowerCase() === "ready" || ap.toLowerCase() === "approved") step = 4;
+
+    return { step: step, isFail: isFail };
+}
+
+function getStepClass(stepNum, currentStep, isFail, targetStep) {
+    if (currentStep > targetStep) return "done";
+    if (currentStep === targetStep && isFail) return "fail";
+    if (currentStep === targetStep) return "curr";
+    return "";
+}
+
+// ================================================================
+// KPI 렌더링
+// ================================================================
+function renderKPI() {
+    var html = "";
+    KPI_MONTHS.forEach(function(m) {
+        var monthRecs = allRecords.filter(function(r) {
+            return getVal(r, "targetMonth").indexOf(m.key) >= 0;
+        });
+        var total = monthRecs.length;
+        var approved = monthRecs.filter(function(r) {
+            var a = getVal(r, "approval").toLowerCase();
+            return a === "approved" || a === "ready";
+        }).length;
+        var pct = total > 0 ? Math.round((approved / total) * 100) : 0;
+        var warnClass = pct < 50 ? "warn" : "ok";
+
+        html += '<div class="kpi-card ' + m.cssClass + '">';
+        html += '  <div class="kpi-head">';
+        html += '    <div class="kpi-label"><span class="dot"></span> ' + m.label + '</div>';
+        html += '    <span class="drop-badge">' + m.drop + '</span>';
+        html += '  </div>';
+        html += '  <div class="kpi-val">' + total + ' <span>Styles</span></div>';
+        html += '  <div class="kpi-divider"></div>';
+        html += '  <div class="kpi-footer">';
+        html += '    <span class="kpi-footer-label">☑ 생산 승인 완료</span>';
+        html += '    <span class="kpi-footer-val ' + warnClass + '">' + approved + ' (' + pct + '%)</span>';
+        html += '  </div>';
+        html += '</div>';
+    });
+    document.getElementById("kpiRow").innerHTML = html;
+}
+
+// ================================================================
+// 테이블 렌더링
+// ================================================================
+function renderTable() {
+    var html = "";
+    if (filteredRecords.length === 0) {
+        html = '<tr><td colspan="8" class="no-data">조건에 맞는 스타일이 없습니다.</td></tr>';
+    } else {
+        filteredRecords.forEach(function(rec, idx) {
+            var code = getVal(rec, "styleCode");
+            var name = getVal(rec, "styleName");
+            var month = getVal(rec, "targetMonth");
+            var tp = getVal(rec, "techPack");
+            var sm = getVal(rec, "sample");
+            var cs = getVal(rec, "costing");
+            var ap = getVal(rec, "approval");
+            var vendor = getVal(rec, "vendor");
+            var prog = calcStep(rec);
+
+            var iconClass = prog.isFail ? "style-icon fail" : "style-icon";
+            var iconEmoji = prog.isFail ? "⚠" : "👕";
+
+            html += '<tr data-idx="' + idx + '">';
+            html += '<td><div class="style-info"><div class="' + iconClass + '">' + iconEmoji + '</div><div><span class="style-code">' + escHtml(code) + '</span><span class="style-name">' + escHtml(name) + '</span></div></div></td>';
+            html += '<td>' + escHtml(month) + '</td>';
+            html += '<td><span class="tag ' + getTagClass(tp) + '">' + escHtml(tp) + '</span></td>';
+            html += '<td><span class="tag ' + getTagClass(sm) + '">' + escHtml(sm) + '</span></td>';
+            html += '<td><span class="tag ' + getTagClass(cs) + '">' + escHtml(cs) + '</span></td>';
+            html += '<td><span class="tag ' + getTagClass(ap) + '">' + escHtml(ap) + '</span></td>';
+            html += '<td><span class="vendor-tag">' + escHtml(vendor) + '</span></td>';
+            html += '<td><div class="lc-bar">';
+            html += '<div class="lc-step ' + getStepClass(1, prog.step, prog.isFail, 1) + '"></div>';
+            html += '<div class="lc-step ' + getStepClass(2, prog.step, prog.isFail, 2) + '"></div>';
+            html += '<div class="lc-step ' + getStepClass(3, prog.step, prog.isFail, 3) + '"></div>';
+            html += '<div class="lc-step ' + getStepClass(4, prog.step, prog.isFail, 4) + '"></div>';
+            html += '</div></td>';
+            html += '</tr>';
+        });
+    }
+    document.getElementById("styleTableBody").innerHTML = html;
+    document.getElementById("recCount").textContent = filteredRecords.length + " styles";
+
+    // Row click → Modal
+    var rows = document.querySelectorAll("#styleTableBody tr[data-idx]");
+    rows.forEach(function(row) {
+        row.addEventListener("click", function() {
+            var idx = parseInt(this.getAttribute("data-idx"));
+            openModal(filteredRecords[idx]);
+        });
+    });
+}
+
+function escHtml(str) {
+    var div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+// ================================================================
+// 검색 & 필터
+// ================================================================
+document.getElementById("searchBox").addEventListener("input", applyFilters);
+document.getElementById("filterStatus").addEventListener("change", applyFilters);
+
+function applyFilters() {
+    var q = document.getElementById("searchBox").value.toLowerCase().trim();
+    var statusFilter = document.getElementById("filterStatus").value.toLowerCase();
+
+    filteredRecords = allRecords.filter(function(rec) {
+        // Text search
+        if (q) {
+            var haystack = (getVal(rec, "styleCode") + " " + getVal(rec, "styleName") + " " + getVal(rec, "vendor")).toLowerCase();
+            if (haystack.indexOf(q) < 0) return false;
+        }
+        // Status filter
+        if (statusFilter) {
+            var allStatuses = (getVal(rec, "techPack") + " " + getVal(rec, "sample") + " " + getVal(rec, "costing") + " " + getVal(rec, "approval")).toLowerCase();
+            if (allStatuses.indexOf(statusFilter) < 0) return false;
+        }
+        return true;
+    });
+
+    if (sortField) doSort(sortField, false);
+    renderTable();
+}
+
+// ================================================================
+// 정렬
+// ================================================================
+document.querySelectorAll(".z-table th[data-sort]").forEach(function(th) {
+    th.addEventListener("click", function() {
+        var field = this.getAttribute("data-sort");
+        doSort(field, true);
+        renderTable();
+        // Update header style
+        document.querySelectorAll(".z-table th").forEach(function(h) { h.classList.remove("sorted"); });
+        this.classList.add("sorted");
+        this.querySelector(".sort-icon").textContent = sortAsc ? "▲" : "▼";
+    });
+});
+
+function doSort(field, toggle) {
+    if (toggle) {
+        if (sortField === field) { sortAsc = !sortAsc; } else { sortField = field; sortAsc = true; }
+    }
+    var keyMap = { code: "styleCode", month: "targetMonth", tp: "techPack", sample: "sample", cost: "costing", appr: "approval", vendor: "vendor" };
+    var key = keyMap[field] || field;
+    filteredRecords.sort(function(a, b) {
+        var va = getVal(a, key).toLowerCase();
+        var vb = getVal(b, key).toLowerCase();
+        if (va < vb) return sortAsc ? -1 : 1;
+        if (va > vb) return sortAsc ? 1 : -1;
+        return 0;
+    });
+}
+
+// ================================================================
+// 모달 (상세 팝업)
+// ================================================================
+function openModal(rec) {
+    var code = getVal(rec, "styleCode");
+    var name = getVal(rec, "styleName");
+    document.getElementById("modalTitle").textContent = code;
+    document.getElementById("modalSubtitle").textContent = name;
+
+    var prog = calcStep(rec);
+    var steps = [
+        { num: 1, label: "Tech Pack", val: getVal(rec, "techPack") },
+        { num: 2, label: "Sample", val: getVal(rec, "sample") },
+        { num: 3, label: "Costing", val: getVal(rec, "costing") },
+        { num: 4, label: "Approval", val: getVal(rec, "approval") }
+    ];
+
+    var html = '';
+
+    // Progress Steps
+    html += '<div class="modal-section">';
+    html += '<div class="modal-section-title">라이프사이클 진행 상태</div>';
+    html += '<div class="progress-steps">';
+    steps.forEach(function(s) {
+        var cls = "";
+        if (prog.step > s.num) cls = "done";
+        else if (prog.step === s.num && prog.isFail) cls = "fail";
+        else if (prog.step === s.num) cls = "curr";
+        html += '<div class="p-step ' + cls + '">';
+        html += '<div class="p-step-line"></div>';
+        html += '<div class="p-step-dot">' + s.num + '</div>';
+        html += '<div class="p-step-label">' + s.label + '</div>';
+        html += '</div>';
+    });
+    html += '</div></div>';
+
+    // Detail Grid
+    html += '<div class="modal-section">';
+    html += '<div class="modal-section-title">기본 정보</div>';
+    html += '<div class="detail-grid">';
+    
+    var details = [
+        ["Style Code", code],
+        ["Style Name", name],
+        ["Target Month", getVal(rec, "targetMonth")],
+        ["Season", getVal(rec, "season")],
+        ["Category", getVal(rec, "category")],
+        ["Vendor", getVal(rec, "vendor")],
+        ["Designer", getVal(rec, "designer")],
+        ["Fabric", getVal(rec, "fabric")],
+        ["Color", getVal(rec, "color")],
+        ["Cost", getVal(rec, "costValue")]
+    ];
+
+    details.forEach(function(d) {
+        html += '<div class="detail-item"><span class="detail-label">' + d[0] + '</span><span class="detail-value">' + escHtml(d[1]) + '</span></div>';
+    });
+    html += '</div></div>';
+
+    // Status Tags
+    html += '<div class="modal-section">';
+    html += '<div class="modal-section-title">상태 상세</div>';
+    html += '<div class="detail-grid">';
+    steps.forEach(function(s) {
+        html += '<div class="detail-item"><span class="detail-label">' + s.label + '</span><span class="tag ' + getTagClass(s.val) + '" style="align-self:flex-start;">' + escHtml(s.val) + '</span></div>';
+    });
+    html += '</div></div>';
+
+    document.getElementById("modalBody").innerHTML = html;
+    document.getElementById("modalOverlay").classList.add("active");
+}
+
+function closeModal() {
+    document.getElementById("modalOverlay").classList.remove("active");
+}
+
+document.getElementById("modalClose").addEventListener("click", closeModal);
+document.getElementById("modalOverlay").addEventListener("click", function(e) {
+    if (e.target === this) closeModal();
+});
+document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") closeModal();
+});
+</script>
+</body>
+</html>
