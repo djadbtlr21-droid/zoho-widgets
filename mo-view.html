@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MO Detail Widget</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
+<style>
+/* ============================================================
+   MO DETAIL VIEW v1 — Widget
+   ============================================================ */
+:root {
+    --z-primary: #1E3A8A;
+    --z-accent: #3B82F6;
+    --z-bg: #F1F5F9;
+    --z-border: #E2E8F0;
+    --z-text-main: #0F172A;
+    --z-text-muted: #64748B;
+    --z-card-bg: #FFFFFF;
+    --st-draft: #94A3B8;
+    --st-prog: #F59E0B;
+    --st-appr: #10B981;
+    --st-danger: #EF4444;
+    --st-delay: #EF4444;
+    --st-complete: #10B981;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', -apple-system, sans-serif; }
+body { background: var(--z-bg); padding: 16px; min-height: 100vh; }
+
+.loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px; gap: 16px; }
+.spinner { width: 40px; height: 40px; border: 4px solid var(--z-border); border-top-color: var(--z-accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 13px; color: var(--z-text-muted); font-weight: 600; }
+
+/* Page Header */
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+.page-header h1 { font-size: 17px; font-weight: 900; color: var(--z-text-main); display: flex; align-items: center; gap: 8px; }
+.page-header h1 .icon-m { width: 26px; height: 26px; background: var(--z-primary); border-radius: 5px; display: inline-flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 900; }
+
+/* KPI Cards */
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+.kpi-mini { background: var(--z-card-bg); border: 1px solid var(--z-border); border-radius: 8px; padding: 12px 14px; text-align: center; position: relative; overflow: hidden; }
+.kpi-mini::before { content:''; position:absolute; left:0; top:0; width:100%; height:3px; }
+.kpi-total::before { background: var(--z-primary); }
+.kpi-progress::before { background: var(--st-prog); }
+.kpi-delay::before { background: var(--st-danger); }
+.kpi-done::before { background: var(--st-appr); }
+.kpi-mini-val { font-size: 24px; font-weight: 900; color: var(--z-text-main); }
+.kpi-mini-label { font-size: 10px; font-weight: 700; color: var(--z-text-muted); margin-top: 2px; }
+.kpi-total .kpi-mini-val { color: var(--z-primary); }
+.kpi-progress .kpi-mini-val { color: var(--st-prog); }
+.kpi-delay .kpi-mini-val { color: var(--st-danger); }
+.kpi-done .kpi-mini-val { color: var(--st-appr); }
+
+/* Table Card */
+.table-card { background: var(--z-card-bg); border: 1px solid var(--z-border); border-radius: 8px; overflow: hidden; }
+.table-toolbar { padding: 10px 16px; background: #F8FAFC; border-bottom: 1px solid var(--z-border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.toolbar-left { display: flex; align-items: center; gap: 8px; }
+.toolbar-title { font-size: 13px; font-weight: 800; color: var(--z-text-main); }
+.rec-count { font-size: 11px; color: var(--z-text-muted); font-weight: 600; background: #F1F5F9; padding: 2px 8px; border-radius: 10px; border: 1px solid #CBD5E1; }
+.toolbar-right { display: flex; align-items: center; gap: 8px; }
+.search-box { background: white; border: 1px solid var(--z-border); border-radius: 6px; padding: 5px 10px; font-size: 11px; width: 200px; outline: none; font-family: inherit; }
+.search-box:focus { border-color: var(--z-accent); box-shadow: 0 0 0 2px rgba(59,130,246,0.1); }
+.filter-select { background: white; border: 1px solid var(--z-border); border-radius: 6px; padding: 5px 8px; font-size: 11px; outline: none; font-family: inherit; cursor: pointer; }
+
+.table-scroll { max-height: 500px; overflow-y: auto; }
+.z-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+.z-table th { background: #F1F5F9; padding: 10px 12px; color: var(--z-text-muted); font-weight: 800; font-size: 11px; border-bottom: 1px solid var(--z-border); white-space: nowrap; position: sticky; top: 0; z-index: 5; cursor: pointer; }
+.z-table th:hover { background: #E8EEF4; }
+.z-table th .sort-icon { font-size: 9px; margin-left: 3px; opacity: 0.4; }
+.z-table th.sorted .sort-icon { opacity: 1; color: var(--z-accent); }
+.z-table td { padding: 10px 12px; border-bottom: 1px solid #F1F5F9; color: var(--z-text-main); vertical-align: middle; }
+.z-table tbody tr { cursor: pointer; transition: background 0.1s; }
+.z-table tbody tr:hover td { background: #EFF6FF; }
+
+.tag { padding: 3px 10px; border-radius: 4px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; min-width: 60px; white-space: nowrap; }
+.tag-draft { background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1; }
+.tag-prog { background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A; }
+.tag-appr { background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0; }
+.tag-fail { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
+.tag-delay { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
+
+.mo-number { font-weight: 800; color: var(--z-primary); }
+.no-data { text-align: center; padding: 40px; color: var(--z-text-muted); font-size: 13px; }
+
+/* ===================== Modal ===================== */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
+.modal-overlay.active { display: flex; }
+.modal-box { background: white; border-radius: 12px; width: 92%; max-width: 750px; max-height: 88vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); animation: modalIn 0.25s ease-out; position: relative; }
+@keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.modal-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--z-border); display: flex; justify-content: space-between; align-items: flex-start; position: sticky; top: 0; background: white; z-index: 10; border-radius: 12px 12px 0 0; }
+.modal-title { font-size: 18px; font-weight: 900; color: var(--z-primary); }
+.modal-subtitle { font-size: 12px; color: var(--z-text-muted); margin-top: 2px; }
+.modal-close { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--z-border); background: #F8FAFC; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--z-text-muted); transition: all 0.15s; }
+.modal-close:hover { background: #FEF2F2; color: var(--st-danger); border-color: #FECACA; }
+.modal-body { padding: 20px 24px; }
+.modal-section { margin-bottom: 20px; }
+.modal-section-title { font-size: 11px; font-weight: 800; color: var(--z-text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px dashed var(--z-border); }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.detail-item { display: flex; flex-direction: column; gap: 2px; }
+.detail-label { font-size: 10px; font-weight: 700; color: var(--z-text-muted); }
+.detail-value { font-size: 13px; font-weight: 600; color: var(--z-text-main); }
+
+/* Timeline in Modal */
+.timeline { margin-top: 8px; }
+.tl-item { display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; position: relative; }
+.tl-item:not(:last-child)::before { content:''; position: absolute; left: 11px; top: 30px; width: 2px; height: calc(100% - 18px); background: #E2E8F0; }
+.tl-dot { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: white; position: relative; z-index: 2; }
+.tl-dot.done { background: var(--st-appr); }
+.tl-dot.curr { background: var(--z-accent); }
+.tl-dot.wait { background: #CBD5E1; }
+.tl-dot.delay { background: var(--st-danger); }
+.tl-info { flex: 1; }
+.tl-label { font-size: 12px; font-weight: 700; color: var(--z-text-main); }
+.tl-date { font-size: 10px; color: var(--z-text-muted); margin-top: 2px; }
+
+.error-box { background: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px; padding: 20px; text-align: center; color: #B91C1C; margin: 20px 0; }
+.error-box .error-title { font-weight: 800; font-size: 14px; margin-bottom: 8px; }
+.error-box .error-msg { font-size: 12px; color: #DC2626; }
+
+@media (max-width: 768px) {
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .detail-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="loadingScreen" class="loading-screen">
+    <div class="spinner"></div>
+    <div class="loading-text">MO 데이터를 불러오는 중...</div>
+</div>
+
+<div id="mainContent" style="display:none;">
+    <div class="page-header">
+        <h1><span class="icon-m">MO</span> 생산발주 (Manufacturing Order)</h1>
+    </div>
+
+    <div class="kpi-row" id="kpiRow"></div>
+
+    <div class="table-card">
+        <div class="table-toolbar">
+            <div class="toolbar-left">
+                <span class="toolbar-title">📦 MO List</span>
+                <span class="rec-count" id="recCount">0 MOs</span>
+            </div>
+            <div class="toolbar-right">
+                <input type="text" class="search-box" id="searchBox" placeholder="🔍 MO번호, SKU, 공장 검색...">
+                <select class="filter-select" id="filterStatus">
+                    <option value="">All Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Delayed">Delayed</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+            </div>
+        </div>
+        <div class="table-scroll">
+            <table class="z-table">
+                <thead>
+                    <tr>
+                        <th data-sort="moNum">MO # <span class="sort-icon">▼</span></th>
+                        <th data-sort="sku">SKU <span class="sort-icon">▼</span></th>
+                        <th data-sort="styleName">Style <span class="sort-icon">▼</span></th>
+                        <th data-sort="factory">Factory <span class="sort-icon">▼</span></th>
+                        <th data-sort="qty">Qty <span class="sort-icon">▼</span></th>
+                        <th data-sort="orderStatus">Order Status <span class="sort-icon">▼</span></th>
+                        <th data-sort="prodStatus">Prod Status <span class="sort-icon">▼</span></th>
+                        <th data-sort="exFactory">Ex-Factory <span class="sort-icon">▼</span></th>
+                    </tr>
+                </thead>
+                <tbody id="moTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="errorScreen" style="display:none;">
+    <div class="error-box">
+        <div class="error-title">데이터를 불러올 수 없습니다</div>
+        <div class="error-msg" id="errorMsg"></div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <div>
+                <div class="modal-title" id="modalTitle">-</div>
+                <div class="modal-subtitle" id="modalSubtitle">-</div>
+            </div>
+            <div class="modal-close" id="modalClose">✕</div>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+// ================================================================
+// ★★★ 필드 매핑 — 실제 Add_MO 폼 필드명에 맞게 수정 ★★★
+// ================================================================
+var FIELD_MAP = {
+    moNumber:       "MO_Number",
+    sku:            "SKU",
+    styleName:      "Style_Name",
+    factory:        "Factory",
+    quantity:        "Quantity",
+    orderStatus:    "Order_Status",
+    prodStatus:     "Production_Status",
+    season:         "Season",
+    exFactory:      "Ex_Factory_Date",
+    fabricIn:       "Fabric_In_Date",
+    cutDate:        "Cut_Date",
+    sewStart:       "Sew_Start_Date",
+    sewEnd:         "Sew_End_Date",
+    packDate:       "Pack_Date",
+    shipDate:       "Ship_Date",
+    unitPrice:      "Unit_Price",
+    totalPrice:     "Total_Price",
+    remarks:        "Remarks",
+    image:          "Image"
+};
+
+var APP_NAME = "eom";
+var REPORT_NAME = "All_MO";
+
+var allRecords = [];
+var filteredRecords = [];
+var sortField = "";
+var sortAsc = true;
+var autoOpenMoId = null;
+
+// ================================================================
+// 초기화
+// ================================================================
+ZOHO.CREATOR.init().then(function() {
+    try {
+        var params = ZOHO.CREATOR.UTIL.getQueryParams();
+        if (params && params.App) APP_NAME = params.App;
+        if (params && params.MOReport) REPORT_NAME = params.MOReport;
+        if (params && params.moId) autoOpenMoId = params.moId;
+    } catch(e) {}
+    loadData();
+});
+
+function loadData() {
+    var config = { appName: APP_NAME, reportName: REPORT_NAME, page: 1, pageSize: 200 };
+    ZOHO.CREATOR.API.getAllRecords(config).then(function(response) {
+        if (response && response.code === 3000 && response.data) {
+            allRecords = response.data;
+            filteredRecords = allRecords.slice();
+            renderKPI();
+            renderTable();
+            document.getElementById("loadingScreen").style.display = "none";
+            document.getElementById("mainContent").style.display = "block";
+            // Auto-open if moId provided
+            if (autoOpenMoId) {
+                var found = allRecords.find(function(r) { return r.ID === autoOpenMoId; });
+                if (found) openModal(found);
+            }
+        } else {
+            showError("리포트 데이터를 가져올 수 없습니다: " + REPORT_NAME);
+        }
+    }).catch(function(err) {
+        showError("API 호출 실패: " + JSON.stringify(err));
+    });
+}
+
+function showError(msg) {
+    document.getElementById("loadingScreen").style.display = "none";
+    document.getElementById("errorScreen").style.display = "block";
+    document.getElementById("errorMsg").textContent = msg;
+}
+
+// ================================================================
+// 유틸리티
+// ================================================================
+function getVal(rec, key) {
+    var fn = FIELD_MAP[key];
+    if (!fn) return "-";
+    var v = rec[fn];
+    if (v === undefined || v === null || v === "") return "-";
+    if (typeof v === "object" && v.display_value) return v.display_value;
+    return String(v);
+}
+
+function getStatusClass(status) {
+    var s = (status || "").toLowerCase();
+    if (s.indexOf("confirmed") >= 0 || s.indexOf("delivered") >= 0 || s.indexOf("complete") >= 0) return "tag-appr";
+    if (s.indexOf("progress") >= 0) return "tag-prog";
+    if (s.indexOf("delay") >= 0 || s.indexOf("cancel") >= 0) return "tag-fail";
+    return "tag-draft";
+}
+
+function escHtml(str) {
+    var d = document.createElement("div"); d.textContent = str; return d.innerHTML;
+}
+
+// ================================================================
+// KPI
+// ================================================================
+function renderKPI() {
+    var total = allRecords.length;
+    var inProg = allRecords.filter(function(r) { return getVal(r,"prodStatus").toLowerCase().indexOf("progress") >= 0; }).length;
+    var delayed = allRecords.filter(function(r) { var s = getVal(r,"orderStatus").toLowerCase(); return s.indexOf("delay") >= 0; }).length;
+    var done = allRecords.filter(function(r) { var s = getVal(r,"prodStatus").toLowerCase(); return s.indexOf("delivered") >= 0 || s.indexOf("complete") >= 0; }).length;
+
+    document.getElementById("kpiRow").innerHTML =
+        '<div class="kpi-mini kpi-total"><div class="kpi-mini-val">' + total + '</div><div class="kpi-mini-label">Total MO</div></div>' +
+        '<div class="kpi-mini kpi-progress"><div class="kpi-mini-val">' + inProg + '</div><div class="kpi-mini-label">In Progress</div></div>' +
+        '<div class="kpi-mini kpi-delay"><div class="kpi-mini-val">' + delayed + '</div><div class="kpi-mini-label">Delayed</div></div>' +
+        '<div class="kpi-mini kpi-done"><div class="kpi-mini-val">' + done + '</div><div class="kpi-mini-label">Delivered</div></div>';
+}
+
+// ================================================================
+// 테이블
+// ================================================================
+function renderTable() {
+    var html = "";
+    if (filteredRecords.length === 0) {
+        html = '<tr><td colspan="8" class="no-data">조건에 맞는 MO가 없습니다.</td></tr>';
+    } else {
+        filteredRecords.forEach(function(rec, idx) {
+            html += '<tr data-idx="' + idx + '">';
+            html += '<td class="mo-number">' + escHtml(getVal(rec,"moNumber")) + '</td>';
+            html += '<td>' + escHtml(getVal(rec,"sku")) + '</td>';
+            html += '<td>' + escHtml(getVal(rec,"styleName")) + '</td>';
+            html += '<td>' + escHtml(getVal(rec,"factory")) + '</td>';
+            html += '<td style="text-align:right;font-weight:700;">' + escHtml(getVal(rec,"quantity")) + '</td>';
+            html += '<td><span class="tag ' + getStatusClass(getVal(rec,"orderStatus")) + '">' + escHtml(getVal(rec,"orderStatus")) + '</span></td>';
+            html += '<td><span class="tag ' + getStatusClass(getVal(rec,"prodStatus")) + '">' + escHtml(getVal(rec,"prodStatus")) + '</span></td>';
+            html += '<td>' + escHtml(getVal(rec,"exFactory")) + '</td>';
+            html += '</tr>';
+        });
+    }
+    document.getElementById("moTableBody").innerHTML = html;
+    document.getElementById("recCount").textContent = filteredRecords.length + " MOs";
+
+    document.querySelectorAll("#moTableBody tr[data-idx]").forEach(function(row) {
+        row.addEventListener("click", function() {
+            openModal(filteredRecords[parseInt(this.getAttribute("data-idx"))]);
+        });
+    });
+}
+
+// ================================================================
+// 검색 & 필터
+// ================================================================
+document.getElementById("searchBox").addEventListener("input", applyFilters);
+document.getElementById("filterStatus").addEventListener("change", applyFilters);
+
+function applyFilters() {
+    var q = document.getElementById("searchBox").value.toLowerCase().trim();
+    var sf = document.getElementById("filterStatus").value.toLowerCase();
+    filteredRecords = allRecords.filter(function(rec) {
+        if (q) {
+            var h = (getVal(rec,"moNumber")+" "+getVal(rec,"sku")+" "+getVal(rec,"styleName")+" "+getVal(rec,"factory")).toLowerCase();
+            if (h.indexOf(q) < 0) return false;
+        }
+        if (sf) {
+            var st = (getVal(rec,"orderStatus")+" "+getVal(rec,"prodStatus")).toLowerCase();
+            if (st.indexOf(sf) < 0) return false;
+        }
+        return true;
+    });
+    if (sortField) doSort(sortField, false);
+    renderTable();
+}
+
+// ================================================================
+// 정렬
+// ================================================================
+document.querySelectorAll(".z-table th[data-sort]").forEach(function(th) {
+    th.addEventListener("click", function() {
+        doSort(this.getAttribute("data-sort"), true);
+        renderTable();
+        document.querySelectorAll(".z-table th").forEach(function(h){h.classList.remove("sorted");});
+        this.classList.add("sorted");
+        this.querySelector(".sort-icon").textContent = sortAsc ? "▲" : "▼";
+    });
+});
+
+function doSort(field, toggle) {
+    if (toggle) { if (sortField === field) sortAsc = !sortAsc; else { sortField = field; sortAsc = true; } }
+    filteredRecords.sort(function(a,b) {
+        var va = getVal(a, field).toLowerCase(), vb = getVal(b, field).toLowerCase();
+        if (va < vb) return sortAsc ? -1 : 1;
+        if (va > vb) return sortAsc ? 1 : -1;
+        return 0;
+    });
+}
+
+// ================================================================
+// 모달
+// ================================================================
+function openModal(rec) {
+    document.getElementById("modalTitle").textContent = getVal(rec,"moNumber");
+    document.getElementById("modalSubtitle").textContent = getVal(rec,"styleName") + " — " + getVal(rec,"sku");
+
+    var html = '';
+
+    // Basic Info
+    html += '<div class="modal-section"><div class="modal-section-title">기본 정보</div><div class="detail-grid">';
+    var info = [
+        ["MO Number", getVal(rec,"moNumber")], ["SKU", getVal(rec,"sku")],
+        ["Style Name", getVal(rec,"styleName")], ["Season", getVal(rec,"season")],
+        ["Factory", getVal(rec,"factory")], ["Quantity", getVal(rec,"quantity")],
+        ["Unit Price", getVal(rec,"unitPrice")], ["Total Price", getVal(rec,"totalPrice")],
+        ["Order Status", getVal(rec,"orderStatus")], ["Production Status", getVal(rec,"prodStatus")]
+    ];
+    info.forEach(function(d) {
+        var isStatus = d[0].indexOf("Status") >= 0;
+        var val = isStatus ? '<span class="tag ' + getStatusClass(d[1]) + '">' + escHtml(d[1]) + '</span>' : escHtml(d[1]);
+        html += '<div class="detail-item"><span class="detail-label">' + d[0] + '</span><span class="detail-value">' + val + '</span></div>';
+    });
+    html += '</div></div>';
+
+    // Production Timeline
+    html += '<div class="modal-section"><div class="modal-section-title">생산 타임라인</div><div class="timeline">';
+    var timeline = [
+        { label: "Fabric In", key: "fabricIn" },
+        { label: "Cut Date", key: "cutDate" },
+        { label: "Sew Start", key: "sewStart" },
+        { label: "Sew End", key: "sewEnd" },
+        { label: "Pack Date", key: "packDate" },
+        { label: "Ex-Factory", key: "exFactory" },
+        { label: "Ship Date", key: "shipDate" }
+    ];
+    var today = new Date().toISOString().split("T")[0];
+    timeline.forEach(function(t, i) {
+        var dateVal = getVal(rec, t.key);
+        var dotClass = "wait";
+        if (dateVal !== "-") {
+            if (dateVal <= today) dotClass = "done";
+            else dotClass = "curr";
+        }
+        html += '<div class="tl-item">';
+        html += '<div class="tl-dot ' + dotClass + '">' + (i+1) + '</div>';
+        html += '<div class="tl-info"><div class="tl-label">' + t.label + '</div><div class="tl-date">' + escHtml(dateVal) + '</div></div>';
+        html += '</div>';
+    });
+    html += '</div></div>';
+
+    // Remarks
+    var rem = getVal(rec, "remarks");
+    if (rem !== "-") {
+        html += '<div class="modal-section"><div class="modal-section-title">비고</div><div style="font-size:12px;color:var(--z-text-main);line-height:1.6;">' + escHtml(rem) + '</div></div>';
+    }
+
+    document.getElementById("modalBody").innerHTML = html;
+    document.getElementById("modalOverlay").classList.add("active");
+}
+
+function closeModal() { document.getElementById("modalOverlay").classList.remove("active"); }
+document.getElementById("modalClose").addEventListener("click", closeModal);
+document.getElementById("modalOverlay").addEventListener("click", function(e) { if (e.target === this) closeModal(); });
+document.addEventListener("keydown", function(e) { if (e.key === "Escape") closeModal(); });
+</script>
+</body>
+</html>
