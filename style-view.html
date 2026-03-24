@@ -252,7 +252,7 @@ html+='<td>'+escH(mv("Material_Type",g(r,"Material_Type")))+'</td>';
 html+='<td style="text-align:right;font-weight:700">'+escH(g(r,"Target_Cost"))+'</td>';
 html+='<td><span class="tag '+tc(g(r,"Style_Status"))+'">'+escH(g(r,"Style_Status"))+'</span></td>';
 html+='<td><span class="tag '+tc(g(r,"Sample_Status"))+'">'+escH(g(r,"Sample_Status"))+'</span></td>';
-html+='<td>'+(ordered?'<span class="tag tag-appr">Ordered</span>':'<span class="tag tag-fail">Not Order</span>')+'</td>';
+html+='<td>'+(ordered?'<span class="tag tag-appr">Ordered</span>':'<span class="tag tag-fail">Not Ordered</span>')+'</td>';
 html+='</tr>'});
 html+='</tbody></table></div></div></div>'});
 document.getElementById("monthlyTables").innerHTML=html;
@@ -307,7 +307,7 @@ h+='<div class="modal-section"><div class="modal-section-title">📌 기본 정�
 h+=it("Style SKU",dv(g(d,"Style_SKU")));h+=it("Style Name / 스타일명",dv(g(d,"Style_Name")));h+=it("Style Number / 번호",dv(g(d,"Style_Number")));
 h+=it("Season / 시즌",dv(g(d,"Season")));h+=it("Plan Year / 년도",dv(g(d,"Plan_Year")));h+=it("Plan Month / 월",dv(g(d,"Plan_Month")));
 h+=it("Brand / 사업주체",dv(g(d,"Business_Entity")));h+=it("Style Status / 상태",dt(g(d,"Style_Status")));
-h+=it("Order Status",ordered?'<span class="tag tag-appr">Ordered</span>':'<span class="tag tag-fail">Not Order</span>');
+h+=it("Order Status",ordered?'<span class="tag tag-appr">Ordered</span>':'<span class="tag tag-fail">Not Ordered</span>');
 h+='</div></div>';
 
 h+='<div class="modal-section"><div class="modal-section-title">👗 제품 정의 / Product Definition / 产品定义</div><div class="detail-grid">';
