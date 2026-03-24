@@ -161,8 +161,9 @@ function getImgUrl(r){
 var i=r["Style_Image"];
 if(!i)return null;
 if(typeof i==="string"&&i.length>5)return i;
+if(Array.isArray(i)&&i.length>0)return i[0];
 if(typeof i==="object"){
-    if(i.display_value&&typeof i.display_value==="string")return i.display_value;
+    if(i.display_value)return i.display_value;
     if(i.url)return i.url;
 }
 return null;
