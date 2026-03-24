@@ -88,7 +88,9 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .modal-images{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
 .modal-img-wrap{text-align:center}
 .modal-img-box{width:120px;height:120px;background:#F8FAFC;border:1px solid var(--z-border);border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;color:#CBD5E1}
-.modal-img-box img{width:100%;height:100%;object-fit:contain}
+.modal-img-box img{width:100%;height:100%;object-fit:contain;cursor:pointer;transition:transform 0.2s}
+.modal-img-box:hover{border-color:var(--z-accent);box-shadow:0 2px 8px rgba(59,130,246,0.15)}
+.modal-img-box:hover img{transform:scale(1.03)}
 .modal-img-label{font-size:8px;color:var(--z-text-muted);margin-top:3px;font-weight:600}
 .error-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C;margin:20px 0}
 @media(max-width:768px){.kpi-row{grid-template-columns:repeat(2,1fr)}.detail-grid{grid-template-columns:1fr 1fr}}
@@ -117,6 +119,12 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 </div>
 
 <div id="errorScreen" style="display:none"><div class="error-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다</div><div id="errorMsg" style="font-size:12px"></div></div></div>
+
+<!-- Lightbox (이미지 확대) -->
+<div id="lightboxOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:2000;justify-content:center;align-items:center;cursor:pointer;backdrop-filter:blur(4px)" onclick="closeLightbox()">
+<img id="lightboxImg" style="max-width:90%;max-height:90%;object-fit:contain;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,0.5)" onclick="event.stopPropagation()">
+<div style="position:absolute;top:20px;right:24px;color:white;font-size:28px;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.15);border-radius:50%" onclick="closeLightbox()">✕</div>
+</div>
 
 <!-- Modal -->
 <div class="modal-overlay" id="modalOverlay"><div class="modal-box">
@@ -195,32 +203,75 @@ if(typeof i==="string"&&i.length>5)return[i];
 return[]}
 
 function loadImages(){document.querySelectorAll("[data-img]").forEach(function(el){loadSI(el,el.getAttribute("data-img"))})}
-function loadSI(el,url){if(!url||url==="-")return;var img=document.createElement("img");img.style.cssText="width:100%;height:100%;object-fit:cover";
-// Method 1: Zoho SDK
-var loaded=false;
+
+// ★ Sequential image loading queue (Zoho SDK can't handle parallel calls)
+var imgQueue=[];
+var imgQueueRunning=false;
+
+function queueImageLoad(el,url){
+imgQueue.push({el:el,url:url});
+if(!imgQueueRunning)processImgQueue()}
+
+function processImgQueue(){
+if(imgQueue.length===0){imgQueueRunning=false;return}
+imgQueueRunning=true;
+var task=imgQueue.shift();
+loadSI_internal(task.el,task.url,function(){
+    setTimeout(processImgQueue,200);
+})}
+
+function loadSI(el,url){
+if(!url||url==="-")return;
+loadSI_internal(el,url,function(){})}
+
+function loadSI_internal(el,url,callback){
+if(!url||url==="-"){callback();return}
+var img=document.createElement("img");
+img.style.cssText="width:100%;height:100%;object-fit:cover;cursor:pointer";
+img.setAttribute("data-zoom-url",url);
+img.onclick=function(){openLightbox(this.src)};
+var done=false;
+function finish(){if(!done){done=true;callback()}}
 try{
 ZOHO.CREATOR.UTIL.setImageData(img,url,function(){
-    loaded=true;
-    if(img.src&&img.src.length>10&&img.src!=="about:blank"){el.innerHTML="";el.appendChild(img)}
-    else{tryDirect(el,url)}
+    if(img.src&&img.src.length>10&&img.src!=="about:blank"){
+        el.innerHTML="";el.appendChild(img);finish()}
+    else{tryDirectLoad(el,url,finish)}
 });
-}catch(e){tryDirect(el,url);return}
-// Fallback after 5 seconds if SDK didn't work
-setTimeout(function(){if(!loaded&&!el.querySelector("img")){tryDirect(el,url)}},5000)}
-function tryDirect(el,url){var img=document.createElement("img");img.style.cssText="width:100%;height:100%;object-fit:cover";
-var fu=url;
-if(url.indexOf("/api/")===0)fu="https://creatorapp.zoho.com"+url;
-img.src=fu;img.onload=function(){el.innerHTML="";el.appendChild(img)};
+}catch(e){tryDirectLoad(el,url,finish)}
+setTimeout(function(){if(!done){tryDirectLoad(el,url,finish)}},4000)}
+
+function tryDirectLoad(el,url,callback){
+var img=document.createElement("img");
+img.style.cssText="width:100%;height:100%;object-fit:cover;cursor:pointer";
+img.onclick=function(){openLightbox(this.src)};
+var fu=(url.indexOf("/api/")===0)?"https://creatorapp.zoho.com"+url:url;
+img.src=fu;
+img.onload=function(){el.innerHTML="";el.appendChild(img);if(callback)callback()};
 img.onerror=function(){
-    // Try alternate domain
     if(url.indexOf("/api/")===0){
-        var img2=document.createElement("img");img2.style.cssText="width:100%;height:100%;object-fit:cover";
+        var img2=document.createElement("img");
+        img2.style.cssText="width:100%;height:100%;object-fit:cover;cursor:pointer";
+        img2.onclick=function(){openLightbox(this.src)};
         img2.src="https://creator.zoho.com"+url;
-        img2.onload=function(){el.innerHTML="";el.appendChild(img2)};
-        img2.onerror=function(){el.innerHTML="📷"}
-    } else {el.innerHTML="📷"}
+        img2.onload=function(){el.innerHTML="";el.appendChild(img2);if(callback)callback()};
+        img2.onerror=function(){el.innerHTML="📷";if(callback)callback()}
+    }else{el.innerHTML="📷";if(callback)callback()}
 }}
-function loadImg(id,url){var el=document.getElementById(id);if(el)loadSI(el,url)}
+
+function loadImg(id,url){var el=document.getElementById(id);if(el)queueImageLoad(el,url)}
+
+// ★★★ Lightbox (이미지 확대 보기) ★★★
+function openLightbox(src){
+if(!src||src==="about:blank")return;
+var overlay=document.getElementById("lightboxOverlay");
+var img=document.getElementById("lightboxImg");
+img.src=src;
+overlay.style.display="flex"}
+
+function closeLightbox(){
+document.getElementById("lightboxOverlay").style.display="none";
+document.getElementById("lightboxImg").src=""}
 
 function isOrdered(sku){return moSkuSet.has(sku)}
 
@@ -331,16 +382,16 @@ if(allStyleImgs.length>0){
 document.getElementById("modalBody").innerHTML=buildDetailHtml(rec);
 document.getElementById("modalOverlay").classList.add("active");
 
-// Load all modal images with staggered timing to avoid overload
+// Load all modal images via queue (sequential)
 setTimeout(function(){
     var styleImgs=getAllImgUrls(rec,"Style_Image");
     var flatImgs=getAllImgUrls(rec,"Flat_Sketch");
     var sampleImgs=getAllImgUrls(rec,"Sample_Images");
-    var delay=0;
-    styleImgs.forEach(function(u,i){setTimeout(function(){loadImg("sImg"+i,u)},delay);delay+=300});
-    flatImgs.forEach(function(u,i){setTimeout(function(){loadImg("fImg"+i,u)},delay);delay+=300});
-    sampleImgs.forEach(function(u,i){setTimeout(function(){loadImg("smImg"+i,u)},delay);delay+=300});
-},200);
+    imgQueue=[];imgQueueRunning=false; // reset queue
+    styleImgs.forEach(function(u,i){loadImg("sImg"+i,u)});
+    flatImgs.forEach(function(u,i){loadImg("fImg"+i,u)});
+    sampleImgs.forEach(function(u,i){loadImg("smImg"+i,u)});
+},300);
 }
 
 function buildDetailHtml(d){
@@ -418,15 +469,19 @@ h+='</div>'}
 return h}
 
 function loadModalImages(d){
-var delay=0;
-getAllImgUrls(d,"Style_Image").forEach(function(u,i){setTimeout(function(){loadImg("sImg"+i,u)},delay);delay+=300});
-getAllImgUrls(d,"Flat_Sketch").forEach(function(u,i){setTimeout(function(){loadImg("fImg"+i,u)},delay);delay+=300});
-getAllImgUrls(d,"Sample_Images").forEach(function(u,i){setTimeout(function(){loadImg("smImg"+i,u)},delay);delay+=300})}
+imgQueue=[];imgQueueRunning=false;
+getAllImgUrls(d,"Style_Image").forEach(function(u,i){loadImg("sImg"+i,u)});
+getAllImgUrls(d,"Flat_Sketch").forEach(function(u,i){loadImg("fImg"+i,u)});
+getAllImgUrls(d,"Sample_Images").forEach(function(u,i){loadImg("smImg"+i,u)})}
 
 function closeModal(){document.getElementById("modalOverlay").classList.remove("active")}
 document.getElementById("modalClose").addEventListener("click",closeModal);
 document.getElementById("modalOverlay").addEventListener("click",function(e){if(e.target===this)closeModal()});
-document.addEventListener("keydown",function(e){if(e.key==="Escape")closeModal()});
+document.addEventListener("keydown",function(e){
+if(e.key==="Escape"){
+    if(document.getElementById("lightboxOverlay").style.display==="flex"){closeLightbox()}
+    else{closeModal()}
+}});
 </script>
 </body>
 </html>
