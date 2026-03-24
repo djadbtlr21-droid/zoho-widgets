@@ -281,50 +281,24 @@ var sku=g(rec,"Style_SKU"),name=g(rec,"Style_Name");
 document.getElementById("modalTitle").textContent=sku;
 document.getElementById("modalSubtitle").textContent=name;
 
-// ★ FIX: Clear thumb completely, then load fresh image for THIS record
+// ★ Reset & load header image fresh for THIS record
 var te=document.getElementById("modalThumb");
-te.innerHTML="👕"; // Reset first
+te.innerHTML="👕";
 var iu=getImgUrl(rec);
 if(iu){
-    var freshImg=document.createElement("img");
-    freshImg.style.cssText="width:100%;height:100%;object-fit:cover";
-    try{
-        ZOHO.CREATOR.UTIL.setImageData(freshImg,iu,function(){
-            te.innerHTML="";te.appendChild(freshImg)});
-    }catch(e){
-        freshImg.src=(iu.indexOf("/api/")===0?"https://creatorapp.zoho.com":"")+iu;
-        freshImg.onload=function(){te.innerHTML="";te.appendChild(freshImg)};
-        freshImg.onerror=function(){te.innerHTML="👕"};
-    }
+    var fi=document.createElement("img");
+    fi.style.cssText="width:100%;height:100%;object-fit:cover";
+    try{ZOHO.CREATOR.UTIL.setImageData(fi,iu,function(){te.innerHTML="";te.appendChild(fi)})}
+    catch(e){fi.src=(iu.indexOf("/api/")===0?"https://creatorapp.zoho.com":"")+iu;fi.onload=function(){te.innerHTML="";te.appendChild(fi)}}
 }
 
-// ★ FIX: Show minimal info + loading spinner (don't show empty detail fields)
-var quickHtml='<div style="text-align:center;padding:30px"><div class="spinner-sm"></div><div style="margin-top:8px;color:var(--z-text-muted);font-size:12px">상세 정보를 불러오는 중...</div></div>';
-document.getElementById("modalBody").innerHTML=quickHtml;
+// ★ NO getRecordById! All data from getAllRecords (Quick View has all fields now)
+document.getElementById("modalBody").innerHTML=buildDetailHtml(rec);
 document.getElementById("modalOverlay").classList.add("active");
 
-// ★ FIX: Load full detail from API, then show everything
-ZOHO.CREATOR.API.getRecordById({appName:APP_NAME,reportName:REPORT_NAME,id:rec["ID"]}).then(function(r){
-if(r&&r.code===3000&&r.data){
-    document.getElementById("modalBody").innerHTML=buildDetailHtml(r.data);
-    // Also refresh header image from full record data
-    var detailImg=getImgUrl(r.data);
-    if(detailImg){
-        var te2=document.getElementById("modalThumb");
-        var dImg=document.createElement("img");
-        dImg.style.cssText="width:100%;height:100%;object-fit:cover";
-        try{ZOHO.CREATOR.UTIL.setImageData(dImg,detailImg,function(){te2.innerHTML="";te2.appendChild(dImg)})}
-        catch(e2){dImg.src=(detailImg.indexOf("/api/")===0?"https://creatorapp.zoho.com":"")+detailImg;dImg.onload=function(){te2.innerHTML="";te2.appendChild(dImg)}}
-    }
-    setTimeout(function(){loadModalImages(r.data)},300);
-} else {
-    // Fallback: show Quick View data if getRecordById fails
-    document.getElementById("modalBody").innerHTML=buildDetailHtml(rec);
+// Load modal images
+setTimeout(function(){loadModalImages(rec)},200);
 }
-}).catch(function(e){
-    // Fallback
-    document.getElementById("modalBody").innerHTML=buildDetailHtml(rec)+'<div class="error-box" style="font-size:11px">상세 정보 로드 실패. Quick View 데이터만 표시됩니다.</div>';
-})}
 
 function buildDetailHtml(d){
 var h='';
