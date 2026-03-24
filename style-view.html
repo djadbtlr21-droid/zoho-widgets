@@ -9,34 +9,30 @@
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 :root {
-    --z-primary: #1E3A8A;
-    --z-accent: #3B82F6;
-    --z-bg: #F1F5F9;
-    --z-border: #E2E8F0;
-    --z-text-main: #0F172A;
-    --z-text-muted: #64748B;
-    --z-card-bg: #FFFFFF;
-    --st-draft: #94A3B8;
-    --st-prog: #F59E0B;
-    --st-review: #8B5CF6;
-    --st-appr: #10B981;
-    --st-danger: #EF4444;
+    --z-primary: #1E3A8A; --z-accent: #3B82F6; --z-bg: #F1F5F9;
+    --z-border: #E2E8F0; --z-text-main: #0F172A; --z-text-muted: #64748B;
+    --z-card-bg: #FFFFFF; --st-draft: #94A3B8; --st-prog: #F59E0B;
+    --st-review: #8B5CF6; --st-appr: #10B981; --st-danger: #EF4444;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', -apple-system, sans-serif; }
 body { background: var(--z-bg); padding: 16px; min-height: 100vh; }
+
+/* Debug Panel */
+.debug-panel { background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; font-size: 11px; color: #92400E; }
+.debug-panel summary { cursor: pointer; font-weight: 700; }
+.debug-fields { margin-top: 6px; font-size: 10px; color: #78350F; word-break: break-all; line-height: 1.8; }
+.debug-fields code { background: #FEF3C7; padding: 1px 4px; border-radius: 3px; font-weight: 600; }
 
 .loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px; gap: 16px; }
 .spinner { width: 40px; height: 40px; border: 4px solid var(--z-border); border-top-color: var(--z-accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-text { font-size: 13px; color: var(--z-text-muted); font-weight: 600; }
 
-/* Page Header */
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
 .page-header h1 { font-size: 17px; font-weight: 900; color: var(--z-text-main); display: flex; align-items: center; gap: 8px; }
 .page-header h1 .icon-s { width: 26px; height: 26px; background: var(--z-primary); border-radius: 5px; display: inline-flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 900; }
 .season-badge { background: #EFF6FF; color: var(--z-primary); border: 1px solid #BFDBFE; padding: 5px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; }
 
-/* KPI Cards */
 .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
 .kpi-card { background: var(--z-card-bg); border: 1px solid var(--z-border); border-radius: 8px; padding: 14px 16px; position: relative; overflow: hidden; }
 .kpi-card::before { content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 3px; }
@@ -44,15 +40,13 @@ body { background: var(--z-bg); padding: 16px; min-height: 100vh; }
 .kpi-active::before { background: var(--st-appr); }
 .kpi-sampling::before { background: var(--st-prog); }
 .kpi-inactive::before { background: var(--st-draft); }
-.kpi-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-.kpi-label { font-size: 11px; font-weight: 700; color: var(--z-text-muted); }
+.kpi-label { font-size: 11px; font-weight: 700; color: var(--z-text-muted); margin-bottom: 4px; }
 .kpi-val { font-size: 28px; font-weight: 900; letter-spacing: -0.5px; }
 .kpi-total .kpi-val { color: var(--z-primary); }
 .kpi-active .kpi-val { color: var(--st-appr); }
 .kpi-sampling .kpi-val { color: var(--st-prog); }
 .kpi-inactive .kpi-val { color: var(--st-draft); }
 
-/* Table Card */
 .table-card { background: var(--z-card-bg); border: 1px solid var(--z-border); border-radius: 8px; overflow: hidden; }
 .table-toolbar { padding: 10px 16px; background: #F8FAFC; border-bottom: 1px solid var(--z-border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
 .toolbar-left { display: flex; align-items: center; gap: 8px; }
@@ -89,7 +83,6 @@ body { background: var(--z-bg); padding: 16px; min-height: 100vh; }
 .vendor-tag { font-size: 10px; font-weight: 700; color: var(--z-text-muted); background: #F8FAFC; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--z-border); }
 .no-data { text-align: center; padding: 40px; color: var(--z-text-muted); font-size: 13px; }
 
-/* Modal */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
 .modal-overlay.active { display: flex; }
 .modal-box { background: white; border-radius: 12px; width: 92%; max-width: 720px; max-height: 88vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); animation: modalIn 0.25s ease-out; }
@@ -100,7 +93,7 @@ body { background: var(--z-bg); padding: 16px; min-height: 100vh; }
 .modal-thumb-lg img { width: 100%; height: 100%; object-fit: cover; }
 .modal-title { font-size: 18px; font-weight: 900; color: var(--z-primary); }
 .modal-subtitle { font-size: 12px; color: var(--z-text-muted); margin-top: 2px; }
-.modal-close { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--z-border); background: #F8FAFC; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--z-text-muted); transition: all 0.15s; flex-shrink: 0; }
+.modal-close { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--z-border); background: #F8FAFC; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--z-text-muted); }
 .modal-close:hover { background: #FEF2F2; color: var(--st-danger); border-color: #FECACA; }
 .modal-body { padding: 20px 24px; }
 .modal-section { margin-bottom: 20px; }
@@ -109,14 +102,9 @@ body { background: var(--z-bg); padding: 16px; min-height: 100vh; }
 .detail-item { display: flex; flex-direction: column; gap: 2px; }
 .detail-label { font-size: 10px; font-weight: 700; color: var(--z-text-muted); }
 .detail-value { font-size: 13px; font-weight: 600; color: var(--z-text-main); }
-
 .error-box { background: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px; padding: 20px; text-align: center; color: #B91C1C; margin: 20px 0; }
 
-@media (max-width: 768px) {
-    .kpi-row { grid-template-columns: repeat(2, 1fr); }
-    .detail-grid { grid-template-columns: 1fr 1fr; }
-    .page-header { flex-direction: column; align-items: flex-start; }
-}
+@media (max-width: 768px) { .kpi-row { grid-template-columns: repeat(2, 1fr); } .detail-grid { grid-template-columns: 1fr 1fr; } }
 </style>
 </head>
 <body>
@@ -127,9 +115,15 @@ body { background: var(--z-bg); padding: 16px; min-height: 100vh; }
 </div>
 
 <div id="mainContent" style="display:none;">
+    <!-- Debug Panel (삭제해도 됨) -->
+    <details class="debug-panel" id="debugPanel">
+        <summary>🔧 디버그: API 반환 필드 확인 (클릭해서 열기)</summary>
+        <div class="debug-fields" id="debugFields"></div>
+    </details>
+
     <div class="page-header">
         <h1><span class="icon-s">S</span> 시즌 기획 및 스타일 라이프사이클 관리</h1>
-        <span class="season-badge" id="seasonBadge">All Seasons</span>
+        <span class="season-badge">All Seasons</span>
     </div>
     <div class="kpi-row" id="kpiRow"></div>
     <div class="table-card">
@@ -147,18 +141,16 @@ body { background: var(--z-bg); padding: 16px; min-height: 100vh; }
         </div>
         <div class="table-scroll">
             <table class="z-table">
-                <thead>
-                    <tr>
-                        <th data-sort="Style_SKU" width="24%">Style Info <span class="sort-icon">▼</span></th>
-                        <th data-sort="Season" width="8%">Season <span class="sort-icon">▼</span></th>
-                        <th data-sort="Plan_Month" width="8%">Plan <span class="sort-icon">▼</span></th>
-                        <th data-sort="Category" width="8%">Category <span class="sort-icon">▼</span></th>
-                        <th data-sort="Style_Status" width="10%">Style Status <span class="sort-icon">▼</span></th>
-                        <th data-sort="Sample_Status" width="10%">Sample <span class="sort-icon">▼</span></th>
-                        <th data-sort="Business_Entity" width="8%">Vendor <span class="sort-icon">▼</span></th>
-                        <th data-sort="Target_Cost" width="8%">Cost <span class="sort-icon">▼</span></th>
-                    </tr>
-                </thead>
+                <thead><tr>
+                    <th data-sort="Style_SKU" width="24%">Style Info <span class="sort-icon">▼</span></th>
+                    <th data-sort="Season" width="8%">Season <span class="sort-icon">▼</span></th>
+                    <th data-sort="Plan_Month" width="8%">Plan <span class="sort-icon">▼</span></th>
+                    <th data-sort="Category" width="8%">Category <span class="sort-icon">▼</span></th>
+                    <th data-sort="Style_Status" width="12%">Style Status <span class="sort-icon">▼</span></th>
+                    <th data-sort="Sample_Status" width="12%">Sample <span class="sort-icon">▼</span></th>
+                    <th data-sort="Business_Entity" width="8%">Vendor <span class="sort-icon">▼</span></th>
+                    <th data-sort="Target_Cost" width="8%">Cost <span class="sort-icon">▼</span></th>
+                </tr></thead>
                 <tbody id="styleTableBody"></tbody>
             </table>
         </div>
@@ -172,7 +164,6 @@ body { background: var(--z-bg); padding: 16px; min-height: 100vh; }
     </div>
 </div>
 
-<!-- Modal -->
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal-box">
         <div class="modal-header">
@@ -192,33 +183,44 @@ body { background: var(--z-bg); padding: 16px; min-height: 100vh; }
 <script>
 var APP_NAME = "eom";
 var REPORT_NAME = "All_Styles";
+var allRecords = [], filteredRecords = [], sortField = "", sortAsc = true;
+var imageCounter = 0;
 
-var allRecords = [];
-var filteredRecords = [];
-var sortField = "";
-var sortAsc = true;
-
-ZOHO.CREATOR.init().then(function() {
-    loadData();
-});
+ZOHO.CREATOR.init().then(function() { loadData(); });
 
 function loadData() {
-    var config = { appName: APP_NAME, reportName: REPORT_NAME, page: 1, pageSize: 200 };
-    ZOHO.CREATOR.API.getAllRecords(config).then(function(response) {
-        if (response && response.code === 3000 && response.data) {
-            allRecords = response.data;
+    ZOHO.CREATOR.API.getAllRecords({
+        appName: APP_NAME, reportName: REPORT_NAME, page: 1, pageSize: 200
+    }).then(function(resp) {
+        if (resp && resp.code === 3000 && resp.data) {
+            allRecords = resp.data;
             filteredRecords = allRecords.slice();
+
+            // Debug: show all field names
+            if (allRecords.length > 0) {
+                var keys = Object.keys(allRecords[0]).sort();
+                var dbg = "<strong>총 " + keys.length + "개 필드 반환됨:</strong><br>";
+                keys.forEach(function(k) {
+                    var v = allRecords[0][k];
+                    var dv = (v === null || v === undefined || v === "") ? "(빈값)" :
+                             (typeof v === "object" && v.display_value) ? v.display_value :
+                             (typeof v === "object") ? JSON.stringify(v).substring(0,50) :
+                             String(v).substring(0,50);
+                    dbg += "<code>" + k + "</code> = " + dv + " &nbsp;|&nbsp; ";
+                });
+                document.getElementById("debugFields").innerHTML = dbg;
+            }
+
             renderKPI();
             buildFilterOptions();
             renderTable();
+            loadAllImages();
             document.getElementById("loadingScreen").style.display = "none";
             document.getElementById("mainContent").style.display = "block";
         } else {
-            showError("리포트 데이터를 가져올 수 없습니다: " + REPORT_NAME);
+            showError("데이터 로드 실패: " + JSON.stringify(resp));
         }
-    }).catch(function(err) {
-        showError("API 호출 실패: " + JSON.stringify(err));
-    });
+    }).catch(function(err) { showError("API 에러: " + JSON.stringify(err)); });
 }
 
 function showError(msg) {
@@ -227,7 +229,6 @@ function showError(msg) {
     document.getElementById("errorMsg").textContent = msg;
 }
 
-// ── Utility ──
 function g(rec, field) {
     var v = rec[field];
     if (v === undefined || v === null || v === "") return "-";
@@ -238,19 +239,68 @@ function g(rec, field) {
 function getTagClass(status) {
     var s = (status || "").toLowerCase();
     if (s.indexOf("active") >= 0 || s.indexOf("approved") >= 0 || s.indexOf("confirmed") >= 0 || s.indexOf("완성") >= 0) return "tag-appr";
-    if (s.indexOf("progress") >= 0 || s.indexOf("sampling") >= 0 || s.indexOf("진행") >= 0 || s.indexOf("활성") >= 0) return "tag-prog";
+    if (s.indexOf("progress") >= 0 || s.indexOf("sampling") >= 0 || s.indexOf("진행") >= 0 || s.indexOf("활성") >= 0 || s.indexOf("샘플") >= 0) return "tag-prog";
     if (s.indexOf("review") >= 0 || s.indexOf("pending") >= 0) return "tag-rev";
     if (s.indexOf("rejected") >= 0 || s.indexOf("cancel") >= 0 || s.indexOf("fail") >= 0) return "tag-fail";
     return "tag-draft";
 }
 
-function escHtml(str) { var d = document.createElement("div"); d.textContent = str; return d.innerHTML; }
+function escHtml(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+// ── Image Loading via Zoho SDK ──
+function loadAllImages() {
+    var thumbs = document.querySelectorAll(".style-thumb[data-img-url]");
+    thumbs.forEach(function(el) {
+        var url = el.getAttribute("data-img-url");
+        if (url && url !== "-") {
+            var img = document.createElement("img");
+            img.style.width = "100%";
+            img.style.height = "100%";
+            img.style.objectFit = "cover";
+            try {
+                ZOHO.CREATOR.UTIL.setImageData(img, url, function() {
+                    el.innerHTML = "";
+                    el.appendChild(img);
+                });
+            } catch(e) {
+                // fallback: try direct src
+                img.src = url;
+                img.onerror = function() { el.innerHTML = "👕"; };
+                el.innerHTML = "";
+                el.appendChild(img);
+            }
+        }
+    });
+}
+
+function loadModalImage(rec) {
+    var el = document.getElementById("modalThumb");
+    var url = getImageUrl(rec);
+    if (url) {
+        var img = document.createElement("img");
+        img.style.width = "100%";
+        img.style.height = "100%";
+        img.style.objectFit = "cover";
+        try {
+            ZOHO.CREATOR.UTIL.setImageData(img, url, function() {
+                el.innerHTML = "";
+                el.appendChild(img);
+            });
+        } catch(e) {
+            img.src = url;
+            img.onerror = function() { el.innerHTML = "👕"; };
+            el.innerHTML = "";
+            el.appendChild(img);
+        }
+    } else {
+        el.innerHTML = "👕";
+    }
+}
 
 function getImageUrl(rec) {
     var img = rec["Style_Image"];
-    if (!img) return null;
-    if (typeof img === "string" && img.indexOf("/api/") === 0) return img;
-    if (typeof img === "string" && img.indexOf("http") === 0) return img;
+    if (!img || img === "") return null;
+    if (typeof img === "string" && img.length > 5) return img;
     return null;
 }
 
@@ -258,17 +308,15 @@ function getImageUrl(rec) {
 function renderKPI() {
     var total = allRecords.length;
     var active = allRecords.filter(function(r) { var s = g(r,"Style_Status").toLowerCase(); return s.indexOf("active") >= 0 || s.indexOf("활성") >= 0; }).length;
-    var sampling = allRecords.filter(function(r) { var s = g(r,"Sample_Status").toLowerCase(); return s.indexOf("progress") >= 0 || s.indexOf("진행") >= 0 || s.indexOf("sampling") >= 0; }).length;
+    var sampling = allRecords.filter(function(r) { var s = g(r,"Sample_Status").toLowerCase() + " " + g(r,"Style_Status").toLowerCase(); return s.indexOf("sampling") >= 0 || s.indexOf("샘플") >= 0; }).length;
     var inactive = total - active;
-
     document.getElementById("kpiRow").innerHTML =
         '<div class="kpi-card kpi-total"><div class="kpi-label">총 스타일 수</div><div class="kpi-val">' + total + '</div></div>' +
         '<div class="kpi-card kpi-active"><div class="kpi-label">Active 스타일</div><div class="kpi-val">' + active + '</div></div>' +
-        '<div class="kpi-card kpi-sampling"><div class="kpi-label">샘플 진행중</div><div class="kpi-val">' + sampling + '</div></div>' +
+        '<div class="kpi-card kpi-sampling"><div class="kpi-label">Sampling 진행중</div><div class="kpi-val">' + sampling + '</div></div>' +
         '<div class="kpi-card kpi-inactive"><div class="kpi-label">비활성 / 기타</div><div class="kpi-val">' + inactive + '</div></div>';
 }
 
-// ── Filter Options ──
 function buildFilterOptions() {
     var seasons = {}, categories = {}, statuses = {};
     allRecords.forEach(function(r) {
@@ -276,12 +324,13 @@ function buildFilterOptions() {
         var ca = g(r,"Category"); if (ca !== "-") categories[ca] = true;
         var st = g(r,"Style_Status"); if (st !== "-") statuses[st] = true;
     });
-    var seasonSel = document.getElementById("filterSeason");
-    Object.keys(seasons).sort().forEach(function(s) { seasonSel.innerHTML += '<option value="'+s+'">'+s+'</option>'; });
-    var catSel = document.getElementById("filterCategory");
-    Object.keys(categories).sort().forEach(function(c) { catSel.innerHTML += '<option value="'+c+'">'+c+'</option>'; });
-    var statusSel = document.getElementById("filterStatus");
-    Object.keys(statuses).sort().forEach(function(s) { statusSel.innerHTML += '<option value="'+s+'">'+s+'</option>'; });
+    var sel;
+    sel = document.getElementById("filterSeason");
+    Object.keys(seasons).sort().forEach(function(s) { sel.innerHTML += '<option value="'+s+'">'+s+'</option>'; });
+    sel = document.getElementById("filterCategory");
+    Object.keys(categories).sort().forEach(function(c) { sel.innerHTML += '<option value="'+c+'">'+c+'</option>'; });
+    sel = document.getElementById("filterStatus");
+    Object.keys(statuses).sort().forEach(function(s) { sel.innerHTML += '<option value="'+s+'">'+s+'</option>'; });
 }
 
 // ── Table ──
@@ -291,24 +340,15 @@ function renderTable() {
         html = '<tr><td colspan="8" class="no-data">조건에 맞는 스타일이 없습니다.</td></tr>';
     } else {
         filteredRecords.forEach(function(rec, idx) {
-            var sku = g(rec,"Style_SKU");
-            var name = g(rec,"Style_Name");
-            var season = g(rec,"Season");
-            var plan = g(rec,"Plan_Month");
-            var category = g(rec,"Category");
-            var styleStatus = g(rec,"Style_Status");
-            var sampleStatus = g(rec,"Sample_Status");
-            var vendor = g(rec,"Business_Entity");
-            var cost = g(rec,"Target_Cost");
-
-            var thumbHtml = '👕';
+            var sku = g(rec,"Style_SKU"), name = g(rec,"Style_Name");
+            var season = g(rec,"Season"), plan = g(rec,"Plan_Month"), category = g(rec,"Category");
+            var styleStatus = g(rec,"Style_Status"), sampleStatus = g(rec,"Sample_Status");
+            var vendor = g(rec,"Business_Entity"), cost = g(rec,"Target_Cost");
             var imgUrl = getImageUrl(rec);
-            if (imgUrl) {
-                thumbHtml = '<img src="' + imgUrl + '" onerror="this.parentNode.innerHTML=\'👕\'">';
-            }
+            var imgAttr = imgUrl ? ' data-img-url="' + imgUrl + '"' : '';
 
             html += '<tr data-idx="' + idx + '">';
-            html += '<td><div class="style-info"><div class="style-thumb">' + thumbHtml + '</div><div><span class="style-code">' + escHtml(sku) + '</span><span class="style-name">' + escHtml(name) + '</span></div></div></td>';
+            html += '<td><div class="style-info"><div class="style-thumb" id="thumb-' + idx + '"' + imgAttr + '>👕</div><div><span class="style-code">' + escHtml(sku) + '</span><span class="style-name">' + escHtml(name) + '</span></div></div></td>';
             html += '<td>' + escHtml(season) + '</td>';
             html += '<td>' + escHtml(plan) + '</td>';
             html += '<td>' + escHtml(category) + '</td>';
@@ -322,6 +362,10 @@ function renderTable() {
     document.getElementById("styleTableBody").innerHTML = html;
     document.getElementById("recCount").textContent = filteredRecords.length + " styles";
 
+    // Load images
+    setTimeout(loadAllImages, 100);
+
+    // Click events
     document.querySelectorAll("#styleTableBody tr[data-idx]").forEach(function(row) {
         row.addEventListener("click", function() {
             openModal(filteredRecords[parseInt(this.getAttribute("data-idx"))]);
@@ -337,18 +381,14 @@ document.getElementById("filterStatus").addEventListener("change", applyFilters)
 
 function applyFilters() {
     var q = document.getElementById("searchBox").value.toLowerCase().trim();
-    var fSeason = document.getElementById("filterSeason").value;
-    var fCat = document.getElementById("filterCategory").value;
-    var fStatus = document.getElementById("filterStatus").value;
-
-    filteredRecords = allRecords.filter(function(rec) {
-        if (q) {
-            var hay = (g(rec,"Style_SKU") + " " + g(rec,"Style_Name") + " " + g(rec,"Business_Entity") + " " + g(rec,"Style_Number")).toLowerCase();
-            if (hay.indexOf(q) < 0) return false;
-        }
-        if (fSeason && g(rec,"Season") !== fSeason) return false;
-        if (fCat && g(rec,"Category") !== fCat) return false;
-        if (fStatus && g(rec,"Style_Status") !== fStatus) return false;
+    var fS = document.getElementById("filterSeason").value;
+    var fC = document.getElementById("filterCategory").value;
+    var fSt = document.getElementById("filterStatus").value;
+    filteredRecords = allRecords.filter(function(r) {
+        if (q) { var h = (g(r,"Style_SKU")+" "+g(r,"Style_Name")+" "+g(r,"Business_Entity")).toLowerCase(); if (h.indexOf(q)<0) return false; }
+        if (fS && g(r,"Season") !== fS) return false;
+        if (fC && g(r,"Category") !== fC) return false;
+        if (fSt && g(r,"Style_Status") !== fSt) return false;
         return true;
     });
     if (sortField) doSort(sortField, false);
@@ -358,103 +398,60 @@ function applyFilters() {
 // ── Sort ──
 document.querySelectorAll(".z-table th[data-sort]").forEach(function(th) {
     th.addEventListener("click", function() {
-        doSort(this.getAttribute("data-sort"), true);
-        renderTable();
-        document.querySelectorAll(".z-table th").forEach(function(h) { h.classList.remove("sorted"); });
+        doSort(this.getAttribute("data-sort"), true); renderTable();
+        document.querySelectorAll(".z-table th").forEach(function(h){h.classList.remove("sorted");});
         this.classList.add("sorted");
         this.querySelector(".sort-icon").textContent = sortAsc ? "▲" : "▼";
     });
 });
-
 function doSort(field, toggle) {
-    if (toggle) { if (sortField === field) sortAsc = !sortAsc; else { sortField = field; sortAsc = true; } }
-    filteredRecords.sort(function(a, b) {
-        var va = g(a, field).toLowerCase(), vb = g(b, field).toLowerCase();
-        if (va < vb) return sortAsc ? -1 : 1;
-        if (va > vb) return sortAsc ? 1 : -1;
-        return 0;
+    if (toggle) { if (sortField===field) sortAsc=!sortAsc; else { sortField=field; sortAsc=true; } }
+    filteredRecords.sort(function(a,b) {
+        var va=g(a,field).toLowerCase(), vb=g(b,field).toLowerCase();
+        return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
     });
 }
 
 // ── Modal ──
 function openModal(rec) {
-    var sku = g(rec,"Style_SKU");
-    var name = g(rec,"Style_Name");
-    document.getElementById("modalTitle").textContent = sku;
-    document.getElementById("modalSubtitle").textContent = name;
-
-    var thumbEl = document.getElementById("modalThumb");
-    var imgUrl = getImageUrl(rec);
-    if (imgUrl) {
-        thumbEl.innerHTML = '<img src="' + imgUrl + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentNode.innerHTML=\'👕\'">';
-    } else {
-        thumbEl.innerHTML = '👕';
-    }
+    document.getElementById("modalTitle").textContent = g(rec,"Style_SKU");
+    document.getElementById("modalSubtitle").textContent = g(rec,"Style_Name");
+    loadModalImage(rec);
 
     var html = '';
-
     // Identity
     html += '<div class="modal-section"><div class="modal-section-title">기본 정보 / Identity</div><div class="detail-grid">';
-    var identity = [
-        ["Style SKU", g(rec,"Style_SKU")],
-        ["Style Name", g(rec,"Style_Name")],
-        ["Style Number", g(rec,"Style_Number")],
-        ["Business Entity", g(rec,"Business_Entity")],
-        ["Season", g(rec,"Season")],
-        ["Plan Year", g(rec,"Plan_Year")],
-        ["Plan Month", g(rec,"Plan_Month")],
-        ["Style Status", g(rec,"Style_Status")],
-        ["Category", g(rec,"Category")]
-    ];
-    identity.forEach(function(d) {
-        var isTag = d[0].indexOf("Status") >= 0;
-        var val = isTag ? '<span class="tag ' + getTagClass(d[1]) + '">' + escHtml(d[1]) + '</span>' : escHtml(d[1]);
-        html += '<div class="detail-item"><span class="detail-label">' + d[0] + '</span><span class="detail-value">' + val + '</span></div>';
+    [["Style SKU",g(rec,"Style_SKU")],["Style Name",g(rec,"Style_Name")],["Style Number",g(rec,"Style_Number")],
+     ["Business Entity",g(rec,"Business_Entity")],["Season",g(rec,"Season")],["Plan Year",g(rec,"Plan_Year")],
+     ["Plan Month",g(rec,"Plan_Month")],["Style Status",g(rec,"Style_Status")],["Category",g(rec,"Category")]
+    ].forEach(function(d) {
+        var isTag = d[0].indexOf("Status")>=0;
+        var val = isTag ? '<span class="tag '+getTagClass(d[1])+'">'+escHtml(d[1])+'</span>' : escHtml(d[1]);
+        html += '<div class="detail-item"><span class="detail-label">'+d[0]+'</span><span class="detail-value">'+val+'</span></div>';
     });
     html += '</div></div>';
 
-    // Product Details
+    // Product
     html += '<div class="modal-section"><div class="modal-section-title">제품 상세 / Product Definition</div><div class="detail-grid">';
-    var product = [
-        ["Gender", g(rec,"Gender")],
-        ["Fit", g(rec,"Fit")],
-        ["Top Type", g(rec,"Top_Type")],
-        ["Bottom Type", g(rec,"Bottom_Type")],
-        ["Bottom Length", g(rec,"Bottom_Length")],
-        ["Sleeve", g(rec,"Sleeve")],
-        ["Lining Type", g(rec,"Lining_Type")],
-        ["Details", g(rec,"Details")],
-        ["Material Type", g(rec,"Material_Type")],
-        ["Available Colors", g(rec,"Available_Colors")],
-        ["Available Sizes", g(rec,"Available_Sizes")]
-    ];
-    product.forEach(function(d) {
-        html += '<div class="detail-item"><span class="detail-label">' + d[0] + '</span><span class="detail-value">' + escHtml(d[1]) + '</span></div>';
+    [["Gender",g(rec,"Gender")],["Fit",g(rec,"Fit")],["Top Type",g(rec,"Top_Type")],
+     ["Bottom Type",g(rec,"Bottom_Type")],["Bottom Length",g(rec,"Bottom_Length")],["Sleeve",g(rec,"Sleeve")],
+     ["Lining Type",g(rec,"Lining_Type")],["Details",g(rec,"Details")],["Material Type",g(rec,"Material_Type")],
+     ["Available Colors",g(rec,"Available_Colors")],["Available Sizes",g(rec,"Available_Sizes")]
+    ].forEach(function(d) {
+        html += '<div class="detail-item"><span class="detail-label">'+d[0]+'</span><span class="detail-value">'+escHtml(d[1])+'</span></div>';
     });
     html += '</div></div>';
 
-    // Sample & Costing
+    // Sample & Cost
     html += '<div class="modal-section"><div class="modal-section-title">샘플 & 원가 / Sample & Costing</div><div class="detail-grid">';
-    var sampleCost = [
-        ["Sample Status", g(rec,"Sample_Status")],
-        ["Sample Date", g(rec,"Sample_Date")],
-        ["Target Cost", g(rec,"Target_Cost")],
-        ["Final Cost", g(rec,"Final_Cost")],
-        ["Total BOM Cost", g(rec,"Total_BOM_Cost")],
-        ["Cost Notes", g(rec,"Cost_Notes")]
-    ];
-    sampleCost.forEach(function(d) {
-        var isTag = d[0].indexOf("Status") >= 0;
-        var val = isTag ? '<span class="tag ' + getTagClass(d[1]) + '">' + escHtml(d[1]) + '</span>' : escHtml(d[1]);
-        html += '<div class="detail-item"><span class="detail-label">' + d[0] + '</span><span class="detail-value">' + val + '</span></div>';
+    [["Sample Status",g(rec,"Sample_Status")],["Sample Date",g(rec,"Sample_Date")],["Target Cost",g(rec,"Target_Cost")],
+     ["Final Cost",g(rec,"Final_Cost")],["Total BOM Cost",g(rec,"Total_BOM_Cost")],["Cost Notes",g(rec,"Cost_Notes")]
+    ].forEach(function(d) {
+        var isTag = d[0].indexOf("Status")>=0;
+        var val = isTag ? '<span class="tag '+getTagClass(d[1])+'">'+escHtml(d[1])+'</span>' : escHtml(d[1]);
+        html += '<div class="detail-item"><span class="detail-label">'+d[0]+'</span><span class="detail-value">'+val+'</span></div>';
     });
     html += '</div></div>';
-
-    // Sample Notes
-    var sn = g(rec,"Sample_Notes");
-    if (sn !== "-") {
-        html += '<div class="modal-section"><div class="modal-section-title">샘플 메모</div><div style="font-size:12px;color:var(--z-text-main);line-height:1.6;background:#F8FAFC;padding:10px;border-radius:6px;">' + escHtml(sn) + '</div></div>';
-    }
 
     document.getElementById("modalBody").innerHTML = html;
     document.getElementById("modalOverlay").classList.add("active");
@@ -462,8 +459,8 @@ function openModal(rec) {
 
 function closeModal() { document.getElementById("modalOverlay").classList.remove("active"); }
 document.getElementById("modalClose").addEventListener("click", closeModal);
-document.getElementById("modalOverlay").addEventListener("click", function(e) { if (e.target === this) closeModal(); });
-document.addEventListener("keydown", function(e) { if (e.key === "Escape") closeModal(); });
+document.getElementById("modalOverlay").addEventListener("click", function(e) { if(e.target===this) closeModal(); });
+document.addEventListener("keydown", function(e) { if(e.key==="Escape") closeModal(); });
 </script>
 </body>
 </html>
