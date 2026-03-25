@@ -36,9 +36,9 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .month-title{font-size:13px;font-weight:800;color:var(--z-text-main)}
 .month-count{font-size:11px;color:var(--z-text-muted);font-weight:600;background:#F1F5F9;padding:2px 8px;border-radius:10px;border:1px solid #CBD5E1}
 .table-scroll{overflow-x:auto}
-.z-table{width:100%;border-collapse:collapse;font-size:11px;text-align:left}
+.z-table{width:100%;border-collapse:collapse;font-size:11px;text-align:left;table-layout:fixed}
 .z-table th{background:#F1F5F9;padding:7px 8px;color:var(--z-text-muted);font-weight:800;font-size:10px;border-bottom:1px solid var(--z-border);white-space:nowrap;text-align:left}
-.z-table td{padding:7px 8px;border-bottom:1px solid #F1F5F9;color:var(--z-text-main);vertical-align:middle;text-align:left;white-space:nowrap}
+.z-table td{padding:7px 8px;border-bottom:1px solid #F1F5F9;color:var(--z-text-main);vertical-align:middle;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .z-table tr{cursor:pointer;transition:background .1s}
 .z-table tbody tr:hover td{background:#EFF6FF}
 .style-info{display:flex;align-items:center;gap:8px}
@@ -138,7 +138,7 @@ function mv(f,v){return(!v||v==="-")?"-":(MAP[f]&&MAP[f][v])?MAP[f][v]:v}
 
 ZOHO.CREATOR.init().then(function(){
 ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:MO_REP,page:1,pageSize:200}).then(function(r){
-if(r&&r.code===3000&&r.data)r.data.forEach(function(m){var s=g(m,"SKU")||g(m,"Style_SKU");if(s!=="-")moSkus.add(s)});
+if(r&&r.code===3000&&r.data)r.data.forEach(function(m){var s=g(m,"Style_SKU");if(s==="-")s=g(m,"SKU");if(s!=="-")moSkus.add(s)});
 loadStyles()}).catch(function(){loadStyles()})});
 
 function loadStyles(){
@@ -217,7 +217,7 @@ smi.forEach(function(u,i){queueImg("smImg"+i,u)});
 
 // ★ Navigation — simple window.open to top frame
 function goTo(url){
-    window.open(url,"_blank");
+    window.open(url,"_top");
 }
 
 var _currentRecId=null;
@@ -267,7 +267,7 @@ var items=groups[key];
 html+='<div class="month-section"><div class="month-card">';
 html+='<div class="month-header"><div class="month-title">📅 '+escH(key)+'</div><span class="month-count">'+items.length+' styles</span></div>';
 html+='<div class="table-scroll"><table class="z-table"><thead><tr>';
-html+='<th>Style Info</th><th>Brand</th><th>Season</th><th>Gender</th><th>Category</th><th>Material_Type</th><th>Target_Cost</th><th>Status</th><th>Sample</th><th>Order</th>';
+html+='<th style="width:18%">Style Info</th><th style="width:7%">Brand</th><th style="width:7%">Season</th><th style="width:12%">Gender</th><th style="width:12%">Category</th><th style="width:14%">Material_Type</th><th style="width:8%">Target_Cost</th><th style="width:10%">Status</th><th style="width:6%">Sample</th><th style="width:8%">Order</th>';
 html+='</tr></thead><tbody>';
 items.forEach(function(r){
 var sku=g(r,"Style_SKU"),name=g(r,"Style_Name");
