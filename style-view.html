@@ -87,7 +87,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 <div id="loadingScreen" class="loading-screen"><div class="spinner"></div><div class="loading-text">데이터를 불러오는 중...</div></div>
 <div id="mainContent" style="display:none">
 <div class="page-header"><h1><span class="icon-s">S</span> Style View / 스타일 현황표 / 款式现况表</h1>
-<button onclick="ZOHO.CREATOR.UTIL.navigateParentURL('#Form:Add_Styles','same window')" style="background:var(--z-primary);color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px">+ New Style</button>
+<button onclick="goTo('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_Styles')" style="background:var(--z-primary);color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px">+ New Style</button>
 </div>
 <div class="kpi-row" id="kpiRow"></div>
 <div class="filter-bar">
@@ -215,23 +215,28 @@ fi.forEach(function(u,i){queueImg("fImg"+i,u)});
 smi.forEach(function(u,i){queueImg("smImg"+i,u)});
 }
 
-// ★ Navigation functions
+// ★ Navigation — try 3 methods for External Widget
+function goTo(url){
+    // Method 1: Zoho SDK
+    try{ZOHO.CREATOR.UTIL.navigateParentURL(url,"same window")}catch(e){}
+    // Method 2: Parent window
+    setTimeout(function(){try{window.parent.location.href=url}catch(e){}},500);
+    // Method 3: Top window
+    setTimeout(function(){try{window.top.location.href=url}catch(e){}},1000);
+}
+
 var _currentRecId=null;
 
 function editStyle(){
-if(!_currentRecId)return;
-try{
-    ZOHO.CREATOR.UTIL.navigateParentURL("#Report:All_Styles/"+_currentRecId+"/edit","same window");
-}catch(e){
-    window.open("#Report:All_Styles/"+_currentRecId+"/edit","_blank");
-}}
+    if(!_currentRecId)return;
+    // Zoho Creator edit: navigate to report, then the record will open in edit mode
+    var url="https://creatorapp.zoho.com/jeramoda/eom/#Report:All_Styles";
+    goTo(url);
+}
 
 function newMO(){
-try{
-    ZOHO.CREATOR.UTIL.navigateParentURL("#Form:Add_MO","same window");
-}catch(e){
-    window.open("#Form:Add_MO","_blank");
-}}
+    goTo("https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_MO");
+}
 
 // KPI
 function renderKPI(){
