@@ -54,9 +54,9 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .mt-title{font-size:13px;font-weight:800;color:var(--tx)}
 .mt-cnt{font-size:11px;color:var(--tm);font-weight:600;background:#F1F5F9;padding:2px 8px;border-radius:10px;border:1px solid #CBD5E1}
 .tbl-scroll{overflow-x:auto}
-table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left}
-.zt th{background:#F1F5F9;padding:7px 8px;color:var(--tm);font-weight:800;font-size:10px;border-bottom:1px solid var(--bd);white-space:nowrap}
-.zt td{padding:7px 8px;border-bottom:1px solid #F1F5F9;color:var(--tx);vertical-align:middle;white-space:nowrap}
+table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;table-layout:fixed}
+.zt th{background:#F1F5F9;padding:7px 8px;color:var(--tm);font-weight:800;font-size:10px;border-bottom:1px solid var(--bd);white-space:nowrap;overflow:hidden}
+.zt td{padding:7px 8px;border-bottom:1px solid #F1F5F9;color:var(--tx);vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .zt tbody tr{cursor:pointer;transition:background .1s}
 .zt tbody tr:hover td{background:#EFF6FF}
 .zt .mo-num{font-weight:800;color:var(--pr)}
@@ -182,13 +182,25 @@ function showErr(m){hide("loadingScreen");show("errorScreen");document.getElemen
 function g(r,f){var v=r[f];if(v==null||v==="")return"-";if(typeof v==="object"&&v.display_value)return v.display_value;return String(v)}
 function escH(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
 
+// Date parsing helper (Zoho returns various formats)
+function parseDate(v){
+if(!v||v==="-")return null;
+if(/^\d{4}-\d{2}-\d{2}/.test(v))return v.substring(0,10);
+var m=v.match(/^(\d{1,2})-([A-Za-z]+)-(\d{4})/);
+if(m){var months={Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};
+var mm=months[m[2]]||"01";var dd=m[1].length===1?"0"+m[1]:m[1];return m[3]+"-"+mm+"-"+dd}
+var m2=v.match(/([A-Za-z]+)\s+(\d{1,2}),?\s*(\d{4})/);
+if(m2){var months2={Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};
+var mm2=months2[m2[1].substring(0,3)]||"01";var dd2=m2[2].length===1?"0"+m2[2]:m2[2];return m2[3]+"-"+mm2+"-"+dd2}
+return null}
+
 function pSt(s){return(s||"").toLowerCase()}
 function tc(s){var l=pSt(s);if(l.indexOf("confirmed")>=0||l.indexOf("delivered")>=0||l.indexOf("complete")>=0||l.indexOf("shipped")>=0||l.indexOf("done")>=0)return"t-ok";if(l.indexOf("progress")>=0||l.indexOf("cutting")>=0||l.indexOf("sewing")>=0||l.indexOf("fabric")>=0||l.indexOf("packing")>=0)return"t-wn";if(l.indexOf("delay")>=0||l.indexOf("cancel")>=0||l.indexOf("reject")>=0)return"t-dg";if(l.indexOf("pending")>=0)return"t-bl";return"t-dr"}
 
 function isDelayed(r){
 var ds=g(r,"Delivery_Status").toLowerCase();if(ds.indexOf("delay")>=0)return true;
-var ed=g(r,"Expected_Delivery");var ps=g(r,"Production_Status").toLowerCase();
-if(ed!=="-"&&!ps.indexOf("shipped")>=0&&!ps.indexOf("complete")>=0){if(ed<todayStr)return true}
+var ed=parseDate(g(r,"Expected_Delivery"));var ps=g(r,"Production_Status").toLowerCase();
+if(ed&&ps.indexOf("shipped")<0&&ps.indexOf("complete")<0){if(ed<todayStr)return true}
 return false}
 
 function getProdStage(r){
@@ -265,7 +277,7 @@ var html="";
 Object.keys(groups).sort().forEach(function(key){
 var items=groups[key];
 html+='<div class="mt-sec"><div class="mt-card"><div class="mt-hd"><div class="mt-title">📅 '+escH(key)+'</div><span class="mt-cnt">'+items.length+' MOs</span></div>';
-html+='<div class="tbl-scroll"><table class="zt"><thead><tr><th>MO#</th><th>SKU</th><th>Style</th><th>Factory</th><th>Qty</th><th>Order</th><th>Production</th><th>Exp.Del</th><th>Ship</th></tr></thead><tbody>';
+html+='<div class="tbl-scroll"><table class="zt"><thead><tr><th style="width:7%">MO#</th><th style="width:12%">SKU</th><th style="width:14%">Style</th><th style="width:10%">Factory</th><th style="width:7%;text-align:center">Qty</th><th style="width:14%">Order</th><th style="width:14%">Production</th><th style="width:11%">Exp.Del</th><th style="width:11%">Ship</th></tr></thead><tbody>';
 items.forEach(function(r){
 var delayed=isDelayed(r);
 var trStyle=delayed?'style="background:#FEF2F2"':'';
@@ -274,7 +286,7 @@ html+='<td class="mo-num">'+escH(g(r,"MO_Number"))+'</td>';
 html+='<td style="font-size:9px;font-weight:600">'+escH(g(r,"Style_SKU"))+'</td>';
 html+='<td>'+escH(g(r,"Style_Name"))+'</td>';
 html+='<td>'+escH(g(r,"Factory"))+'</td>';
-html+='<td style="text-align:right;font-weight:700">'+escH(g(r,"Total_Quantity"))+'</td>';
+html+='<td style="text-align:center;font-weight:700">'+escH(g(r,"Total_Quantity"))+'</td>';
 html+='<td><span class="tag '+tc(g(r,"Order_Status"))+'">'+escH(g(r,"Order_Status"))+'</span></td>';
 html+='<td><span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span></td>';
 var ed=g(r,"Expected_Delivery");
@@ -288,10 +300,26 @@ document.querySelectorAll("#monthlyTables tr[data-id]").forEach(function(row){
 row.addEventListener("click",function(){var id=this.getAttribute("data-id");var r=allRec.find(function(x){return x["ID"]===id});if(r)openModal(r)})})}
 
 // Calendar
+// Date parsing helper (Zoho returns various formats)
+function parseDate(v){
+if(!v||v==="-")return null;
+// Try ISO: 2026-03-25
+if(/^\d{4}-\d{2}-\d{2}/.test(v))return v.substring(0,10);
+// Try DD-Mon-YYYY: 25-Mar-2026
+var m=v.match(/^(\d{1,2})-([A-Za-z]+)-(\d{4})/);
+if(m){var months={Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};
+var mm=months[m[2]]||"01";var dd=m[1].length===1?"0"+m[1]:m[1];return m[3]+"-"+mm+"-"+dd}
+// Try Mon DD, YYYY
+var m2=v.match(/([A-Za-z]+)\s+(\d{1,2}),?\s*(\d{4})/);
+if(m2){var months2={Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};
+var mm2=months2[m2[1].substring(0,3)]||"01";var dd2=m2[2].length===1?"0"+m2[2]:m2[2];return m2[3]+"-"+mm2+"-"+dd2}
+return null}
+
 function renderCalendar(){
 var yr=today.getFullYear(),mo=today.getMonth();
 var daysInMonth=new Date(yr,mo+1,0).getDate();
 var monthName=today.toLocaleString('en',{month:'long'})+' '+yr;
+var curMM=yr+"-"+(mo+1<10?"0":"")+(mo+1);
 var h='<div class="cal-card"><div class="cal-hd"><div class="cal-title">📅 월간 생산 타임라인 / Monthly Production Timeline</div><div style="display:flex;align-items:center;gap:12px">';
 h+='<div class="cal-legend"><span><span class="cal-dot" style="background:#8B5CF6"></span>Fabric</span><span><span class="cal-dot" style="background:#F97316"></span>Cut</span><span><span class="cal-dot" style="background:#EF4444"></span>Sew</span><span><span class="cal-dot" style="background:#22C55E"></span>Pack</span><span><span class="cal-dot" style="background:#2563EB"></span>Ship</span></div>';
 h+='<div class="cal-month">'+monthName+'</div></div></div>';
@@ -304,27 +332,24 @@ if(d===todayD)cls="today";
 h+='<th class="'+cls+'">'+d+'</th>'}
 h+='</tr></thead><tbody>';
 
-var curMM=(yr)+"-"+(mo+1<10?"0":"")+(mo+1);
 var hasRows=false;
 filtered.forEach(function(r){
-// Check if any date falls in current month
-var dates=["Fabric_In_house_Date","Cutting_Start_Date","Cutting_End_Date","Sewing_Start_Date","Sewing_Completion_Date","Packing_Start_Date","Packing_End_Date","Ship_Date"];
+var dateFields=["Fabric_In_house_Date","Cutting_Start_Date","Cutting_End_Date","Sewing_Start_Date","Sewing_Completion_Date","Packing_Start_Date","Packing_End_Date","Ship_Date"];
 var inMonth=false;
-dates.forEach(function(df){var v=g(r,df);if(v!=="-"&&v.substring(0,7)===curMM)inMonth=true});
+dateFields.forEach(function(df){var p=parseDate(g(r,df));if(p&&p.substring(0,7)===curMM)inMonth=true});
 if(!inMonth)return;
 hasRows=true;
 
 h+='<tr><td class="info-cell"><div style="font-size:12px;font-weight:800;color:var(--pr)">'+escH(g(r,"MO_Number"))+'</div><div style="font-size:10px;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px">'+escH(g(r,"Style_Name"))+'</div><div style="font-size:9px;color:#94A3B8">'+escH(g(r,"Factory"))+' · '+escH(g(r,"Total_Quantity"))+'pcs</div></td>';
 
-// Build day cells
-var fabD=dayOfMonth(g(r,"Fabric_In_house_Date"),curMM);
-var cutS=dayOfMonth(g(r,"Cutting_Start_Date"),curMM);
-var cutE=dayOfMonth(g(r,"Cutting_End_Date"),curMM);
-var sewS=dayOfMonth(g(r,"Sewing_Start_Date"),curMM);
-var sewE=dayOfMonth(g(r,"Sewing_Completion_Date"),curMM);
-var pkS=dayOfMonth(g(r,"Packing_Start_Date"),curMM);
-var pkE=dayOfMonth(g(r,"Packing_End_Date"),curMM);
-var shD=dayOfMonth(g(r,"Ship_Date"),curMM);
+var fabD=dayParse(g(r,"Fabric_In_house_Date"),curMM);
+var cutS=dayParse(g(r,"Cutting_Start_Date"),curMM);
+var cutE=dayParse(g(r,"Cutting_End_Date"),curMM);
+var sewS=dayParse(g(r,"Sewing_Start_Date"),curMM);
+var sewE=dayParse(g(r,"Sewing_Completion_Date"),curMM);
+var pkS=dayParse(g(r,"Packing_Start_Date"),curMM);
+var pkE=dayParse(g(r,"Packing_End_Date"),curMM);
+var shD=dayParse(g(r,"Ship_Date"),curMM);
 
 var skip=0;
 for(var d=1;d<=daysInMonth;d++){
@@ -341,10 +366,10 @@ if(!hasRows)h+='<tr><td class="info-cell" colspan="'+(daysInMonth+1)+'" style="t
 h+='</tbody></table></div></div>';
 document.getElementById("calendarSection").innerHTML=h}
 
-function dayOfMonth(dateStr,curMM){
-if(!dateStr||dateStr==="-")return 0;
-if(dateStr.substring(0,7)!==curMM)return 0;
-return parseInt(dateStr.substring(8,10))||0}
+function dayParse(dateStr,curMM){
+var p=parseDate(dateStr);
+if(!p||p.substring(0,7)!==curMM)return 0;
+return parseInt(p.substring(8,10))||0}
 
 // Modal
 var _curMoId=null;
