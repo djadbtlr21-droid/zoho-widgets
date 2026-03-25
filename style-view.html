@@ -36,11 +36,9 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .month-title{font-size:13px;font-weight:800;color:var(--z-text-main)}
 .month-count{font-size:11px;color:var(--z-text-muted);font-weight:600;background:#F1F5F9;padding:2px 8px;border-radius:10px;border:1px solid #CBD5E1}
 .table-scroll{overflow-x:auto}
-.z-table{width:100%;border-collapse:collapse;font-size:11px;text-align:center}
-.z-table th{background:#F1F5F9;padding:7px 8px;color:var(--z-text-muted);font-weight:800;font-size:10px;border-bottom:1px solid var(--z-border);white-space:nowrap;text-align:center}
-.z-table th:first-child{text-align:left}
-.z-table td{padding:7px 8px;border-bottom:1px solid #F1F5F9;color:var(--z-text-main);vertical-align:middle;text-align:center;white-space:nowrap}
-.z-table td:first-child{text-align:left}
+.z-table{width:100%;border-collapse:collapse;font-size:11px;text-align:left}
+.z-table th{background:#F1F5F9;padding:7px 8px;color:var(--z-text-muted);font-weight:800;font-size:10px;border-bottom:1px solid var(--z-border);white-space:nowrap;text-align:left}
+.z-table td{padding:7px 8px;border-bottom:1px solid #F1F5F9;color:var(--z-text-main);vertical-align:middle;text-align:left;white-space:nowrap}
 .z-table tr{cursor:pointer;transition:background .1s}
 .z-table tbody tr:hover td{background:#EFF6FF}
 .style-info{display:flex;align-items:center;gap:8px}
@@ -88,7 +86,9 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 <body>
 <div id="loadingScreen" class="loading-screen"><div class="spinner"></div><div class="loading-text">데이터를 불러오는 중...</div></div>
 <div id="mainContent" style="display:none">
-<div class="page-header"><h1><span class="icon-s">S</span> Style View / 스타일 현황표 / 款式现况表</h1></div>
+<div class="page-header"><h1><span class="icon-s">S</span> Style View / 스타일 현황표 / 款式现况表</h1>
+<button onclick="ZOHO.CREATOR.UTIL.navigateParentURL('#Form:Add_Styles','same window')" style="background:var(--z-primary);color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px">+ New Style</button>
+</div>
 <div class="kpi-row" id="kpiRow"></div>
 <div class="filter-bar">
 <input type="text" class="search-box" id="searchBox" placeholder="🔍 SKU, 스타일명, Brand 검색...">
@@ -109,7 +109,12 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 
 <!-- Modal -->
 <div class="modal-overlay" id="modalOverlay"><div class="modal-box">
-<div class="modal-header"><div class="modal-header-left"><div class="modal-thumb-lg" id="modalThumb">👕</div><div><div class="modal-title" id="modalTitle">-</div><div class="modal-subtitle" id="modalSubtitle">-</div></div></div><div class="modal-close" id="modalClose">✕</div></div>
+<div class="modal-header"><div class="modal-header-left"><div class="modal-thumb-lg" id="modalThumb">👕</div><div><div class="modal-title" id="modalTitle">-</div><div class="modal-subtitle" id="modalSubtitle">-</div></div></div>
+<div style="display:flex;align-items:center;gap:8px">
+<button id="btnEdit" onclick="editStyle()" style="background:#EFF6FF;color:var(--z-primary);border:1px solid #BFDBFE;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit</button>
+<button id="btnNewMO" onclick="newMO()" style="background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">+ New MO</button>
+<div class="modal-close" id="modalClose">✕</div>
+</div></div>
 <div class="modal-body" id="modalBody"></div>
 </div></div>
 
@@ -163,50 +168,70 @@ var url=el.getAttribute("data-img");if(!url)return;
 var img=document.createElement("img");img.style.cssText="width:100%;height:100%;object-fit:cover";
 try{ZOHO.CREATOR.UTIL.setImageData(img,url,function(){el.innerHTML="";el.appendChild(img)})}catch(e){}})}
 
-// ★★★ NEW IMAGE APPROACH: Use hidden iframes per image ★★★
-// Each image gets its own invisible iframe that calls setImageData independently
-function loadModalImg(elementId, url){
-var el=document.getElementById(elementId);
-if(!el||!url)return;
+// ★★★ SEQUENTIAL IMAGE LOADING — One at a time, 30s timeout ★★★
+var _imgQ=[];
+var _imgBusy=false;
 
-// Create a unique hidden container for this image's SDK call
-var container=document.createElement("div");
-container.style.cssText="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0";
-document.body.appendChild(container);
+function queueImg(id,url){
+_imgQ.push({id:id,url:url});
+if(!_imgBusy)_processNext()}
+
+function _processNext(){
+if(_imgQ.length===0){_imgBusy=false;return}
+_imgBusy=true;
+var task=_imgQ.shift();
+var el=document.getElementById(task.id);
+if(!el){_imgBusy=false;setTimeout(_processNext,100);return}
 
 var img=document.createElement("img");
 img.style.cssText="width:100%;height:100%;object-fit:contain;cursor:pointer";
 img.onclick=function(){openLightbox(this.src)};
+var done=false;
+
+function finish(success){
+    if(done)return;done=true;
+    if(success){el.innerHTML="";el.appendChild(img)}
+    // Wait 1s then process next
+    setTimeout(_processNext,1000);
+}
 
 try{
-    ZOHO.CREATOR.UTIL.setImageData(img,url,function(){
-        if(img.src&&img.src.length>20&&img.src!=="about:blank"){
-            el.innerHTML="";
-            var finalImg=document.createElement("img");
-            finalImg.src=img.src;
-            finalImg.style.cssText="width:100%;height:100%;object-fit:contain;cursor:pointer";
-            finalImg.onclick=function(){openLightbox(this.src)};
-            el.appendChild(finalImg);
-        }
-        // Clean up hidden container
-        if(container.parentNode)container.parentNode.removeChild(container);
-    });
-}catch(e){
-    if(container.parentNode)container.parentNode.removeChild(container);
-}
+ZOHO.CREATOR.UTIL.setImageData(img,url,function(){
+    if(img.src&&img.src.length>20&&img.src!=="about:blank"){finish(true)}
+    else{finish(false)}
+});
+}catch(e){finish(false)}
+// 30 second timeout
+setTimeout(function(){if(!done){done=true;setTimeout(_processNext,1000)}},30000);
 }
 
-// Load modal images: call each one independently with delays
 function loadAllModalImgs(rec){
-var all=[];
-getAllImgs(rec,"Style_Image").forEach(function(u,i){all.push({id:"sImg"+i,url:u})});
-getAllImgs(rec,"Flat_Sketch").forEach(function(u,i){all.push({id:"fImg"+i,url:u})});
-getAllImgs(rec,"Sample_Images").forEach(function(u,i){all.push({id:"smImg"+i,url:u})});
+_imgQ=[];_imgBusy=false;
+var si=getAllImgs(rec,"Style_Image");
+var fi=getAllImgs(rec,"Flat_Sketch");
+var smi=getAllImgs(rec,"Sample_Images");
+si.forEach(function(u,i){queueImg("sImg"+i,u)});
+fi.forEach(function(u,i){queueImg("fImg"+i,u)});
+smi.forEach(function(u,i){queueImg("smImg"+i,u)});
+}
 
-// Load each image with 2-second intervals to prevent SDK overload
-all.forEach(function(item,idx){
-    setTimeout(function(){loadModalImg(item.id,item.url)},idx*2000);
-})}
+// ★ Navigation functions
+var _currentRecId=null;
+
+function editStyle(){
+if(!_currentRecId)return;
+try{
+    ZOHO.CREATOR.UTIL.navigateParentURL("#Report:All_Styles/"+_currentRecId+"/edit","same window");
+}catch(e){
+    window.open("#Report:All_Styles/"+_currentRecId+"/edit","_blank");
+}}
+
+function newMO(){
+try{
+    ZOHO.CREATOR.UTIL.navigateParentURL("#Form:Add_MO","same window");
+}catch(e){
+    window.open("#Form:Add_MO","_blank");
+}}
 
 // KPI
 function renderKPI(){
@@ -244,14 +269,14 @@ var items=groups[key];
 html+='<div class="month-section"><div class="month-card">';
 html+='<div class="month-header"><div class="month-title">📅 '+escH(key)+'</div><span class="month-count">'+items.length+' styles</span></div>';
 html+='<div class="table-scroll"><table class="z-table"><thead><tr>';
-html+='<th style="text-align:left">Style Info</th><th>Brand</th><th>Season</th><th>Gender</th><th>Category</th><th>Material_Type</th><th>Target_Cost</th><th>Status</th><th>Sample</th><th>Order</th>';
+html+='<th>Style Info</th><th>Brand</th><th>Season</th><th>Gender</th><th>Category</th><th>Material_Type</th><th>Target_Cost</th><th>Status</th><th>Sample</th><th>Order</th>';
 html+='</tr></thead><tbody>';
 items.forEach(function(r){
 var sku=g(r,"Style_SKU"),name=g(r,"Style_Name");
 var iu=getImg1(r),ia=iu?' data-img="'+iu+'"':'';
 var ordered=moSkus.has(sku);
 html+='<tr data-id="'+r["ID"]+'">';
-html+='<td style="text-align:left"><div class="style-info"><div class="style-thumb"'+ia+'>👕</div><div><span class="style-code">'+escH(sku)+'</span><span class="style-name">'+escH(name)+'</span></div></div></td>';
+html+='<td><div class="style-info"><div class="style-thumb"'+ia+'>👕</div><div><span class="style-code">'+escH(sku)+'</span><span class="style-name">'+escH(name)+'</span></div></div></td>';
 html+='<td>'+escH(g(r,"Business_Entity"))+'</td>';
 html+='<td>'+escH(g(r,"Season"))+'</td>';
 html+='<td>'+escH(mv("Gender",g(r,"Gender")))+'</td>';
@@ -287,6 +312,7 @@ renderKPI();renderTables()}
 
 // ★ MODAL
 function openModal(rec){
+_currentRecId=rec["ID"];
 document.getElementById("modalTitle").textContent=g(rec,"Style_SKU");
 document.getElementById("modalSubtitle").textContent=g(rec,"Style_Name");
 var te=document.getElementById("modalThumb");te.innerHTML="👕";
@@ -372,7 +398,7 @@ return h}
 
 function openLightbox(src){if(!src)return;document.getElementById("lightboxImg").src=src;document.getElementById("lightboxOverlay").style.display="flex"}
 function closeLightbox(){document.getElementById("lightboxOverlay").style.display="none";document.getElementById("lightboxImg").src=""}
-function closeModal(){document.getElementById("modalOverlay").classList.remove("active")}
+function closeModal(){document.getElementById("modalOverlay").classList.remove("active");_imgQ=[];_imgBusy=false;_currentRecId=null}
 document.getElementById("modalClose").addEventListener("click",closeModal);
 document.getElementById("modalOverlay").addEventListener("click",function(e){if(e.target===this)closeModal()});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"){if(document.getElementById("lightboxOverlay").style.display==="flex")closeLightbox();else closeModal()}});
