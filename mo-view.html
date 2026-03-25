@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MO View v3</title>
+<title>MO View v4</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -35,8 +35,6 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .search-box{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 10px;font-size:11px;width:200px;outline:none;font-family:inherit}
 .search-box:focus{border-color:var(--ac);box-shadow:0 0 0 2px rgba(59,130,246,.1)}
 .fsel{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 8px;font-size:11px;outline:none;font-family:inherit;cursor:pointer}
-
-/* ★ 월별 섹션 간격 확대 */
 .mt-sec{margin-bottom:32px}
 .mt-card{background:var(--cw);border:1px solid var(--bd);border-radius:8px;overflow:hidden}
 .mt-hd{padding:10px 16px;background:#F8FAFC;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
@@ -45,7 +43,6 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .tbl-scroll{overflow-x:auto}
 table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;table-layout:fixed}
 .zt th{background:#F1F5F9;padding:9px 8px;color:var(--tm);font-weight:800;font-size:10px;border-bottom:1px solid var(--bd);white-space:nowrap;overflow:hidden}
-/* ★ 행 높이 증가 */
 .zt td{padding:10px 8px;border-bottom:1px solid #F1F5F9;color:var(--tx);vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;height:40px}
 .zt tbody tr{cursor:pointer;transition:background .1s}
 .zt tbody tr:hover td{background:#EFF6FF}
@@ -59,7 +56,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .dly-badge{display:inline-block;padding:1px 4px;border-radius:3px;font-size:7px;font-weight:700;background:#FEF2F2;color:#DC2626;margin-left:2px;animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* ★ Timeline 개선 */
+/* Timeline */
 .tl-card{background:var(--cw);border:1px solid var(--bd);border-radius:0 0 8px 8px;border-top:2px dashed var(--bd);overflow:hidden}
 .tl-hd{padding:10px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;background:#FAFBFC;border-bottom:1px solid var(--bd)}
 .tl-title{font-size:12px;font-weight:800;color:var(--tx)}
@@ -72,29 +69,31 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .tl-tbl th,.tl-tbl td{border:1px solid #EEF2F6}
 .tl-tbl th{background:#F8FAFC;color:var(--tm);font-weight:700;padding:6px 0;text-align:center;font-size:9px}
 .tl-tbl th.wk{background:#FEF8F8;color:#E87979}
-/* ★ Today 헤더 강조 */
 .tl-tbl th.today{background:var(--ac);color:#fff;font-weight:900;position:relative}
-.tl-tbl .info-cell{width:175px;min-width:175px;text-align:left;background:#FAFBFC;padding:6px 10px;position:sticky;left:0;z-index:2;border-right:2px solid var(--bd)}
-
-/* ★ 행 높이 증가 */
-.tl-tbl td{padding:0px;vertical-align:middle;height:22px;background:#FEFEFE}
-.tl-tbl tr.plan-row td{height:20px}
-.tl-tbl tr.actual-row td{height:22px}
-
-/* ★ MO 그룹 구분 - 간격 행 */
-.tl-tbl tr.mo-gap td{height:10px;background:#F8FAFC !important;border-top:2px solid #E2E8F0;border-bottom:none}
-.tl-tbl tr.mo-gap .info-cell{background:#F8FAFC !important}
-
-/* ★ Today 세로선 */
-.tl-tbl td.today-col{position:relative;background:#EFF6FF !important}
-.tl-tbl td.today-col::after{content:'';position:absolute;left:50%;top:0;width:2px;height:100%;background:rgba(59,130,246,0.5);transform:translateX(-50%);pointer-events:none;z-index:1}
 .tl-tbl th.today::after{content:'▼';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);font-size:8px;color:var(--ac)}
+.tl-tbl .info-cell{width:175px;min-width:175px;text-align:left;background:#FAFBFC;padding:6px 10px;position:sticky;left:0;z-index:2;border-right:2px solid var(--bd)}
+.tl-tbl td{padding:0px;vertical-align:middle;height:22px;background:#FEFEFE}
+.tl-tbl tr.plan-row td{height:18px}
+.tl-tbl tr.actual-row td{height:20px}
+.tl-tbl td.today-col{position:relative;background:#F0F7FF !important}
+.tl-tbl td.today-col::after{content:'';position:absolute;left:50%;top:0;width:2px;height:100%;background:rgba(59,130,246,0.35);transform:translateX(-50%);pointer-events:none;z-index:1}
 
-.tl-bar{height:100%;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;min-height:16px}
-/* Plan colors (pastel/light) */
-.pb-fab{background:#D8B4FE}.pb-cut{background:#FDBA74}.pb-sew{background:#FCA5A5}.pb-pack{background:#86EFAC}.pb-ship{background:#93C5FD}
-/* Actual colors (richer) */
-.ab-fab{background:#8B5CF6}.ab-cut{background:#F97316}.ab-sew{background:#EF4444}.ab-pack{background:#22C55E}.ab-ship{background:#2563EB}
+/* ★★★ TIMELINE BAR STYLES ★★★ */
+.tl-bar{height:100%;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;white-space:nowrap;overflow:hidden;min-height:14px}
+
+/* ── Plan bars: dashed border, transparent fill ── */
+.pb-fab{background:transparent;border:1.5px dashed #C4B5FD;color:#8B5CF6}
+.pb-cut{background:transparent;border:1.5px dashed #FDBA74;color:#D97706}
+.pb-sew{background:transparent;border:1.5px dashed #FCA5A5;color:#DC2626}
+.pb-pack{background:transparent;border:1.5px dashed #86EFAC;color:#16A34A}
+.pb-ship{background:transparent;border:1.5px dashed #93C5FD;color:#2563EB}
+
+/* ── Actual bars: soft pastel fill ── */
+.ab-fab{background:#DDD6FE;color:#6D28D9}
+.ab-cut{background:#FED7AA;color:#C2410C}
+.ab-sew{background:#FECACA;color:#B91C1C}
+.ab-pack{background:#BBF7D0;color:#15803D}
+.ab-ship{background:#BFDBFE;color:#1D4ED8}
 
 .tl-mo-info{cursor:pointer}
 .tl-mo-info:hover{background:#EFF6FF !important}
@@ -239,166 +238,4 @@ if(ym){html+=buildTimeline(items,ym.y,ym.m,key)}
 html+='</div></div>'});
 
 document.getElementById("monthlyContent").innerHTML=html;
-document.querySelectorAll("#monthlyContent tr[data-id]").forEach(function(row){
-row.addEventListener("click",function(){var id=this.getAttribute("data-id");var r=allRec.find(function(x){return x["ID"]===id});if(r)openModal(r)})});
-document.querySelectorAll(".tl-mo-info").forEach(function(el){
-el.addEventListener("click",function(){var id=this.getAttribute("data-id");var r=allRec.find(function(x){return x["ID"]===id});if(r)openModal(r)})})}
-
-function parseYM(key){var m=key.match(/(\d+)년\s*(\d+)월/);if(!m)return null;var y=parseInt(m[1]);if(y<100)y+=2000;return{y:y,m:parseInt(m[2])}}
-
-function buildTimeline(items,yr,mo,label){
-var daysInMonth=new Date(yr,mo,0).getDate();
-var curMM=yr+"-"+(mo<10?"0":"")+mo;
-var todayD=(today.getFullYear()===yr&&today.getMonth()+1===mo)?today.getDate():0;
-
-var h='<div class="tl-card"><div class="tl-hd"><div class="tl-title">📊 '+escH(label)+' Production Timeline (Plan vs Actual)</div>';
-h+='<div class="tl-legend"><span class="tl-type-badge" style="background:#F0EBFF;color:#7C3AED">P = Plan</span><span class="tl-type-badge" style="background:#FEF3C7;color:#B45309">A = Actual</span>';
-h+='<span><span class="tl-dot" style="background:#C4B5FD"></span>Fab</span><span><span class="tl-dot" style="background:#FDBA74"></span>Cut</span><span><span class="tl-dot" style="background:#FCA5A5"></span>Sew</span><span><span class="tl-dot" style="background:#86EFAC"></span>Pack</span><span><span class="tl-dot" style="background:#93C5FD"></span>Ship</span></div></div>';
-h+='<div class="tl-scroll"><table class="tl-tbl"><thead><tr><th class="info-cell">MO / Style</th>';
-
-// ★ 헤더: Today 컬럼 강조
-for(var d=1;d<=daysInMonth;d++){
-  var dt=new Date(yr,mo-1,d);var dow=dt.getDay();
-  var cls=(dow===0||dow===6)?"wk":"";
-  if(d===todayD)cls="today";
-  h+='<th class="'+cls+'">'+d+(d===todayD?'<br><span style="font-size:7px">▼</span>':'')+'</th>';
-}
-h+='</tr></thead><tbody>';
-
-var hasAny=false;
-var visibleItems=[];
-items.forEach(function(r){
-  var fields=["Plan_Fabric_Date","Plan_Cutting_Start","Plan_Cutting_End","Plan_Sewing_Start","Plan_Sewing_End","Plan_Packing_Start","Plan_Packing_End","Fabric_In_house_Date","Cutting_Start_Date","Cutting_End_Date","Sewing_Start_Date","Sewing_Completion_Date","Packing_Start_Date","Packing_End_Date","Ship_Date"];
-  var inMonth=false;
-  fields.forEach(function(f){var p=pd(g(r,f));if(p&&p.substring(0,7)===curMM)inMonth=true});
-  var edp=pd(g(r,"Expected_Delivery"));if(edp&&edp.substring(0,7)===curMM)inMonth=true;
-  if(inMonth){visibleItems.push(r);hasAny=true}
-});
-
-visibleItems.forEach(function(r,idx){
-  // ★ MO 사이 구분선 (첫 번째 MO 제외)
-  if(idx>0){
-    h+='<tr class="mo-gap"><td class="info-cell" style="border-right:2px solid var(--bd)"></td>';
-    for(var d=1;d<=daysInMonth;d++){
-      h+='<td'+(d===todayD?' class="today-col"':'')+'></td>';
-    }
-    h+='</tr>';
-  }
-
-  // Plan row
-  var pFab=dayInMo(g(r,"Plan_Fabric_Date"),curMM);
-  var pCS=dayInMo(g(r,"Plan_Cutting_Start"),curMM);var pCE=dayInMo(g(r,"Plan_Cutting_End"),curMM);
-  var pSS=dayInMo(g(r,"Plan_Sewing_Start"),curMM);var pSE=dayInMo(g(r,"Plan_Sewing_End"),curMM);
-  var pPS=dayInMo(g(r,"Plan_Packing_Start"),curMM);var pPE=dayInMo(g(r,"Plan_Packing_End"),curMM);
-  var pShip=dayInMo(g(r,"Expected_Delivery"),curMM);
-
-  h+='<tr class="plan-row"><td class="info-cell tl-mo-info" rowspan="2" data-id="'+r["ID"]+'">';
-  h+='<div class="tl-mo-num">'+escH(g(r,"MO_Number"))+'</div>';
-  h+='<div class="tl-mo-name">'+escH(g(r,"Style_Name"))+'</div>';
-  h+='<div class="tl-mo-meta">'+escH(g(r,"Factory"))+' · '+(parseInt(g(r,"Total_Quantity"))||0).toLocaleString()+'pcs</div></td>';
-  h+=buildBarRow(daysInMonth,pFab,pCS,pCE,pSS,pSE,pPS,pPE,pShip,true,todayD);
-  h+='</tr>';
-
-  // Actual row
-  var aFab=dayInMo(g(r,"Fabric_In_house_Date"),curMM);
-  var aCS=dayInMo(g(r,"Cutting_Start_Date"),curMM);var aCE=dayInMo(g(r,"Cutting_End_Date"),curMM);
-  var aSS=dayInMo(g(r,"Sewing_Start_Date"),curMM);var aSE=dayInMo(g(r,"Sewing_Completion_Date"),curMM);
-  var aPS=dayInMo(g(r,"Packing_Start_Date"),curMM);var aPE=dayInMo(g(r,"Packing_End_Date"),curMM);
-  var aSh=dayInMo(g(r,"Ship_Date"),curMM);
-  h+='<tr class="actual-row">'+buildBarRow(daysInMonth,aFab,aCS,aCE,aSS,aSE,aPS,aPE,aSh,false,todayD)+'</tr>';
-});
-
-if(!hasAny)h+='<tr><td class="info-cell" colspan="'+(daysInMonth+1)+'" style="text-align:center;padding:16px;color:#94A3B8;font-size:10px">이 달에 해당하는 일정이 없습니다</td></tr>';
-h+='</tbody></table></div></div>';
-return h}
-
-function dayInMo(v,curMM){var p=pd(v);if(!p||p.substring(0,7)!==curMM)return 0;return parseInt(p.substring(8,10))||0}
-
-// ★ Today 세로선: todayD 파라미터 추가
-function buildBarRow(days,fab,cs,ce,ss,se,ps,pe,ship,isPlan,todayD){
-var prefix=isPlan?"pb":"ab";
-var h='';
-var skip=0;
-for(var d=1;d<=days;d++){
-  if(skip>0){skip--;continue}
-  // Today 컬럼 클래스
-  var tdClass=(d===todayD)?' class="today-col"':'';
-  if(fab===d){h+='<td'+tdClass+'><div class="tl-bar '+prefix+'-fab">FAB</div></td>'}
-  else if(cs===d){
-    var sp=ce?ce-cs+1:1;if(sp<1)sp=1;if(d+sp-1>days)sp=days-d+1;
-    // Today가 span 안에 있으면 colspan 유지 (세로선은 오버레이 불가, 첫 셀에만)
-    var hasTodayInSpan=(todayD>=d&&todayD<=d+sp-1);
-    skip=sp-1;
-    h+='<td colspan="'+sp+'"'+(d===todayD?' class="today-col"':'')+'><div class="tl-bar '+prefix+'-cut">CUT</div></td>';
-  }
-  else if(ss===d){
-    var sp=se?se-ss+1:1;if(sp<1)sp=1;if(d+sp-1>days)sp=days-d+1;skip=sp-1;
-    h+='<td colspan="'+sp+'"'+(d===todayD?' class="today-col"':'')+'><div class="tl-bar '+prefix+'-sew">SEW</div></td>';
-  }
-  else if(ps===d){
-    var sp=pe?pe-ps+1:1;if(sp<1)sp=1;if(d+sp-1>days)sp=days-d+1;skip=sp-1;
-    h+='<td colspan="'+sp+'"'+(d===todayD?' class="today-col"':'')+'><div class="tl-bar '+prefix+'-pack">PACK</div></td>';
-  }
-  else if(ship===d){h+='<td'+tdClass+'><div class="tl-bar '+prefix+'-ship">SHIP</div></td>'}
-  else{h+='<td'+tdClass+'></td>'}
-}
-return h}
-
-function openModal(r){
-document.getElementById("mTitle").textContent=g(r,"MO_Number");
-document.getElementById("mSub").textContent=g(r,"Style_Name")+" — "+g(r,"Style_SKU");
-var h='';
-function dv(v){return v==="-"?'<span class="d-val empty">미입력</span>':escH(v)}
-function it(l,v){return'<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'}
-
-h+='<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / Order Info / 订单信息</div><div class="d-grid">';
-h+=it("MO Number / MO번호 / 订单编号",dv(g(r,"MO_Number")));
-h+=it("Style SKU / 스타일SKU / 款式SKU",dv(g(r,"Style_SKU")));
-h+=it("Style Name / 스타일명 / 款式名",dv(g(r,"Style_Name")));
-h+=it("Season / 시즌 / 季节",dv(g(r,"Season")));
-h+=it("Factory / 공장 / 工厂",dv(g(r,"Factory")));
-h+=it("Order Date / 주문일 / 订单日期",dv(g(r,"Order_Date")));
-h+=it("Order Status / 주문상태 / 订单状态",'<span class="tag '+tc(g(r,"Order_Status"))+'">'+escH(g(r,"Order_Status"))+'</span>');
-h+=it("Expected Delivery / 예상배송 / 预计交货",dv(g(r,"Expected_Delivery")));
-h+=it("Delivery Status / 납기상태 / 交期情况",isDelayed(r)?'<span class="tag t-dg">DELAYED</span>':dv(g(r,"Delivery_Status")));
-h+='</div></div>';
-
-h+='<div class="m-sec"><div class="m-sec-t">📦 수량 & 금액 / Quantity & Amount / 数量&金额</div><div class="d-grid">';
-h+=it("Total Qty / 총수량 / 总数量",dv(g(r,"Total_Quantity")));
-h+=it("Grand Total / 총금액 / 总金额",dv(g(r,"Grand_Total")));
-h+=it("Notes / 메모 / 备注",dv(g(r,"Notes")));
-h+='</div></div>';
-
-h+='<div class="m-sec"><div class="m-sec-t">🏭 생산 추적 / Production / 生产跟踪</div><div class="d-grid">';
-h+=it("Production Status / 생산상태 / 生산状态",'<span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span>');
-h+=it("Fabric Status / 원단상태 / 面料进度",dv(g(r,"Fabric_Status")));
-h+=it("Progress / 진척률 / 生产进度",dv(g(r,"Progress")));
-h+=it("Cut Qty / 재단수량 / 裁剪数量",dv(g(r,"Cut_Quantity")));
-h+=it("Finished Qty / 완제품수량 / 成衣数量",dv(g(r,"Finished_Quantity")));
-h+='</div></div>';
-
-h+='<div class="m-sec"><div class="m-sec-t">📅 생산 일정 / Dates / 生产日期</div><div class="tl-modal">';
-[{l:"Fabric In / 원단입고",k:"Fabric_In_house_Date"},{l:"Cutting Start / 재단시작",k:"Cutting_Start_Date"},{l:"Cutting End / 재단완성",k:"Cutting_End_Date"},
-{l:"Sewing Start / 봉제시작",k:"Sewing_Start_Date"},{l:"Sewing End / 봉제완성",k:"Sewing_Completion_Date"},
-{l:"Packing Start / 포장시작",k:"Packing_Start_Date"},{l:"Packing End / 포장완성",k:"Packing_End_Date"},
-{l:"Ship Date / 선적일",k:"Ship_Date"}].forEach(function(t,i){
-var v=g(r,t.k);var p=pd(v);var cls="wait";if(p){if(p<=todayStr)cls="done";else cls="curr"}
-h+='<div class="tl-item"><div class="tl-dot-m '+cls+'">'+(i+1)+'</div><div class="tl-info-m"><div class="tl-lb-m">'+t.l+'</div><div class="tl-dt-m">'+escH(v)+'</div></div></div>'});
-h+='</div></div>';
-
-h+='<div class="m-sec"><div class="m-sec-t">🚢 출고 / Shipment / 出货信息</div><div class="d-grid">';
-h+=it("Ready to Ship / 출고준비 / 待出货",dv(g(r,"Ready_to_Ship")));
-h+=it("Final QC / 최종QC / 最终QC",dv(g(r,"Final_QC_Passed")));
-h+=it("Shipped Qty / 선적수량 / 出货数量",dv(g(r,"Shipped_Quantity")));
-h+='</div></div>';
-
-document.getElementById("mBody").innerHTML=h;
-document.getElementById("modalOv").classList.add("active")}
-
-function closeModal(){document.getElementById("modalOv").classList.remove("active")}
-document.getElementById("mClose").addEventListener("click",closeModal);
-document.getElementById("modalOv").addEventListener("click",function(e){if(e.target===this)closeModal()});
-document.addEventListener("keydown",function(e){if(e.key==="Escape")closeModal()});
-</script>
-</body>
-</html>
+document.querySelectorAll("#monthlyContent tr[data-id]").forEach(funct
