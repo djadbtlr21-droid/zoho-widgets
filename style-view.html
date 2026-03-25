@@ -215,23 +215,16 @@ fi.forEach(function(u,i){queueImg("fImg"+i,u)});
 smi.forEach(function(u,i){queueImg("smImg"+i,u)});
 }
 
-// ★ Navigation — try 3 methods for External Widget
+// ★ Navigation — simple window.open to top frame
 function goTo(url){
-    // Method 1: Zoho SDK
-    try{ZOHO.CREATOR.UTIL.navigateParentURL(url,"same window")}catch(e){}
-    // Method 2: Parent window
-    setTimeout(function(){try{window.parent.location.href=url}catch(e){}},500);
-    // Method 3: Top window
-    setTimeout(function(){try{window.top.location.href=url}catch(e){}},1000);
+    window.open(url,"_top");
 }
 
 var _currentRecId=null;
 
 function editStyle(){
     if(!_currentRecId)return;
-    // Zoho Creator edit: navigate to report, then the record will open in edit mode
-    var url="https://creatorapp.zoho.com/jeramoda/eom/#Report:All_Styles";
-    goTo(url);
+    goTo("https://creatorapp.zoho.com/jeramoda/eom/#Report:All_Styles");
 }
 
 function newMO(){
