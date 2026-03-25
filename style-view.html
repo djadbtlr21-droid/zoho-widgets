@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Style View v17</title>
+<title>Style View v23</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -79,14 +79,16 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .modal-img-box img{width:100%;height:100%;object-fit:contain;cursor:pointer;transition:transform .2s}
 .modal-img-box:hover{border-color:var(--z-accent);box-shadow:0 2px 8px rgba(59,130,246,.15)}
 .modal-img-label{font-size:8px;color:var(--z-text-muted);margin-top:3px;font-weight:600}
-/* Bar Chart */
-.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.bar-label{font-size:9px;font-weight:600;color:var(--z-text-main);min-width:320px;max-width:320px;text-align:right;line-height:1.3;overflow:hidden}
-.bar-wrap{flex:1;height:22px;background:#F1F5F9;border-radius:4px;overflow:hidden}
-.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:10px;font-weight:800;color:#fff;min-width:24px;transition:width .5s ease}
-.bar-count{font-size:11px;font-weight:800;color:var(--z-text-main);min-width:30px;text-align:center}
+/* Bar Chart — compact version */
+.chart-card{background:#fff;border:1px solid var(--z-border);border-radius:8px;padding:16px;margin-top:20px}
+.chart-title{font-size:13px;font-weight:800;color:var(--z-text-main);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:5px}
+.bar-label{font-size:10px;font-weight:600;color:var(--z-text-main);min-width:420px;max-width:420px;text-align:right;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{width:180px;height:20px;background:#F1F5F9;border-radius:4px;overflow:hidden;flex-shrink:0}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:6px;font-size:9px;font-weight:800;color:#fff;min-width:22px;transition:width .5s ease}
+.bar-count{font-size:11px;font-weight:800;color:var(--z-text-main);min-width:24px}
 .error-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C}
-@media(max-width:768px){.kpi-row{grid-template-columns:repeat(2,1fr)}.detail-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.kpi-row{grid-template-columns:repeat(2,1fr)}.detail-grid{grid-template-columns:1fr 1fr}.bar-label{min-width:200px;max-width:200px}}
 </style>
 </head>
 <body>
@@ -97,12 +99,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 </div>
 <div class="kpi-row" id="kpiRow"></div>
 
-<!-- Style Combination Chart -->
-<div id="chartSection" style="background:#fff;border:1px solid var(--z-border);border-radius:8px;padding:16px;margin-bottom:16px;display:none">
-<div style="font-size:13px;font-weight:800;color:var(--z-text-main);margin-bottom:12px;display:flex;align-items:center;gap:6px">📊 Style Type Distribution / 스타일 유형 분포 / 款式类型分布</div>
-<div id="barChart"></div>
-</div>
-
 <div class="filter-bar">
 <input type="text" class="search-box" id="searchBox" placeholder="🔍 SKU, 스타일명, Brand 검색...">
 <select class="filter-select" id="filterCategory"><option value="">All Category</option></select>
@@ -111,7 +107,14 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 <select class="filter-select" id="filterStatus"><option value="">All Status</option></select>
 </div>
 <div id="monthlyTables"></div>
+
+<!-- Chart at BOTTOM -->
+<div id="chartSection" class="chart-card" style="display:none">
+<div class="chart-title">📊 Style Type Distribution / 스타일 유형 분포 / 款式类型分布</div>
+<div id="barChart"></div>
 </div>
+</div>
+
 <div id="errorScreen" style="display:none"><div class="error-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다</div><div id="errorMsg" style="font-size:12px"></div></div></div>
 
 <!-- Lightbox -->
@@ -135,6 +138,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 var APP="eom",REP="All_Styles",MO_REP="All_MO";
 var allRec=[],filtered=[],moSkus=new Set();
 
+/* ── Full-name mappings (trilingual for modal, English-only short for chart) ── */
 var MAP={
 Gender:{"W":"Women / 여성 / 女","M":"Men / 남성 / 男","U":"Unisex / 남녀공용 / 男女通用"},
 Category:{"S":"Set / 세트 / 套装","I":"Individual / 단품 / 单品"},
@@ -147,7 +151,19 @@ Bottom_Length:{"3":"3-Tier(Short) / 3부 / 三分","5":"5-Tier(Mid) / 5부 / 五
 Material_Type:{"P":"Polyester / 폴리에스터 / 涤纶","N":"Nylon / 나일론 / 尼龙","D":"Polyamide / 폴리아미드 / 聚酰胺","C":"Cotton / 코튼 / 棉","H":"Mesh / 메쉬 / 网布","M":"Modal / 모달 / 莫代尔","L":"Lycra / 라이크라 / 莱卡","PS":"Poly+Spandex","NS":"Nylon+Spandex","DS":"Polyamide+Spandex","CS":"Cotton+Spandex"},
 Lining_Type:{"B":"Brushed / 기모 / 磨毛","F":"Fur / 퍼 / 毛皮","N":"None / 없음 / 无"}
 };
+/* English-only short names for chart labels */
+var SHORT={
+Category:{"S":"Set","I":"Individual"},
+Top_Type:{"B":"Bra-top","C":"Crop","T":"Tank"},
+Sleeve:{"L":"Long","S":"Short","N":"None"},
+Fit:{"O":"Oversize","R":"Regular","S":"Slim"},
+Details:{"Z":"Zip-up(Full)","H":"Half-zip","N":"Round-neck","C":"Cami-strap","W":"Wide-strap","D":"Hood"},
+Bottom_Type:{"L":"Leggings","W":"Wide","J":"Jogger","F":"Flare","P":"Pleats","A":"A-line","B":"Shorts"},
+Bottom_Length:{"3":"3-Tier(Short)","5":"5-Tier(Mid)","7":"7-Tier(Mid-full)","9":"9-Tier(Full)"},
+Gender:{"W":"Women","M":"Men","U":"Unisex"}
+};
 function mv(f,v){return(!v||v==="-")?"-":(MAP[f]&&MAP[f][v])?MAP[f][v]:v}
+function sv(f,v){return(!v||v==="-")?null:(SHORT[f]&&SHORT[f][v])?SHORT[f][v]:v}
 
 ZOHO.CREATOR.init().then(function(){
 ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:MO_REP,page:1,pageSize:200}).then(function(r){
@@ -156,7 +172,7 @@ loadStyles()}).catch(function(){loadStyles()})});
 
 function loadStyles(){
 ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:REP,page:1,pageSize:200}).then(function(r){
-if(r&&r.code===3000&&r.data){allRec=r.data;filtered=allRec.slice();renderKPI();buildFilters();renderChart();renderTables();hide("loadingScreen");show("mainContent");setTimeout(loadTableImgs,500)}
+if(r&&r.code===3000&&r.data){allRec=r.data;filtered=allRec.slice();renderKPI();buildFilters();renderTables();renderChart();hide("loadingScreen");show("mainContent");setTimeout(loadTableImgs,500)}
 else showErr("로드 실패")}).catch(function(e){showErr(JSON.stringify(e))})}
 
 function show(i){document.getElementById(i).style.display="block"}
@@ -167,102 +183,46 @@ function escH(s){var d=document.createElement("div");d.textContent=s;return d.in
 function tc(s){s=(s||"").toLowerCase();if(s.indexOf("active")>=0||s.indexOf("approved")>=0||s.indexOf("완성")>=0||s.indexOf("승인")>=0)return"tag-appr";if(s.indexOf("progress")>=0||s.indexOf("sampling")>=0||s.indexOf("샘플")>=0||s.indexOf("진행")>=0)return"tag-prog";if(s.indexOf("rejected")>=0||s.indexOf("cancel")>=0)return"tag-fail";return"tag-draft"}
 
 function getImg1(r){var i=r["Style_Image"];if(!i)return null;if(Array.isArray(i)&&i.length>0)return i[0];if(typeof i==="string"&&i.length>5)return i;if(typeof i==="object"&&i.display_value)return i.display_value;return null}
+function getAllImgs(r,field){var i=r[field];if(!i)return[];if(Array.isArray(i))return i.filter(function(x){return x&&typeof x==="string"&&x.length>5});if(typeof i==="object"&&!Array.isArray(i)){var u=[];Object.keys(i).forEach(function(k){var v=i[k];if(v&&typeof v==="string"&&v.length>5)u.push(v)});return u}if(typeof i==="string"&&i.length>5)return[i];return[]}
 
-function getAllImgs(r,field){
-var i=r[field];if(!i)return[];
-if(Array.isArray(i))return i.filter(function(x){return x&&typeof x==="string"&&x.length>5});
-if(typeof i==="object"&&!Array.isArray(i)){var u=[];Object.keys(i).forEach(function(k){var v=i[k];if(v&&typeof v==="string"&&v.length>5)u.push(v)});return u}
-if(typeof i==="string"&&i.length>5)return[i];return[]}
+function loadTableImgs(){document.querySelectorAll("[data-img]").forEach(function(el){var url=el.getAttribute("data-img");if(!url)return;var img=document.createElement("img");img.style.cssText="width:100%;height:100%;object-fit:cover";try{ZOHO.CREATOR.UTIL.setImageData(img,url,function(){el.innerHTML="";el.appendChild(img)})}catch(e){}})}
 
-// ★ Table thumbnails (one per row - SDK works fine for single calls)
-function loadTableImgs(){
-document.querySelectorAll("[data-img]").forEach(function(el){
-var url=el.getAttribute("data-img");if(!url)return;
-var img=document.createElement("img");img.style.cssText="width:100%;height:100%;object-fit:cover";
-try{ZOHO.CREATOR.UTIL.setImageData(img,url,function(){el.innerHTML="";el.appendChild(img)})}catch(e){}})}
+var _imgQ=[],_imgBusy=false;
+function queueImg(id,url){_imgQ.push({id:id,url:url});if(!_imgBusy)_processNext()}
+function _processNext(){if(_imgQ.length===0){_imgBusy=false;return}_imgBusy=true;var task=_imgQ.shift();var el=document.getElementById(task.id);if(!el){_imgBusy=false;setTimeout(_processNext,100);return}var img=document.createElement("img");img.style.cssText="width:100%;height:100%;object-fit:contain;cursor:pointer";img.onclick=function(){openLightbox(this.src)};var done=false;function finish(s){if(done)return;done=true;if(s){el.innerHTML="";el.appendChild(img)}setTimeout(_processNext,1000)}try{ZOHO.CREATOR.UTIL.setImageData(img,task.url,function(){if(img.src&&img.src.length>20&&img.src!=="about:blank")finish(true);else finish(false)})}catch(e){finish(false)}setTimeout(function(){if(!done){done=true;setTimeout(_processNext,1000)}},30000)}
+function loadAllModalImgs(rec){_imgQ=[];_imgBusy=false;var si=getAllImgs(rec,"Style_Image"),fi=getAllImgs(rec,"Flat_Sketch"),smi=getAllImgs(rec,"Sample_Images");si.forEach(function(u,i){queueImg("sImg"+i,u)});fi.forEach(function(u,i){queueImg("fImg"+i,u)});smi.forEach(function(u,i){queueImg("smImg"+i,u)})}
 
-// ★★★ SEQUENTIAL IMAGE LOADING — One at a time, 30s timeout ★★★
-var _imgQ=[];
-var _imgBusy=false;
-
-function queueImg(id,url){
-_imgQ.push({id:id,url:url});
-if(!_imgBusy)_processNext()}
-
-function _processNext(){
-if(_imgQ.length===0){_imgBusy=false;return}
-_imgBusy=true;
-var task=_imgQ.shift();
-var el=document.getElementById(task.id);
-if(!el){_imgBusy=false;setTimeout(_processNext,100);return}
-
-var img=document.createElement("img");
-img.style.cssText="width:100%;height:100%;object-fit:contain;cursor:pointer";
-img.onclick=function(){openLightbox(this.src)};
-var done=false;
-
-function finish(success){
-    if(done)return;done=true;
-    if(success){el.innerHTML="";el.appendChild(img)}
-    // Wait 1s then process next
-    setTimeout(_processNext,1000);
-}
-
-try{
-ZOHO.CREATOR.UTIL.setImageData(img,url,function(){
-    if(img.src&&img.src.length>20&&img.src!=="about:blank"){finish(true)}
-    else{finish(false)}
-});
-}catch(e){finish(false)}
-// 30 second timeout
-setTimeout(function(){if(!done){done=true;setTimeout(_processNext,1000)}},30000);
-}
-
-function loadAllModalImgs(rec){
-_imgQ=[];_imgBusy=false;
-var si=getAllImgs(rec,"Style_Image");
-var fi=getAllImgs(rec,"Flat_Sketch");
-var smi=getAllImgs(rec,"Sample_Images");
-si.forEach(function(u,i){queueImg("sImg"+i,u)});
-fi.forEach(function(u,i){queueImg("fImg"+i,u)});
-smi.forEach(function(u,i){queueImg("smImg"+i,u)});
-}
-
-// ★ Navigation — simple window.open to top frame
-function goTo(url){
-    window.open(url,"_top");
-}
-
+function goTo(url){window.open(url,"_blank")}
 var _currentRecId=null;
+function editStyle(){if(!_currentRecId)return;goTo("https://creatorapp.zoho.com/jeramoda/eom/#Report:All_Styles")}
+function newMO(){goTo("https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_MO")}
 
-function editStyle(){
-    if(!_currentRecId)return;
-    goTo("https://creatorapp.zoho.com/jeramoda/eom/#Report:All_Styles");
-}
+/* ── KPI ── */
+function renderKPI(){var t=filtered.length;var a=filtered.filter(function(r){return tc(g(r,"Style_Status"))==="tag-appr"}).length;var sm=filtered.filter(function(r){var s=(g(r,"Sample_Status")+" "+g(r,"Style_Status")).toLowerCase();return s.indexOf("sampling")>=0||s.indexOf("샘플")>=0}).length;document.getElementById("kpiRow").innerHTML='<div class="kpi-card kpi-total"><div class="kpi-label">총 스타일 / Total</div><div class="kpi-val">'+t+'</div></div><div class="kpi-card kpi-active"><div class="kpi-label">Active / 활성화</div><div class="kpi-val">'+a+'</div></div><div class="kpi-card kpi-sampling"><div class="kpi-label">Sampling / 샘플진행</div><div class="kpi-val">'+sm+'</div></div><div class="kpi-card kpi-inactive"><div class="kpi-label">기타 / Other</div><div class="kpi-val">'+(t-a)+'</div></div>'}
 
-function newMO(){
-    goTo("https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_MO");
-}
+/* ── Filters ── */
+function buildFilters(){var cat={},gen={},se={},st={};allRec.forEach(function(r){var c=g(r,"Category");if(c!=="-")cat[c]=mv("Category",c);var ge=g(r,"Gender");if(ge!=="-")gen[ge]=mv("Gender",ge);var s=g(r,"Season");if(s!=="-")se[s]=1;var t=g(r,"Style_Status");if(t!=="-")st[t]=1});var el;el=document.getElementById("filterCategory");Object.keys(cat).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+escH(cat[k])+'</option>'});el=document.getElementById("filterGender");Object.keys(gen).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+escH(gen[k])+'</option>'});el=document.getElementById("filterSeason");Object.keys(se).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});el=document.getElementById("filterStatus");Object.keys(st).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'})}
 
-// KPI
-// ★ Style Type Distribution Chart
+/* ── Chart: English-only short labels, compact bars ── */
 var COLORS=["#3B82F6","#8B5CF6","#EC4899","#F97316","#10B981","#06B6D4","#EF4444","#F59E0B","#6366F1","#14B8A6","#E11D48","#84CC16","#0EA5E9","#A855F7","#F43F5E"];
 function renderChart(){
 var combos={};
 allRec.forEach(function(r){
-var cat=g(r,"Category"),top=g(r,"Top_Type"),sl=g(r,"Sleeve"),fit=g(r,"Fit"),det=g(r,"Details"),bot=g(r,"Bottom_Type"),bl=g(r,"Bottom_Length");
-// Build key from non-empty values
+var cat=g(r,"Category"),gen=g(r,"Gender"),top=g(r,"Top_Type"),sl=g(r,"Sleeve"),fit=g(r,"Fit"),det=g(r,"Details"),bot=g(r,"Bottom_Type"),bl=g(r,"Bottom_Length");
 var parts=[];
-if(cat!=="-")parts.push({f:"Category",v:cat});
-if(top!=="-")parts.push({f:"Top_Type",v:top});
-if(sl!=="-")parts.push({f:"Sleeve",v:sl});
-if(fit!=="-")parts.push({f:"Fit",v:fit});
-if(det!=="-")parts.push({f:"Details",v:det});
-if(bot!=="-")parts.push({f:"Bottom_Type",v:bot});
-if(bl!=="-")parts.push({f:"Bottom_Length",v:bl});
-if(parts.length===0)return;
-var key=parts.map(function(p){return p.f+":"+p.v}).join("|");
-var label=parts.map(function(p){return mv(p.f,p.v)}).join(" + ");
+/* Category as prefix in brackets */
+var catName=sv("Category",cat);
+/* Collect detail parts (English short names only) */
+var details=[];
+var topN=sv("Top_Type",top);if(topN)details.push(topN);
+var slN=sv("Sleeve",sl);if(slN)details.push(slN);
+var fitN=sv("Fit",fit);if(fitN)details.push(fitN);
+var detN=sv("Details",det);if(detN)details.push(detN);
+var botN=sv("Bottom_Type",bot);if(botN)details.push(botN);
+var blN=sv("Bottom_Length",bl);if(blN)details.push(blN);
+if(!catName&&details.length===0)return;
+var label=(catName?"["+catName+"] ":"")+(details.length>0?details.join(" + "):"");
+var key=label;
 if(!combos[key])combos[key]={label:label,count:0};
 combos[key].count++});
 
@@ -272,103 +232,24 @@ document.getElementById("chartSection").style.display="block";
 var max=arr[0].count;
 var h='';
 arr.forEach(function(item,i){
-var pct=Math.max(5,Math.round(item.count/max*100));
+var pct=Math.max(8,Math.round(item.count/max*100));
 var color=COLORS[i%COLORS.length];
 h+='<div class="bar-row">';
 h+='<div class="bar-label" title="'+escH(item.label)+'">'+escH(item.label)+'</div>';
-h+='<div class="bar-wrap"><div class="bar-fill" style="width:'+pct+'%;background:'+color+'">'+item.count+'</div></div>';
+h+='<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+color+'">'+item.count+'</div></div>';
 h+='<div class="bar-count">'+item.count+'</div>';
 h+='</div>'});
 document.getElementById("barChart").innerHTML=h}
 
-function renderKPI(){
-var t=filtered.length;
-var a=filtered.filter(function(r){return tc(g(r,"Style_Status"))==="tag-appr"}).length;
-var sm=filtered.filter(function(r){var s=(g(r,"Sample_Status")+" "+g(r,"Style_Status")).toLowerCase();return s.indexOf("sampling")>=0||s.indexOf("샘플")>=0}).length;
-document.getElementById("kpiRow").innerHTML=
-'<div class="kpi-card kpi-total"><div class="kpi-label">총 스타일 / Total</div><div class="kpi-val">'+t+'</div></div>'+
-'<div class="kpi-card kpi-active"><div class="kpi-label">Active / 활성화</div><div class="kpi-val">'+a+'</div></div>'+
-'<div class="kpi-card kpi-sampling"><div class="kpi-label">Sampling / 샘플진행</div><div class="kpi-val">'+sm+'</div></div>'+
-'<div class="kpi-card kpi-inactive"><div class="kpi-label">기타 / Other</div><div class="kpi-val">'+(t-a)+'</div></div>'}
+/* ── Tables ── */
+function renderTables(){var groups={};filtered.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[key])groups[key]=[];groups[key].push(r)});var html="";Object.keys(groups).sort().forEach(function(key){var items=groups[key];html+='<div class="month-section"><div class="month-card"><div class="month-header"><div class="month-title">📅 '+escH(key)+'</div><span class="month-count">'+items.length+' styles</span></div><div class="table-scroll"><table class="z-table"><thead><tr><th style="width:18%">Style Info</th><th style="width:7%">Brand</th><th style="width:7%">Season</th><th style="width:12%">Gender</th><th style="width:12%">Category</th><th style="width:14%">Material_Type</th><th style="width:8%">Target_Cost</th><th style="width:10%">Status</th><th style="width:6%">Sample</th><th style="width:8%">Order</th></tr></thead><tbody>';items.forEach(function(r){var sku=g(r,"Style_SKU"),name=g(r,"Style_Name");var iu=getImg1(r),ia=iu?' data-img="'+iu+'"':'';var ordered=moSkus.has(sku);html+='<tr data-id="'+r["ID"]+'"><td><div class="style-info"><div class="style-thumb"'+ia+'>👕</div><div><span class="style-code">'+escH(sku)+'</span><span class="style-name">'+escH(name)+'</span></div></div></td><td>'+escH(g(r,"Business_Entity"))+'</td><td>'+escH(g(r,"Season"))+'</td><td>'+escH(mv("Gender",g(r,"Gender")))+'</td><td>'+escH(mv("Category",g(r,"Category")))+'</td><td>'+escH(mv("Material_Type",g(r,"Material_Type")))+'</td><td>'+escH(g(r,"Target_Cost"))+'</td><td><span class="tag '+tc(g(r,"Style_Status"))+'">'+escH(g(r,"Style_Status"))+'</span></td><td><span class="tag '+tc(g(r,"Sample_Status"))+'">'+escH(g(r,"Sample_Status"))+'</span></td><td>'+(ordered?'<span class="tag tag-appr">Ordered</span>':'<span class="tag tag-fail">Not Ordered</span>')+'</td></tr>'});html+='</tbody></table></div></div></div>'});document.getElementById("monthlyTables").innerHTML=html;setTimeout(loadTableImgs,500);document.querySelectorAll("#monthlyTables tr[data-id]").forEach(function(row){row.addEventListener("click",function(){var id=this.getAttribute("data-id");var r=allRec.find(function(x){return x["ID"]===id});if(r)openModal(r)})})}
 
-// ★ Filters: Category, Gender, Season, Status
-function buildFilters(){
-var cat={},gen={},se={},st={};
-allRec.forEach(function(r){
-var c=g(r,"Category");if(c!=="-")cat[c]=mv("Category",c);
-var ge=g(r,"Gender");if(ge!=="-")gen[ge]=mv("Gender",ge);
-var s=g(r,"Season");if(s!=="-")se[s]=1;
-var t=g(r,"Style_Status");if(t!=="-")st[t]=1});
-var el;
-el=document.getElementById("filterCategory");Object.keys(cat).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+escH(cat[k])+'</option>'});
-el=document.getElementById("filterGender");Object.keys(gen).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+escH(gen[k])+'</option>'});
-el=document.getElementById("filterSeason");Object.keys(se).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});
-el=document.getElementById("filterStatus");Object.keys(st).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'})}
+/* ── Filter events ── */
+["searchBox","filterCategory","filterGender","filterSeason","filterStatus"].forEach(function(id){document.getElementById(id).addEventListener(id==="searchBox"?"input":"change",af)});
+function af(){var q=document.getElementById("searchBox").value.toLowerCase().trim();var fc=document.getElementById("filterCategory").value;var fg=document.getElementById("filterGender").value;var fs=document.getElementById("filterSeason").value;var ft=document.getElementById("filterStatus").value;filtered=allRec.filter(function(r){if(q){var h=(g(r,"Style_SKU")+" "+g(r,"Style_Name")+" "+g(r,"Business_Entity")).toLowerCase();if(h.indexOf(q)<0)return false}if(fc&&g(r,"Category")!==fc)return false;if(fg&&g(r,"Gender")!==fg)return false;if(fs&&g(r,"Season")!==fs)return false;if(ft&&g(r,"Style_Status")!==ft)return false;return true});renderKPI();renderTables()}
 
-// ★ Table: columns center-aligned, matching user's image 2
-function renderTables(){
-var groups={};
-filtered.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[key])groups[key]=[];groups[key].push(r)});
-
-var html="";
-Object.keys(groups).sort().forEach(function(key){
-var items=groups[key];
-html+='<div class="month-section"><div class="month-card">';
-html+='<div class="month-header"><div class="month-title">📅 '+escH(key)+'</div><span class="month-count">'+items.length+' styles</span></div>';
-html+='<div class="table-scroll"><table class="z-table"><thead><tr>';
-html+='<th style="width:18%">Style Info</th><th style="width:7%">Brand</th><th style="width:7%">Season</th><th style="width:12%">Gender</th><th style="width:12%">Category</th><th style="width:14%">Material_Type</th><th style="width:8%">Target_Cost</th><th style="width:10%">Status</th><th style="width:6%">Sample</th><th style="width:8%">Order</th>';
-html+='</tr></thead><tbody>';
-items.forEach(function(r){
-var sku=g(r,"Style_SKU"),name=g(r,"Style_Name");
-var iu=getImg1(r),ia=iu?' data-img="'+iu+'"':'';
-var ordered=moSkus.has(sku);
-html+='<tr data-id="'+r["ID"]+'">';
-html+='<td><div class="style-info"><div class="style-thumb"'+ia+'>👕</div><div><span class="style-code">'+escH(sku)+'</span><span class="style-name">'+escH(name)+'</span></div></div></td>';
-html+='<td>'+escH(g(r,"Business_Entity"))+'</td>';
-html+='<td>'+escH(g(r,"Season"))+'</td>';
-html+='<td>'+escH(mv("Gender",g(r,"Gender")))+'</td>';
-html+='<td>'+escH(mv("Category",g(r,"Category")))+'</td>';
-html+='<td>'+escH(mv("Material_Type",g(r,"Material_Type")))+'</td>';
-html+='<td>'+escH(g(r,"Target_Cost"))+'</td>';
-html+='<td><span class="tag '+tc(g(r,"Style_Status"))+'">'+escH(g(r,"Style_Status"))+'</span></td>';
-html+='<td><span class="tag '+tc(g(r,"Sample_Status"))+'">'+escH(g(r,"Sample_Status"))+'</span></td>';
-html+='<td>'+(ordered?'<span class="tag tag-appr">Ordered</span>':'<span class="tag tag-fail">Not Ordered</span>')+'</td>';
-html+='</tr>'});
-html+='</tbody></table></div></div></div>'});
-document.getElementById("monthlyTables").innerHTML=html;
-setTimeout(loadTableImgs,500);
-document.querySelectorAll("#monthlyTables tr[data-id]").forEach(function(row){
-row.addEventListener("click",function(){var id=this.getAttribute("data-id");var r=allRec.find(function(x){return x["ID"]===id});if(r)openModal(r)})})}
-
-// Filters
-["searchBox","filterCategory","filterGender","filterSeason","filterStatus"].forEach(function(id){
-document.getElementById(id).addEventListener(id==="searchBox"?"input":"change",af)});
-function af(){
-var q=document.getElementById("searchBox").value.toLowerCase().trim();
-var fc=document.getElementById("filterCategory").value;
-var fg=document.getElementById("filterGender").value;
-var fs=document.getElementById("filterSeason").value;
-var ft=document.getElementById("filterStatus").value;
-filtered=allRec.filter(function(r){
-if(q){var h=(g(r,"Style_SKU")+" "+g(r,"Style_Name")+" "+g(r,"Business_Entity")).toLowerCase();if(h.indexOf(q)<0)return false}
-if(fc&&g(r,"Category")!==fc)return false;
-if(fg&&g(r,"Gender")!==fg)return false;
-if(fs&&g(r,"Season")!==fs)return false;
-if(ft&&g(r,"Style_Status")!==ft)return false;return true});
-renderKPI();renderTables()}
-
-// ★ MODAL
-function openModal(rec){
-_currentRecId=rec["ID"];
-document.getElementById("modalTitle").textContent=g(rec,"Style_SKU");
-document.getElementById("modalSubtitle").textContent=g(rec,"Style_Name");
-var te=document.getElementById("modalThumb");te.innerHTML="👕";
-var iu=getImg1(rec);
-if(iu){var hi=document.createElement("img");hi.style.cssText="width:100%;height:100%;object-fit:cover";
-try{ZOHO.CREATOR.UTIL.setImageData(hi,iu,function(){te.innerHTML="";te.appendChild(hi)})}catch(e){}}
-document.getElementById("modalBody").innerHTML=buildDetail(rec);
-document.getElementById("modalOverlay").classList.add("active");
-setTimeout(function(){loadAllModalImgs(rec)},500)}
+/* ── Modal ── */
+function openModal(rec){_currentRecId=rec["ID"];document.getElementById("modalTitle").textContent=g(rec,"Style_SKU");document.getElementById("modalSubtitle").textContent=g(rec,"Style_Name");var te=document.getElementById("modalThumb");te.innerHTML="👕";var iu=getImg1(rec);if(iu){var hi=document.createElement("img");hi.style.cssText="width:100%;height:100%;object-fit:cover";try{ZOHO.CREATOR.UTIL.setImageData(hi,iu,function(){te.innerHTML="";te.appendChild(hi)})}catch(e){}}document.getElementById("modalBody").innerHTML=buildDetail(rec);document.getElementById("modalOverlay").classList.add("active");setTimeout(function(){loadAllModalImgs(rec)},500)}
 
 function buildDetail(d){
 var h='';
@@ -377,7 +258,6 @@ function dt(v){return'<span class="tag '+tc(v)+'">'+escH(v)+'</span>'}
 function it(l,v){return'<div class="detail-item"><span class="detail-label">'+l+'</span><span class="detail-value">'+v+'</span></div>'}
 var ordered=moSkus.has(g(d,"Style_SKU"));
 
-// ── 1. 기본 정보 ──
 h+='<div class="modal-section"><div class="modal-section-title">📌 기본 정보 / Identity / 基本信息</div><div class="detail-grid">';
 h+=it("Style SKU / 스타일SKU / 款式SKU",dv(g(d,"Style_SKU")));
 h+=it("Style Name / 스타일명 / 款式名",dv(g(d,"Style_Name")));
@@ -390,7 +270,6 @@ h+=it("Style Status / 스타일상태 / 款式状态",dt(g(d,"Style_Status")));
 h+=it("Order Status / 오더상태 / 订单状态",ordered?'<span class="tag tag-appr">Ordered</span>':'<span class="tag tag-fail">Not Ordered</span>');
 h+='</div></div>';
 
-// ── 2. 제품 정의 ──
 h+='<div class="modal-section"><div class="modal-section-title">👗 제품 정의 / Product Definition / 产品定义</div><div class="detail-grid">';
 h+=it("Gender / 성별 / 性别",dv(mv("Gender",g(d,"Gender"))));
 h+=it("Category / 구분 / 大类",dv(mv("Category",g(d,"Category"))));
@@ -402,27 +281,23 @@ h+=it("Bottom Type / 하의유형 / 下装类型",dv(mv("Bottom_Type",g(d,"Botto
 h+=it("Bottom Length / 하의기장 / 下装长短",dv(mv("Bottom_Length",g(d,"Bottom_Length"))));
 h+='</div></div>';
 
-// ── 3. 원단 ──
 h+='<div class="modal-section"><div class="modal-section-title">🧵 원단 정보 / Material Info / 面料</div><div class="detail-grid">';
 h+=it("Material Type / 원단종류 / 面料种类",dv(mv("Material_Type",g(d,"Material_Type"))));
 h+=it("blended % / 혼방% / 混纺%",dv(g(d,"blended_percentage")));
 h+=it("Lining Type / 안감유형 / 里料类型",dv(mv("Lining_Type",g(d,"Lining_Type"))));
 h+='</div></div>';
 
-// ── 4. 색상 & 사이즈 ──
 h+='<div class="modal-section"><div class="modal-section-title">🎨 색상 & 사이즈 / Variants / 尺寸颜色</div><div class="detail-grid">';
 h+=it("Available Sizes / 사이즈 / 尺寸",dv(g(d,"Available_Sizes")));
 h+=it("Available Colors / 색상 / 颜色",dv(g(d,"Available_Colors")));
 h+='</div></div>';
 
-// ── 5. 샘플 ──
 h+='<div class="modal-section"><div class="modal-section-title">✂️ 샘플 정보 / Sample Info / 样品信息</div><div class="detail-grid">';
 h+=it("Sample Status / 샘플상태 / 样品状态",dt(g(d,"Sample_Status")));
 h+=it("Sample Date / 샘플날짜 / 样品日期",dv(g(d,"Sample_Date")));
 h+=it("Sample Notes / 샘플메모 / 样品备注",dv(g(d,"Sample_Notes")));
 h+='</div></div>';
 
-// ── 6. 원가 ──
 h+='<div class="modal-section"><div class="modal-section-title">💰 원가 정보 / Costing / 成本信息</div><div class="detail-grid">';
 h+=it("Target Cost / 목표원가 / 目标成本",dv(g(d,"Target_Cost")));
 h+=it("Final Cost / 최종원가 / 最终成本",dv(g(d,"Final_Cost")));
@@ -430,16 +305,12 @@ h+=it("Total BOM Cost / 총BOM원가 / BOM总成本",dv(g(d,"Total_BOM_Cost")));
 h+=it("Cost Notes / 원가메모 / 成本备注",dv(g(d,"Cost_Notes")));
 h+='</div></div>';
 
-// ── 7. 이미지 ──
 var si=getAllImgs(d,"Style_Image"),fi=getAllImgs(d,"Flat_Sketch"),smi=getAllImgs(d,"Sample_Images");
 if(si.length||fi.length||smi.length){
 h+='<div class="modal-section"><div class="modal-section-title">📸 이미지 / Images / 图片</div>';
-if(si.length){h+='<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin-bottom:6px">Style Images / 스타일이미지 / 款式图片 ('+si.length+')</div><div class="modal-images">';
-si.forEach(function(u,i){h+='<div class="modal-img-wrap"><div class="modal-img-box" id="sImg'+i+'"><div class="spinner-sm"></div></div><div class="modal-img-label">Style '+(i+1)+'</div></div>'});h+='</div>'}
-if(fi.length){h+='<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin:10px 0 6px">Flat Sketch / 도안이미지 / 工艺图 ('+fi.length+')</div><div class="modal-images">';
-fi.forEach(function(u,i){h+='<div class="modal-img-wrap"><div class="modal-img-box" id="fImg'+i+'"><div class="spinner-sm"></div></div><div class="modal-img-label">Sketch '+(i+1)+'</div></div>'});h+='</div>'}
-if(smi.length){h+='<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin:10px 0 6px">Sample Images / 샘플이미지 / 样品图片 ('+smi.length+')</div><div class="modal-images">';
-smi.forEach(function(u,i){h+='<div class="modal-img-wrap"><div class="modal-img-box" id="smImg'+i+'"><div class="spinner-sm"></div></div><div class="modal-img-label">Sample '+(i+1)+'</div></div>'});h+='</div>'}
+if(si.length){h+='<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin-bottom:6px">Style Images ('+si.length+')</div><div class="modal-images">';si.forEach(function(u,i){h+='<div class="modal-img-wrap"><div class="modal-img-box" id="sImg'+i+'"><div class="spinner-sm"></div></div><div class="modal-img-label">Style '+(i+1)+'</div></div>'});h+='</div>'}
+if(fi.length){h+='<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin:10px 0 6px">Flat Sketch ('+fi.length+')</div><div class="modal-images">';fi.forEach(function(u,i){h+='<div class="modal-img-wrap"><div class="modal-img-box" id="fImg'+i+'"><div class="spinner-sm"></div></div><div class="modal-img-label">Sketch '+(i+1)+'</div></div>'});h+='</div>'}
+if(smi.length){h+='<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin:10px 0 6px">Sample Images ('+smi.length+')</div><div class="modal-images">';smi.forEach(function(u,i){h+='<div class="modal-img-wrap"><div class="modal-img-box" id="smImg'+i+'"><div class="spinner-sm"></div></div><div class="modal-img-label">Sample '+(i+1)+'</div></div>'});h+='</div>'}
 h+='</div>'}
 return h}
 
