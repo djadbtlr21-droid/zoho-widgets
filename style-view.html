@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Style View v25</title>
+<title>Style View v26</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -20,7 +20,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .page-header h1{font-size:17px;font-weight:900;color:var(--z-text-main);display:flex;align-items:center;gap:8px}
 .page-header h1 .icon-s{width:26px;height:26px;background:var(--z-primary);border-radius:5px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900}
 
-/* KPI 상단 행 - MO View 4컬럼 스타일 이식 */
+/* ★ KPI 상단 행 - MO View 4컬럼 스타일 이식 */
 .mkpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 420px;gap:12px;margin-bottom:21px}
 
 /* 월별 KPI 카드 */
@@ -177,7 +177,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
   </div>
 </div>
 
-<div id="lightboxOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:4000;justify-content:center;align-items:center;cursor:pointer;backdrop-filter:blur(4px)" onclick="closeLightbox()">
+<div id="lightboxOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:4000;justify(center;align-items:center;cursor:pointer;backdrop-filter:blur(4px)" onclick="closeLightbox()">
 <img id="lightboxImg" style="max-width:90%;max-height:90%;object-fit:contain;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.5)" onclick="event.stopPropagation()">
 <div style="position:absolute;top:20px;right:24px;color:#fff;font-size:28px;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.15);border-radius:50%" onclick="closeLightbox()">✕</div>
 </div>
@@ -199,7 +199,7 @@ var today=new Date();
 
 /* ── Full-name mappings ── */
 var MAP={
-Gender:{"W":"Women / 여성 / 女","M":"Men / 남성 / 男","U":"Unisex / 남녀공용 / 男女通用"},
+Gender:{"W":"Women / 여성 / 女","M":"Men / 남성 / 남","U":"Unisex / 남녀공용 / 男女通用"},
 Category:{"S":"Set / 세트 / 套装","I":"Individual / 단품 / 单品"},
 Top_Type:{"B":"Bra-top / 브라탑 / 运动内衣","C":"Crop / 크롭 / 露脐装","T":"Tank / 탱크 / 背心"},
 Sleeve:{"L":"Long / 긴팔 / 长袖","S":"Short / 반팔 / 短袖","N":"None / 민소매 / 无袖"},
@@ -273,7 +273,6 @@ function isOrderDelayed(r) {
   var pm = parseInt(g(r, "Plan_Month"));
   if (isNaN(py) || isNaN(pm)) return false;
 
-  /* ★ 26년(26)을 1926년으로 인식하는 버그 완벽 수정 */
   if (py < 100) py += 2000;
 
   var lastMon = getLastMonday(py, pm);
@@ -317,7 +316,7 @@ function renderMKPI(){
     var ym=parseYM(key);
     var yy = ym ? ym.y.toString().slice(-2) : "";
     var mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
-    var titleText = ym ? (yy+"."+mm+" Style KPI / "+yy+"年 "+ym.m+"月 款式 KPI") : "Style KPI / 款式 KPI";
+    var titleText = ym ? (yy+"."+mm+" Style KPI / "+yy+"年 "+ym.m+"월 款式 KPI") : "Style KPI / 款式 KPI";
 
     h+='<div class="mkpi-card">';
     h+='<div class="mkpi-header"><div class="mkpi-title">📅 '+titleText+'</div></div>';
@@ -492,7 +491,7 @@ h+='</div></div>';
 h+='<div class="modal-section"><div class="modal-section-title">👗 제품 정의 / Product Definition / 产品定义</div><div class="detail-grid">';
 h+=it("Gender / 성별 / 性别",dv(mv("Gender",g(d,"Gender"))));
 h+=it("Category / 구분 / 大类",dv(mv("Category",g(d,"Category"))));
-h+=it("Top Type / 상의유형 / 上衣类型",dv(mv("Top_Type",g(d,"Top_Type"))));
+h+=it("Top Type / 상의유형 / 상의유형",dv(mv("Top_Type",g(d,"Top_Type"))));
 h+=it("Sleeve / 소매유형 / 衣袖类型",dv(mv("Sleeve",g(d,"Sleeve"))));
 h+=it("Fit / 핏 / 版型",dv(mv("Fit",g(d,"Fit"))));
 h+=it("Details / 디테일 / 类型详情",dv(mv("Details",g(d,"Details"))));
@@ -501,7 +500,7 @@ h+=it("Bottom Length / 하의기장 / 下装长短",dv(mv("Bottom_Length",g(d,"B
 h+='</div></div>';
 
 h+='<div class="modal-section"><div class="modal-section-title">🧵 원단 정보 / Material Info / 面料</div><div class="detail-grid">';
-h+=it("Material Type / 원단종류 / 面料种类",dv(mv("Material_Type",g(d,"Material_Type"))));
+h+=it("Material Type / 원단종류 / 면료종류",dv(mv("Material_Type",g(d,"Material_Type"))));
 h+=it("blended % / 혼방% / 混纺%",dv(g(d,"blended_percentage")));
 h+=it("Lining Type / 안감유형 / 里料类型",dv(mv("Lining_Type",g(d,"Lining_Type"))));
 h+='</div></div>';
