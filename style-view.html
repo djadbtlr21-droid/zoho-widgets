@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Style View v23</title>
+<title>Style View v24</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -19,13 +19,41 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
 .page-header h1{font-size:17px;font-weight:900;color:var(--z-text-main);display:flex;align-items:center;gap:8px}
 .page-header h1 .icon-s{width:26px;height:26px;background:var(--z-primary);border-radius:5px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900}
-.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
-.kpi-card{background:var(--z-card-bg);border:1px solid var(--z-border);border-radius:8px;padding:14px 16px;position:relative;overflow:hidden}
-.kpi-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px}
-.kpi-total::before{background:var(--z-primary)}.kpi-active::before{background:var(--st-appr)}.kpi-sampling::before{background:var(--st-prog)}.kpi-inactive::before{background:var(--st-draft)}
-.kpi-label{font-size:11px;font-weight:700;color:var(--z-text-muted);margin-bottom:4px}
-.kpi-val{font-size:28px;font-weight:900;letter-spacing:-.5px}
-.kpi-total .kpi-val{color:var(--z-primary)}.kpi-active .kpi-val{color:var(--st-appr)}.kpi-sampling .kpi-val{color:var(--st-prog)}.kpi-inactive .kpi-val{color:var(--st-draft)}
+
+/* ★ KPI 상단 행 - MO View 4컬럼 스타일 이식 */
+.mkpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 420px;gap:12px;margin-bottom:21px}
+
+/* 월별 KPI 카드 */
+.mkpi-card{background:var(--z-card-bg);border:1px solid var(--z-border);border-radius:10px;padding:14px;position:relative;overflow:hidden}
+.mkpi-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px}
+.mkpi-card:nth-child(1)::before{background:#A5B4FC}
+.mkpi-card:nth-child(2)::before{background:#FDE68A}
+.mkpi-card:nth-child(3)::before{background:#A7F3D0}
+.mkpi-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.mkpi-title{font-size:15px;font-weight:800;color:var(--z-text-main)}
+.mkpi-body{display:flex;align-items:center;gap:16px}
+.mkpi-ring{position:relative;width:80px;height:80px;flex-shrink:0}
+.mkpi-ring svg{transform:rotate(-90deg)}
+.mkpi-ring-pct{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:16px;font-weight:900;color:var(--z-text-main)}
+.mkpi-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1}
+.mkpi-stat{text-align:center;padding:6px 5px;border-radius:6px;background:#FAFBFC;border:1px solid #F1F5F9;cursor:pointer;transition:background .15s}
+.mkpi-stat:hover{background:#EFF6FF;border-color:#BFDBFE}
+.mkpi-stat-n{font-size:20px;font-weight:900;line-height:1}
+.mkpi-stat-l{font-size:10px;font-weight:700;color:var(--z-text-muted);margin-top:4px;line-height:1.3}
+.mkpi-stat .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;vertical-align:middle}
+
+/* 생산 지연 현황 카드 (미오더 지연) */
+.delay-card{background:#FFF5F5;border:1px solid #FECACA;border-radius:10px;padding:14px;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.delay-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:#FCA5A5}
+.delay-card-title{font-size:12px;font-weight:800;color:#DC2626;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.delay-total{font-size:22px;font-weight:900;color:#DC2626;text-align:center;margin-bottom:8px}
+.delay-total span{font-size:10px;font-weight:600;color:#EF4444;display:block;margin-top:2px}
+.delay-list{display:flex;flex-direction:column;gap:5px;flex:1;overflow-y:auto}
+.delay-item{background:#fff;border:1px solid #FECACA;border-radius:6px;padding:6px 8px;cursor:pointer;transition:background .1s}
+.delay-item:hover{background:#FEF2F2}
+.delay-mo{font-size:10px;font-weight:800;color:#DC2626}
+.delay-style{font-size:8px;color:#64748B;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
 .filter-bar{display:flex;justify-content:flex-end;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
 .search-box{background:#fff;border:1px solid var(--z-border);border-radius:6px;padding:5px 10px;font-size:11px;width:200px;outline:none;font-family:inherit}
 .search-box:focus{border-color:var(--z-accent);box-shadow:0 0 0 2px rgba(59,130,246,.1)}
@@ -41,6 +69,8 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .z-table td{padding:7px 8px;border-bottom:1px solid #F1F5F9;color:var(--z-text-main);vertical-align:middle;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .z-table tr{cursor:pointer;transition:background .1s}
 .z-table tbody tr:hover td{background:#EFF6FF}
+/* ★ Not Ordered 일 경우 연한 빨간색 호버 유지 */
+.z-table tbody tr.not-ordered:hover td{background:#FEE2E2}
 .style-info{display:flex;align-items:center;gap:8px}
 .style-thumb{width:34px;height:34px;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#94A3B8;flex-shrink:0;overflow:hidden}
 .style-thumb img{width:100%;height:100%;object-fit:cover}
@@ -51,11 +81,28 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .tag-prog{background:#FEF3C7;color:#B45309;border:1px solid #FDE68A}
 .tag-appr{background:#D1FAE5;color:#065F46;border:1px solid #A7F3D0}
 .tag-fail{background:#FEF2F2;color:#B91C1C;border:1px solid #FECACA}
-.no-data{text-align:center;padding:20px;color:var(--z-text-muted);font-size:12px}
+
+/* ★ KPI 탭 팝업 (MO View 이식) */
+.pop-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:2000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
+.pop-ov.active{display:flex}
+.pop-box{background:#fff;border-radius:12px;width:92%;max-width:700px;max-height:82vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:modalIn .2s ease-out}
+.pop-hd{padding:16px 20px 12px;border-bottom:1px solid var(--z-border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:10;border-radius:12px 12px 0 0}
+.pop-title{font-size:15px;font-weight:800;color:var(--z-primary)}
+.pop-sub{font-size:11px;color:var(--z-text-muted);margin-top:2px}
+.pop-close{width:28px;height:28px;border-radius:6px;border:1px solid var(--z-border);background:#F8FAFC;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--z-text-muted);flex-shrink:0}
+.pop-close:hover{background:#FEF2F2;color:var(--st-danger)}
+.pop-body{padding:16px 20px}
+.pop-item{padding:10px 12px;border:1px solid var(--z-border);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:background .1s;display:flex;justify-content:space-between;align-items:center}
+.pop-item:hover{background:#EFF6FF;border-color:#BFDBFE}
+.pop-item-left .pi-mo{font-size:12px;font-weight:800;color:var(--z-primary)}
+.pop-item-left .pi-name{font-size:10px;color:var(--z-text-muted);margin-top:2px}
+.pop-item-left .pi-meta{font-size:9px;color:#94A3B8;margin-top:2px}
+.pop-empty{text-align:center;padding:30px;color:var(--z-text-muted);font-size:13px}
+
 /* Modal */
-.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:1000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:3000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
 .modal-overlay.active{display:flex}
-.modal-box{background:#fff;border-radius:12px;width:92%;max-width:760px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:modalIn .25s ease-out}
+.modal-box-lg{background:#fff;border-radius:12px;width:92%;max-width:760px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:modalIn .25s ease-out}
 @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .modal-header{padding:20px 24px 16px;border-bottom:1px solid var(--z-border);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:#fff;z-index:10;border-radius:12px 12px 0 0}
 .modal-header-left{display:flex;align-items:center;gap:14px}
@@ -63,8 +110,8 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .modal-thumb-lg img{width:100%;height:100%;object-fit:cover}
 .modal-title{font-size:18px;font-weight:900;color:var(--z-primary)}
 .modal-subtitle{font-size:12px;color:var(--z-text-muted);margin-top:2px}
-.modal-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--z-border);background:#F8FAFC;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--z-text-muted)}
-.modal-close:hover{background:#FEF2F2;color:var(--st-danger);border-color:#FECACA}
+.modal-close-lg{width:32px;height:32px;border-radius:8px;border:1px solid var(--z-border);background:#F8FAFC;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--z-text-muted)}
+.modal-close-lg:hover{background:#FEF2F2;color:var(--st-danger);border-color:#FECACA}
 .modal-body{padding:20px 24px}
 .modal-section{margin-bottom:24px}
 .modal-section-title{font-size:12px;font-weight:800;color:var(--z-primary);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #EFF6FF}
@@ -79,7 +126,8 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .modal-img-box img{width:100%;height:100%;object-fit:contain;cursor:pointer;transition:transform .2s}
 .modal-img-box:hover{border-color:var(--z-accent);box-shadow:0 2px 8px rgba(59,130,246,.15)}
 .modal-img-label{font-size:8px;color:var(--z-text-muted);margin-top:3px;font-weight:600}
-/* Bar Chart — compact version */
+
+/* Bar Chart */
 .chart-card{background:#fff;border:1px solid var(--z-border);border-radius:8px;padding:16px;margin-top:20px}
 .chart-title{font-size:13px;font-weight:800;color:var(--z-text-main);margin-bottom:14px;display:flex;align-items:center;gap:6px}
 .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:5px}
@@ -88,7 +136,9 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:6px;font-size:9px;font-weight:800;color:#fff;min-width:22px;transition:width .5s ease}
 .bar-count{font-size:11px;font-weight:800;color:var(--z-text-main);min-width:24px}
 .error-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C}
-@media(max-width:768px){.kpi-row{grid-template-columns:repeat(2,1fr)}.detail-grid{grid-template-columns:1fr 1fr}.bar-label{min-width:200px;max-width:200px}}
+
+@media(max-width:1100px){.mkpi-row{grid-template-columns:1fr 1fr}.detail-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.mkpi-row{grid-template-columns:1fr}.detail-grid{grid-template-columns:1fr 1fr}.bar-label{min-width:200px;max-width:200px}}
 </style>
 </head>
 <body>
@@ -97,7 +147,8 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 <div class="page-header"><h1><span class="icon-s">S</span> Style View / 스타일 현황표 / 款式现况表</h1>
 <button onclick="goTo('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_Styles')" style="background:var(--z-primary);color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px">+ New Style</button>
 </div>
-<div class="kpi-row" id="kpiRow"></div>
+
+<div class="mkpi-row" id="kpiRow"></div>
 
 <div class="filter-bar">
 <input type="text" class="search-box" id="searchBox" placeholder="🔍 SKU, 스타일명, Brand 검색...">
@@ -108,7 +159,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 </div>
 <div id="monthlyTables"></div>
 
-<!-- Chart at BOTTOM -->
 <div id="chartSection" class="chart-card" style="display:none">
 <div class="chart-title">📊 Style Type Distribution / 스타일 유형 분포 / 款式类型分布</div>
 <div id="barChart"></div>
@@ -117,19 +167,27 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 
 <div id="errorScreen" style="display:none"><div class="error-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다</div><div id="errorMsg" style="font-size:12px"></div></div></div>
 
-<!-- Lightbox -->
-<div id="lightboxOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:2000;justify-content:center;align-items:center;cursor:pointer;backdrop-filter:blur(4px)" onclick="closeLightbox()">
+<div class="pop-ov" id="kpiPopOv">
+  <div class="pop-box">
+    <div class="pop-hd">
+      <div><div class="pop-title" id="kpiPopTitle">-</div><div class="pop-sub" id="kpiPopSub">-</div></div>
+      <div class="pop-close" id="kpiPopClose">✕</div>
+    </div>
+    <div class="pop-body" id="kpiPopBody"></div>
+  </div>
+</div>
+
+<div id="lightboxOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:4000;justify-content:center;align-items:center;cursor:pointer;backdrop-filter:blur(4px)" onclick="closeLightbox()">
 <img id="lightboxImg" style="max-width:90%;max-height:90%;object-fit:contain;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.5)" onclick="event.stopPropagation()">
 <div style="position:absolute;top:20px;right:24px;color:#fff;font-size:28px;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.15);border-radius:50%" onclick="closeLightbox()">✕</div>
 </div>
 
-<!-- Modal -->
-<div class="modal-overlay" id="modalOverlay"><div class="modal-box">
+<div class="modal-overlay" id="modalOverlay"><div class="modal-box-lg">
 <div class="modal-header"><div class="modal-header-left"><div class="modal-thumb-lg" id="modalThumb">👕</div><div><div class="modal-title" id="modalTitle">-</div><div class="modal-subtitle" id="modalSubtitle">-</div></div></div>
 <div style="display:flex;align-items:center;gap:8px">
 <button id="btnEdit" onclick="editStyle()" style="background:#EFF6FF;color:var(--z-primary);border:1px solid #BFDBFE;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit</button>
 <button id="btnNewMO" onclick="newMO()" style="background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">+ New MO</button>
-<div class="modal-close" id="modalClose">✕</div>
+<div class="modal-close-lg" id="modalClose">✕</div>
 </div></div>
 <div class="modal-body" id="modalBody"></div>
 </div></div>
@@ -137,8 +195,9 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 <script>
 var APP="eom",REP="All_Styles",MO_REP="All_MO";
 var allRec=[],filtered=[],moSkus=new Set();
+var today=new Date();
 
-/* ── Full-name mappings (trilingual for modal, English-only short for chart) ── */
+/* ── Full-name mappings ── */
 var MAP={
 Gender:{"W":"Women / 여성 / 女","M":"Men / 남성 / 男","U":"Unisex / 남녀공용 / 男女通用"},
 Category:{"S":"Set / 세트 / 套装","I":"Individual / 단품 / 单品"},
@@ -151,7 +210,6 @@ Bottom_Length:{"3":"3-Tier(Short) / 3부 / 三分","5":"5-Tier(Mid) / 5부 / 五
 Material_Type:{"P":"Polyester / 폴리에스터 / 涤纶","N":"Nylon / 나일론 / 尼龙","D":"Polyamide / 폴리아미드 / 聚酰胺","C":"Cotton / 코튼 / 棉","H":"Mesh / 메쉬 / 网布","M":"Modal / 모달 / 莫代尔","L":"Lycra / 라이크라 / 莱卡","PS":"Poly+Spandex","NS":"Nylon+Spandex","DS":"Polyamide+Spandex","CS":"Cotton+Spandex"},
 Lining_Type:{"B":"Brushed / 기모 / 磨毛","F":"Fur / 퍼 / 毛皮","N":"None / 없음 / 无"}
 };
-/* English-only short names for chart labels */
 var SHORT={
 Category:{"S":"Set","I":"Individual"},
 Top_Type:{"B":"Bra-top","C":"Crop","T":"Tank"},
@@ -172,7 +230,7 @@ loadStyles()}).catch(function(){loadStyles()})});
 
 function loadStyles(){
 ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:REP,page:1,pageSize:200}).then(function(r){
-if(r&&r.code===3000&&r.data){allRec=r.data;filtered=allRec.slice();renderKPI();buildFilters();renderTables();renderChart();hide("loadingScreen");show("mainContent");setTimeout(loadTableImgs,500)}
+if(r&&r.code===3000&&r.data){allRec=r.data;filtered=allRec.slice();renderMKPI();buildFilters();renderTables();renderChart();hide("loadingScreen");show("mainContent");setTimeout(loadTableImgs,500)}
 else showErr("로드 실패")}).catch(function(e){showErr(JSON.stringify(e))})}
 
 function show(i){document.getElementById(i).style.display="block"}
@@ -197,8 +255,148 @@ var _currentRecId=null;
 function editStyle(){if(!_currentRecId)return;goTo("https://creatorapp.zoho.com/jeramoda/eom/#Report:All_Styles")}
 function newMO(){goTo("https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_MO")}
 
-/* ── KPI ── */
-function renderKPI(){var t=filtered.length;var a=filtered.filter(function(r){return tc(g(r,"Style_Status"))==="tag-appr"}).length;var sm=filtered.filter(function(r){var s=(g(r,"Sample_Status")+" "+g(r,"Style_Status")).toLowerCase();return s.indexOf("sampling")>=0||s.indexOf("샘플")>=0}).length;document.getElementById("kpiRow").innerHTML='<div class="kpi-card kpi-total"><div class="kpi-label">총 스타일 / Total</div><div class="kpi-val">'+t+'</div></div><div class="kpi-card kpi-active"><div class="kpi-label">Active / 활성화</div><div class="kpi-val">'+a+'</div></div><div class="kpi-card kpi-sampling"><div class="kpi-label">Sampling / 샘플진행</div><div class="kpi-val">'+sm+'</div></div><div class="kpi-card kpi-inactive"><div class="kpi-label">기타 / Other</div><div class="kpi-val">'+(t-a)+'</div></div>'}
+/* ★ 오더 지연 추적 로직 (해당 월 마지막 주 월요일 기준) */
+function getLastMonday(year, month) {
+  var lastDay = new Date(year, month, 0);
+  var dow = lastDay.getDay();
+  var offset = dow === 0 ? 6 : dow - 1;
+  lastDay.setDate(lastDay.getDate() - offset);
+  return lastDay;
+}
+
+function isOrderDelayed(r) {
+  var sku = g(r, "Style_SKU");
+  if (sku === "-") sku = g(r, "SKU");
+  if (moSkus.has(sku)) return false; 
+  
+  var py = parseInt(g(r, "Plan_Year"));
+  var pm = parseInt(g(r, "Plan_Month"));
+  if (isNaN(py) || isNaN(pm)) return false;
+
+  var lastMon = getLastMonday(py, pm);
+  var todayD = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  var lastMonD = new Date(lastMon.getFullYear(), lastMon.getMonth(), lastMon.getDate());
+  
+  return todayD > lastMonD;
+}
+
+function parseYM(key){var m=key.match(/(\d+)년\s*(\d+)월/);if(!m)return null;var y=parseInt(m[1]);if(y<100)y+=2000;return{y:y,m:parseInt(m[2])}}
+
+/* ★★★ STYLE VIEW MONTHLY KPI + 생산 지연 현황 카드 ★★★ */
+function renderMKPI(){
+  var groups={};
+  filtered.forEach(function(r){
+    var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");
+    var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";
+    if(!groups[key])groups[key]=[];groups[key].push(r)});
+
+  var colors=["#818CF8","#F59E0B","#34D399"];
+  var ringColors=["#A5B4FC","#FDE68A","#A7F3D0"];
+  var h="";var ci=0;
+
+  Object.keys(groups).sort().forEach(function(key){
+    if(key==="미지정") return;
+    var items=groups[key];var c=colors[ci%colors.length];var rc=ringColors[ci%ringColors.length];ci++;
+    var tot=items.length,sm=0,ord=0,nord=0;
+    
+    items.forEach(function(r){
+      var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");
+      var sStat=(g(r,"Sample_Status")+" "+g(r,"Style_Status")).toLowerCase();
+      if(sStat.indexOf("sampling")>=0||sStat.indexOf("샘플")>=0)sm++;
+      if(moSkus.has(sku)) ord++; else nord++;
+    });
+
+    var pct=tot>0?Math.round((ord/tot)*100):0;
+    var r36=36,circ=2*Math.PI*r36,offset=circ-(pct/100)*circ;
+    var trail="#E5E7EB";
+    var keyEnc=encodeURIComponent(key);
+
+    var ym=parseYM(key);
+    var yy = ym ? ym.y.toString().slice(-2) : "";
+    var mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
+    var titleText = ym ? (yy+"."+mm+" Style KPI / "+yy+"年 "+ym.m+"月 款式 KPI") : "Style KPI / 款式 KPI";
+
+    h+='<div class="mkpi-card">';
+    h+='<div class="mkpi-header"><div class="mkpi-title">📅 '+titleText+'</div></div>';
+    h+='<div class="mkpi-body">';
+    h+='<div class="mkpi-ring"><svg width="80" height="80" viewBox="0 0 80 80">';
+    h+='<circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="'+trail+'" stroke-width="6"/>';
+    h+='<circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="'+c+'" stroke-width="6" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'" stroke-linecap="round"/>';
+    h+='</svg><div class="mkpi-ring-pct" style="color:'+c+'">'+pct+'%</div></div>';
+    h+='<div class="mkpi-stats">';
+    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'all\')"><div class="mkpi-stat-n" style="color:#6366F1">'+tot+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A5B4FC"></span>총 스타일 / 总款式</div></div>';
+    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'sm\')"><div class="mkpi-stat-n" style="color:#F59E0B">'+sm+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FDE68A"></span>샘플제작중 / 样品制作中</div></div>';
+    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'ord\')"><div class="mkpi-stat-n" style="color:#34D399">'+ord+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A7F3D0"></span>오더완료 / 订单完成</div></div>';
+    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'nord\')"><div class="mkpi-stat-n" style="color:#EF4444">'+nord+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FCA5A5"></span>미오더 / 未下订单</div></div>';
+    h+='</div></div>';
+    h+='</div>'});
+
+  // 생산 지연 현황 카드
+  var delayedAll=filtered.filter(function(r){return isOrderDelayed(r)});
+  h+='<div class="delay-card">';
+  h+='<div class="delay-card-title">⚠️ 오더 지연 현황<br><span style="font-size:10px;color:#EF4444;font-weight:600">订单延误现况</span></div>';
+  h+='<div class="delay-total">'+delayedAll.length+'<span>건 지연 / 件延误</span></div>';
+  h+='<div class="delay-list" style="margin-bottom:8px">';
+  if(delayedAll.length===0){
+    h+='<div style="text-align:center;padding:16px;color:#94A3B8;font-size:11px">지연 없음 / 无延误 ✓</div>';
+  } else {
+    delayedAll.forEach(function(r){
+      var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");
+      h+='<div class="delay-item" onclick="openModal(allRec.find(function(x){return x[\'ID\']==='+"'"+r["ID"]+"'"+'}))">';
+      h+='<div><div class="delay-mo">'+escH(sku)+'</div>';
+      h+='<div class="delay-style">'+escH(g(r,"Style_Name"))+'</div></div>';
+      h+='</div>'});
+  }
+  h+='</div>';
+  h+='<div style="font-size:9px;color:#94A3B8;text-align:center;padding-top:8px;border-top:1px dashed #FECACA;line-height:1.4">당월 마지막 주까지 오더 미진행 시 추가<br>若当月最后一周未下订单则添加</div>';
+  h+='</div>';
+
+  document.getElementById("kpiRow").innerHTML=h;
+}
+
+/* KPI 탭 팝업 열기 */
+function openKpiPop(keyEnc,type){
+  var key=decodeURIComponent(keyEnc);
+  var groups={};
+  filtered.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var k=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[k])groups[k]=[];groups[k].push(r)});
+  var items=groups[key]||[];
+  var typeNames={all:"총 스타일 / 总款式",sm:"샘플 제작 중 / 样品制作中",ord:"오더완료 / 订单完成",nord:"미오더 / 未下订单"};
+  
+  var popItems=items.filter(function(r){
+    var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");
+    var sStat=(g(r,"Sample_Status")+" "+g(r,"Style_Status")).toLowerCase();
+    if(type==="all")return true;
+    if(type==="sm")return sStat.indexOf("sampling")>=0||sStat.indexOf("샘플")>=0;
+    if(type==="ord")return moSkus.has(sku);
+    if(type==="nord")return !moSkus.has(sku);
+    return true;
+  });
+
+  document.getElementById("kpiPopTitle").textContent=key+" — "+typeNames[type];
+  document.getElementById("kpiPopSub").textContent="총 "+popItems.length+"건";
+  var h="";
+  if(popItems.length===0){h='<div class="pop-empty">해당 스타일이 없습니다</div>'}
+  else{
+    popItems.forEach(function(r){
+      var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");
+      var isDel=isOrderDelayed(r);
+      h+='<div class="pop-item" onclick="openModalFromPop(\''+r["ID"]+'\')">';
+      h+='<div class="pop-item-left">';
+      h+='<div class="pi-mo">'+escH(sku)+(isDel?'<span class="dly-badge">DELAYED</span>':'')+'</div>';
+      h+='<div class="pi-name">'+escH(g(r,"Style_Name"))+'</div>';
+      h+='<div class="pi-meta">Category: '+escH(mv("Category",g(r,"Category")))+' · Gender: '+escH(mv("Gender",g(r,"Gender")))+'</div>';
+      h+='</div>';
+      h+='<span class="tag '+tc(g(r,"Style_Status"))+'">'+escH(g(r,"Style_Status"))+'</span>';
+      h+='</div>'});}
+  document.getElementById("kpiPopBody").innerHTML=h;
+  document.getElementById("kpiPopOv").classList.add("active")}
+
+function openModalFromPop(id){
+  var r=allRec.find(function(x){return x["ID"]===id});
+  if(r){document.getElementById("kpiPopOv").classList.remove("active");openModal(r)}}
+
+document.getElementById("kpiPopClose").addEventListener("click",function(){document.getElementById("kpiPopOv").classList.remove("active")});
+document.getElementById("kpiPopOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
 
 /* ── Filters ── */
 function buildFilters(){var cat={},gen={},se={},st={};allRec.forEach(function(r){var c=g(r,"Category");if(c!=="-")cat[c]=mv("Category",c);var ge=g(r,"Gender");if(ge!=="-")gen[ge]=mv("Gender",ge);var s=g(r,"Season");if(s!=="-")se[s]=1;var t=g(r,"Style_Status");if(t!=="-")st[t]=1});var el;el=document.getElementById("filterCategory");Object.keys(cat).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+escH(cat[k])+'</option>'});el=document.getElementById("filterGender");Object.keys(gen).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+escH(gen[k])+'</option>'});el=document.getElementById("filterSeason");Object.keys(se).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});el=document.getElementById("filterStatus");Object.keys(st).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'})}
@@ -210,9 +408,7 @@ var combos={};
 allRec.forEach(function(r){
 var cat=g(r,"Category"),gen=g(r,"Gender"),top=g(r,"Top_Type"),sl=g(r,"Sleeve"),fit=g(r,"Fit"),det=g(r,"Details"),bot=g(r,"Bottom_Type"),bl=g(r,"Bottom_Length");
 var parts=[];
-/* Category as prefix in brackets */
 var catName=sv("Category",cat);
-/* Collect detail parts (English short names only) */
 var details=[];
 var topN=sv("Top_Type",top);if(topN)details.push(topN);
 var slN=sv("Sleeve",sl);if(slN)details.push(slN);
@@ -242,11 +438,31 @@ h+='</div>'});
 document.getElementById("barChart").innerHTML=h}
 
 /* ── Tables ── */
-function renderTables(){var groups={};filtered.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[key])groups[key]=[];groups[key].push(r)});var html="";Object.keys(groups).sort().forEach(function(key){var items=groups[key];html+='<div class="month-section"><div class="month-card"><div class="month-header"><div class="month-title">📅 '+escH(key)+'</div><span class="month-count">'+items.length+' styles</span></div><div class="table-scroll"><table class="z-table"><thead><tr><th style="width:18%">Style Info</th><th style="width:7%">Brand</th><th style="width:7%">Season</th><th style="width:12%">Gender</th><th style="width:12%">Category</th><th style="width:14%">Material_Type</th><th style="width:8%">Target_Cost</th><th style="width:10%">Status</th><th style="width:6%">Sample</th><th style="width:8%">Order</th></tr></thead><tbody>';items.forEach(function(r){var sku=g(r,"Style_SKU"),name=g(r,"Style_Name");var iu=getImg1(r),ia=iu?' data-img="'+iu+'"':'';var ordered=moSkus.has(sku);html+='<tr data-id="'+r["ID"]+'"><td><div class="style-info"><div class="style-thumb"'+ia+'>👕</div><div><span class="style-code">'+escH(sku)+'</span><span class="style-name">'+escH(name)+'</span></div></div></td><td>'+escH(g(r,"Business_Entity"))+'</td><td>'+escH(g(r,"Season"))+'</td><td>'+escH(mv("Gender",g(r,"Gender")))+'</td><td>'+escH(mv("Category",g(r,"Category")))+'</td><td>'+escH(mv("Material_Type",g(r,"Material_Type")))+'</td><td>'+escH(g(r,"Target_Cost"))+'</td><td><span class="tag '+tc(g(r,"Style_Status"))+'">'+escH(g(r,"Style_Status"))+'</span></td><td><span class="tag '+tc(g(r,"Sample_Status"))+'">'+escH(g(r,"Sample_Status"))+'</span></td><td>'+(ordered?'<span class="tag tag-appr">Ordered</span>':'<span class="tag tag-fail">Not Ordered</span>')+'</td></tr>'});html+='</tbody></table></div></div></div>'});document.getElementById("monthlyTables").innerHTML=html;setTimeout(loadTableImgs,500);document.querySelectorAll("#monthlyTables tr[data-id]").forEach(function(row){row.addEventListener("click",function(){var id=this.getAttribute("data-id");var r=allRec.find(function(x){return x["ID"]===id});if(r)openModal(r)})})}
+function renderTables(){
+  var groups={};
+  filtered.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[key])groups[key]=[];groups[key].push(r)});
+  var html="";
+  Object.keys(groups).sort().forEach(function(key){
+    var items=groups[key];
+    html+='<div class="month-section"><div class="month-card"><div class="month-header"><div class="month-title">📅 '+escH(key)+'</div><span class="month-count">'+items.length+' styles</span></div><div class="table-scroll"><table class="z-table"><thead><tr><th style="width:18%">Style Info</th><th style="width:7%">Brand</th><th style="width:7%">Season</th><th style="width:12%">Gender</th><th style="width:12%">Category</th><th style="width:14%">Material_Type</th><th style="width:8%">Target_Cost</th><th style="width:10%">Status</th><th style="width:6%">Sample</th><th style="width:8%">Order</th></tr></thead><tbody>';
+    items.forEach(function(r){
+      var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");
+      var name=g(r,"Style_Name");
+      var iu=getImg1(r),ia=iu?' data-img="'+iu+'"':'';
+      var ordered=moSkus.has(sku);
+      /* ★ 미오더(Not Ordered) 행(Row) 빨간색 경고 배경 처리 */
+      var trStyle = (!ordered) ? ' style="background:#FEF2F2"' : '';
+      var trClass = (!ordered) ? ' class="not-ordered"' : '';
+      
+      html+='<tr data-id="'+r["ID"]+'"'+trClass+trStyle+'><td><div class="style-info"><div class="style-thumb"'+ia+'>👕</div><div><span class="style-code">'+escH(sku)+'</span><span class="style-name">'+escH(name)+'</span></div></div></td><td>'+escH(g(r,"Business_Entity"))+'</td><td>'+escH(g(r,"Season"))+'</td><td>'+escH(mv("Gender",g(r,"Gender")))+'</td><td>'+escH(mv("Category",g(r,"Category")))+'</td><td>'+escH(mv("Material_Type",g(r,"Material_Type")))+'</td><td>'+escH(g(r,"Target_Cost"))+'</td><td><span class="tag '+tc(g(r,"Style_Status"))+'">'+escH(g(r,"Style_Status"))+'</span></td><td><span class="tag '+tc(g(r,"Sample_Status"))+'">'+escH(g(r,"Sample_Status"))+'</span></td><td>'+(ordered?'<span class="tag tag-appr">Ordered</span>':'<span class="tag tag-fail">Not Ordered</span>')+'</td></tr>'});
+      html+='</tbody></table></div></div></div>'});
+  document.getElementById("monthlyTables").innerHTML=html;
+  setTimeout(loadTableImgs,500);
+  document.querySelectorAll("#monthlyTables tr[data-id]").forEach(function(row){row.addEventListener("click",function(){var id=this.getAttribute("data-id");var r=allRec.find(function(x){return x["ID"]===id});if(r)openModal(r)})})}
 
 /* ── Filter events ── */
 ["searchBox","filterCategory","filterGender","filterSeason","filterStatus"].forEach(function(id){document.getElementById(id).addEventListener(id==="searchBox"?"input":"change",af)});
-function af(){var q=document.getElementById("searchBox").value.toLowerCase().trim();var fc=document.getElementById("filterCategory").value;var fg=document.getElementById("filterGender").value;var fs=document.getElementById("filterSeason").value;var ft=document.getElementById("filterStatus").value;filtered=allRec.filter(function(r){if(q){var h=(g(r,"Style_SKU")+" "+g(r,"Style_Name")+" "+g(r,"Business_Entity")).toLowerCase();if(h.indexOf(q)<0)return false}if(fc&&g(r,"Category")!==fc)return false;if(fg&&g(r,"Gender")!==fg)return false;if(fs&&g(r,"Season")!==fs)return false;if(ft&&g(r,"Style_Status")!==ft)return false;return true});renderKPI();renderTables()}
+function af(){var q=document.getElementById("searchBox").value.toLowerCase().trim();var fc=document.getElementById("filterCategory").value;var fg=document.getElementById("filterGender").value;var fs=document.getElementById("filterSeason").value;var ft=document.getElementById("filterStatus").value;filtered=allRec.filter(function(r){if(q){var h=(g(r,"Style_SKU")+" "+g(r,"Style_Name")+" "+g(r,"Business_Entity")).toLowerCase();if(h.indexOf(q)<0)return false}if(fc&&g(r,"Category")!==fc)return false;if(fg&&g(r,"Gender")!==fg)return false;if(fs&&g(r,"Season")!==fs)return false;if(ft&&g(r,"Style_Status")!==ft)return false;return true});renderMKPI();renderTables()}
 
 /* ── Modal ── */
 function openModal(rec){_currentRecId=rec["ID"];document.getElementById("modalTitle").textContent=g(rec,"Style_SKU");document.getElementById("modalSubtitle").textContent=g(rec,"Style_Name");var te=document.getElementById("modalThumb");te.innerHTML="👕";var iu=getImg1(rec);if(iu){var hi=document.createElement("img");hi.style.cssText="width:100%;height:100%;object-fit:cover";try{ZOHO.CREATOR.UTIL.setImageData(hi,iu,function(){te.innerHTML="";te.appendChild(hi)})}catch(e){}}document.getElementById("modalBody").innerHTML=buildDetail(rec);document.getElementById("modalOverlay").classList.add("active");setTimeout(function(){loadAllModalImgs(rec)},500)}
