@@ -25,7 +25,7 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .btn-cctv:hover{background:#A78BFA}
 .btn-primary:hover{background:#818CF8}
 
-/* KPI 상단 행 - 4컬럼 */
+/* KPI 상단 행 - 4컬럼 (우측 지연현황 카드 420px로 확대) */
 .mkpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 420px;gap:12px;margin-bottom:16px}
 
 /* 월별 KPI 카드 */
@@ -89,14 +89,11 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .tbl-scroll{overflow-x:auto}
 table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;table-layout:fixed}
 .zt th{background:#F1F5F9;padding:9px 8px;color:var(--tm);font-weight:800;font-size:10px;border-bottom:1px solid var(--bd);white-space:nowrap;text-align:center}
-.zt th:nth-child(1){text-align:left}
-.zt th:nth-child(2){text-align:left}
-.zt th:nth-child(3){text-align:left}
+.zt th:nth-child(1), .zt th:nth-child(2), .zt th:nth-child(3){text-align:left}
 .zt td{padding:10px 8px;border-bottom:1px solid #F1F5F9;color:var(--tx);vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;height:40px;text-align:center}
-.zt td:nth-child(1){text-align:left}
-.zt td:nth-child(2){text-align:left}
-.zt td:nth-child(3){text-align:left}
-.zt tbody tr{cursor:pointer;transition:background .1s}.zt tbody tr:hover td{background:#EFF6FF}
+.zt td:nth-child(1), .zt td:nth-child(2), .zt td:nth-child(3){text-align:left}
+.zt tbody tr{cursor:pointer;transition:background .1s}
+.zt tbody tr:hover td{background:#EFF6FF}
 .zt .mo-num{font-weight:800;color:var(--pr)}
 .tag{padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;display:inline-flex;align-items:center;white-space:nowrap}
 .t-ok{background:#D1FAE5;color:#065F46;border:1px solid #A7F3D0}
@@ -130,80 +127,35 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .tl-tbl tr.mo-gap .info-cell{background:#F8FAFC !important}
 .tl-bar{height:100%;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;white-space:nowrap;overflow:hidden;min-height:16px}
 
-/* Plan 막대 (점선) - 빗금 패턴 추가 */
+/* ★ Plan 막대 (점선) - 빗금 패턴 추가 */
 .pb-fab{
   border: 1.5px dashed #C4B5FD;
   color: #7C3AED;
-  background-image: linear-gradient(
-    45deg,
-    rgba(196, 181, 253, 0.4) 25%,
-    transparent 25%,
-    transparent 50%,
-    rgba(196, 181, 253, 0.4) 50%,
-    rgba(196, 181, 253, 0.4) 75%,
-    transparent 75%,
-    transparent
-  );
+  background-image: linear-gradient(45deg, rgba(196, 181, 253, 0.4) 25%, transparent 25%, transparent 50%, rgba(196, 181, 253, 0.4) 50%, rgba(196, 181, 253, 0.4) 75%, transparent 75%, transparent);
   background-size: 8px 8px;
 }
 .pb-cut{
   border: 1.5px dashed #FDE68A;
   color: #CA8A04;
-  background-image: linear-gradient(
-    45deg,
-    rgba(253, 230, 138, 0.4) 25%,
-    transparent 25%,
-    transparent 50%,
-    rgba(253, 230, 138, 0.4) 50%,
-    rgba(253, 230, 138, 0.4) 75%,
-    transparent 75%,
-    transparent
-  );
+  background-image: linear-gradient(45deg, rgba(253, 230, 138, 0.4) 25%, transparent 25%, transparent 50%, rgba(253, 230, 138, 0.4) 50%, rgba(253, 230, 138, 0.4) 75%, transparent 75%, transparent);
   background-size: 8px 8px;
 }
 .pb-sew{
   border: 1.5px dashed #BAE6FD;
   color: #0284C7;
-  background-image: linear-gradient(
-    45deg,
-    rgba(186, 230, 253, 0.4) 25%,
-    transparent 25%,
-    transparent 50%,
-    rgba(186, 230, 253, 0.4) 50%,
-    rgba(186, 230, 253, 0.4) 75%,
-    transparent 75%,
-    transparent
-  );
+  background-image: linear-gradient(45deg, rgba(186, 230, 253, 0.4) 25%, transparent 25%, transparent 50%, rgba(186, 230, 253, 0.4) 50%, rgba(186, 230, 253, 0.4) 75%, transparent 75%, transparent);
   background-size: 8px 8px;
 }
 .pb-pack{
   border: 1.5px dashed #86EFAC;
   color: #047857;
-  background-image: linear-gradient(
-    45deg,
-    rgba(134, 239, 172, 0.4) 25%,
-    transparent 25%,
-    transparent 50%,
-    rgba(134, 239, 172, 0.4) 50%,
-    rgba(134, 239, 172, 0.4) 75%,
-    transparent 75%,
-    transparent
-  );
+  background-image: linear-gradient(45deg, rgba(134, 239, 172, 0.4) 25%, transparent 25%, transparent 50%, rgba(134, 239, 172, 0.4) 50%, rgba(134, 239, 172, 0.4) 75%, transparent 75%, transparent);
   background-size: 8px 8px;
 }
 .pb-ship{
   border: 1.5px dashed #3B82F6;
   color: #1D4ED8;
-  background-image: linear-gradient(
-    45deg,
-    rgba(59, 130, 246, 0.4) 25%,
-    transparent 25%,
-    transparent 50%,
-    rgba(59, 130, 246, 0.4) 50%,
-    rgba(59, 130, 246, 0.4) 75%,
-    transparent 75%,
-    transparent
-  );
+  background-image: linear-gradient(45deg, rgba(59, 130, 246, 0.4) 25%, transparent 25%, transparent 50%, rgba(59, 130, 246, 0.4) 50%, rgba(59, 130, 246, 0.4) 75%, transparent 75%, transparent);
   background-size: 8px 8px;
 }
 
@@ -458,10 +410,10 @@ function openModalFromPop(id){
   var r=allRec.find(function(x){return x["ID"]===id});
   if(r){document.getElementById("kpiPopOv").classList.remove("active");openModal(r)}}
 
-/* 파이프라인 */
+/* 파이프라인 (안전한 유니코드 이모티콘 사용) */
 function renderPipeline(){
   var st=["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
-  var emojis = ["⏳ ", "🧵 ", "✂️ ", "🪡 ", "📦 ", "✅ ", "🚚 "];
+  var emojis = ["\u23F3 ", "\uD83E\uDDF5 ", "\u2702\uFE0F ", "\uD83E\uDDA1 ", "\uD83D\uDCE6 ", "\u2705 ", "\uD83D\uDE9A "];
   var co=["#94A3B8","#A78BFA","#FDBA74","#7DD3FC","#34D399","#10B981","#3B82F6"];
   var lb2=["미시작 / 未开始","원단 / 面料","재단 / 裁剪","봉제 / 车缝","포장 / 包装","완료 / 完成","출고 / 出货"];
   var cn=[0,0,0,0,0,0,0];
@@ -547,7 +499,7 @@ function renderMonthly(){
       html+='<td style="font-size:9px">'+escH(catName(g(r,"Category")))+'</td>';
       html+='<td>'+escH(cleanFactory(g(r,"Factory")))+'</td>';
       html+='<td style="font-weight:700">'+escH(g(r,"Total_Quantity"))+'</td>';
-      /* ★ 에러 수정됨: html+=' 가 제대로 추가됨 */
+      /* ★ 완벽하게 복구된 테이블 태그 */
       html+='<td><span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span></td>';
       html+='<td><span class="tag '+tc(g(r,"Order_Status"))+'">'+escH(g(r,"Order_Status"))+'</span></td>';
       var ed=g(r,"Expected_Delivery");html+='<td>'+escH(ed)+(dl?' <span class="dly-badge">DELAYED</span>':'')+'</td>';
@@ -603,7 +555,6 @@ function buildTimeline(items,yr,mo,label){
     h+=buildBarRow(daysInMonth,todayD,pF,pCS,pCE,pSS,pSE,pPS,pPE,pSh,true)+'</tr>';
     var aF=dayInMo(g(r,"Fabric_In_house_Date"),curMM),aCS=dayInMo(g(r,"Cutting_Start_Date"),curMM),aCE=dayInMo(g(r,"Cutting_End_Date"),curMM),aSS=dayInMo(g(r,"Sewing_Start_Date"),curMM),aSE=dayInMo(g(r,"Sewing_Completion_Date"),curMM),aPS=dayInMo(g(r,"Packing_Start_Date"),curMM),aPE=dayInMo(g(r,"Packing_End_Date"),curMM),aSh=dayInMo(g(r,"Ship_Date"),curMM);
     h+='<tr>'+buildBarRow(daysInMonth,todayD,aF,aCS,aCE,aSS,aSE,aPS,aPE,aSh,false)+'</tr>'});
-  /* ★ 에러 수정됨: padding이 16px로 정상 복구됨 */
   if(!hasAny)h+='<tr><td class="info-cell" colspan="'+(daysInMonth+1)+'" style="text-align:center;padding:16px;color:#94A3B8;font-size:10px">이 달에 해당하는 일정이 없습니다 / 本月无生产计划</td></tr>';
   h+='</tbody></table></div></div>';return h}
 
