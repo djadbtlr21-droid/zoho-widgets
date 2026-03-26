@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MO View v18</title>
+<title>MO View v20</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -26,7 +26,7 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .btn-primary:hover{background:#818CF8}
 
 /* KPI 상단 행 - 4컬럼 */
-.mkpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 420px;gap:12px;margin-bottom:16px}
+.mkpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 420px;gap:12px;margin-bottom:21px}
 
 /* 월별 KPI 카드 */
 .mkpi-card{background:var(--cw);border:1px solid var(--bd);border-radius:10px;padding:14px;position:relative;overflow:hidden}
@@ -65,7 +65,7 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .delay-badge{display:inline-block;font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:#FEE2E2;color:#DC2626;margin-left:4px}
 
 /* Pipeline */
-.pipe-card{background:var(--cw);border:1px solid var(--bd);border-radius:8px;padding:22px 20px;margin-bottom:16px}
+.pipe-card{background:var(--cw);border:1px solid var(--bd);border-radius:8px;padding:22px 20px;margin-bottom:21px}
 .pipe-title{font-size:13px;font-weight:800;color:var(--tm);text-transform:uppercase;margin-bottom:14px;letter-spacing:.5px}
 .pipe-row{display:flex;align-items:center;gap:4px;overflow-x:auto}
 .pipe-step{flex:1;text-align:center;min-width:90px;padding:14px 6px;border-radius:8px;cursor:pointer;transition:transform .1s,box-shadow .1s}
@@ -81,7 +81,7 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .search-box{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 10px;font-size:11px;outline:none;font-family:inherit}
 .search-box:focus{border-color:var(--ac);box-shadow:0 0 0 2px rgba(59,130,246,.1)}
 .fsel{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 8px;font-size:11px;outline:none;font-family:inherit;cursor:pointer}
-.mt-sec{margin-bottom:64px}
+.mt-sec{margin-bottom:83px}
 .mt-card{background:var(--cw);border:1px solid var(--bd);border-radius:8px;overflow:hidden}
 .mt-hd{padding:10px 16px;background:#F8FAFC;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
 .mt-title{font-size:16px;font-weight:800;color:var(--tx)}
@@ -288,7 +288,7 @@ function tc(s){var l=(s||"").toLowerCase();
   if(l.indexOf("delay")>=0||l.indexOf("cancel")>=0)return"t-dg";
   if(l.indexOf("pending")>=0)return"t-bl";return"t-dr"}
 
-/* ★ 출고완료(Delivered/Shipped) 상태일 경우 지연 상태(빨간색 경고) 무시 */
+/* 출고완료(Delivered/Shipped) 상태일 경우 지연 상태(빨간색 경고) 무시 */
 function isDelayed(r){
   var os=(g(r,"Order_Status")||"").toLowerCase();
   if(os.indexOf("delivered")>=0||os.indexOf("shipped")>=0||os.indexOf("done")>=0) return false;
@@ -304,7 +304,7 @@ function getImg1(r){var i=r["Style_Image"];if(!i)return null;if(Array.isArray(i)
 
 function renderAll(){renderMKPI();renderPipeline();renderMonthly()}
 
-/* ★★★ MONTHLY KPI + 생산 지연 현황 카드 ★★★ */
+/* MONTHLY KPI + 생산 지연 현황 카드 */
 function renderMKPI(){
   var groups={};
   allRec.forEach(function(r){
@@ -347,10 +347,12 @@ function renderMKPI(){
     h+='<div class="mkpi-stats">';
     h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'all\')" title="클릭하여 오더 목록 보기"><div class="mkpi-stat-n" style="color:#6366F1">'+tot+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A5B4FC"></span>총 오더 / 总订单</div></div>';
     h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'ip\')" title="클릭하여 오더 목록 보기"><div class="mkpi-stat-n" style="color:#F59E0B">'+ip+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FDE68A"></span>진행중 / 进行中</div></div>';
-    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'dl\')" title="클릭하여 오더 목록 보기"><div class="mkpi-stat-n" style="color:#EF4444">'+dl+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FCA5A5"></span>지연 / 延误</div></div>';
+    /* ★ 간체자로 교정 및 위치 변경 (출고완료 먼저) */
     h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'dv\')" title="클릭하여 오더 목록 보기"><div class="mkpi-stat-n" style="color:#34D399">'+dv+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A7F3D0"></span>출고완료 / 已出货</div></div>';
+    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'dl\')" title="클릭하여 오더 목록 보기"><div class="mkpi-stat-n" style="color:#EF4444">'+dl+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FCA5A5"></span>지연 / 延误</div></div>';
     h+='</div></div>';
-    h+='<div class="mkpi-footer"><span>진행수량 <b>'+tq.toLocaleString()+' pcs</b></span><span>출고수량 <b>'+sq.toLocaleString()+' pcs</b></span></div>';
+    /* ★ 한국어 옆에 정확한 중국어 간체자 표기 */
+    h+='<div class="mkpi-footer"><span>진행수량 <b>'+tq.toLocaleString()+' pcs</b> / 进行数量</span><span>출고수량 <b>'+sq.toLocaleString()+' pcs</b> / 出货数量</span></div>';
     h+='</div>'});
 
   // 생산 지연 현황 카드
@@ -360,6 +362,7 @@ function renderMKPI(){
   h+='<div class="delay-total">'+delayedAll.length+'<span>건 지연 / 件延误</span></div>';
   h+='<div class="delay-list">';
   if(delayedAll.length===0){
+    /* ★ 무延误 오류 수정 -> 无延误 */
     h+='<div style="text-align:center;padding:16px;color:#94A3B8;font-size:11px">지연 없음 / 无延误 ✓</div>';
   } else {
     delayedAll.forEach(function(r){
@@ -425,6 +428,7 @@ function renderPipeline(){
   /* ★ 오소리 대신 명확한 바늘과 실 이모티콘(\uD83E\uDDF1) 적용 */
   var emojis = ["\u23F3", "\uD83E\uDDF5", "\u2702\uFE0F", "\uD83E\uDDF1", "\uD83D\uDCE6", "\u2705", "\uD83D\uDE9A"];
   var co=["#94A3B8","#A78BFA","#FDBA74","#7DD3FC","#34D399","#10B981","#3B82F6"];
+  /* ★ 미开始, 출货 등 한중 혼종 오류 수정 */
   var lb2=["미시작 / 未开始","원단 / 面料","재단 / 裁剪","봉제 / 车缝","포장 / 包装","완료 / 完成","출고 / 出货"];
   var cn=[0,0,0,0,0,0,0];
   allRec.forEach(function(r){var i=st.indexOf(getProdStage(r));if(i>=0)cn[i]++});
@@ -500,7 +504,7 @@ function renderMonthly(){
     html+='</select></div>';
     html+='<div class="tbl-scroll"><table class="zt"><thead><tr>';
     
-    /* ★ 표 항목 간격 좌측 시프트 패치 (SKU, Style 너비를 줄여 Category/Factory/Qty를 왼쪽으로 이동) */
+    /* ★ 표 항목 간격 좌측 시프트 패치: SKU, Style 너비를 줄여 Category/Factory/Qty를 왼쪽으로 이동 */
     html+='<th style="width:5%">MO#</th><th style="width:8%">SKU</th><th style="width:9%">Style</th><th style="width:11%">Category</th><th style="width:10%">Factory</th><th style="width:7%">Qty</th><th style="width:16%">Production</th><th style="width:13%">Order</th><th style="width:11%">Exp.Del</th><th style="width:10%">Ship</th>';
     
     html+='</tr></thead><tbody>';
