@@ -193,7 +193,7 @@ function showErr(m){hide("loadingScreen");show("errorScreen");document.getElemen
 function g(r,f){var v=r[f];if(v==null||v==="")return"-";if(typeof v==="object"&&v.display_value)return v.display_value;return String(v)}
 function escH(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
 function tc(s){var l=(s||"").toLowerCase();if(l.indexOf("confirmed")>=0||l.indexOf("delivered")>=0||l.indexOf("complete")>=0||l.indexOf("shipped")>=0||l.indexOf("done")>=0)return"t-ok";if(l.indexOf("progress")>=0||l.indexOf("cutting")>=0||l.indexOf("sewing")>=0||l.indexOf("fabric")>=0||l.indexOf("packing")>=0)return"t-wn";if(l.indexOf("delay")>=0||l.indexOf("cancel")>=0)return"t-dg";if(l.indexOf("pending")>=0)return"t-bl";return"t-dr"}
-function isDelayed(r){var ds=g(r,"Delivery_Status").toLowerCase();if(ds.indexOf("delay")>=0)return true;var ed=pd(g(r,"Expected_Delivery"));var ps=g(r,"Production_Status").toLowerCase();if(ed&&ps.indexOf("shipped")<0&&ps.indexOf("complete")<0&&ed<todayStr)return true;return false}
+function isDelayed(r){var ds=g(r,"Delivery_Status");return ds.indexOf("Delay")>=0||ds.indexOf("지연")>=0}
 function getProdStage(r){var s=g(r,"Production_Status").toLowerCase();if(s.indexOf("shipped")>=0)return"Shipped";if(s.indexOf("complete")>=0||s.indexOf("done")>=0)return"Done";if(s.indexOf("packing")>=0)return"Packing";if(s.indexOf("sewing")>=0)return"Sewing";if(s.indexOf("cutting")>=0)return"Cutting";if(s.indexOf("fabric")>=0)return"Fabric";return"Not Started"}
 
 /* ★ Style_Image helper */
