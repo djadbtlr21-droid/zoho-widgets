@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard / 대시보드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ════════════════════════════════════════════════════════════════ */
+/*                    PASTEL COLOR PALETTE THEME                    */
+/* ════════════════════════════════════════════════════════════════ */
+:root {
+  --bg: #F8F9FD;
+  --card: #FFFFFF;
+  --border: #E8EDF5;
+  --text: #1E293B;
+  --muted: #64748B;
+  --accent: #93C5FD;
+ 
+  /* Soft Pastel Colors */
+  --p-blue: #BFDBFE;
+  --p-purple: #DDD6FE;
+  --p-mint: #BBF7D0;
+  --p-peach: #FED7AA;
+  --p-pink: #FECACA;
+  --p-yellow: #FEF08A;
+  --p-sky: #BAE6FD;
+  --p-violet: #E9D5FF;
+  --p-teal: #CCFBF1;
+  --p-rose: #FCE7F3;
+  --p-orange: #FFD8BF;
+  --p-lime: #D9F99D;
+  --p-cyan: #A5F3FC;
+}
+ 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto Sans KR', -apple-system, sans-serif;
+}
+ 
+body {
+  background: var(--bg);
+  padding: 16px;
+  min-height: 100vh;
+}
+ 
+/* ════════════════════════════════════════════════════════════════ */
+/*                        LOADING STATE                             */
+/* ════════════════════════════════════════════════════════════════ */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto;
+}
+ 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+ 
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+ 
+/* ════════════════════════════════════════════════════════════════ */
+/*                          HEADER                                  */
+/* ════════════════════════════════════════════════════════════════ */
+.hdr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+ 
+.hdr-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+ 
+.hdr-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--p-blue), var(--p-purple));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+}
+ 
+.hdr-text h1 {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+ 
+.hdr-text p {
+  font-size: 11px;
+  color: var(--muted);
+}
+ 
+.hdr-right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+ 
+.refresh-btn {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.2s;
+}
+ 
+.refresh-btn:hover {
+  background: var(--p-blue);
+  color: #1E40AF;
+  border-color: var(--p-blue);
+}
+ 
+.last-update {
+  font-size: 10px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+ 
+/* ════════════════════════════════════════════════════════════════ */
+/*                        KPI CARDS                                 */
+/* ════════════════════════════════════════════════════════════════ */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
+}
+ 
+.kpi-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+ 
+.kpi-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+}
+ 
+.kpi-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  border-radius: 10px 10px 0 0;
+}
+ 
+.kpi-icon {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+ 
+.kpi-value {
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+ 
+.kpi-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  line-height: 1.3;
+  margin-bottom: 2px;
+}
+ 
+.kpi-sub {
+  font-size: 9px;
+  color: var(--muted);
+}
+ 
+/* ════════════════════════════════════════════════════════════════ */
+/*                      CHART LAYOUTS                               */
+/* ════════════════════════════════════════════════════════════════ */
+.chart-section {
+  margin-bottom: 12px;
+}
+ 
+.chart-row {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+ 
+.chart-row-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+ 
+.chart-row-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+ 
+.chart-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+ 
+.chart-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+ 
+.chart-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+ 
+.chart-container {
+  position: relative;
+  height: 240px;
+}
+ 
+/* ════════════════════════════════════════════════════════════════ */
+/*                      ALERT & LIST PANELS                         */
+/* ════════════════════════════════════════════════════════════════ */
+.panel-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+ 
+.panel-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+ 
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+ 
+.panel-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+ 
+.panel-count {
+  font-size: 10px;
+  color: var(--muted);
+  background: #F1F5F9;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+ 
+.alert-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  background: #FFF5F5;
+  border: 1px solid var(--p-pink);
+}
+ 
+.alert-mo {
+  font-size: 11px;
+  font-weight: 800;
+  color: #B91C1C;
+  min-width: 65px;
+  white-space: nowrap;
+}
+ 
+.alert-name {
+  font-size: 10px;
+  color: #7F1D1D;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+ 
+.alert-date {
+  font-size: 9px;
+  color: #B91C1C;
+  font-weight: 700;
+  white-space: nowrap;
+}
+ 
+.upcoming-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  background: #F0FDF4;
+  border: 1px solid var(--p-mint);
+}
+ 
+.up-mo {
+  font-size: 11px;
+  font-weight: 800;
+  color: #065F46;
+  min-width: 65px;
+  white-space: nowrap;
+}
+ 
+.up-name {
+  font-size: 10px;
+  color: #064E3B;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+ 
+.up-days {
+  font-size: 8px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: var(--p-mint);
+  color: #065F46;
+  font-weight: 700;
+  white-space: nowrap;
+}
+ 
+.up-date {
+  font-size: 9px;
+  color: #065F46;
+  font-weight: 700;
+  white-space: nowrap;
+}
+ 
+.empty-panel {
+  text-align: center;
+  padding: 20px 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+ 
+/* ════════════════════════════════════════════════════════════════ */
+/*                         ERROR                                    */
+/* ════════════════════════════════════════════════════════════════ */
+.error-box {
+  background: #FEF2F2;
+  border: 1px solid var(--p-pink);
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  color: #B91C1C;
+  margin-top: 20px;
+}
+ 
+.error-box .error-title {
+  font-weight: 800;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+ 
+.error-box .error-msg {
+  font-size: 12px;
+}
+ 
+/* ════════════════════════════════════════════════════════════════ */
+/*                     RESPONSIVE                                   */
+/* ════════════════════════════════════════════════════════════════ */
+@media (max-width: 1200px) {
+  .kpi-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .chart-row-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+ 
+@media (max-width: 768px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .chart-row-3,
+  .chart-row-2 {
+    grid-template-columns: 1fr;
+  }
+  .panel-row {
+    grid-template-columns: 1fr;
+  }
+  .hdr {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .hdr-right {
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+ 
+<div id="loadingScreen" class="loading">
+  <div class="spinner"></div>
+  <span>대시보드 데이터를 불러오는 중...</span>
+</div>
+ 
+<div id="mainContent" style="display:none">
+  <!-- Header -->
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-icon">📊</div>
+      <div class="hdr-text">
+        <h1>Dashboard / 대시보드</h1>
+        <p id="lastUpdate"></p>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <span class="last-update" id="lastUpdateTime"></span>
+      <button class="refresh-btn" onclick="refreshData()">↻ 새로고침</button>
+    </div>
+  </div>
+ 
+  <!-- KPI Cards -->
+  <div class="kpi-grid" id="kpiGrid"></div>
+ 
+  <!-- Charts Section 1: Production Pipeline Donuts -->
+  <div class="chart-section">
+    <div class="chart-row chart-row-3">
+      <div class="chart-card">
+        <div class="chart-title">
+          <span class="chart-icon" style="background: var(--p-blue)">🏭</span>
+          생산 단계 현황
+        </div>
+        <div class="chart-container">
+          <canvas id="chartProdStage"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">
+          <span class="chart-icon" style="background: var(--p-purple)">📋</span>
+          주문 상태 분포
+        </div>
+        <div class="chart-container">
+          <canvas id="chartOrderStatus"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">
+          <span class="chart-icon" style="background: var(--p-mint)">👗</span>
+          스타일 상태
+        </div>
+        <div class="chart-container">
+          <canvas id="chartStyleStatus"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Charts Section 2: Monthly & Factory -->
+  <div class="chart-section">
+    <div class="chart-row chart-row-2">
+      <div class="chart-card">
+        <div class="chart-title">
+          <span class="chart-icon" style="background: var(--p-peach)">📅</span>
+          월별 MO 수량 및 지연 현황
+        </div>
+        <div class="chart-container">
+          <canvas id="chartMonthly"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">
+          <span class="chart-icon" style="background: var(--p-rose)">🏗️</span>
+          공장별 생산량 (pcs)
+        </div>
+        <div class="chart-container">
+          <canvas id="chartFactory"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Charts Section 3: Season & Shipment -->
+  <div class="chart-section">
+    <div class="chart-row chart-row-2">
+      <div class="chart-card">
+        <div class="chart-title">
+          <span class="chart-icon" style="background: var(--p-yellow)">🌿</span>
+          시즌별 MO 분포
+        </div>
+        <div class="chart-container">
+          <canvas id="chartSeason"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">
+          <span class="chart-icon" style="background: var(--p-sky)">🚢</span>
+          월별 출고 현황 (누적)
+        </div>
+        <div class="chart-container">
+          <canvas id="chartShipment"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Charts Section 4: Category & Status -->
+  <div class="chart-section">
+    <div class="chart-row chart-row-2">
+      <div class="chart-card">
+        <div class="chart-title">
+          <span class="chart-icon" style="background: var(--p-violet)">📊</span>
+          스타일 카테고리 분포
+        </div>
+        <div class="chart-container">
+          <canvas id="chartCategory"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">
+          <span class="chart-icon" style="background: var(--p-teal)">🎯</span>
+          주요 공장 월별 생산량 추이
+        </div>
+        <div class="chart-container">
+          <canvas id="chartFactoryTrend"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Alerts & Lists -->
+  <div class="panel-row">
+    <div class="panel-card">
+      <div class="panel-header">
+        <div class="panel-title">⚠️ 지연 MO 알림</div>
+        <span class="panel-count" id="delayedCount">0건</span>
+      </div>
+      <div id="delayedList"></div>
+    </div>
+    <div class="panel-card">
+      <div class="panel-header">
+        <div class="panel-title">📦 30일 내 출고 예정</div>
+        <span class="panel-count" id="upcomingCount">0건</span>
+      </div>
+      <div id="upcomingList"></div>
+    </div>
+  </div>
+</div>
+ 
+<div id="errorScreen" style="display:none">
+  <div class="error-box">
+    <div class="error-title">데이터를 불러올 수 없습니다</div>
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+</div>
+ 
+<script>
+/* ════════════════════════════════════════════════════════════════ */
+/*                      INITIALIZATION                              */
+/* ════════════════════════════════════════════════════════════════ */
+var APP = "eom";
+var allMO = [], allStyles = [];
+var today = new Date();
+var todayStr = today.toISOString().split("T")[0];
+var charts = {};
+ 
+/* Pastel Color Palettes */
+var PASTEL = ['#BFDBFE', '#DDD6FE', '#BBF7D0', '#FED7AA', '#FECACA', '#FEF08A', '#BAE6FD', '#E9D5FF', '#CCFBF1', '#FCE7F3', '#FFD8BF', '#D9F99D'];
+var PASTEL_DARK = ['#93C5FD', '#A5B4FC', '#6EE7B7', '#FDBA74', '#FCA5A5', '#FACC15', '#67E8F9', '#D8B4FE', '#5EEAD4', '#F472B6', '#FB923C', '#84CC16'];
+ 
+/* ════════════════════════════════════════════════════════════════ */
+/*                      HELPER FUNCTIONS                            */
+/* ════════════════════════════════════════════════════════════════ */
+function g(r, f) {
+  var v = r[f];
+  if (v == null || v === "") return "-";
+  if (typeof v === "object" && v.display_value) return v.display_value;
+  return String(v);
+}
+ 
+function escH(s) {
+  var d = document.createElement("div");
+  d.textContent = s;
+  return d.innerHTML;
+}
+ 
+function pd(v) {
+  if (!v || v === "-") return null;
+  if (/^\d{4}-\d{2}-\d{2}/.test(v)) return v.substring(0, 10);
+  var m = v.match(/^(\d{1,2})-([A-Za-z]+)-(\d{4})/);
+  if (m) {
+    var mo = { Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12" };
+    return m[3] + "-" + (mo[m[2]] || "01") + "-" + (m[1].length === 1 ? "0" + m[1] : m[1]);
+  }
+  return null;
+}
+ 
+function show(i) { document.getElementById(i).style.display = "block"; }
+function hide(i) { document.getElementById(i).style.display = "none"; }
+function showErr(m) { hide("loadingScreen"); show("errorScreen"); document.getElementById("errorMsg").textContent = m; }
+ 
+function isDelayed(r) {
+  var ds = (g(r, "Delivery_Status") || "").toLowerCase();
+  if (ds.indexOf("delay") >= 0) return true;
+  var ed = pd(g(r, "Expected_Delivery"));
+  var ps = (g(r, "Production_Status") || "").toLowerCase();
+  if (ed && ed < todayStr && ps.indexOf("shipped") < 0 && ps.indexOf("complete") < 0) return true;
+  return false;
+}
+ 
+function getProdStage(r) {
+  var s = (g(r, "Production_Status") || "").toLowerCase();
+  if (s.indexOf("shipped") >= 0) return "Shipped";
+  if (s.indexOf("complete") >= 0 || s.indexOf("done") >= 0) return "Done";
+  if (s.indexOf("packing") >= 0) return "Packing";
+  if (s.indexOf("sewing") >= 0) return "Sewing";
+  if (s.indexOf("cutting") >= 0) return "Cutting";
+  if (s.indexOf("fabric") >= 0) return "Fabric";
+  return "Not Started";
+}
+ 
+function countBy(arr, fn) {
+  var obj = {};
+  arr.forEach(function (r) {
+    var k = fn(r);
+    if (!k) return;
+    obj[k] = (obj[k] || 0) + 1;
+  });
+  return obj;
+}
+ 
+function sumBy(arr, keyFn, valFn) {
+  var obj = {};
+  arr.forEach(function (r) {
+    var k = keyFn(r);
+    if (!k) return;
+    obj[k] = (obj[k] || 0) + (valFn(r) || 0);
+  });
+  return obj;
+}
+ 
+function sortedEntries(obj, limit) {
+  var entries = Object.entries(obj).sort(function (a, b) { return b[1] - a[1]; });
+  return limit ? entries.slice(0, limit) : entries;
+}
+ 
+function destroyChart(id) {
+  if (charts[id]) {
+    charts[id].destroy();
+    delete charts[id];
+  }
+}
+ 
+/* ════════════════════════════════════════════════════════════════ */
+/*                      MAIN FLOW                                   */
+/* ════════════════════════════════════════════════════════════════ */
+ZOHO.CREATOR.init().then(function () { loadData(); });
+ 
+function refreshData() {
+  allMO = [];
+  allStyles = [];
+  Object.keys(charts).forEach(destroyChart);
+  hide("mainContent");
+  hide("errorScreen");
+  show("loadingScreen");
+  loadData();
+}
+ 
+function loadData() {
+  var moLoaded = false, styLoaded = false;
+ 
+  function tryRender() {
+    if (moLoaded && styLoaded) {
+      renderAll();
+      hide("loadingScreen");
+      show("mainContent");
+    }
+  }
+ 
+  ZOHO.CREATOR.API.getAllRecords({ appName: APP, reportName: "All_MO", page: 1, pageSize: 200 }).then(function (r) {
+    if (r && r.code === 3000 && r.data) allMO = r.data;
+    moLoaded = true;
+    tryRender();
+  }).catch(function () { moLoaded = true; tryRender(); });
+ 
+  ZOHO.CREATOR.API.getAllRecords({ appName: APP, reportName: "All_Styles", page: 1, pageSize: 200 }).then(function (r) {
+    if (r && r.code === 3000 && r.data) allStyles = r.data;
+    styLoaded = true;
+    tryRender();
+  }).catch(function () { styLoaded = true; tryRender(); });
+}
+ 
+function renderAll() {
+  var now = new Date();
+  document.getElementById("lastUpdate").textContent = "마지막 업데이트: " + now.toLocaleString("ko-KR");
+  document.getElementById("lastUpdateTime").textContent = now.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" });
+ 
+  renderKPI();
+  renderProdStageDonut();
+  renderOrderStatusDonut();
+  renderStyleStatusDonut();
+  renderMonthlyBar();
+  renderFactoryBar();
+  renderSeasonBar();
+  renderShipmentBar();
+  renderCategoryDonut();
+  renderFactoryTrendLine();
+  renderDelayed();
+  renderUpcoming();
+}
+ 
+/* ════════════════════════════════════════════════════════════════ */
+/*                        KPI RENDERING                             */
+/* ════════════════════════════════════════════════════════════════ */
+function renderKPI() {
+  var totalMO = allMO.length;
+  var inProg = 0, delayed = 0, shipped = 0, totalQty = 0, shippedQty = 0;
+ 
+  allMO.forEach(function (r) {
+    var os = (g(r, "Order_Status") || "").toLowerCase();
+    var ps = (g(r, "Production_Status") || "").toLowerCase();
+    if (os.indexOf("progress") >= 0) inProg++;
+    if (isDelayed(r)) delayed++;
+    if (ps.indexOf("shipped") >= 0) shipped++;
+    totalQty += parseInt(g(r, "Total_Quantity")) || 0;
+    shippedQty += parseInt(g(r, "Shipped_Quantity")) || 0;
+  });
+ 
+  var totalStyles = allStyles.length;
+  var activeStyles = allStyles.filter(function (r) {
+    var s = (g(r, "Style_Status") || "").toLowerCase();
+    return s.indexOf("active") >= 0 || s.indexOf("approved") >= 0;
+  }).length;
+  var samplingStyles = allStyles.filter(function (r) {
+    var s = (g(r, "Sample_Status") + " " + g(r, "Style_Status")).toLowerCase();
+    return s.indexOf("sampling") >= 0 || s.indexOf("sample") >= 0;
+  }).length;
+ 
+  var shipPct = totalQty > 0 ? Math.round(shippedQty / totalQty * 100) : 0;
+ 
+  var kpis = [
+    { icon: "📋", val: totalMO, label: "총 MO", sub: totalQty.toLocaleString() + " pcs", color: "#93C5FD", text: "#1E40AF" },
+    { icon: "⚙️", val: inProg, label: "진행 중", sub: "", color: "#FDBA74", text: "#9A3412" },
+    { icon: "⚠️", val: delayed, label: "지연", sub: "", color: "#FCA5A5", text: "#B91C1C" },
+    { icon: "✅", val: shipped, label: "출고완료", sub: shippedQty.toLocaleString() + " pcs · " + shipPct + "%", color: "#6EE7B7", text: "#065F46" },
+    { icon: "👗", val: totalStyles, label: "총 스타일", sub: activeStyles + " Active", color: "#D8B4FE", text: "#5B21B6" },
+    { icon: "🪡", val: samplingStyles, label: "샘플 진행", sub: "", color: "#FACC15", text: "#713F12" }
+  ];
+ 
+  document.getElementById("kpiGrid").innerHTML = kpis.map(function (k) {
+    return '<div class="kpi-card">' +
+      '<div class="kpi-bar" style="background: ' + k.color + '"></div>' +
+      '<div class="kpi-icon">' + k.icon + '</div>' +
+      '<div class="kpi-value" style="color: ' + k.text + '">' + k.val + '</div>' +
+      '<div class="kpi-label">' + k.label + '</div>' +
+      (k.sub ? '<div class="kpi-sub">' + escH(k.sub) + '</div>' : '') +
+      '</div>';
+  }).join("");
+}
+ 
+/* ════════════════════════════════════════════════════════════════ */
+/*                      CHART RENDERING                             */
+/* ════════════════════════════════════════════════════════════════ */
+ 
+/* Donut 1: Production Stage */
+function renderProdStageDonut() {
+  var stages = ["Not Started", "Fabric", "Cutting", "Sewing", "Packing", "Done", "Shipped"];
+  var colors = ['#E2E8F0', '#DDD6FE', '#FED7AA', '#FECACA', '#BBF7D0', '#BFDBFE', '#86EFAC'];
+  var counts = stages.map(function (s) {
+    return allMO.filter(function (r) { return getProdStage(r) === s; }).length;
+  });
+ 
+  destroyChart('chartProdStage');
+  var ctx = document.getElementById('chartProdStage').getContext('2d');
+  charts['chartProdStage'] = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: stages,
+      datasets: [{
+        data: counts,
+        backgroundColor: colors,
+        borderColor: '#fff',
+        borderWidth: 2,
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: { font: { size: 10, family: 'Noto Sans KR' }, boxWidth: 10, padding: 6 }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(c) { return c.label + ': ' + c.parsed + '건'; }
+          }
+        }
+      }
+    }
+  });
+}
+ 
+/* Donut 2: Order Status */
+function renderOrderStatusDonut() {
+  var counts = countBy(allMO, function (r) { return g(r, "Order_Status"); });
+  var entries = sortedEntries(counts);
+ 
+  destroyChart('chartOrderStatus');
+  var ctx = document.getElementById('chartOrderStatus').getContext('2d');
+  charts['chartOrderStatus'] = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: entries.map(function(e){ return e[0]; }),
+      datasets: [{
+        data: entries.map(function(e){ return e[1]; }),
+        backgroundColor: PASTEL,
+        borderColor: '#fff',
+        borderWidth: 2,
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: { font: { size: 9, family: 'Noto Sans KR' }, boxWidth: 10, padding: 5 }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(c) { return c.label + ': ' + c.parsed + '건'; }
+          }
+        }
+      }
+    }
+  });
+}
+ 
+/* Donut 3: Style Status */
+function renderStyleStatusDonut() {
+  if (allStyles.length === 0) {
+    destroyChart('chartStyleStatus');
+    document.getElementById('chartStyleStatus').parentElement.innerHTML = '<div style="text-align:center;padding:60px 10px;color:#94A3B8;font-size:12px">스타일 데이터 없음</div>';
+    return;
+  }
+ 
+  var counts = countBy(allStyles, function (r) { return g(r, "Style_Status"); });
+  var entries = sortedEntries(counts);
+ 
+  destroyChart('chartStyleStatus');
+  var ctx = document.getElementById('chartStyleStatus').getContext('2d');
+  charts['chartStyleStatus'] = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: entries.map(function(e){ return e[0]; }),
+      datasets: [{
+        data: entries.map(function(e){ return e[1]; }),
+        backgroundColor: PASTEL,
+        borderColor: '#fff',
+        borderWidth: 2,
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: { font: { size: 9, family: 'Noto Sans KR' }, boxWidth: 10, padding: 5 }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(c) { return c.label + ': ' + c.parsed + '건'; }
+          }
+        }
+      }
+    }
+  });
+}
+ 
+/* Bar 1: Monthly MO Count */
+function renderMonthlyBar() {
+  var monthMap = {};
+  allMO.forEach(function (r) {
+    var py = g(r, "Plan_Year"), pm = g(r, "Plan_Month");
+    if (py === "-" || pm === "-") return;
+    var key = py + "-" + (pm < 10 ? "0" : "") + pm;
+    if (!monthMap[key]) monthMap[key] = { count: 0, delayed: 0 };
+    monthMap[key].count++;
+    if (isDelayed(r)) monthMap[key].delayed++;
+  });
+ 
+  var keys = Object.keys(monthMap).sort();
+  var labels = keys.map(function (k) { var p = k.split("-"); return p[0].slice(2) + "/" + p[1]; });
+  var counts = keys.map(function (k) { return monthMap[k].count; });
+  var delays = keys.map(function (k) { return monthMap[k].delayed; });
+ 
+  destroyChart('chartMonthly');
+  var ctx = document.getElementById('chartMonthly').getContext('2d');
+  charts['chartMonthly'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: '총 MO', data: counts, backgroundColor: var(--p-blue)', borderColor: '#93C5FD', borderWidth: 1, borderRadius: 4 },
+        { label: '지연', data: delays, backgroundColor: '#FECACA', borderColor: '#FCA5A5', borderWidth: 1, borderRadius: 4 }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { font: { size: 10, family: 'Noto Sans KR' }, boxWidth: 12 } }
+      },
+      scales: {
+        x: { ticks: { font: { size: 9 } }, grid: { display: false } },
+        y: { ticks: { font: { size: 9 }, stepSize: 1 }, grid: { color: '#F1F5F9' } }
+      }
+    }
+  });
+}
+ 
+/* Bar 2: Factory Distribution (Horizontal) */
+function renderFactoryBar() {
+  var factMap = sumBy(allMO, function (r) { return g(r, "Factory") !== "-" ? g(r, "Factory") : null; }, function (r) { return parseInt(g(r, "Total_Quantity")) || 0; });
+  var entries = sortedEntries(factMap, 8);
+ 
+  destroyChart('chartFactory');
+  var ctx = document.getElementById('chartFactory').getContext('2d');
+  charts['chartFactory'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: entries.map(function(e){ return e[0]; }),
+      datasets: [{
+        label: 'pcs',
+        data: entries.map(function(e){ return e[1]; }),
+        backgroundColor: PASTEL_DARK.slice(0, entries.length),
+        borderRadius: 4,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function(c) { return c.parsed.x.toLocaleString() + ' pcs'; } } }
+      },
+      scales: {
+        x: { ticks: { font: { size: 9 }, callback: function(v) { return v >= 1000 ? (v/1000).toFixed(1)+'k' : v; } }, grid: { color: '#F1F5F9' } },
+        y: { ticks: { font: { size: 10 } }, grid: { display: false } }
+      }
+    }
+  });
+}
+ 
+/* Bar 3: Season Distribution */
+function renderSeasonBar() {
+  var seaMap = countBy(allMO, function (r) { return g(r, "Season") !== "-" ? g(r, "Season") : null; });
+  var entries = sortedEntries(seaMap);
+ 
+  destroyChart('chartSeason');
+  var ctx = document.getElementById('chartSeason').getContext('2d');
+  charts['chartSeason'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: entries.map(function(e){ return e[0]; }),
+      datasets: [{
+        label: 'MO 수',
+        data: entries.map(function(e){ return e[1]; }),
+        backgroundColor: PASTEL.slice(0, entries.length),
+        borderRadius: 5
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { font: { size: 9 } }, grid: { display: false } },
+        y: { ticks: { font: { size: 9 }, stepSize: 1 }, grid: { color: '#F1F5F9' } }
+      }
+    }
+  });
+}
+ 
+/* Bar 4: Shipment Stacked (출고완료 vs 잔여) */
+function renderShipmentBar() {
+  var monthMap = {};
+  allMO.forEach(function (r) {
+    var py = g(r, "Plan_Year"), pm = g(r, "Plan_Month");
+    if (py === "-" || pm === "-") return;
+    var key = py + "-" + (pm < 10 ? "0" : "") + pm;
+    if (!monthMap[key]) monthMap[key] = { total: 0, shipped: 0 };
+    monthMap[key].total += parseInt(g(r, "Total_Quantity")) || 0;
+    monthMap[key].shipped += parseInt(g(r, "Shipped_Quantity")) || 0;
+  });
+ 
+  var keys = Object.keys(monthMap).sort();
+  var labels = keys.map(function (k) { var p = k.split("-"); return p[0].slice(2) + "/" + p[1]; });
+  var shipped = keys.map(function (k) { return monthMap[k].shipped; });
+  var remaining = keys.map(function (k) { return Math.max(0, monthMap[k].total - monthMap[k].shipped); });
+ 
+  destroyChart('chartShipment');
+  var ctx = document.getElementById('chartShipment').getContext('2d');
+  charts['chartShipment'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: '출고완료 (pcs)', data: shipped, backgroundColor: '#86EFAC', borderRadius: 4 },
+        { label: '잔여 (pcs)', data: remaining, backgroundColor: '#E2E8F0', borderRadius: 4 }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { font: { size: 10, family: 'Noto Sans KR' }, boxWidth: 12 } },
+        tooltip: { callbacks: { label: function(c) { return c.dataset.label + ': ' + c.parsed.y.toLocaleString() + ' pcs'; } } }
+      },
+      scales: {
+        x: { stacked: true, ticks: { font: { size: 9 } }, grid: { display: false } },
+        y: { stacked: true, ticks: { font: { size: 9 }, callback: function(v) { return v >= 1000 ? (v/1000).toFixed(1)+'k' : v; } }, grid: { color: '#F1F5F9' } }
+      }
+    }
+  });
+}
+ 
+/* Donut 4: Style Category */
+function renderCategoryDonut() {
+  if (allStyles.length === 0) {
+    destroyChart('chartCategory');
+    document.getElementById('chartCategory').parentElement.innerHTML = '<div style="text-align:center;padding:60px 10px;color:#94A3B8;font-size:12px">카테고리 데이터 없음</div>';
+    return;
+  }
+ 
+  var catMap = countBy(allStyles, function (r) { return g(r, "Category"); });
+  var entries = sortedEntries(catMap);
+ 
+  destroyChart('chartCategory');
+  var ctx = document.getElementById('chartCategory').getContext('2d');
+  charts['chartCategory'] = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: entries.map(function(e){ return e[0]; }),
+      datasets: [{
+        data: entries.map(function(e){ return e[1]; }),
+        backgroundColor: PASTEL,
+        borderColor: '#fff',
+        borderWidth: 2,
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: { font: { size: 9, family: 'Noto Sans KR' }, boxWidth: 10, padding: 5 }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(c) { return c.label + ': ' + c.parsed + '개'; }
+          }
+        }
+      }
+    }
+  });
+}
+ 
+/* Line 1: Factory Trend (Top 3) */
+function renderFactoryTrendLine() {
+  var monthMap = {};
+  var topFactories = [];
+ 
+  // Get top 3 factories
+  var factMap = countBy(allMO, function (r) { return g(r, "Factory"); });
+  var entries = sortedEntries(factMap, 3);
+  topFactories = entries.map(function(e){ return e[0]; });
+ 
+  if (topFactories.length === 0) {
+    destroyChart('chartFactoryTrend');
+    document.getElementById('chartFactoryTrend').parentElement.innerHTML = '<div style="text-align:center;padding:60px 10px;color:#94A3B8;font-size:12px">공장 데이터 없음</div>';
+    return;
+  }
+ 
+  // Build monthly data for each factory
+  allMO.forEach(function (r) {
+    var py = g(r, "Plan_Year"), pm = g(r, "Plan_Month");
+    if (py === "-" || pm === "-") return;
+    var key = py + "-" + (pm < 10 ? "0" : "") + pm;
+    if (!monthMap[key]) monthMap[key] = {};
+    topFactories.forEach(function (f) {
+      if (!monthMap[key][f]) monthMap[key][f] = 0;
+    });
+    var fact = g(r, "Factory");
+    if (topFactories.indexOf(fact) >= 0) {
+      monthMap[key][fact] += parseInt(g(r, "Total_Quantity")) || 0;
+    }
+  });
+ 
+  var keys = Object.keys(monthMap).sort();
+  var labels = keys.map(function (k) { var p = k.split("-"); return p[0].slice(2) + "/" + p[1]; });
+ 
+  var datasets = topFactories.map(function (f, i) {
+    var data = keys.map(function (k) { return monthMap[k][f] || 0; });
+    return {
+      label: f,
+      data: data,
+      borderColor: PASTEL_DARK[i],
+      backgroundColor: PASTEL_DARK[i] + '20',
+      borderWidth: 2,
+      fill: true,
+      tension: 0.3,
+      pointRadius: 3,
+      pointBackgroundColor: PASTEL_DARK[i]
+    };
+  });
+ 
+  destroyChart('chartFactoryTrend');
+  var ctx = document.getElementById('chartFactoryTrend').getContext('2d');
+  charts['chartFactoryTrend'] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: datasets
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { font: { size: 10, family: 'Noto Sans KR' }, boxWidth: 12 } },
+        tooltip: { callbacks: { label: function(c) { return c.dataset.label + ': ' + c.parsed.y.toLocaleString() + ' pcs'; } } }
+      },
+      scales: {
+        x: { ticks: { font: { size: 9 } }, grid: { color: '#F1F5F9' } },
+        y: { ticks: { font: { size: 9 }, callback: function(v) { return v >= 1000 ? (v/1000).toFixed(1)+'k' : v; } }, grid: { color: '#F1F5F9' } }
+      }
+    }
+  });
+}
+ 
+/* ════════════════════════════════════════════════════════════════ */
+/*                      PANELS                                      */
+/* ════════════════════════════════════════════════════════════════ */
+ 
+/* Delayed MOs */
+function renderDelayed() {
+  var delayed = allMO.filter(function (r) { return isDelayed(r); });
+  delayed.sort(function (a, b) {
+    var da = pd(g(a, "Expected_Delivery")) || "9999";
+    var db = pd(g(b, "Expected_Delivery")) || "9999";
+    return da.localeCompare(db);
+  });
+ 
+  document.getElementById("delayedCount").textContent = delayed.length + "건";
+ 
+  if (delayed.length === 0) {
+    document.getElementById("delayedList").innerHTML = '<div class="empty-panel">🎉 지연된 MO가 없습니다!</div>';
+    return;
+  }
+ 
+  document.getElementById("delayedList").innerHTML = delayed.slice(0, 10).map(function (r) {
+    return '<div class="alert-item">' +
+      '<span class="alert-mo">' + escH(g(r, "MO_Number")) + '</span>' +
+      '<span class="alert-name">' + escH(g(r, "Style_Name")) + ' · ' + escH(g(r, "Factory")) + '</span>' +
+      '<span class="alert-date">예정: ' + escH(g(r, "Expected_Delivery")) + '</span>' +
+      '</div>';
+  }).join("") + (delayed.length > 10 ? '<div style="text-align:center;font-size:10px;color:#94A3B8;padding:6px">+' + (delayed.length - 10) + '건 더</div>' : '');
+}
+ 
+/* Upcoming Shipments (30 days) */
+function renderUpcoming() {
+  var in30 = new Date(today);
+  in30.setDate(in30.getDate() + 30);
+  var in30Str = in30.toISOString().split("T")[0];
+ 
+  var upcoming = allMO.filter(function (r) {
+    var ps = (g(r, "Production_Status") || "").toLowerCase();
+    if (ps.indexOf("shipped") >= 0) return false;
+    var ed = pd(g(r, "Expected_Delivery"));
+    return ed && ed >= todayStr && ed <= in30Str;
+  });
+ 
+  upcoming.sort(function (a, b) {
+    var da = pd(g(a, "Expected_Delivery")) || "9999";
+    var db = pd(g(b, "Expected_Delivery")) || "9999";
+    return da.localeCompare(db);
+  });
+ 
+  document.getElementById("upcomingCount").textContent = upcoming.length + "건";
+ 
+  if (upcoming.length === 0) {
+    document.getElementById("upcomingList").innerHTML = '<div class="empty-panel">30일 내 출고 예정 없음</div>';
+    return;
+  }
+ 
+  document.getElementById("upcomingList").innerHTML = upcoming.slice(0, 10).map(function (r) {
+    var ed = pd(g(r, "Expected_Delivery"));
+    var daysLeft = ed ? Math.round((new Date(ed) - today) / 86400000) : null;
+    var daysTag = daysLeft !== null ? '<span class="up-days">D-' + daysLeft + '</span>' : '';
+ 
+    return '<div class="upcoming-item">' +
+      '<span class="up-mo">' + escH(g(r, "MO_Number")) + '</span>' +
+      '<span class="up-name">' + escH(g(r, "Style_Name")) + ' · ' + escH(g(r, "Factory")) + '</span>' +
+      daysTag +
+      '<span class="up-date">' + escH(g(r, "Expected_Delivery")) + '</span>' +
+      '</div>';
+  }).join("") + (upcoming.length > 10 ? '<div style="text-align:center;font-size:10px;color:#94A3B8;padding:6px">+' + (upcoming.length - 10) + '건 더</div>' : '');
+}
+</script>
+</body>
+</html>
