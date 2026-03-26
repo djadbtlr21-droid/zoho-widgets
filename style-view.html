@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Style View v26</title>
+<title>Style View v27</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -20,7 +20,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .page-header h1{font-size:17px;font-weight:900;color:var(--z-text-main);display:flex;align-items:center;gap:8px}
 .page-header h1 .icon-s{width:26px;height:26px;background:var(--z-primary);border-radius:5px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900}
 
-/* ★ KPI 상단 행 - MO View 4컬럼 스타일 이식 */
+/* KPI 상단 행 */
 .mkpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 420px;gap:12px;margin-bottom:21px}
 
 /* 월별 KPI 카드 */
@@ -177,7 +177,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
   </div>
 </div>
 
-<div id="lightboxOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:4000;justify(center;align-items:center;cursor:pointer;backdrop-filter:blur(4px)" onclick="closeLightbox()">
+<div id="lightboxOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:4000;justify-content:center;align-items:center;cursor:pointer;backdrop-filter:blur(4px)" onclick="closeLightbox()">
 <img id="lightboxImg" style="max-width:90%;max-height:90%;object-fit:contain;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.5)" onclick="event.stopPropagation()">
 <div style="position:absolute;top:20px;right:24px;color:#fff;font-size:28px;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.15);border-radius:50%" onclick="closeLightbox()">✕</div>
 </div>
@@ -199,7 +199,7 @@ var today=new Date();
 
 /* ── Full-name mappings ── */
 var MAP={
-Gender:{"W":"Women / 여성 / 女","M":"Men / 남성 / 남","U":"Unisex / 남녀공용 / 男女通用"},
+Gender:{"W":"Women / 여성 / 女","M":"Men / 남성 / 男","U":"Unisex / 남녀공용 / 男女通用"},
 Category:{"S":"Set / 세트 / 套装","I":"Individual / 단품 / 单品"},
 Top_Type:{"B":"Bra-top / 브라탑 / 运动内衣","C":"Crop / 크롭 / 露脐装","T":"Tank / 탱크 / 背心"},
 Sleeve:{"L":"Long / 긴팔 / 长袖","S":"Short / 반팔 / 短袖","N":"None / 민소매 / 无袖"},
@@ -255,15 +255,7 @@ var _currentRecId=null;
 function editStyle(){if(!_currentRecId)return;goTo("https://creatorapp.zoho.com/jeramoda/eom/#Report:All_Styles")}
 function newMO(){goTo("https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_MO")}
 
-/* ★ 오더 지연 추적 로직 (해당 월 마지막 주 월요일 기준) */
-function getLastMonday(year, month) {
-  var lastDay = new Date(year, month, 0);
-  var dow = lastDay.getDay();
-  var offset = dow === 0 ? 6 : dow - 1;
-  lastDay.setDate(lastDay.getDate() - offset);
-  return lastDay;
-}
-
+/* ★ 오더 지연 추적 로직 (해당 월 20일 기준) */
 function isOrderDelayed(r) {
   var sku = g(r, "Style_SKU");
   if (sku === "-") sku = g(r, "SKU");
@@ -273,13 +265,14 @@ function isOrderDelayed(r) {
   var pm = parseInt(g(r, "Plan_Month"));
   if (isNaN(py) || isNaN(pm)) return false;
 
+  /* 연도 인식 버그 패치 */
   if (py < 100) py += 2000;
 
-  var lastMon = getLastMonday(py, pm);
+  /* ★ 데드라인을 해당 월(Plan_Month)의 20일로 설정 */
+  var deadline = new Date(py, pm - 1, 20); 
   var todayD = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  var lastMonD = new Date(lastMon.getFullYear(), lastMon.getMonth(), lastMon.getDate());
   
-  return todayD > lastMonD;
+  return todayD > deadline;
 }
 
 function parseYM(key){var m=key.match(/(\d+)년\s*(\d+)월/);if(!m)return null;var y=parseInt(m[1]);if(y<100)y+=2000;return{y:y,m:parseInt(m[2])}}
@@ -316,7 +309,8 @@ function renderMKPI(){
     var ym=parseYM(key);
     var yy = ym ? ym.y.toString().slice(-2) : "";
     var mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
-    var titleText = ym ? (yy+"."+mm+" Style KPI / "+yy+"年 "+ym.m+"월 款式 KPI") : "Style KPI / 款式 KPI";
+    /* ★ KPI 카드 제목 형식 정확히 적용: YY.MM Style KPI / YY年 M月 款式 KPI */
+    var titleText = ym ? (yy+"."+mm+" Style KPI / "+yy+"年 "+ym.m+"月 款式 KPI") : "Style KPI / 款式 KPI";
 
     h+='<div class="mkpi-card">';
     h+='<div class="mkpi-header"><div class="mkpi-title">📅 '+titleText+'</div></div>';
@@ -350,7 +344,8 @@ function renderMKPI(){
       h+='</div>'});
   }
   h+='</div>';
-  h+='<div style="font-size:9px;color:#94A3B8;text-align:center;padding-top:8px;border-top:1px dashed #FECACA;line-height:1.4">당월 마지막 주까지 오더 미진행 시 추가<br>若当月最后一周未下订单则添加</div>';
+  /* ★ 지연 안내 문구 크기 10% 확대 및 볼드 처리 */
+  h+='<div style="font-size:10px;font-weight:bold;color:#94A3B8;text-align:center;padding-top:8px;border-top:1px dashed #FECACA;line-height:1.4">당월 20일까지 오더 미진행 시 지연으로 간주<br>若当月20日前未下订单，视为延误</div>';
   h+='</div>';
 
   document.getElementById("kpiRow").innerHTML=h;
@@ -403,7 +398,7 @@ document.getElementById("kpiPopOv").addEventListener("click",function(e){if(e.ta
 /* ── Filters ── */
 function buildFilters(){var cat={},gen={},se={},st={};allRec.forEach(function(r){var c=g(r,"Category");if(c!=="-")cat[c]=mv("Category",c);var ge=g(r,"Gender");if(ge!=="-")gen[ge]=mv("Gender",ge);var s=g(r,"Season");if(s!=="-")se[s]=1;var t=g(r,"Style_Status");if(t!=="-")st[t]=1});var el;el=document.getElementById("filterCategory");Object.keys(cat).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+escH(cat[k])+'</option>'});el=document.getElementById("filterGender");Object.keys(gen).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+escH(gen[k])+'</option>'});el=document.getElementById("filterSeason");Object.keys(se).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});el=document.getElementById("filterStatus");Object.keys(st).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'})}
 
-/* ── Chart: English-only short labels, compact bars ── */
+/* ── Chart ── */
 var COLORS=["#3B82F6","#8B5CF6","#EC4899","#F97316","#10B981","#06B6D4","#EF4444","#F59E0B","#6366F1","#14B8A6","#E11D48","#84CC16","#0EA5E9","#A855F7","#F43F5E"];
 function renderChart(){
 var combos={};
@@ -446,13 +441,20 @@ function renderTables(){
   var html="";
   Object.keys(groups).sort().forEach(function(key){
     var items=groups[key];
-    html+='<div class="month-section"><div class="month-card"><div class="month-header"><div class="month-title">📅 '+escH(key)+'</div><span class="month-count">'+items.length+' styles</span></div><div class="table-scroll"><table class="z-table"><thead><tr><th style="width:18%">Style Info</th><th style="width:7%">Brand</th><th style="width:7%">Season</th><th style="width:12%">Gender</th><th style="width:12%">Category</th><th style="width:14%">Material_Type</th><th style="width:8%">Target_Cost</th><th style="width:10%">Status</th><th style="width:6%">Sample</th><th style="width:8%">Order</th></tr></thead><tbody>';
+    var ym=parseYM(key);
+    var yy = ym ? ym.y.toString().slice(-2) : "";
+    var mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
+    
+    /* ★ 월별 표 제목 100% 적용: YY.MM Styles Table / YY年 M月 款式表 */
+    var tableTitle = ym ? (yy+"."+mm+" Styles Table / "+yy+"年 "+ym.m+"月 款式表") : "Styles Table / 款式表";
+
+    html+='<div class="month-section"><div class="month-card"><div class="month-header"><div class="month-title">📅 '+tableTitle+'</div><span class="month-count">'+items.length+' styles</span></div><div class="table-scroll"><table class="z-table"><thead><tr><th style="width:18%">Style Info</th><th style="width:7%">Brand</th><th style="width:7%">Season</th><th style="width:12%">Gender</th><th style="width:12%">Category</th><th style="width:14%">Material_Type</th><th style="width:8%">Target_Cost</th><th style="width:10%">Status</th><th style="width:6%">Sample</th><th style="width:8%">Order</th></tr></thead><tbody>';
     items.forEach(function(r){
       var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");
       var name=g(r,"Style_Name");
       var iu=getImg1(r),ia=iu?' data-img="'+iu+'"':'';
       var ordered=moSkus.has(sku);
-      /* ★ 미오더(Not Ordered) 행(Row) 빨간색 경고 배경 처리 */
+      /* Not Ordered 행(Row) 빨간색 경고 배경 처리 */
       var trStyle = (!ordered) ? ' style="background:#FEF2F2"' : '';
       var trClass = (!ordered) ? ' class="not-ordered"' : '';
       
@@ -491,7 +493,7 @@ h+='</div></div>';
 h+='<div class="modal-section"><div class="modal-section-title">👗 제품 정의 / Product Definition / 产品定义</div><div class="detail-grid">';
 h+=it("Gender / 성별 / 性别",dv(mv("Gender",g(d,"Gender"))));
 h+=it("Category / 구분 / 大类",dv(mv("Category",g(d,"Category"))));
-h+=it("Top Type / 상의유형 / 상의유형",dv(mv("Top_Type",g(d,"Top_Type"))));
+h+=it("Top Type / 상의유형 / 上衣类型",dv(mv("Top_Type",g(d,"Top_Type"))));
 h+=it("Sleeve / 소매유형 / 衣袖类型",dv(mv("Sleeve",g(d,"Sleeve"))));
 h+=it("Fit / 핏 / 版型",dv(mv("Fit",g(d,"Fit"))));
 h+=it("Details / 디테일 / 类型详情",dv(mv("Details",g(d,"Details"))));
@@ -500,7 +502,7 @@ h+=it("Bottom Length / 하의기장 / 下装长短",dv(mv("Bottom_Length",g(d,"B
 h+='</div></div>';
 
 h+='<div class="modal-section"><div class="modal-section-title">🧵 원단 정보 / Material Info / 面料</div><div class="detail-grid">';
-h+=it("Material Type / 원단종류 / 면료종류",dv(mv("Material_Type",g(d,"Material_Type"))));
+h+=it("Material Type / 원단종류 / 面料种类",dv(mv("Material_Type",g(d,"Material_Type"))));
 h+=it("blended % / 혼방% / 混纺%",dv(g(d,"blended_percentage")));
 h+=it("Lining Type / 안감유형 / 里料类型",dv(mv("Lining_Type",g(d,"Lining_Type"))));
 h+='</div></div>';
