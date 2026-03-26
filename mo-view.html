@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MO View v22</title>
+<title>MO View v23</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -58,7 +58,8 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .delay-total{font-size:22px;font-weight:900;color:#DC2626;text-align:center;margin-bottom:8px}
 .delay-total span{font-size:10px;font-weight:600;color:#EF4444;display:block;margin-top:2px}
 .delay-list{display:flex;flex-direction:column;gap:5px;max-height:160px;overflow-y:auto}
-.delay-item{background:#fff;border:1px solid #FECACA;border-radius:6px;padding:6px 8px;cursor:pointer;transition:background .1s}
+/* ★ 지연 아이템 내용 중앙 정렬 패치 */
+.delay-item{background:#fff;border:1px solid #FECACA;border-radius:6px;padding:6px 8px;cursor:pointer;transition:background .1s;text-align:center}
 .delay-item:hover{background:#FEF2F2}
 .delay-mo{font-size:10px;font-weight:800;color:#DC2626}
 .delay-style{font-size:8px;color:#64748B;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -335,7 +336,7 @@ function renderMKPI(){
     var ym=parseYM(key);
     var yy = ym ? ym.y.toString().slice(-2) : "";
     var mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
-    /* ★ 월 자를 月 로 정확히 치환하여 출력 */
+    /* ★ 월을 月로 교정 */
     var titleText = ym ? (yy+"."+mm+" Production KPI / "+yy+"年 "+ym.m+"月 生产 KPI") : "Production KPI / 生产 KPI";
 
     h+='<div class="mkpi-card">';
@@ -423,7 +424,7 @@ function openModalFromPop(id){
 /* 파이프라인 */
 function renderPipeline(){
   var st=["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
-  /* ★ 봉제 이모티콘을 의류용 클립 / 옷핀 (\uD83E\uDDF7) 으로 교체 */
+  /* ★ 봉제 이모티콘을 옷핀/의류용 클립(\uD83E\uDDF7)으로 변경 */
   var emojis = ["\u23F3", "\uD83E\uDDF5", "\u2702\uFE0F", "\uD83E\uDDF7", "\uD83D\uDCE6", "\u2705", "\uD83D\uDE9A"];
   var co=["#94A3B8","#A78BFA","#FDBA74","#7DD3FC","#34D399","#10B981","#3B82F6"];
   var lb2=["미시작 / 未开始","원단 / 面料","재단 / 裁剪","봉제 / 车缝","포장 / 包装","완료 / 完成","출고 / 出货"];
@@ -484,7 +485,7 @@ function renderMonthly(){
 
     var yy = ym ? ym.y.toString().slice(-2) : "";
     var mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
-    /* ★ 월 자를 月 로 정확히 치환하여 출력 */
+    /* ★ 월을 月로 교정 */
     var titleText = ym ? (yy+"."+mm+" Production Schedule / "+yy+"年 "+ym.m+"月 生产安排") : "Production Schedule / 生产安排";
 
     html+='<div class="mt-sec" id="ms'+idx+'"><div class="mt-card">';
