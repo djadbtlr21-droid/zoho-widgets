@@ -97,14 +97,14 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 /* ★★★ Plan = dashed border + transparent ★★★ */
 .pb-fab{background:transparent;border:1.5px dashed #C4B5FD;color:#7C3AED}
 .pb-cut{background:transparent;border:1.5px dashed #FDBA74;color:#D97706}
-.pb-sew{background:transparent;border:1.5px dashed #FCA5A5;color:#DC2626}
+.pb-sew{background:transparent;border:1.5px dashed #BAE6FD;color:#0284C7}
 .pb-pack{background:transparent;border:1.5px dashed #86EFAC;color:#16A34A}
 .pb-ship{background:transparent;border:1.5px dashed #93C5FD;color:#2563EB}
 
 /* ★★★ Actual = soft pastel fill ★★★ */
 .ab-fab{background:#DDD6FE;color:#6D28D9}
 .ab-cut{background:#FED7AA;color:#C2410C}
-.ab-sew{background:#FECACA;color:#B91C1C}
+.ab-sew{background:#E0F2FE;color:#0369A1}
 .ab-pack{background:#BBF7D0;color:#15803D}
 .ab-ship{background:#BFDBFE;color:#1D4ED8}
 
@@ -284,7 +284,7 @@ h+='<span class="tl-type-badge" style="background:#F5F3FF;color:#7C3AED;border:1
 h+='<span class="tl-type-badge" style="background:#FEF3C7;color:#B45309">A = Actual</span>';
 h+='<span><span class="tl-dot" style="background:#DDD6FE"></span>Fab</span>';
 h+='<span><span class="tl-dot" style="background:#FED7AA"></span>Cut</span>';
-h+='<span><span class="tl-dot" style="background:#FECACA"></span>Sew</span>';
+h+='<span><span class="tl-dot" style="background:#E0F2FE;border:1px solid #BAE6FD"></span>Sew</span>';
 h+='<span><span class="tl-dot" style="background:#BBF7D0"></span>Pack</span>';
 h+='<span><span class="tl-dot" style="background:#BFDBFE"></span>Ship</span>';
 h+='</div></div>';
@@ -343,20 +343,33 @@ return h}
 
 function dayInMo(v,curMM){var p=pd(v);if(!p||p.substring(0,7)!==curMM)return 0;return parseInt(p.substring(8,10))||0}
 
-/* ★ buildBarRow — todayD added for today column highlight */
+/* ★ buildBarRow — ARRAY-BASED: fixes PACK hidden by SEW colspan bug */
 function buildBarRow(daysInMonth,todayD,fab,cs,ce,ss,se,ps,pe,ship,isPlan){
 var prefix=isPlan?"pb":"ab";
+// Step 1: Build day-by-day array (1-indexed, 0=unused)
+var map=new Array(daysInMonth+1);
+for(var i=0;i<=daysInMonth;i++)map[i]=null;
+// Mark each event — later events override earlier if overlap
+if(fab>0&&fab<=daysInMonth)map[fab]="fab";
+if(cs>0){var cEnd=ce||cs;for(var i=cs;i<=cEnd&&i<=daysInMonth;i++)map[i]="cut"}
+if(ss>0){var sEnd=se||ss;for(var i=ss;i<=sEnd&&i<=daysInMonth;i++)map[i]="sew"}
+if(ps>0){var pEnd=pe||ps;for(var i=ps;i<=pEnd&&i<=daysInMonth;i++)map[i]="pack"}
+if(ship>0&&ship<=daysInMonth)map[ship]="ship";
+// Step 2: Render with colspan merging
+var labels={fab:"FAB",cut:"CUT",sew:"SEW",pack:"PACK",ship:"SHIP"};
 var h='';
-var skip=0;
-for(var d=1;d<=daysInMonth;d++){
-if(skip>0){skip--;continue}
+var d=1;
+while(d<=daysInMonth){
+var type=map[d];
 var tc=(d===todayD)?' class="today-col"':'';
-if(fab===d){h+='<td'+tc+'><div class="tl-bar '+prefix+'-fab">FAB</div></td>'}
-else if(cs===d){var sp=ce?ce-cs+1:1;if(sp<1)sp=1;if(d+sp-1>daysInMonth)sp=daysInMonth-d+1;skip=sp-1;h+='<td colspan="'+sp+'"'+tc+'><div class="tl-bar '+prefix+'-cut">CUT</div></td>'}
-else if(ss===d){var sp=se?se-ss+1:1;if(sp<1)sp=1;if(d+sp-1>daysInMonth)sp=daysInMonth-d+1;skip=sp-1;h+='<td colspan="'+sp+'"'+tc+'><div class="tl-bar '+prefix+'-sew">SEW</div></td>'}
-else if(ps===d){var sp=pe?pe-ps+1:1;if(sp<1)sp=1;if(d+sp-1>daysInMonth)sp=daysInMonth-d+1;skip=sp-1;h+='<td colspan="'+sp+'"'+tc+'><div class="tl-bar '+prefix+'-pack">PACK</div></td>'}
-else if(ship===d){h+='<td'+tc+'><div class="tl-bar '+prefix+'-ship">SHIP</div></td>'}
-else{h+='<td'+tc+'></td>'}
+if(!type){h+='<td'+tc+'></td>';d++}
+else{
+// Count consecutive same-type days
+var span=1;
+while(d+span<=daysInMonth&&map[d+span]===type)span++;
+var cls=prefix+'-'+type;
+h+='<td'+(span>1?' colspan="'+span+'"':'')+tc+'><div class="tl-bar '+cls+'">'+labels[type]+'</div></td>';
+d+=span}
 }
 return h}
 
