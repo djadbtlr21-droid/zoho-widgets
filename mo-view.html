@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MO View v12</title>
+<title>MO View v13</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -25,8 +25,8 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .btn-cctv:hover{background:#A78BFA}
 .btn-primary:hover{background:#818CF8}
 
-/* ★ KPI 상단 행 - 4컬럼 */
-.mkpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 350px;gap:12px;margin-bottom:16px}
+/* ★ KPI 상단 행 - 4컬럼 (우측 지연현황 카드 420px로 20% 확대) */
+.mkpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 420px;gap:12px;margin-bottom:16px}
 
 /* 월별 KPI 카드 */
 .mkpi-card{background:var(--cw);border:1px solid var(--bd);border-radius:10px;padding:14px;position:relative;overflow:hidden}
@@ -35,9 +35,7 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .mkpi-card:nth-child(2)::before{background:#FDE68A}
 .mkpi-card:nth-child(3)::before{background:#A7F3D0}
 .mkpi-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-/* ★ KPI 제목 크기 20% 확대: 12px -> 14.4px (15px) */
 .mkpi-title{font-size:15px;font-weight:800;color:var(--tx)}
-.mkpi-drop{font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;background:#F1F5F9;color:var(--tm);border:1px solid #CBD5E1}
 .mkpi-body{display:flex;align-items:center;gap:16px}
 .mkpi-ring{position:relative;width:80px;height:80px;flex-shrink:0}
 .mkpi-ring svg{transform:rotate(-90deg)}
@@ -66,17 +64,13 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .delay-style{font-size:8px;color:#64748B;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .delay-badge{display:inline-block;font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:#FEE2E2;color:#DC2626;margin-left:4px}
 
-/* ★ Pipeline - 높이 증가, 글자 크기 20% 확대 */
+/* Pipeline */
 .pipe-card{background:var(--cw);border:1px solid var(--bd);border-radius:8px;padding:22px 20px;margin-bottom:16px}
-/* ★ 파이프라인 제목 크기 20% 확대: 11px -> 13px */
 .pipe-title{font-size:13px;font-weight:800;color:var(--tm);text-transform:uppercase;margin-bottom:14px;letter-spacing:.5px}
 .pipe-row{display:flex;align-items:center;gap:4px;overflow-x:auto}
-/* ★ 파이프라인 스텝 패딩 증가 */
 .pipe-step{flex:1;text-align:center;min-width:90px;padding:14px 6px;border-radius:8px;cursor:pointer;transition:transform .1s,box-shadow .1s}
 .pipe-step:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.1)}
-/* ★ 파이프라인 숫자 크기 20% 확대: 22px -> 26px */
 .pipe-n{font-size:26px;font-weight:900;line-height:1}
-/* ★ 파이프라인 라벨 크기 20% 확대: 9px -> 11px, 10px -> 12px */
 .pipe-lb{font-size:12px;font-weight:800;margin-top:5px;line-height:1.3}
 .pipe-lb2{font-size:10px;color:var(--tm);margin-top:3px}
 .pipe-bar{height:5px;border-radius:2px;margin-top:8px}
@@ -86,18 +80,13 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .search-box{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 10px;font-size:11px;outline:none;font-family:inherit}
 .search-box:focus{border-color:var(--ac);box-shadow:0 0 0 2px rgba(59,130,246,.1)}
 .fsel{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 8px;font-size:11px;outline:none;font-family:inherit;cursor:pointer}
-
-/* ★ 월별 섹션 간격 2배 확대: 32px -> 64px */
 .mt-sec{margin-bottom:64px}
 .mt-card{background:var(--cw);border:1px solid var(--bd);border-radius:8px;overflow:hidden}
 .mt-hd{padding:10px 16px;background:#F8FAFC;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
-/* ★ 월별 표 제목 크기 20% 확대: 13px -> 16px */
 .mt-title{font-size:16px;font-weight:800;color:var(--tx)}
 .mt-cnt{font-size:11px;color:var(--tm);font-weight:600;background:#F1F5F9;padding:2px 8px;border-radius:10px;border:1px solid #CBD5E1}
 .mf-bar{display:flex;justify-content:flex-end;align-items:center;padding:8px 16px;gap:8px;background:#FAFBFC;border-bottom:1px solid var(--bd);flex-wrap:wrap}
 .tbl-scroll{overflow-x:auto}
-
-/* ★ 테이블 컬럼 너비 균등 배분 */
 table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;table-layout:fixed}
 .zt th{background:#F1F5F9;padding:9px 8px;color:var(--tm);font-weight:800;font-size:10px;border-bottom:1px solid var(--bd);white-space:nowrap;text-align:center}
 .zt th:nth-child(1){text-align:left}
@@ -118,10 +107,9 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .dly-badge{display:inline-block;padding:1px 4px;border-radius:3px;font-size:7px;font-weight:700;background:#FEF2F2;color:#DC2626;margin-left:2px;animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* ★ Timeline - 표와 타임라인 사이 간격 추가 */
+/* Timeline */
 .tl-card{background:var(--cw);border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin-top:16px}
 .tl-hd{padding:10px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;background:#FAFBFC;border-bottom:1px solid var(--bd)}
-/* ★ 타임라인 제목 크기 20% 확대: 12px -> 14px */
 .tl-title{font-size:14px;font-weight:800;color:var(--tx)}
 .tl-legend{display:flex;gap:10px;font-size:9px;color:var(--tm);align-items:center}
 .tl-legend span{display:flex;align-items:center;gap:3px}
@@ -142,7 +130,6 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .tl-tbl tr.mo-gap .info-cell{background:#F8FAFC !important}
 .tl-bar{height:100%;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;white-space:nowrap;overflow:hidden;min-height:16px}
 
-/* ★ SEW 색상 하늘색으로 복구 */
 .pb-fab{background:transparent;border:1.5px dashed #C4B5FD;color:#7C3AED}
 .pb-cut{background:transparent;border:1.5px dashed #FDE68A;color:#CA8A04}
 .pb-sew{background:transparent;border:1.5px dashed #BAE6FD;color:#0284C7}
@@ -260,9 +247,6 @@ function pd(v){
   if(m){var mo={Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};
   return m[3]+"-"+(mo[m[2]]||"01")+"-"+(m[1].length===1?"0"+m[1]:m[1])}return null}
 
-/* ★ 월 영문 변환 */
-var MONTH_EN=["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-
 ZOHO.CREATOR.init().then(function(){
   ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:REP,page:1,pageSize:200}).then(function(r){
     if(r&&r.code===3000&&r.data){allRec=r.data;renderAll();hide("loadingScreen");show("mainContent")}
@@ -315,23 +299,24 @@ function renderMKPI(){
     var trail="#E5E7EB";
     var keyEnc=encodeURIComponent(key);
 
-    /* ★ 영문 날짜 + 중국어 제목 병행 표기 */
+    /* ★ 영문/중문 날짜 포맷 생성 및 Drop 삭제, 1줄 표기 */
     var ym=parseYM(key);
-    var enTitle=ym?(MONTH_EN[ym.m]+" "+ym.y+" Production KPI"):"Production KPI";
-    var cnTitle="生产KPI";
+    var yy = ym ? ym.y.toString().slice(-2) : "";
+    var mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
+    var titleText = ym ? (yy+"."+mm+" Production KPI / "+yy+"年 "+ym.m+"月 生产 KPI") : "Production KPI / 生产 KPI";
 
     h+='<div class="mkpi-card">';
-    h+='<div class="mkpi-header"><div class="mkpi-title">📅 '+enTitle+' / '+cnTitle+'</div><div class="mkpi-drop">Drop '+(ci)+'</div></div>';
+    h+='<div class="mkpi-header"><div class="mkpi-title">📅 '+titleText+'</div></div>';
     h+='<div class="mkpi-body">';
     h+='<div class="mkpi-ring"><svg width="80" height="80" viewBox="0 0 80 80">';
     h+='<circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="'+trail+'" stroke-width="6"/>';
     h+='<circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="'+c+'" stroke-width="6" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'" stroke-linecap="round"/>';
     h+='</svg><div class="mkpi-ring-pct" style="color:'+c+'">'+pct+'%</div></div>';
     h+='<div class="mkpi-stats">';
-    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'all\')" title="클릭하여 오더 목록 보기"><div class="mkpi-stat-n" style="color:#6366F1">'+tot+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A5B4FC"></span>총 오더<br>总订单</div></div>';
-    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'ip\')" title="클릭하여 오더 목록 보기"><div class="mkpi-stat-n" style="color:#F59E0B">'+ip+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FDE68A"></span>진행중<br>进行中</div></div>';
-    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'dl\')" title="클릭하여 오더 목록 보기"><div class="mkpi-stat-n" style="color:#EF4444">'+dl+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FCA5A5"></span>지연<br>延误</div></div>';
-    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'dv\')" title="클릭하여 오더 목록 보기"><div class="mkpi-stat-n" style="color:#34D399">'+dv+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A7F3D0"></span>출고완료<br>已出货</div></div>';
+    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'all\')" title="클릭하여 오더 목록 보기"><div class="mkpi-stat-n" style="color:#6366F1">'+tot+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A5B4FC"></span>총 오더 / 总订单</div></div>';
+    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'ip\')" title="클릭하여 오더 목록 보기"><div class="mkpi-stat-n" style="color:#F59E0B">'+ip+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FDE68A"></span>진행중 / 进行中</div></div>';
+    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'dl\')" title="클릭하여 오더 목록 보기"><div class="mkpi-stat-n" style="color:#EF4444">'+dl+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FCA5A5"></span>지연 / 延误</div></div>';
+    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'dv\')" title="클릭하여 오더 목록 보기"><div class="mkpi-stat-n" style="color:#34D399">'+dv+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A7F3D0"></span>출고완료 / 已出货</div></div>';
     h+='</div></div>';
     h+='<div class="mkpi-footer"><span>진행수량 <b>'+tq.toLocaleString()+' pcs</b></span><span>출고수량 <b>'+sq.toLocaleString()+' pcs</b></span></div>';
     h+='</div>'});
@@ -402,10 +387,9 @@ function openModalFromPop(id){
   var r=allRec.find(function(x){return x["ID"]===id});
   if(r){document.getElementById("kpiPopOv").classList.remove("active");openModal(r)}}
 
-/* ★ 파이프라인 - 완료/출고 색상 교체 */
+/* 파이프라인 */
 function renderPipeline(){
   var st=["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
-  /* ★ Done과 Shipped 색상 교체: Done=초록(#10B981), Shipped=파랑(#3B82F6) */
   var co=["#94A3B8","#A78BFA","#FDBA74","#7DD3FC","#34D399","#10B981","#3B82F6"];
   var lb=["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
   var lb2=["미시작 / 未开始","원단 / 面料","재단 / 裁剪","봉제 / 车缝","포장 / 包装","완료 / 完成","출고 / 出货"];
@@ -464,12 +448,13 @@ function renderMonthly(){
     var mFac={},mProd={},mCat={};
     items.forEach(function(r){var f=g(r,"Factory");if(f!=="-")mFac[f]=1;var p=g(r,"Production_Status");if(p!=="-")mProd[p]=1;var c=g(r,"Category");if(c!=="-")mCat[c]=catName(c)});
 
-    /* ★ 영문 날짜 + 중국어 제목 병행 표기 */
-    var enTitle=ym?(MONTH_EN[ym.m]+" "+ym.y+" Production Schedule"):"Production Schedule";
-    var cnTitle="生产安排";
+    /* ★ 영문/중문 날짜 포맷 생성 */
+    var yy = ym ? ym.y.toString().slice(-2) : "";
+    var mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
+    var titleText = ym ? (yy+"."+mm+" Production Schedule / "+yy+"年 "+ym.m+"月 生产安排") : "Production Schedule / 生产安排";
 
     html+='<div class="mt-sec" id="ms'+idx+'"><div class="mt-card">';
-    html+='<div class="mt-hd"><div class="mt-title">📅 '+enTitle+' / '+cnTitle+'</div><span class="mt-cnt" id="mc'+idx+'">'+items.length+' MOs</span></div>';
+    html+='<div class="mt-hd"><div class="mt-title">📅 '+titleText+'</div><span class="mt-cnt" id="mc'+idx+'">'+items.length+' MOs</span></div>';
     html+='<div class="mf-bar">';
     html+='<input type="text" class="search-box mf" data-m="'+idx+'" data-t="q" placeholder="🔍 검색..." style="width:150px">';
     html+='<select class="fsel mf" data-m="'+idx+'" data-t="ca"><option value="">All Category</option>';
@@ -482,7 +467,6 @@ function renderMonthly(){
     Object.keys(mProd).sort().forEach(function(k){html+='<option value="'+escH(k)+'">'+escH(k)+'</option>'});
     html+='</select></div>';
     html+='<div class="tbl-scroll"><table class="zt"><thead><tr>';
-    /* ★ 컬럼 순서 변경: Order와 Production 위치 교체, 너비 균등 배분 */
     html+='<th style="width:6%">MO#</th><th style="width:11%">SKU</th><th style="width:13%">Style</th><th style="width:10%">Category</th><th style="width:9%">Factory</th><th style="width:7%">Qty</th><th style="width:13%">Production</th><th style="width:11%">Order</th><th style="width:10%">Exp.Del</th><th style="width:10%">Ship</th>';
     html+='</tr></thead><tbody>';
     items.forEach(function(r){var dl=isDelayed(r);
@@ -493,7 +477,6 @@ function renderMonthly(){
       html+='<td style="font-size:9px">'+escH(catName(g(r,"Category")))+'</td>';
       html+='<td>'+escH(cleanFactory(g(r,"Factory")))+'</td>';
       html+='<td style="font-weight:700">'+escH(g(r,"Total_Quantity"))+'</td>';
-      /* ★ Production과 Order 순서 교체 */
       html+='<td><span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span></td>';
       html+='<td><span class="tag '+tc(g(r,"Order_Status"))+'">'+escH(g(r,"Order_Status"))+'</span></td>';
       var ed=g(r,"Expected_Delivery");html+='<td>'+escH(ed)+(dl?' <span class="dly-badge">DELAYED</span>':'')+'</td>';
@@ -526,11 +509,12 @@ function parseYM(key){var m=key.match(/(\d+)년\s*(\d+)월/);if(!m)return null;v
 function buildTimeline(items,yr,mo,label){
   var daysInMonth=new Date(yr,mo,0).getDate(),curMM=yr+"-"+(mo<10?"0":"")+mo,todayD=(today.getFullYear()===yr&&today.getMonth()+1===mo)?today.getDate():0;
 
-  /* ★ 영문 날짜 + 중국어 제목 병행 표기 */
-  var enLabel=MONTH_EN[mo]+" "+yr+" Production Timeline";
-  var cnLabel="生产排期";
+  /* ★ 영문/중문 날짜 포맷 생성 */
+  var yy = yr.toString().slice(-2);
+  var mm = mo < 10 ? "0"+mo : mo;
+  var titleText = yy+"."+mm+" Production Timeline / "+yy+"年 "+mo+"月 生产排期";
 
-  var h='<div class="tl-card"><div class="tl-hd"><div class="tl-title">📊 '+enLabel+' / '+cnLabel+'</div>';
+  var h='<div class="tl-card"><div class="tl-hd"><div class="tl-title">📊 '+titleText+'</div>';
   h+='<div class="tl-legend"><span class="tl-type-badge" style="background:#F5F3FF;color:#7C3AED;border:1px dashed #C4B5FD">P = Plan</span><span class="tl-type-badge" style="background:#FEF3C7;color:#B45309">A = Actual</span>';
   h+='<span><span class="tl-dot" style="background:#DDD6FE"></span>Fab</span><span><span class="tl-dot" style="background:#FEF3C7;border:1px solid #FDE68A"></span>Cut</span><span><span class="tl-dot" style="background:#E0F2FE;border:1px solid #BAE6FD"></span>Sew</span><span><span class="tl-dot" style="background:#BBF7D0;border:1px solid #86EFAC"></span>Pack</span><span><span class="tl-dot" style="background:#BFDBFE"></span>Ship</span></div></div>';
   h+='<div class="tl-scroll"><table class="tl-tbl"><thead><tr><th class="info-cell">MO / Style</th>';
