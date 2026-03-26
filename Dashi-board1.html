@@ -705,6 +705,16 @@ function destroyChart(id) {
     delete charts[id];
   }
 }
+
+/* ════════════════════════════════════════════════════════════════ */
+/*         BUG FIX #2: 월/연도 키 생성 헬퍼 (parseInt 처리)        */
+/* ════════════════════════════════════════════════════════════════ */
+function makeMonthKey(py, pm) {
+  var year = String(py);
+  var month = parseInt(pm, 10);
+  if (isNaN(month)) return null;
+  return year + "-" + (month < 10 ? "0" : "") + month;
+}
  
 /* ════════════════════════════════════════════════════════════════ */
 /*                      MAIN FLOW                                   */
@@ -941,12 +951,14 @@ function renderStyleStatusDonut() {
 }
  
 /* Bar 1: Monthly MO Count */
+/* BUG FIX #2 적용: makeMonthKey() 헬퍼로 parseInt 처리 */
 function renderMonthlyBar() {
   var monthMap = {};
   allMO.forEach(function (r) {
     var py = g(r, "Plan_Year"), pm = g(r, "Plan_Month");
     if (py === "-" || pm === "-") return;
-    var key = py + "-" + (pm < 10 ? "0" : "") + pm;
+    var key = makeMonthKey(py, pm);
+    if (!key) return;
     if (!monthMap[key]) monthMap[key] = { count: 0, delayed: 0 };
     monthMap[key].count++;
     if (isDelayed(r)) monthMap[key].delayed++;
@@ -964,7 +976,8 @@ function renderMonthlyBar() {
     data: {
       labels: labels,
       datasets: [
-        { label: '총 MO', data: counts, backgroundColor: var(--p-blue)', borderColor: '#93C5FD', borderWidth: 1, borderRadius: 4 },
+        /* BUG FIX #1: var(--p-blue) → 실제 hex 값으로 교체 */
+        { label: '총 MO', data: counts, backgroundColor: '#BFDBFE', borderColor: '#93C5FD', borderWidth: 1, borderRadius: 4 },
         { label: '지연', data: delays, backgroundColor: '#FECACA', borderColor: '#FCA5A5', borderWidth: 1, borderRadius: 4 }
       ]
     },
@@ -1048,12 +1061,14 @@ function renderSeasonBar() {
 }
  
 /* Bar 4: Shipment Stacked (출고완료 vs 잔여) */
+/* BUG FIX #2 적용: makeMonthKey() 헬퍼로 parseInt 처리 */
 function renderShipmentBar() {
   var monthMap = {};
   allMO.forEach(function (r) {
     var py = g(r, "Plan_Year"), pm = g(r, "Plan_Month");
     if (py === "-" || pm === "-") return;
-    var key = py + "-" + (pm < 10 ? "0" : "") + pm;
+    var key = makeMonthKey(py, pm);
+    if (!key) return;
     if (!monthMap[key]) monthMap[key] = { total: 0, shipped: 0 };
     monthMap[key].total += parseInt(g(r, "Total_Quantity")) || 0;
     monthMap[key].shipped += parseInt(g(r, "Shipped_Quantity")) || 0;
@@ -1135,6 +1150,7 @@ function renderCategoryDonut() {
 }
  
 /* Line 1: Factory Trend (Top 3) */
+/* BUG FIX #2 적용: makeMonthKey() 헬퍼로 parseInt 처리 */
 function renderFactoryTrendLine() {
   var monthMap = {};
   var topFactories = [];
@@ -1154,7 +1170,8 @@ function renderFactoryTrendLine() {
   allMO.forEach(function (r) {
     var py = g(r, "Plan_Year"), pm = g(r, "Plan_Month");
     if (py === "-" || pm === "-") return;
-    var key = py + "-" + (pm < 10 ? "0" : "") + pm;
+    var key = makeMonthKey(py, pm);
+    if (!key) return;
     if (!monthMap[key]) monthMap[key] = {};
     topFactories.forEach(function (f) {
       if (!monthMap[key][f]) monthMap[key][f] = 0;
