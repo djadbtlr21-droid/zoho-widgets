@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MO View v14</title>
+<title>MO View v15</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -25,7 +25,7 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .btn-cctv:hover{background:#A78BFA}
 .btn-primary:hover{background:#818CF8}
 
-/* ★ KPI 상단 행 - 4컬럼 */
+/* KPI 상단 행 - 4컬럼 */
 .mkpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 420px;gap:12px;margin-bottom:16px}
 
 /* 월별 KPI 카드 */
@@ -130,7 +130,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .tl-tbl tr.mo-gap .info-cell{background:#F8FAFC !important}
 .tl-bar{height:100%;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;white-space:nowrap;overflow:hidden;min-height:16px}
 
-/* ★ Plan 막대 (점선) - 빗금 패턴 추가 */
+/* Plan 막대 (점선) - 빗금 패턴 추가 */
 .pb-fab{
   border: 1.5px dashed #C4B5FD;
   color: #7C3AED;
@@ -371,7 +371,6 @@ function renderMKPI(){
     var trail="#E5E7EB";
     var keyEnc=encodeURIComponent(key);
 
-    /* ★ 영문/중문 날짜 포맷 생성 및 Drop 삭제, 1줄 표기 */
     var ym=parseYM(key);
     var yy = ym ? ym.y.toString().slice(-2) : "";
     var mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
@@ -462,7 +461,6 @@ function openModalFromPop(id){
 /* 파이프라인 */
 function renderPipeline(){
   var st=["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
-  /* ★ 파이프라인 귀여운 이모티콘 배열 추가 */
   var emojis = ["⏳ ", "🧵 ", "✂️ ", "🪡 ", "📦 ", "✅ ", "🚚 "];
   var co=["#94A3B8","#A78BFA","#FDBA74","#7DD3FC","#34D399","#10B981","#3B82F6"];
   var lb2=["미시작 / 未开始","원단 / 面料","재단 / 裁剪","봉제 / 车缝","포장 / 包装","완료 / 完成","출고 / 出货"];
@@ -473,7 +471,6 @@ function renderPipeline(){
     if(i>0)h+='<div class="pipe-arr">▶</div>';
     h+='<div class="pipe-step" onclick="openPipePop(\''+s+'\')">';
     h+='<div class="pipe-n" style="color:'+co[i]+'">'+cn[i]+'</div>';
-    /* ★ 기존 lb2[i] 앞에 emojis[i] 추가 */
     h+='<div class="pipe-lb" style="color:'+co[i]+'">' + emojis[i] + lb2[i] + '</div>';
     h+='<div class="pipe-bar" style="background:'+co[i]+'"></div></div>'});
   document.getElementById("pipeRow").innerHTML=h}
@@ -522,7 +519,6 @@ function renderMonthly(){
     var mFac={},mProd={},mCat={};
     items.forEach(function(r){var f=g(r,"Factory");if(f!=="-")mFac[f]=1;var p=g(r,"Production_Status");if(p!=="-")mProd[p]=1;var c=g(r,"Category");if(c!=="-")mCat[c]=catName(c)});
 
-    /* ★ 영문/중문 날짜 포맷 생성 */
     var yy = ym ? ym.y.toString().slice(-2) : "";
     var mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
     var titleText = ym ? (yy+"."+mm+" Production Schedule / "+yy+"年 "+ym.m+"月 生产安排") : "Production Schedule / 生产安排";
@@ -551,8 +547,9 @@ function renderMonthly(){
       html+='<td style="font-size:9px">'+escH(catName(g(r,"Category")))+'</td>';
       html+='<td>'+escH(cleanFactory(g(r,"Factory")))+'</td>';
       html+='<td style="font-weight:700">'+escH(g(r,"Total_Quantity"))+'</td>';
-      <td><span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span></td>';
-      <td><span class="tag '+tc(g(r,"Order_Status"))+'">'+escH(g(r,"Order_Status"))+'</span></td>';
+      /* ★ 에러 수정됨: html+=' 가 제대로 추가됨 */
+      html+='<td><span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span></td>';
+      html+='<td><span class="tag '+tc(g(r,"Order_Status"))+'">'+escH(g(r,"Order_Status"))+'</span></td>';
       var ed=g(r,"Expected_Delivery");html+='<td>'+escH(ed)+(dl?' <span class="dly-badge">DELAYED</span>':'')+'</td>';
       html+='<td>'+escH(g(r,"Ship_Date"))+'</td></tr>'});
     html+='</tbody></table></div>';
@@ -583,7 +580,6 @@ function parseYM(key){var m=key.match(/(\d+)년\s*(\d+)월/);if(!m)return null;v
 function buildTimeline(items,yr,mo,label){
   var daysInMonth=new Date(yr,mo,0).getDate(),curMM=yr+"-"+(mo<10?"0":"")+mo,todayD=(today.getFullYear()===yr&&today.getMonth()+1===mo)?today.getDate():0;
 
-  /* ★ 영문/중문 날짜 포맷 생성 */
   var yy = yr.toString().slice(-2);
   var mm = mo < 10 ? "0"+mo : mo;
   var titleText = yy+"."+mm+" Production Timeline / "+yy+"年 "+mo+"月 生产排期";
@@ -607,7 +603,8 @@ function buildTimeline(items,yr,mo,label){
     h+=buildBarRow(daysInMonth,todayD,pF,pCS,pCE,pSS,pSE,pPS,pPE,pSh,true)+'</tr>';
     var aF=dayInMo(g(r,"Fabric_In_house_Date"),curMM),aCS=dayInMo(g(r,"Cutting_Start_Date"),curMM),aCE=dayInMo(g(r,"Cutting_End_Date"),curMM),aSS=dayInMo(g(r,"Sewing_Start_Date"),curMM),aSE=dayInMo(g(r,"Sewing_Completion_Date"),curMM),aPS=dayInMo(g(r,"Packing_Start_Date"),curMM),aPE=dayInMo(g(r,"Packing_End_Date"),curMM),aSh=dayInMo(g(r,"Ship_Date"),curMM);
     h+='<tr>'+buildBarRow(daysInMonth,todayD,aF,aCS,aCE,aSS,aSE,aPS,aPE,aSh,false)+'</tr>'});
-  if(!hasAny)h+='<tr><td class="info-cell" colspan="'+(daysInMonth+1)+'" style="text-align:center;padding:166px;color:#94A3B8;font-size:10px">이 달에 해당하는 일정이 없습니다 / 本月无生产计划</td></tr>';
+  /* ★ 에러 수정됨: padding이 16px로 정상 복구됨 */
+  if(!hasAny)h+='<tr><td class="info-cell" colspan="'+(daysInMonth+1)+'" style="text-align:center;padding:16px;color:#94A3B8;font-size:10px">이 달에 해당하는 일정이 없습니다 / 本月无生产计划</td></tr>';
   h+='</tbody></table></div></div>';return h}
 
 function dayInMo(v,curMM){var p=pd(v);if(!p||p.substring(0,7)!==curMM)return 0;return parseInt(p.substring(8,10))||0}
