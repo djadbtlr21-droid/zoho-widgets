@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MO View v16</title>
+<title>MO View v17</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -25,7 +25,7 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .btn-cctv:hover{background:#A78BFA}
 .btn-primary:hover{background:#818CF8}
 
-/* KPI 상단 행 - 4컬럼 (우측 지연현황 카드 420px로 확대) */
+/* KPI 상단 행 */
 .mkpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 420px;gap:12px;margin-bottom:16px}
 
 /* 월별 KPI 카드 */
@@ -73,7 +73,6 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .pipe-n{font-size:26px;font-weight:900;line-height:1}
 .pipe-lb{font-size:12px;font-weight:800;margin-top:5px;line-height:1.3;display:flex;align-items:center;justify-content:center}
 .pipe-lb2{font-size:10px;color:var(--tm);margin-top:3px}
-/* ★ 이모티콘 사이즈 확대를 위한 CSS 추가 */
 .pipe-emoji{font-size:1.3em;margin-right:4px}
 .pipe-bar{height:5px;border-radius:2px;margin-top:8px}
 .pipe-arr{color:#CBD5E1;font-size:12px;flex-shrink:0}
@@ -117,92 +116,52 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .tl-scroll{overflow-x:auto;padding:0 0 8px}
 .tl-tbl{width:100%;border-collapse:collapse;font-size:10px;table-layout:fixed;min-width:1000px}
 .tl-tbl th,.tl-tbl td{border:1px solid #EEF2F6}
-.tl-tbl th{background:#F8FAFC;color:var(--tm);font-weight:700;padding:6px 0;text-align:center;font-size:9px}
+
+/* ★ 타임라인 날짜 폰트 크기 및 굵기 확대 (9px -> 10px, 900) */
+.tl-tbl th{background:#F8FAFC;color:var(--tm);font-weight:900;padding:6px 0;text-align:center;font-size:10px}
 .tl-tbl th.wk{background:#FEF8F8;color:#E87979}
-.tl-tbl th.today{background:#BFDBFE;color:#1D4ED8;font-weight:900;position:relative}
-.tl-tbl th.today::after{content:'▼';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);font-size:8px;color:#3B82F6}
+
+/* ★ Today 타임라인 색상 연한 빨간색으로 변경 */
+.tl-tbl th.today{background:#FEE2E2;color:#B91C1C;font-weight:900;position:relative}
+.tl-tbl th.today::after{content:'▼';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);font-size:8px;color:#EF4444}
 .tl-tbl .info-cell{width:200px;min-width:200px;text-align:left;background:#FAFBFC;padding:6px 10px;position:sticky;left:0;z-index:2;border-right:2px solid var(--bd)}
 .tl-tbl td{padding:0;vertical-align:middle;height:24px;background:#FEFEFE}
-.tl-tbl td.today-col{position:relative;background:#EFF6FF !important}
-.tl-tbl td.today-col::after{content:'';position:absolute;left:50%;top:0;width:2px;height:100%;background:rgba(59,130,246,.4);transform:translateX(-50%);pointer-events:none;z-index:1}
+.tl-tbl td.today-col{position:relative;background:#FEF2F2 !important}
+.tl-tbl td.today-col::after{content:'';position:absolute;left:50%;top:0;width:2px;height:100%;background:rgba(239,68,68,.3);transform:translateX(-50%);pointer-events:none;z-index:1}
+
 .tl-tbl tr.mo-gap td{height:20px;background:#F8FAFC !important;border-top:2px solid #E2E8F0;border-bottom:none}
 .tl-tbl tr.mo-gap .info-cell{background:#F8FAFC !important}
 .tl-bar{height:100%;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;white-space:nowrap;overflow:hidden;min-height:16px}
 
-/* ★ Plan 막대 (점선) - 빗금 패턴 추가 */
+/* Plan 막대 (점선) - 빗금 패턴 추가 */
 .pb-fab{
   border: 1.5px dashed #C4B5FD;
   color: #7C3AED;
-  background-image: linear-gradient(
-    45deg,
-    rgba(196, 181, 253, 0.4) 25%,
-    transparent 25%,
-    transparent 50%,
-    rgba(196, 181, 253, 0.4) 50%,
-    rgba(196, 181, 253, 0.4) 75%,
-    transparent 75%,
-    transparent
-  );
+  background-image: linear-gradient(45deg, rgba(196, 181, 253, 0.4) 25%, transparent 25%, transparent 50%, rgba(196, 181, 253, 0.4) 50%, rgba(196, 181, 253, 0.4) 75%, transparent 75%, transparent);
   background-size: 8px 8px;
 }
 .pb-cut{
   border: 1.5px dashed #FDE68A;
   color: #CA8A04;
-  background-image: linear-gradient(
-    45deg,
-    rgba(253, 230, 138, 0.4) 25%,
-    transparent 25%,
-    transparent 50%,
-    rgba(253, 230, 138, 0.4) 50%,
-    rgba(253, 230, 138, 0.4) 75%,
-    transparent 75%,
-    transparent
-  );
+  background-image: linear-gradient(45deg, rgba(253, 230, 138, 0.4) 25%, transparent 25%, transparent 50%, rgba(253, 230, 138, 0.4) 50%, rgba(253, 230, 138, 0.4) 75%, transparent 75%, transparent);
   background-size: 8px 8px;
 }
 .pb-sew{
   border: 1.5px dashed #BAE6FD;
   color: #0284C7;
-  background-image: linear-gradient(
-    45deg,
-    rgba(186, 230, 253, 0.4) 25%,
-    transparent 25%,
-    transparent 50%,
-    rgba(186, 230, 253, 0.4) 50%,
-    rgba(186, 230, 253, 0.4) 75%,
-    transparent 75%,
-    transparent
-  );
+  background-image: linear-gradient(45deg, rgba(186, 230, 253, 0.4) 25%, transparent 25%, transparent 50%, rgba(186, 230, 253, 0.4) 50%, rgba(186, 230, 253, 0.4) 75%, transparent 75%, transparent);
   background-size: 8px 8px;
 }
 .pb-pack{
   border: 1.5px dashed #86EFAC;
   color: #047857;
-  background-image: linear-gradient(
-    45deg,
-    rgba(134, 239, 172, 0.4) 25%,
-    transparent 25%,
-    transparent 50%,
-    rgba(134, 239, 172, 0.4) 50%,
-    rgba(134, 239, 172, 0.4) 75%,
-    transparent 75%,
-    transparent
-  );
+  background-image: linear-gradient(45deg, rgba(134, 239, 172, 0.4) 25%, transparent 25%, transparent 50%, rgba(134, 239, 172, 0.4) 50%, rgba(134, 239, 172, 0.4) 75%, transparent 75%, transparent);
   background-size: 8px 8px;
 }
 .pb-ship{
   border: 1.5px dashed #3B82F6;
   color: #1D4ED8;
-  background-image: linear-gradient(
-    45deg,
-    rgba(59, 130, 246, 0.4) 25%,
-    transparent 25%,
-    transparent 50%,
-    rgba(59, 130, 246, 0.4) 50%,
-    rgba(59, 130, 246, 0.4) 75%,
-    transparent 75%,
-    transparent
-  );
+  background-image: linear-gradient(45deg, rgba(59, 130, 246, 0.4) 25%, transparent 25%, transparent 50%, rgba(59, 130, 246, 0.4) 50%, rgba(59, 130, 246, 0.4) 75%, transparent 75%, transparent);
   background-size: 8px 8px;
 }
 
@@ -342,7 +301,7 @@ function getImg1(r){var i=r["Style_Image"];if(!i)return null;if(Array.isArray(i)
 
 function renderAll(){renderMKPI();renderPipeline();renderMonthly()}
 
-/* ★★★ MONTHLY KPI + 생산 지연 현황 카드 ★★★ */
+/* MONTHLY KPI + 생산 지연 현황 카드 */
 function renderMKPI(){
   var groups={};
   allRec.forEach(function(r){
@@ -384,7 +343,7 @@ function renderMKPI(){
     h+='</svg><div class="mkpi-ring-pct" style="color:'+c+'">'+pct+'%</div></div>';
     h+='<div class="mkpi-stats">';
     h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'all\')" title="클릭하여 오더 목록 보기"><div class="mkpi-stat-n" style="color:#6366F1">'+tot+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A5B4FC"></span>총 오더 / 总订单</div></div>';
-    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'ip\')" title="클릭하여 오더 목록 보기"><div class="mkpi-stat-n" style="color:#F59E0B">'+ip+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FDE68A"></span>진행중 / 进行중</div></div>';
+    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'ip\')" title="클릭하여 오더 목록 보기"><div class="mkpi-stat-n" style="color:#F59E0B">'+ip+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FDE68A"></span>진행중 / 进行中</div></div>';
     h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'dl\')" title="클릭하여 오더 목록 보기"><div class="mkpi-stat-n" style="color:#EF4444">'+dl+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FCA5A5"></span>지연 / 延误</div></div>';
     h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'dv\')" title="클릭하여 오더 목록 보기"><div class="mkpi-stat-n" style="color:#34D399">'+dv+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A7F3D0"></span>출고완료 / 已出货</div></div>';
     h+='</div></div>';
@@ -420,7 +379,7 @@ function openKpiPop(keyEnc,type){
   var groups={};
   allRec.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var k=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[k])groups[k]=[];groups[k].push(r)});
   var items=groups[key]||[];
-  var typeNames={all:"총 오더 / 总订单",ip:"진행중 / 进行중",dl:"지연 / 延误",dv:"출고완료 / 已出货"};
+  var typeNames={all:"총 오더 / 总订单",ip:"진행중 / 进行中",dl:"지연 / 延误",dv:"출고완료 / 已出货"};
   var filtered=items.filter(function(r){
     var os=(g(r,"Order_Status")||"").toLowerCase();
     if(type==="all")return true;
@@ -457,13 +416,13 @@ function openModalFromPop(id){
   var r=allRec.find(function(x){return x["ID"]===id});
   if(r){document.getElementById("kpiPopOv").classList.remove("active");openModal(r)}}
 
-/* 파이프라인 (이모티콘 30% 확대 적용) */
+/* 파이프라인 (이모티콘 🪡 바늘과 실 교체 반영) */
 function renderPipeline(){
   var st=["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
-  /* ★ "봉제" 이모티콘을 재봉틀(\uD83D\uDDF5)로 변경 */
-  var emojis = ["\u23F3", "\uD83E\uDDF5", "\u2702\uFE0F", "\uD83D\uDDF5", "\uD83D\uDCE6", "\u2705", "\uD83D\uDE9A"];
+  /* ★ "봉제" 이모티콘을 직관적인 바늘과 실(\uD83E\uDDA1)로 교체 */
+  var emojis = ["\u23F3", "\uD83E\uDDF5", "\u2702\uFE0F", "\uD83E\uDDA1", "\uD83D\uDCE6", "\u2705", "\uD83D\uDE9A"];
   var co=["#94A3B8","#A78BFA","#FDBA74","#7DD3FC","#34D399","#10B981","#3B82F6"];
-  var lb2=["미시작 / 未开始","원단 / 面料","재단 / 裁剪","봉제 / 车缝","포장 / 包装","완료 / 完成","출고 / 출货"];
+  var lb2=["미시작 / 未开始","원단 / 面料","재단 / 裁剪","봉제 / 车缝","포장 / 包装","완료 / 完成","출고 / 出货"];
   var cn=[0,0,0,0,0,0,0];
   allRec.forEach(function(r){var i=st.indexOf(getProdStage(r));if(i>=0)cn[i]++});
   var h="";
@@ -471,7 +430,6 @@ function renderPipeline(){
     if(i>0)h+='<div class="pipe-arr">▶</div>';
     h+='<div class="pipe-step" onclick="openPipePop(\''+s+'\')">';
     h+='<div class="pipe-n" style="color:'+co[i]+'">'+cn[i]+'</div>';
-    /* ★ 이모티콘을 pipe-emoji 스팬으로 감싸서 30% 확대 적용 */
     h+='<div class="pipe-lb" style="color:'+co[i]+'"><span class="pipe-emoji">' + emojis[i] + '</span>' + lb2[i] + '</div>';
     h+='<div class="pipe-bar" style="background:'+co[i]+'"></div></div>'});
   document.getElementById("pipeRow").innerHTML=h}
@@ -481,7 +439,7 @@ function openPipePop(stage){
   var items=allRec.filter(function(r){return getProdStage(r)===stage});
   var stageNames={
     "Not Started":"미시작 / 未开始","Fabric":"원단 / 面料","Cutting":"재단 / 裁剪",
-    "Sewing":"봉제 / 车缝","Packing":"포장 / 包装","Done":"완료 / 完成","Shipped":"출고 / 출货"};
+    "Sewing":"봉제 / 车缝","Packing":"포장 / 包装","Done":"완료 / 完成","Shipped":"출고 / 出货"};
   document.getElementById("pipePopTitle").textContent="🏭 "+stageNames[stage];
   document.getElementById("pipePopSub").textContent="총 "+items.length+"건의 오더가 이 단계에 있습니다";
   var h="";
@@ -510,7 +468,7 @@ document.getElementById("kpiPopOv").addEventListener("click",function(e){if(e.ta
 document.getElementById("pipePopClose").addEventListener("click",function(){document.getElementById("pipePopOv").classList.remove("active")});
 document.getElementById("pipePopOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
 
-/* 월별 테이블 (열 넓이 균일하게 조정) */
+/* 월별 테이블 */
 function renderMonthly(){
   var groups={};
   allRec.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[key])groups[key]=[];groups[key].push(r)});
@@ -522,7 +480,7 @@ function renderMonthly(){
 
     var yy = ym ? ym.y.toString().slice(-2) : "";
     var mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
-    var titleText = ym ? (yy+"."+mm+" Production Schedule / "+yy+"年 "+ym.m+"월 生产安排") : "Production Schedule / 生产安排";
+    var titleText = ym ? (yy+"."+mm+" Production Schedule / "+yy+"年 "+ym.m+"月 生产安排") : "Production Schedule / 生产安排";
 
     html+='<div class="mt-sec" id="ms'+idx+'"><div class="mt-card">';
     html+='<div class="mt-hd"><div class="mt-title">📅 '+titleText+'</div><span class="mt-cnt" id="mc'+idx+'">'+items.length+' MOs</span></div>';
@@ -538,8 +496,9 @@ function renderMonthly(){
     Object.keys(mProd).sort().forEach(function(k){html+='<option value="'+escH(k)+'">'+escH(k)+'</option>'});
     html+='</select></div>';
     html+='<div class="tbl-scroll"><table class="zt"><thead><tr>';
-    /* ★ 표 헤더 넓이 조정 (Style 줄이고 Category 늘려서 간격 일정하게) */
-    html+='<th style="width:7%">MO#</th><th style="width:11%">SKU</th><th style="width:11%">Style</th><th style="width:11%">Category</th><th style="width:11%">Factory</th><th style="width:7%">Qty</th><th style="width:11%">Production</th><th style="width:11%">Order</th><th style="width:10%">Exp.Del</th><th style="width:10%">Ship</th>';
+    
+    /* ★ 표 항목 간격 일정하게 밸런스 조정 (Style 줄이고 나머지 균등화) */
+    html+='<th style="width:5%">MO#</th><th style="width:11%">SKU</th><th style="width:12%">Style</th><th style="width:10%">Category</th><th style="width:9%">Factory</th><th style="width:7%">Qty</th><th style="width:14%">Production</th><th style="width:12%">Order</th><th style="width:10%">Exp.Del</th><th style="width:10%">Ship</th>';
     html+='</tr></thead><tbody>';
     items.forEach(function(r){var dl=isDelayed(r);
       html+='<tr data-id="'+r["ID"]+'" data-m="'+idx+'" data-ca="'+escH(g(r,"Category"))+'" data-fa="'+escH(g(r,"Factory"))+'" data-ps="'+escH(g(r,"Production_Status"))+'" data-st="'+(g(r,"MO_Number")+" "+g(r,"Style_SKU")+" "+g(r,"Style_Name")+" "+g(r,"Factory")).toLowerCase()+'"'+(dl?' style="background:#FEF2F2"':'')+'>';
@@ -549,7 +508,6 @@ function renderMonthly(){
       html+='<td style="font-size:9px">'+escH(catName(g(r,"Category")))+'</td>';
       html+='<td>'+escH(cleanFactory(g(r,"Factory")))+'</td>';
       html+='<td style="font-weight:700">'+escH(g(r,"Total_Quantity"))+'</td>';
-      /* ★ 완벽하게 복구된 테이블 태그 */
       html+='<td><span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span></td>';
       html+='<td><span class="tag '+tc(g(r,"Order_Status"))+'">'+escH(g(r,"Order_Status"))+'</span></td>';
       var ed=g(r,"Expected_Delivery");html+='<td>'+escH(ed)+(dl?' <span class="dly-badge">DELAYED</span>':'')+'</td>';
@@ -584,7 +542,7 @@ function buildTimeline(items,yr,mo,label){
 
   var yy = yr.toString().slice(-2);
   var mm = mo < 10 ? "0"+mo : mo;
-  var titleText = yy+"."+mm+" Production Timeline / "+yy+"年 "+mo+"월 生产排期";
+  var titleText = yy+"."+mm+" Production Timeline / "+yy+"年 "+mo+"月 生产排期";
 
   var h='<div class="tl-card"><div class="tl-hd"><div class="tl-title">📊 '+titleText+'</div>';
   h+='<div class="tl-legend"><span class="tl-type-badge" style="background:#F5F3FF;color:#7C3AED;border:1px dashed #C4B5FD">P = Plan</span><span class="tl-type-badge" style="background:#FEF3C7;color:#B45309">A = Actual</span>';
@@ -644,15 +602,15 @@ function openModal(r){
   h+=it("Cut Qty / 재단수량 / 裁剪数量",dv(g(r,"Cut_Quantity")));h+=it("Finished Qty / 완제품 / 成衣数量",dv(g(r,"Finished_Quantity")));h+='</div></div>';
   h+='<div class="m-sec"><div class="m-sec-t">📅 생산 일정 / 生产日期</div><div class="tl-modal">';
   [{l:"Fabric In / 원단입고 / 面料入库",k:"Fabric_In_house_Date"},{l:"Cutting Start / 재단시작 / 开始裁剪",k:"Cutting_Start_Date"},{l:"Cutting End / 재단완성 / 裁剪完成",k:"Cutting_End_Date"},
-   {l:"Sewing Start / 봉제시작 / 车缝开始",k:"Sewing_Start_Date"},{l:"Sewing End / 봉제완성 / 车缝완성",k:"Sewing_Completion_Date"},
-   {l:"Packing Start / 포장시작 / 包装시작",k:"Packing_Start_Date"},{l:"Packing End / 포장완성 / 包装완성",k:"Packing_End_Date"},
-   {l:"Ship Date / 선적일 / 출货日期",k:"Ship_Date"}].forEach(function(t,i){
+   {l:"Sewing Start / 봉제시작 / 车缝开始",k:"Sewing_Start_Date"},{l:"Sewing End / 봉제완성 / 车缝完成",k:"Sewing_Completion_Date"},
+   {l:"Packing Start / 포장시작 / 包装开始",k:"Packing_Start_Date"},{l:"Packing End / 포장완성 / 包装完成",k:"Packing_End_Date"},
+   {l:"Ship Date / 선적일 / 出货日期",k:"Ship_Date"}].forEach(function(t,i){
     var v=g(r,t.k),p=pd(v),cls="wait";if(p){cls=p<=todayStr?"done":"curr"}
     h+='<div class="tl-item"><div class="tl-dot-m '+cls+'">'+(i+1)+'</div><div class="tl-info-m"><div class="tl-lb-m">'+t.l+'</div><div class="tl-dt-m">'+escH(v)+'</div></div></div>'});
   h+='</div></div>';
-  h+='<div class="m-sec"><div class="m-sec-t">🚢 출고 / 출貨信息</div><div class="d-grid">';
+  h+='<div class="m-sec"><div class="m-sec-t">🚢 출고 / 出货信息</div><div class="d-grid">';
   h+=it("Ready to Ship / 출고준비 / 待出货",dv(g(r,"Ready_to_Ship")));h+=it("Final QC / 최종QC / 最终QC",dv(g(r,"Final_QC_Passed")));
-  h+=it("Shipped Qty / 출고수량 / 출貨数量",dv(g(r,"Shipped_Quantity")));h+=it("Ship Date / 선적일 / 출货日期",dv(g(r,"Ship_Date")));
+  h+=it("Shipped Qty / 출고수량 / 出货数量",dv(g(r,"Shipped_Quantity")));h+=it("Ship Date / 선적일 / 出货日期",dv(g(r,"Ship_Date")));
   h+=it("Expected Delivery / 예상납기 / 预计交货",dv(g(r,"Expected_Delivery")));h+=it("Delivery Status / 납기상태 / 交期状态",isDelayed(r)?'<span class="tag t-dg">DELAYED</span>':dv(g(r,"Delivery_Status")));
   h+='</div></div>';
   document.getElementById("mBody").innerHTML=h;
