@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Style View v32 (Ultimate Fix & Speed)</title>
+<title>Style View v33 (Ultimate Fix & Speed)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -219,6 +219,12 @@ Gender:{"W":"Women","M":"Men","U":"Unisex"}
 function mv(f,v){return(!v||v==="-")?"-":(MAP[f]&&MAP[f][v])?MAP[f][v]:v}
 function sv(f,v){return(!v||v==="-")?null:(SHORT[f]&&SHORT[f][v])?SHORT[f][v]:v}
 
+/* ★ 안전 클릭 이벤트 중앙 컨트롤러 ★ */
+function openModalById(id) {
+  var r = allRec.find(function(x){ return String(x.ID) === String(id); });
+  if(r) openModal(r);
+}
+
 ZOHO.CREATOR.init().then(function(){
 ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:MO_REP,page:1,pageSize:200}).then(function(r){
 if(r&&r.code===3000&&r.data)r.data.forEach(function(m){var s=g(m,"Style_SKU");if(s==="-")s=g(m,"SKU");if(s!=="-")moSkus.add(s)});
@@ -239,7 +245,7 @@ function tc(s){s=(s||"").toLowerCase();if(s.indexOf("active")>=0||s.indexOf("app
 function getImg1(r){var i=r["Style_Image"];if(!i)return null;if(Array.isArray(i)&&i.length>0)return i[0];if(typeof i==="string"&&i.length>5)return i;if(typeof i==="object"&&i.display_value)return i.display_value;return null}
 function getAllImgs(r,field){var i=r[field];if(!i)return[];if(Array.isArray(i))return i.filter(function(x){return x&&typeof x==="string"&&x.length>5});if(typeof i==="object"&&!Array.isArray(i)){var u=[];Object.keys(i).forEach(function(k){var v=i[k];if(v&&typeof v==="string"&&v.length>5)u.push(v)});return u}if(typeof i==="string"&&i.length>5)return[i];return[]}
 
-/* ★ 하이브리드 지연 로딩 큐 시스템 (안전 100% 보장) ★ */
+/* ★ 하이브리드 지연 로딩 큐 (브라우저 렉 원천 차단) ★ */
 var _safeQ = [];
 var _safeBusy = false;
 
@@ -252,15 +258,13 @@ function _runSafeQ() {
 
   var img = document.createElement("img");
   img.style.cssText = task.css || "width:100%;height:100%;object-fit:cover";
-  if (task.clk) {
-    img.onclick = function() { openLightbox(this.src); };
-  }
+  if (task.clk) { img.onclick = function() { openLightbox(this.src); }; }
 
   var done = false;
   function next() {
     if(done) return;
     done = true;
-    setTimeout(_runSafeQ, 100); // 0.1초의 짧은 휴식 후 다음 이미지 (브라우저 렉 원천 차단)
+    setTimeout(_runSafeQ, 80); // 0.08초 간격으로 매우 안정적인 릴레이 호출
   }
 
   try {
@@ -269,26 +273,19 @@ function _runSafeQ() {
       el.appendChild(img);
       next();
     });
-    // 4초가 지나도 로딩 안 되면 무시하고 다음 사진으로 넘어감
-    setTimeout(next, 4000); 
-  } catch(e) {
-    next();
-  }
+    setTimeout(next, 3000); // 3초 뒤 강제 스킵 (멈춤 방지)
+  } catch(e) { next(); }
 }
 
-/* 이미지 로딩을 안전 큐에 넣는 함수 */
 function qImg(elOrId, url, css, clk) {
   _safeQ.push({
     id: typeof elOrId === "string" ? elOrId : null,
     el: typeof elOrId === "object" ? elOrId : null,
-    url: url,
-    css: css,
-    clk: clk
+    url: url, css: css, clk: clk
   });
   if(!_safeBusy) _runSafeQ();
 }
 
-/* 표 썸네일 전용: Intersection Observer 연동 (보일 때만 로딩큐에 넣음) */
 function loadTableImgs() {
   var els = document.querySelectorAll("[data-img]");
   if(els.length === 0) return;
@@ -300,14 +297,14 @@ function loadTableImgs() {
           var url = el.getAttribute("data-img");
           if(url) {
             qImg(el, url, "width:100%;height:100%;object-fit:cover", false);
+            el.removeAttribute("data-img"); // 중복 로딩 완벽 방지
           }
           observer.unobserve(el);
         }
       });
-    }, {rootMargin:"300px"}); // 화면에 닿기 300px 전부터 미리 로딩 시작
+    }, {rootMargin:"300px"});
     els.forEach(function(el){ obs.observe(el); });
   } else {
-    // 구형 브라우저
     els.forEach(function(el){
       var url = el.getAttribute("data-img");
       if(url) qImg(el, url, "width:100%;height:100%;object-fit:cover", false);
@@ -393,7 +390,8 @@ function renderMKPI(){
   } else {
     delayedAll.forEach(function(r){
       var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");
-      h+='<div class="delay-item" onclick="openModal(allRec.find(function(x){return x[\'ID\']==='+"'"+r["ID"]+"'"+'}))">';
+      /* ★ 팝업 호출 안전 스크립트 (onclick="openModalById...") 로 통일 */
+      h+='<div class="delay-item" onclick="openModalById(\''+r.ID+'\')">';
       h+='<div><div class="delay-mo">'+escH(sku)+'</div>';
       h+='<div class="delay-style">'+escH(g(r,"Style_Name"))+'</div></div>';
       h+='</div>'});
@@ -430,7 +428,7 @@ function openKpiPop(keyEnc,type){
     popItems.forEach(function(r){
       var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");
       var isDel=isOrderDelayed(r);
-      h+='<div class="pop-item" onclick="openModalFromPop(\''+r["ID"]+'\')">';
+      h+='<div class="pop-item" onclick="openModalById(\''+r.ID+'\')">';
       h+='<div class="pop-item-left">';
       h+='<div class="pi-mo">'+escH(sku)+(isDel?'<span class="dly-badge">DELAYED</span>':'')+'</div>';
       h+='<div class="pi-name">'+escH(g(r,"Style_Name"))+'</div>';
@@ -440,10 +438,6 @@ function openKpiPop(keyEnc,type){
       h+='</div>'});}
   document.getElementById("kpiPopBody").innerHTML=h;
   document.getElementById("kpiPopOv").classList.add("active")}
-
-function openModalFromPop(id){
-  var r=allRec.find(function(x){return x["ID"]===id});
-  if(r){document.getElementById("kpiPopOv").classList.remove("active");openModal(r)}}
 
 document.getElementById("kpiPopClose").addEventListener("click",function(){document.getElementById("kpiPopOv").classList.remove("active")});
 document.getElementById("kpiPopOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
@@ -502,31 +496,26 @@ function renderTables(){
       var name=g(r,"Style_Name");
       var iu=getImg1(r),ia=iu?' data-img="'+iu+'"':'';
       var ordered=moSkus.has(sku);
-      var trStyle = (!ordered) ? ' style="background:#FEF2F2"' : '';
-      var trClass = (!ordered) ? ' class="not-ordered"' : '';
+      var trStyle = (!ordered) ? ' style="background:#FEF2F2;cursor:pointer"' : ' style="cursor:pointer"';
+      var trClass = (!ordered) ? 'not-ordered' : '';
       
-      html+='<tr data-id="'+r["ID"]+'"'+trClass+trStyle+'><td><div class="style-info"><div class="style-thumb"'+ia+'>👕</div><div><span class="style-code">'+escH(sku)+'</span><span class="style-name">'+escH(name)+'</span></div></div></td><td>'+escH(g(r,"Business_Entity"))+'</td><td>'+escH(g(r,"Season"))+'</td><td>'+escH(mv("Gender",g(r,"Gender")))+'</td><td>'+escH(mv("Category",g(r,"Category")))+'</td><td>'+escH(mv("Material_Type",g(r,"Material_Type")))+'</td><td>'+escH(g(r,"Target_Cost"))+'</td><td><span class="tag '+tc(g(r,"Style_Status"))+'">'+escH(g(r,"Style_Status"))+'</span></td><td><span class="tag '+tc(g(r,"Sample_Status"))+'">'+escH(g(r,"Sample_Status"))+'</span></td><td>'+(ordered?'<span class="tag tag-appr">Ordered</span>':'<span class="tag tag-fail">Not Ordered</span>')+'</td></tr>'});
+      /* ★ 팝업창을 띄우는 100% 보장 인라인 클릭 이벤트 삽입 */
+      html+='<tr class="'+trClass+'"'+trStyle+' onclick="openModalById(\''+r.ID+'\')"><td><div class="style-info"><div class="style-thumb"'+ia+'>👕</div><div><span class="style-code">'+escH(sku)+'</span><span class="style-name">'+escH(name)+'</span></div></div></td><td>'+escH(g(r,"Business_Entity"))+'</td><td>'+escH(g(r,"Season"))+'</td><td>'+escH(mv("Gender",g(r,"Gender")))+'</td><td>'+escH(mv("Category",g(r,"Category")))+'</td><td>'+escH(mv("Material_Type",g(r,"Material_Type")))+'</td><td>'+escH(g(r,"Target_Cost"))+'</td><td><span class="tag '+tc(g(r,"Style_Status"))+'">'+escH(g(r,"Style_Status"))+'</span></td><td><span class="tag '+tc(g(r,"Sample_Status"))+'">'+escH(g(r,"Sample_Status"))+'</span></td><td>'+(ordered?'<span class="tag tag-appr">Ordered</span>':'<span class="tag tag-fail">Not Ordered</span>')+'</td></tr>'});
       html+='</tbody></table></div></div></div>'});
   
   document.getElementById("monthlyTables").innerHTML=html;
   
   setTimeout(loadTableImgs, 500);
-
-  /* ★ 삭제되었던 표 클릭 이벤트 리스너 완벽 복구 ★ */
-  document.querySelectorAll("#monthlyTables tr[data-id]").forEach(function(row){
-    row.addEventListener("click", function(){
-      var id = this.getAttribute("data-id");
-      var r = allRec.find(function(x){return x["ID"]===id});
-      if(r) openModal(r);
-    });
-  });
 }
 
 ["searchBox","filterCategory","filterGender","filterSeason","filterStatus"].forEach(function(id){document.getElementById(id).addEventListener(id==="searchBox"?"input":"change",af)});
 function af(){var q=document.getElementById("searchBox").value.toLowerCase().trim();var fc=document.getElementById("filterCategory").value;var fg=document.getElementById("filterGender").value;var fs=document.getElementById("filterSeason").value;var ft=document.getElementById("filterStatus").value;filtered=allRec.filter(function(r){if(q){var h=(g(r,"Style_SKU")+" "+g(r,"Style_Name")+" "+g(r,"Business_Entity")).toLowerCase();if(h.indexOf(q)<0)return false}if(fc&&g(r,"Category")!==fc)return false;if(fg&&g(r,"Gender")!==fg)return false;if(fs&&g(r,"Season")!==fs)return false;if(ft&&g(r,"Style_Status")!==ft)return false;return true});renderMKPI();renderTables()}
 
-/* 팝업 모달창 열기 & 이미지 로딩 1순위 처리 */
+/* 팝업 모달창 열기 */
 function openModal(rec){
+  // 팝업이 열리면 백그라운드에서 진행 중이던 표 썸네일 대기열을 싹 다 비웁니다 (새치기 세팅)
+  _safeQ = [];
+  
   _currentRecId=rec["ID"];
   document.getElementById("modalTitle").textContent=g(rec,"Style_SKU");
   document.getElementById("modalSubtitle").textContent=g(rec,"Style_Name");
@@ -541,10 +530,6 @@ function openModal(rec){
 }
 
 function loadAllModalImgs(rec){
-  // 팝업이 열리면 기존 대기표 싹 비우고 모달창 이미지만 최우선으로 하이패스!
-  _safeQ = []; 
-  _safeBusy = false; 
-
   var iu=getImg1(rec);
   if(iu) qImg("modalThumb", iu, "width:100%;height:100%;object-fit:cover", false);
 
