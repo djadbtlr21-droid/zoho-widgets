@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Style View v31 (Safe & Fast)</title>
+<title>Style View v32 (Ultimate Fix & Speed)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -239,57 +239,79 @@ function tc(s){s=(s||"").toLowerCase();if(s.indexOf("active")>=0||s.indexOf("app
 function getImg1(r){var i=r["Style_Image"];if(!i)return null;if(Array.isArray(i)&&i.length>0)return i[0];if(typeof i==="string"&&i.length>5)return i;if(typeof i==="object"&&i.display_value)return i.display_value;return null}
 function getAllImgs(r,field){var i=r[field];if(!i)return[];if(Array.isArray(i))return i.filter(function(x){return x&&typeof x==="string"&&x.length>5});if(typeof i==="object"&&!Array.isArray(i)){var u=[];Object.keys(i).forEach(function(k){var v=i[k];if(v&&typeof v==="string"&&v.length>5)u.push(v)});return u}if(typeof i==="string"&&i.length>5)return[i];return[]}
 
-/* ★ 지연 로딩 (Lazy Loading) 안전 모드 ★ */
-function loadTableImgs(){
+/* ★ 하이브리드 지연 로딩 큐 시스템 (안전 100% 보장) ★ */
+var _safeQ = [];
+var _safeBusy = false;
+
+function _runSafeQ() {
+  if(_safeQ.length === 0) { _safeBusy = false; return; }
+  _safeBusy = true;
+  var task = _safeQ.shift();
+  var el = task.id ? document.getElementById(task.id) : task.el;
+  if(!el) { setTimeout(_runSafeQ, 50); return; }
+
+  var img = document.createElement("img");
+  img.style.cssText = task.css || "width:100%;height:100%;object-fit:cover";
+  if (task.clk) {
+    img.onclick = function() { openLightbox(this.src); };
+  }
+
+  var done = false;
+  function next() {
+    if(done) return;
+    done = true;
+    setTimeout(_runSafeQ, 100); // 0.1초의 짧은 휴식 후 다음 이미지 (브라우저 렉 원천 차단)
+  }
+
+  try {
+    ZOHO.CREATOR.UTIL.setImageData(img, task.url, function() {
+      el.innerHTML = "";
+      el.appendChild(img);
+      next();
+    });
+    // 4초가 지나도 로딩 안 되면 무시하고 다음 사진으로 넘어감
+    setTimeout(next, 4000); 
+  } catch(e) {
+    next();
+  }
+}
+
+/* 이미지 로딩을 안전 큐에 넣는 함수 */
+function qImg(elOrId, url, css, clk) {
+  _safeQ.push({
+    id: typeof elOrId === "string" ? elOrId : null,
+    el: typeof elOrId === "object" ? elOrId : null,
+    url: url,
+    css: css,
+    clk: clk
+  });
+  if(!_safeBusy) _runSafeQ();
+}
+
+/* 표 썸네일 전용: Intersection Observer 연동 (보일 때만 로딩큐에 넣음) */
+function loadTableImgs() {
   var els = document.querySelectorAll("[data-img]");
   if(els.length === 0) return;
-  if("IntersectionObserver" in window){
+  if("IntersectionObserver" in window) {
     var obs = new IntersectionObserver(function(entries, observer){
       entries.forEach(function(ent){
         if(ent.isIntersecting){
           var el = ent.target;
           var url = el.getAttribute("data-img");
-          if(url){
-            var img = document.createElement("img");
-            img.style.cssText = "width:100%;height:100%;object-fit:cover";
-            try{ ZOHO.CREATOR.UTIL.setImageData(img, url, function(){ el.innerHTML=""; el.appendChild(img); }); } catch(e){}
+          if(url) {
+            qImg(el, url, "width:100%;height:100%;object-fit:cover", false);
           }
           observer.unobserve(el);
         }
       });
-    }, {rootMargin:"200px"});
+    }, {rootMargin:"300px"}); // 화면에 닿기 300px 전부터 미리 로딩 시작
     els.forEach(function(el){ obs.observe(el); });
-  }
-}
-
-function loadModalImgInstantly(id, url) {
-  var el = document.getElementById(id);
-  if(!el || !url) return;
-  var img = document.createElement("img");
-  img.style.cssText = "width:100%;height:100%;object-fit:contain;cursor:pointer";
-  img.onclick = function(){ openLightbox(this.src); };
-  try {
-    ZOHO.CREATOR.UTIL.setImageData(img, url, function() {
-      el.innerHTML = "";
-      el.appendChild(img);
+  } else {
+    // 구형 브라우저
+    els.forEach(function(el){
+      var url = el.getAttribute("data-img");
+      if(url) qImg(el, url, "width:100%;height:100%;object-fit:cover", false);
     });
-  } catch(e) {
-    el.innerHTML = "Error";
-  }
-}
-
-function loadAllModalImgs(rec){
-  var si=getAllImgs(rec,"Style_Image"),fi=getAllImgs(rec,"Flat_Sketch"),smi=getAllImgs(rec,"Sample_Images");
-  si.forEach(function(u,i){ loadModalImgInstantly("sImg"+i, u); });
-  fi.forEach(function(u,i){ loadModalImgInstantly("fImg"+i, u); });
-  smi.forEach(function(u,i){ loadModalImgInstantly("smImg"+i, u); });
-  
-  var iu=getImg1(rec);
-  if(iu) {
-    var te=document.getElementById("modalThumb");
-    var img = document.createElement("img");
-    img.style.cssText = "width:100%;height:100%;object-fit:cover";
-    try{ ZOHO.CREATOR.UTIL.setImageData(img, iu, function(){ te.innerHTML=""; te.appendChild(img); }); } catch(e){}
   }
 }
 
@@ -485,13 +507,25 @@ function renderTables(){
       
       html+='<tr data-id="'+r["ID"]+'"'+trClass+trStyle+'><td><div class="style-info"><div class="style-thumb"'+ia+'>👕</div><div><span class="style-code">'+escH(sku)+'</span><span class="style-name">'+escH(name)+'</span></div></div></td><td>'+escH(g(r,"Business_Entity"))+'</td><td>'+escH(g(r,"Season"))+'</td><td>'+escH(mv("Gender",g(r,"Gender")))+'</td><td>'+escH(mv("Category",g(r,"Category")))+'</td><td>'+escH(mv("Material_Type",g(r,"Material_Type")))+'</td><td>'+escH(g(r,"Target_Cost"))+'</td><td><span class="tag '+tc(g(r,"Style_Status"))+'">'+escH(g(r,"Style_Status"))+'</span></td><td><span class="tag '+tc(g(r,"Sample_Status"))+'">'+escH(g(r,"Sample_Status"))+'</span></td><td>'+(ordered?'<span class="tag tag-appr">Ordered</span>':'<span class="tag tag-fail">Not Ordered</span>')+'</td></tr>'});
       html+='</tbody></table></div></div></div>'});
+  
   document.getElementById("monthlyTables").innerHTML=html;
   
-  setTimeout(loadTableImgs,500)}
+  setTimeout(loadTableImgs, 500);
+
+  /* ★ 삭제되었던 표 클릭 이벤트 리스너 완벽 복구 ★ */
+  document.querySelectorAll("#monthlyTables tr[data-id]").forEach(function(row){
+    row.addEventListener("click", function(){
+      var id = this.getAttribute("data-id");
+      var r = allRec.find(function(x){return x["ID"]===id});
+      if(r) openModal(r);
+    });
+  });
+}
 
 ["searchBox","filterCategory","filterGender","filterSeason","filterStatus"].forEach(function(id){document.getElementById(id).addEventListener(id==="searchBox"?"input":"change",af)});
 function af(){var q=document.getElementById("searchBox").value.toLowerCase().trim();var fc=document.getElementById("filterCategory").value;var fg=document.getElementById("filterGender").value;var fs=document.getElementById("filterSeason").value;var ft=document.getElementById("filterStatus").value;filtered=allRec.filter(function(r){if(q){var h=(g(r,"Style_SKU")+" "+g(r,"Style_Name")+" "+g(r,"Business_Entity")).toLowerCase();if(h.indexOf(q)<0)return false}if(fc&&g(r,"Category")!==fc)return false;if(fg&&g(r,"Gender")!==fg)return false;if(fs&&g(r,"Season")!==fs)return false;if(ft&&g(r,"Style_Status")!==ft)return false;return true});renderMKPI();renderTables()}
 
+/* 팝업 모달창 열기 & 이미지 로딩 1순위 처리 */
 function openModal(rec){
   _currentRecId=rec["ID"];
   document.getElementById("modalTitle").textContent=g(rec,"Style_SKU");
@@ -503,7 +537,22 @@ function openModal(rec){
   document.getElementById("modalBody").innerHTML=buildDetail(rec);
   document.getElementById("modalOverlay").classList.add("active");
   
-  setTimeout(function(){loadAllModalImgs(rec)},50)}
+  setTimeout(function(){loadAllModalImgs(rec)},50)
+}
+
+function loadAllModalImgs(rec){
+  // 팝업이 열리면 기존 대기표 싹 비우고 모달창 이미지만 최우선으로 하이패스!
+  _safeQ = []; 
+  _safeBusy = false; 
+
+  var iu=getImg1(rec);
+  if(iu) qImg("modalThumb", iu, "width:100%;height:100%;object-fit:cover", false);
+
+  var si=getAllImgs(rec,"Style_Image"), fi=getAllImgs(rec,"Flat_Sketch"), smi=getAllImgs(rec,"Sample_Images");
+  si.forEach(function(u,i){ qImg("sImg"+i, u, "width:100%;height:100%;object-fit:contain;cursor:pointer", true); });
+  fi.forEach(function(u,i){ qImg("fImg"+i, u, "width:100%;height:100%;object-fit:contain;cursor:pointer", true); });
+  smi.forEach(function(u,i){ qImg("smImg"+i, u, "width:100%;height:100%;object-fit:contain;cursor:pointer", true); });
+}
 
 function buildDetail(d){
 var h='';
