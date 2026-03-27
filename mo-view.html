@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MO View v27 (Safe & Fast)</title>
+<title>MO View v28 (Safe & Hybrid Fast)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -54,6 +54,7 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .delay-card{background:#FFF5F5;border:1px solid #FECACA;border-radius:10px;padding:14px;position:relative;overflow:hidden;display:flex;flex-direction:column}
 .delay-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:#FCA5A5}
 .delay-card-title{font-size:12px;font-weight:800;color:#DC2626;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.delay-card-sub{font-size:9px;color:#EF4444;margin-bottom:10px;font-weight:600}
 .delay-total{font-size:22px;font-weight:900;color:#DC2626;text-align:center;margin-bottom:8px}
 .delay-total span{font-size:10px;font-weight:600;color:#EF4444;display:block;margin-top:2px}
 .delay-list{display:flex;flex-direction:column;gap:5px;flex:1;overflow-y:auto}
@@ -275,6 +276,50 @@ function getProdStage(r){var s=g(r,"Production_Status").toLowerCase();
   if(s.indexOf("cutting")>=0)return"Cutting";if(s.indexOf("fabric")>=0)return"Fabric";return"Not Started"}
 function getImg1(r){var i=r["Style_Image"];if(!i)return null;if(Array.isArray(i)&&i.length>0)return i[0];if(typeof i==="string"&&i.length>5)return i;if(typeof i==="object"&&i.display_value)return i.display_value;return null}
 
+/* ★ 하이브리드 지연 로딩 (안전 큐 방식) ★ */
+var _safeQ = [];
+var _safeBusy = false;
+
+function _runSafeQ() {
+  if(_safeQ.length === 0) { _safeBusy = false; return; }
+  _safeBusy = true;
+  var task = _safeQ.shift();
+  var el = task.id ? document.getElementById(task.id) : task.el;
+  if(!el) { setTimeout(_runSafeQ, 50); return; }
+
+  var img = document.createElement("img");
+  img.style.cssText = task.css || "width:100%;height:100%;object-fit:cover";
+  
+  var done = false;
+  function next() {
+    if(done) return;
+    done = true;
+    setTimeout(_runSafeQ, 100); // 0.1초 휴식 후 다음 로딩 (브라우저 렉 방지)
+  }
+
+  try {
+    ZOHO.CREATOR.UTIL.setImageData(img, task.url, function() {
+      el.innerHTML = "";
+      el.appendChild(img);
+      next();
+    });
+    setTimeout(next, 4000); 
+  } catch(e) {
+    next();
+  }
+}
+
+function qImg(elOrId, url, css, clk) {
+  _safeQ.push({
+    id: typeof elOrId === "string" ? elOrId : null,
+    el: typeof elOrId === "object" ? elOrId : null,
+    url: url,
+    css: css,
+    clk: clk
+  });
+  if(!_safeBusy) _runSafeQ();
+}
+
 function renderAll(){renderMKPI();renderPipeline();renderMonthly()}
 
 function renderMKPI(){
@@ -389,36 +434,6 @@ function openModalFromPop(id){
   var r=allRec.find(function(x){return x["ID"]===id});
   if(r){document.getElementById("kpiPopOv").classList.remove("active");openModal(r)}}
 
-/* ★ 지연 로딩 (Lazy Loading) 안전 모드 ★ */
-function loadTlImgs() {
-  var els = document.querySelectorAll("[data-tlimg]");
-  if (els.length === 0) return;
-
-  if ("IntersectionObserver" in window) {
-    var obs = new IntersectionObserver(function(entries, observer) {
-      entries.forEach(function(ent) {
-        if (ent.isIntersecting) {
-          var el = ent.target;
-          var url = el.getAttribute("data-tlimg");
-          if (url) {
-            var img = document.createElement("img");
-            img.style.cssText = "width:100%;height:100%;object-fit:cover";
-            try {
-              ZOHO.CREATOR.UTIL.setImageData(img, url, function() {
-                el.innerHTML = "";
-                el.appendChild(img);
-              });
-            } catch(e) {}
-          }
-          observer.unobserve(el);
-        }
-      });
-    }, { rootMargin: "200px" });
-
-    els.forEach(function(el) { obs.observe(el); });
-  }
-}
-
 function renderPipeline(){
   var st=["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
   var emojis = ["\u23F3", "\uD83E\uDDF5", "\u2702\uFE0F", "\uD83E\uDDF7", "\uD83D\uDCE6", "\u2705", "\uD83D\uDE9A"];
@@ -514,11 +529,40 @@ function renderMonthly(){
     if(ym)html+=buildTimeline(items,ym.y,ym.m,key);
     html+='</div></div>'});
   document.getElementById("monthlyContent").innerHTML=html;
+
+  /* 표를 클릭할 때 모달이 열리도록 설정 */
   document.querySelectorAll("#monthlyContent tr[data-id]").forEach(function(row){row.addEventListener("click",function(){var id=this.getAttribute("data-id");var r=allRec.find(function(x){return x["ID"]===id});if(r)openModal(r)})});
   document.querySelectorAll(".tl-mo-info").forEach(function(el){el.addEventListener("click",function(){var id=this.getAttribute("data-id");var r=allRec.find(function(x){return x["ID"]===id});if(r)openModal(r)})});
   document.querySelectorAll(".mf").forEach(function(el){el.addEventListener(el.tagName==="INPUT"?"input":"change",function(){mFilter(this.getAttribute("data-m"))})});
   
-  setTimeout(loadTlImgs,500)}
+  /* 타임라인 하이브리드 로딩 */
+  setTimeout(loadTlImgs,500)
+}
+
+function loadTlImgs() {
+  var els = document.querySelectorAll("[data-tlimg]");
+  if(els.length === 0) return;
+  if("IntersectionObserver" in window) {
+    var obs = new IntersectionObserver(function(entries, observer){
+      entries.forEach(function(ent){
+        if(ent.isIntersecting){
+          var el = ent.target;
+          var url = el.getAttribute("data-tlimg");
+          if(url) {
+            qImg(el, url, "width:100%;height:100%;object-fit:cover", false);
+          }
+          observer.unobserve(el);
+        }
+      });
+    }, {rootMargin:"300px"});
+    els.forEach(function(el){ obs.observe(el); });
+  } else {
+    els.forEach(function(el){
+      var url = el.getAttribute("data-tlimg");
+      if(url) qImg(el, url, "width:100%;height:100%;object-fit:cover", false);
+    });
+  }
+}
 
 function mFilter(mi){
   var sec=document.getElementById("ms"+mi);if(!sec)return;
