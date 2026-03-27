@@ -3,113 +3,111 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Overview (Layout Fixed & Filters Removed)</title>
+<title>Overview (Exact Match Layout)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
-:root{--pr:#1E3A8A;--ac:#3B82F6;--bg:#F1F5F9;--bd:#E2E8F0;--tx:#0F172A;--tm:#64748B;--cw:#FFF;--ok:#10B981;--wn:#F59E0B;--dg:#EF4444;--dr:#94A3B8}
+/* 원본 v33, v28 CSS 변수 및 기본 설정 100% 이식 */
+:root{--z-primary:#1E3A8A;--z-accent:#3B82F6;--z-bg:#F1F5F9;--z-border:#E2E8F0;--z-text-main:#0F172A;--z-text-muted:#64748B;--z-card-bg:#FFF;--st-appr:#10B981;--st-prog:#F59E0B;--st-danger:#EF4444;--st-draft:#94A3B8}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Noto Sans KR',-apple-system,sans-serif}
-/* Zoho 컨테이너 중앙정렬 강제 해제 */
-body{background:var(--bg);padding:16px;min-height:100vh;text-align:left;width:100%}
+
+/* 중앙 정렬 강제 해제 및 왼쪽 정렬 고정 */
+html, body {width:100%; height:100%; text-align:left !important;}
+body {background:var(--z-bg); padding:16px; min-height:100vh; display:block !important;}
+#mainContent {width:100%; display:block; text-align:left !important;}
 
 /* 로딩 & 에러 */
-.spinner{width:40px;height:40px;border:4px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
+.loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;gap:16px;width:100%}
+.spinner{width:40px;height:40px;border:4px solid var(--z-border);border-top-color:var(--z-accent);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;gap:12px;color:var(--tm);font-size:13px;font-weight:600;width:100%}
-.err-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C}
+.loading-text{font-size:13px;color:var(--z-text-muted);font-weight:600}
+.error-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C;margin:20px}
 
-/* 페이지 헤더 (완벽한 왼쪽 정렬) */
-.page-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;width:100%}
-.page-hdr h1{font-size:19px;font-weight:900;color:var(--tx);display:flex;align-items:center;gap:8px;margin:0}
-.page-hdr h1 .ic{width:30px;height:30px;background:var(--pr);border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:900}
-.hdr-btns{display:flex;gap:8px;flex-shrink:0}
-.btn-s{background:#A5B4FC;color:#1E1B4B;border:none;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer}
-.btn-m{background:#86EFAC;color:#065F46;border:none;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer}
-.btn-s:hover{background:#818CF8} .btn-m:hover{background:#4ADE80}
+/* 페이지 헤더 (왼쪽 정렬) */
+.page-header{display:flex !important;justify-content:space-between !important;align-items:center !important;margin-bottom:24px;width:100%}
+.page-header h1{font-size:18px;font-weight:900;color:var(--z-text-main);display:flex;align-items:center;gap:10px;margin:0}
+.page-header h1 .icon-s{width:32px;height:32px;background:var(--z-primary);border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900}
 
 /* 섹션 타이틀 */
-.ov-section{margin-bottom:32px;width:100%}
-.sec-title{font-size:15px;font-weight:900;color:var(--tx);display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--bd)}
-.sec-title .sec-ic{width:24px;height:24px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:900}
+.ov-section{margin-bottom:40px;width:100%}
+.sec-title{font-size:16px;font-weight:900;color:var(--z-text-main);display:flex;align-items:center;gap:8px;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--z-border)}
+.sec-title .sec-ic{width:26px;height:26px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:900}
 
-/* KPI 배열 (3개월 + 지연현황 - 원본과 동일한 비율) */
-.mkpi-row{display:grid;grid-template-columns:repeat(3, 1fr) 380px;gap:12px;margin-bottom:21px;width:100%}
+/* KPI 배열 (원본 v33 완벽 동일) */
+.mkpi-row{display:grid;grid-template-columns:repeat(3, 1fr) 400px;gap:12px;margin-bottom:24px;width:100%}
 
-/* 월별 KPI 카드 */
-.mkpi-card{background:var(--cw);border:1px solid var(--bd);border-radius:10px;padding:14px;position:relative;overflow:hidden}
+/* KPI 카드 공통 */
+.mkpi-card{background:var(--z-card-bg);border:1px solid var(--z-border);border-radius:10px;padding:14px;position:relative;overflow:hidden;text-align:left}
 .mkpi-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px}
-.sc-0::before{background:#818CF8} .sc-1::before{background:#FDE68A} .sc-2::before{background:#A7F3D0}
-.mc-0::before{background:#10B981} .mc-1::before{background:#34D399} .mc-2::before{background:#A7F3D0}
-
 .mkpi-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.mkpi-title{font-size:14px;font-weight:800;color:var(--tx)}
+.mkpi-title{font-size:14px;font-weight:800;color:var(--z-text-main)}
 .mkpi-body{display:flex;align-items:center;gap:16px}
-.mkpi-ring{position:relative;width:75px;height:75px;flex-shrink:0}
+.mkpi-ring{position:relative;width:80px;height:80px;flex-shrink:0}
 .mkpi-ring svg{transform:rotate(-90deg)}
-.mkpi-ring-pct{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:16px;font-weight:900;color:var(--tx)}
-
-/* KPI 탭 */
+.mkpi-ring-pct{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:16px;font-weight:900;color:var(--z-text-main)}
 .mkpi-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1}
-.mkpi-stat{text-align:center;padding:7px 5px;border-radius:6px;background:#FAFBFC;border:1px solid #F1F5F9;transition:background .15s}
-.mkpi-stat:hover{background:#EFF6FF;border-color:#BFDBFE}
-.mkpi-stat-n{font-size:20px;font-weight:900;line-height:1;margin-bottom:4px}
-.mkpi-stat-l{font-size:9px;font-weight:700;color:var(--tm);line-height:1.3}
+.mkpi-stat{text-align:center;padding:6px 5px;border-radius:6px;background:#FAFBFC;border:1px solid #F1F5F9}
+.mkpi-stat-n{font-size:20px;font-weight:900;line-height:1}
+.mkpi-stat-l{font-size:10px;font-weight:700;color:var(--z-text-muted);margin-top:4px;line-height:1.3}
 .mkpi-stat .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;vertical-align:middle}
-.mkpi-footer{margin-top:12px;padding-top:10px;border-top:1px solid #F1F5F9;font-size:11px;color:var(--tm);display:flex;justify-content:center;gap:24px}
-.mkpi-footer b{font-size:12px;color:var(--tx);font-weight:800}
+.mkpi-footer{margin-top:12px;padding-top:10px;border-top:1px solid #F1F5F9;font-size:11px;color:var(--z-text-muted);display:flex;justify-content:center;gap:24px}
+.mkpi-footer b{font-size:12px;color:var(--z-text-main);font-weight:800}
 
-/* 지연 현황 카드 (원본 완벽 이식) */
-.delay-card{background:#FFF5F5;border:1px solid #FECACA;border-radius:10px;padding:14px;position:relative;overflow:hidden;display:flex;flex-direction:column}
+/* KPI 컬러 매핑 (Style / MO) */
+.style-c:nth-child(1)::before{background:#818CF8} .style-c:nth-child(2)::before{background:#FDE68A} .style-c:nth-child(3)::before{background:#A7F3D0}
+.mo-c:nth-child(1)::before{background:#10B981} .mo-c:nth-child(2)::before{background:#FDE68A} .mo-c:nth-child(3)::before{background:#A7F3D0}
+
+/* 지연 카드 (빨간색 테마 완벽 복원) */
+.delay-card{background:#FFF5F5;border:1px solid #FECACA;border-radius:10px;padding:14px;position:relative;display:flex;flex-direction:column;text-align:center}
 .delay-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:#FCA5A5}
-.delay-card-title{font-size:12px;font-weight:800;color:#DC2626;margin-bottom:4px;display:flex;align-items:center;gap:6px}
-.delay-total{font-size:22px;font-weight:900;color:#DC2626;text-align:center;margin-bottom:8px}
+.delay-card-title{font-size:12px;font-weight:800;color:#DC2626;margin-bottom:4px;display:flex;align-items:center;justify-content:center;gap:6px}
+.delay-total{font-size:22px;font-weight:900;color:#DC2626;margin-bottom:8px}
 .delay-total span{font-size:10px;font-weight:600;color:#EF4444;display:block;margin-top:2px}
 .delay-list{display:flex;flex-direction:column;gap:5px;flex:1;overflow-y:auto;max-height:110px}
-.delay-item{background:#fff;border:1px solid #FECACA;border-radius:6px;padding:6px 8px;text-align:center;cursor:pointer;transition:background .1s}
-.delay-item:hover{background:#FEF2F2}
-.delay-mo{font-size:10px;font-weight:800;color:#DC2626}
-.delay-style{font-size:8px;color:#64748B;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.delay-badge{display:inline-block;font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:#FEE2E2;color:#DC2626;margin-left:4px}
+.delay-item{background:#fff;border:1px solid #FECACA;border-radius:6px;padding:6px 8px;text-align:center}
+.delay-mo{font-size:11px;font-weight:800;color:#DC2626}
+.delay-style{font-size:9px;color:#64748B;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.delay-desc{font-size:10px;font-weight:bold;color:#94A3B8;text-align:center;padding-top:8px;border-top:1px dashed #FECACA;line-height:1.4;margin-top:8px}
 
-/* 파이프라인 */
-.pipe-card{background:var(--cw);border:1px solid var(--bd);border-radius:8px;padding:22px 20px;margin-bottom:21px}
+/* 파이프라인 (MO View v28 디자인) */
+.pipe-card{background:var(--z-card-bg);border:1px solid var(--z-border);border-radius:8px;padding:22px 20px;margin-bottom:21px;text-align:left}
+.pipe-title{font-size:13px;font-weight:800;color:var(--z-text-muted);text-transform:uppercase;margin-bottom:14px;letter-spacing:.5px}
 .pipe-row{display:flex;align-items:center;gap:4px;overflow-x:auto}
 .pipe-step{flex:1;text-align:center;min-width:90px;padding:14px 6px;border-radius:8px}
 .pipe-n{font-size:26px;font-weight:900;line-height:1}
 .pipe-lb{font-size:12px;font-weight:800;margin-top:5px;line-height:1.3;display:flex;align-items:center;justify-content:center}
-.pipe-lb2{font-size:10px;color:var(--tm);margin-top:3px}
+.pipe-lb2{font-size:10px;color:var(--z-text-muted);margin-top:3px}
 .pipe-emoji{font-size:1.3em;margin-right:4px}
 .pipe-bar{height:5px;border-radius:2px;margin-top:8px}
 .pipe-arr{color:#CBD5E1;font-size:12px;flex-shrink:0}
 
-/* 테이블 공통 */
-.tbl-card{background:var(--cw);border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin-bottom:30px;width:100%}
-.tbl-hd{padding:10px 16px;background:#F8FAFC;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;width:100%}
-.tbl-hd-title{font-size:13px;font-weight:800;color:var(--tx)}
-.tbl-cnt{font-size:11px;color:var(--tm);font-weight:600;background:#F1F5F9;padding:2px 8px;border-radius:10px;border:1px solid #CBD5E1}
-.tbl-scroll{overflow-x:auto}
-table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;table-layout:fixed}
-.zt th{background:#F1F5F9;padding:9px 8px;color:var(--tm);font-weight:800;font-size:10px;border-bottom:1px solid var(--bd);white-space:nowrap}
-.zt td{padding:10px 8px;border-bottom:1px solid #F1F5F9;color:var(--tx);vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.zt tbody tr:hover td{background:#EFF6FF}
-.delayed-row td{background:#FEF2F2 !important}
+/* 테이블 공통 (Style View v33 디자인) */
+.month-card{background:var(--z-card-bg);border:1px solid var(--z-border);border-radius:8px;overflow:hidden;margin-bottom:16px;text-align:left}
+.month-header{padding:10px 16px;background:#F8FAFC;border-bottom:1px solid var(--z-border);display:flex !important;justify-content:space-between !important;align-items:center !important}
+.month-title{font-size:14px;font-weight:800;color:var(--z-text-main)}
+.month-count{font-size:11px;color:var(--z-text-muted);font-weight:600;background:#F1F5F9;padding:2px 8px;border-radius:10px;border:1px solid #CBD5E1}
+.table-scroll{overflow-x:auto}
+table.z-table{width:100%;border-collapse:collapse;font-size:11px;text-align:left;table-layout:fixed}
+.z-table th{background:#F1F5F9;padding:9px 8px;color:var(--z-text-muted);font-weight:800;font-size:10px;border-bottom:1px solid var(--z-border);white-space:nowrap;text-align:left !important}
+.z-table td{padding:10px 8px;border-bottom:1px solid #F1F5F9;color:var(--z-text-main);vertical-align:middle;text-align:left !important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.z-table tbody tr:hover td{background:#EFF6FF}
+.z-table tbody tr.delayed-row td{background:#FEF2F2 !important}
 
 /* 테이블 내부 요소 */
-.style-info{display:flex;align-items:center;gap:7px}
-.style-thumb{width:34px;height:34px;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#94A3B8;flex-shrink:0;overflow:hidden}
+.style-info{display:flex;align-items:center;gap:8px}
+.style-thumb{width:34px;height:34px;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#94A3B8;flex-shrink:0;overflow:hidden}
 .style-thumb img{width:100%;height:100%;object-fit:cover}
-.style-code{font-weight:800;color:var(--pr);font-size:11px;display:block}
-.style-name{font-size:9px;color:var(--tm);display:block;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mo-num{font-weight:800;color:var(--pr)}
+.style-code{font-weight:800;color:var(--z-primary);font-size:11px;display:block}
+.style-name{font-size:9px;color:var(--z-text-muted);display:block;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* 태그 */
 .tag{padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;display:inline-flex;align-items:center;white-space:nowrap}
-.tag-appr, .t-ok{background:#D1FAE5;color:#065F46;border:1px solid #A7F3D0}
-.tag-prog, .t-wn{background:#FEF3C7;color:#B45309;border:1px solid #FDE68A}
-.tag-fail, .t-dg{background:#FEF2F2;color:#B91C1C;border:1px solid #FECACA}
-.tag-draft, .t-dr{background:#F1F5F9;color:#475569;border:1px solid #CBD5E1}
-.t-bl{background:#EFF6FF;color:#1E40AF;border:1px solid #BFDBFE}
+.tag-appr{background:#D1FAE5;color:#065F46;border:1px solid #A7F3D0}
+.tag-prog{background:#FEF3C7;color:#B45309;border:1px solid #FDE68A}
+.tag-fail{background:#FEF2F2;color:#B91C1C;border:1px solid #FECACA}
+.tag-draft{background:#F1F5F9;color:#475569;border:1px solid #CBD5E1}
+.tag-bl{background:#EFF6FF;color:#1E40AF;border:1px solid #BFDBFE}
 
 @media(max-width:1400px){.mkpi-row{grid-template-columns:repeat(2, 1fr)}}
 @media(max-width:800px){.mkpi-row{grid-template-columns:1fr}}
@@ -117,16 +115,16 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 </head>
 <body>
 
-<div id="loadingScreen" class="loading"><div class="spinner"></div>Overview 데이터를 불러오는 중 / 加载数据中...</div>
-<div id="errorScreen" style="display:none"><div class="err-box"><b>데이터 로드에 실패했습니다. (Data Sync Failed)</b><div id="errorMsg" style="font-size:11px;margin-top:6px"></div></div></div>
+<div id="loadingScreen" class="loading-screen"><div class="spinner"></div><div class="loading-text">Overview 데이터를 취합 중입니다...</div></div>
+<div id="errorScreen" style="display:none"><div class="error-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다 (Sync Failed)</div><div id="errorMsg" style="font-size:12px"></div></div></div>
 
 <div id="mainContent" style="display:none">
 
-<div class="page-hdr">
-  <h1><span class="ic">OV</span> Overview / 전체현황 / 总览</h1>
-  <div class="hdr-btns">
-    <button class="btn-s" onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_Styles','_blank')">+ New Style</button>
-    <button class="btn-m" onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_MO','_blank')">+ New MO</button>
+<div class="page-header">
+  <h1><span class="icon-s">OV</span> Overview / 전체현황 / 总览</h1>
+  <div style="display:flex;gap:8px">
+    <button onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_Styles','_blank')" style="background:var(--z-primary);color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer">+ New Style</button>
+    <button onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_MO','_blank')" style="background:#10B981;color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer">+ New MO</button>
   </div>
 </div>
 
@@ -134,15 +132,15 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
   <div class="sec-title"><span class="sec-ic" style="background:#6366F1">S</span> Style Progress Status / 스타일 현황 / 款式现况</div>
   <div class="mkpi-row" id="styleKpiRow"></div>
   
-  <div class="tbl-card">
-    <div class="tbl-hd">
-      <div class="tbl-hd-title" id="styleTblTitle">📅 Styles Table</div>
-      <span class="tbl-cnt" id="styleTblCnt">-</span>
+  <div class="month-card">
+    <div class="month-header">
+      <div class="month-title" id="styleTblTitle">📅 당월 Styles Table</div>
+      <span class="month-count" id="styleTblCnt">-</span>
     </div>
-        <div class="tbl-scroll">
-      <table class="zt">
+        <div class="table-scroll">
+      <table class="z-table">
         <thead><tr>
-          <th style="width:18%">Style Info</th><th style="width:8%">Brand</th><th style="width:8%">Season</th><th style="width:12%">Category</th><th style="width:14%">Material</th><th style="width:10%">Status</th><th style="width:9%">Order</th>
+          <th style="width:22%">Style Info</th><th style="width:10%">Brand</th><th style="width:10%">Season</th><th style="width:15%">Category</th><th style="width:15%">Material</th><th style="width:15%">Status</th><th style="width:13%">Order</th>
         </tr></thead>
         <tbody id="styleTbody"></tbody>
       </table>
@@ -159,15 +157,15 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
     <div class="pipe-row" id="pipeRow"></div>
   </div>
 
-    <div class="tbl-card">
-    <div class="tbl-hd">
-      <div class="tbl-hd-title" id="moTblTitle">📅 MO Table</div>
-      <span class="tbl-cnt" id="moTblCnt">-</span>
+    <div class="month-card">
+    <div class="month-header">
+      <div class="month-title" id="moTblTitle">📅 당월 Production Schedule</div>
+      <span class="month-count" id="moTblCnt">-</span>
     </div>
-        <div class="tbl-scroll">
-      <table class="zt">
+        <div class="table-scroll">
+      <table class="z-table">
         <thead><tr>
-          <th style="width:8%">MO#</th><th style="width:15%">Style Info</th><th style="width:10%">Factory</th><th style="width:8%">Qty</th><th style="width:16%">Production</th><th style="width:12%">Order</th><th style="width:10%">Exp.Del</th><th style="width:10%">Ship</th>
+          <th style="width:10%">MO#</th><th style="width:20%">Style Info</th><th style="width:12%">Factory</th><th style="width:10%">Qty</th><th style="width:16%">Production</th><th style="width:12%">Order</th><th style="width:10%">Exp.Del</th><th style="width:10%">Ship</th>
         </tr></thead>
         <tbody id="moTbody"></tbody>
       </table>
@@ -178,27 +176,25 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 </div>
 
 <script>
-/* 안정적인 순차적 연동 로직 적용 (무한 로딩 차단) */
-var APP="eom", STYLE_REP="All_Styles", MO_REP="All_MO";
-var allStyles=[], allMO=[], moSkus=new Set();
+/* 순차 로드 (무한 로딩 100% 방지) */
+var APP="eom", S_REP="All_Styles", M_REP="All_MO";
+var allS=[], allM=[], moSkus=new Set();
 var today = new Date();
-var CUR_YEAR = today.getFullYear();
-var CUR_MONTH = today.getMonth() + 1;
+var T_YR = today.getFullYear(), T_MO = today.getMonth() + 1;
 
-/* 3개월 목록 */
+/* 3개월 리스트 생성 */
 var mList = [];
 for(var i=0; i<3; i++){
-  var dt = new Date(CUR_YEAR, CUR_MONTH - 1 + i, 1);
-  var yy = dt.getFullYear().toString().slice(-2);
-  var mm = (dt.getMonth()+1 < 10 ? "0" : "") + (dt.getMonth()+1);
-  mList.push({ y: dt.getFullYear(), m: dt.getMonth()+1, label: yy+"."+mm, txt: yy+"年 "+(dt.getMonth()+1)+"月" });
+  var d = new Date(T_YR, T_MO-1+i, 1);
+  var yy = d.getFullYear().toString().slice(-2);
+  var mm = (d.getMonth()+1 < 10 ? "0" : "") + (d.getMonth()+1);
+  mList.push({ y: d.getFullYear(), m: d.getMonth()+1, label: yy+"."+mm, txt: yy+"年 "+(d.getMonth()+1)+"月" });
 }
 
 function g(r,f){var v=r[f];if(v==null||v==="")return"-";if(typeof v==="object"&&v.display_value)return v.display_value;return String(v)}
 function escH(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
-function pN(v){var n=parseInt(v); return isNaN(n)?0:n;}
+function pN(v){var n=parseInt(String(v).replace(/[^0-9]/g,"")); return isNaN(n)?0:n;}
 
-/* 안전 큐 로딩 */
 var _Q=[], _busy=false;
 function _runQ(){
   if(_Q.length===0){_busy=false; return;} _busy=true;
@@ -213,24 +209,23 @@ function _runQ(){
 }
 function qImg(id, url){ _Q.push({id:id, url:url}); if(!_busy)_runQ(); }
 
+/* 데이터 호출 (순차 연결 방식) */
 ZOHO.CREATOR.init().then(function(){
-  ZOHO.CREATOR.API.getAllRecords({appName:APP, reportName:MO_REP, page:1, pageSize:200})
-  .then(function(r1){
-    if(r1 && r1.code===3000 && r1.data){
-      allMO = r1.data;
-      allMO.forEach(function(m){ var s=g(m,"Style_SKU"); if(s==="-")s=g(m,"SKU"); if(s!=="-")moSkus.add(s); });
+  ZOHO.CREATOR.API.getAllRecords({appName:APP, reportName:M_REP, page:1, pageSize:200})
+  .then(function(res1){
+    if(res1 && res1.code===3000 && res1.data){
+      allM = res1.data;
+      allM.forEach(function(m){ var s=g(m,"Style_SKU"); if(s==="-")s=g(m,"SKU"); if(s!=="-")moSkus.add(s); });
     }
-    return ZOHO.CREATOR.API.getAllRecords({appName:APP, reportName:STYLE_REP, page:1, pageSize:200});
+    return ZOHO.CREATOR.API.getAllRecords({appName:APP, reportName:S_REP, page:1, pageSize:200});
   })
-  .then(function(r2){
-    if(r2 && r2.code===3000 && r2.data){
-      allStyles = r2.data;
+  .then(function(res2){
+    if(res2 && res2.code===3000 && res2.data){
+      allS = res2.data;
       renderAll();
       document.getElementById("loadingScreen").style.display="none";
       document.getElementById("mainContent").style.display="block";
-    } else {
-      throw new Error("Style 데이터를 불러오지 못했습니다.");
-    }
+    } else { throw new Error("Style 데이터 불러오기 실패"); }
   })
   .catch(function(e){
     document.getElementById("loadingScreen").style.display="none";
@@ -244,7 +239,7 @@ function mvCat(v){ return CAT_MAP[v] || v; }
 function cleanFac(v){ return v==="-"?v:v.replace(/^[_\s]*\d+[_\s]*/,""); }
 
 function tcS(s){s=(s||"").toLowerCase(); if(s.indexOf("active")>=0||s.indexOf("approved")>=0)return"tag-appr"; if(s.indexOf("progress")>=0||s.indexOf("sampling")>=0)return"tag-prog"; if(s.indexOf("rejected")>=0||s.indexOf("cancel")>=0)return"tag-fail"; return"tag-draft";}
-function tcM(s){var l=(s||"").toLowerCase(); if(l.indexOf("confirmed")>=0||l.indexOf("delivered")>=0||l.indexOf("complete")>=0||l.indexOf("shipped")>=0||l.indexOf("done")>=0)return"t-ok"; if(l.indexOf("progress")>=0||l.indexOf("cutting")>=0||l.indexOf("sewing")>=0||l.indexOf("fabric")>=0||l.indexOf("packing")>=0)return"t-wn"; if(l.indexOf("delay")>=0||l.indexOf("cancel")>=0)return"t-dg"; if(l.indexOf("pending")>=0)return"t-bl"; return"t-dr";}
+function tcM(s){var l=(s||"").toLowerCase(); if(l.indexOf("confirmed")>=0||l.indexOf("delivered")>=0||l.indexOf("complete")>=0||l.indexOf("shipped")>=0||l.indexOf("done")>=0)return"tag-appr"; if(l.indexOf("progress")>=0||l.indexOf("cutting")>=0||l.indexOf("sewing")>=0||l.indexOf("fabric")>=0||l.indexOf("packing")>=0)return"tag-prog"; if(l.indexOf("delay")>=0||l.indexOf("cancel")>=0)return"tag-fail"; if(l.indexOf("pending")>=0)return"tag-bl"; return"tag-draft";}
 
 function isSDelay(r){
   var sku=g(r,"Style_SKU"); if(sku==="-")sku=g(r,"SKU"); if(moSkus.has(sku)) return false;
@@ -257,20 +252,21 @@ function isMDelay(r){
 }
 
 function renderAll(){
-  renderStyleKPI();
+  renderStyleKpis();
   renderStyleTable();
-  renderMOKPI();
+  renderMOKpis();
   renderPipe();
   renderMOTable();
 }
 
-function renderStyleKPI(){
+/* Style KPI (원본 v33 디자인 100% 반영) */
+function renderStyleKpis(){
   var h = "";
-  var colors = ["#818CF8", "#F59E0B", "#34D399"];
+  var colors = ["#818CF8", "#FDE68A", "#A7F3D0"];
   var dotColors = ["#A5B4FC", "#FDE68A", "#A7F3D0", "#FCA5A5"];
   
   mList.forEach(function(m, i){
-    var items = allStyles.filter(function(r){ return pN(g(r,"Plan_Year"))%100===(m.y%100) && pN(g(r,"Plan_Month"))===m.m; });
+    var items = allS.filter(function(r){ return pN(g(r,"Plan_Year"))%100===(m.y%100) && pN(g(r,"Plan_Month"))===m.m; });
     var tot=items.length, sm=0, ord=0, nord=0;
     items.forEach(function(r){
       var sku=g(r,"Style_SKU"); if(sku==="-")sku=g(r,"SKU");
@@ -282,10 +278,10 @@ function renderStyleKPI(){
     var c = colors[i%3];
     var r36=36, circ=2*Math.PI*r36, offset=circ-(pct/100)*circ;
 
-    h+='<div class="mkpi-card sc-'+(i%3)+'">';
+    h+='<div class="mkpi-card style-c sc-'+(i%3)+'">';
     h+='<div class="mkpi-header"><div class="mkpi-title">📅 '+m.label+' Style KPI / '+m.txt+' 款式 KPI</div></div>';
     h+='<div class="mkpi-body">';
-    h+='<div class="mkpi-ring"><svg width="75" height="75" viewBox="0 0 80 80"><circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="#E5E7EB" stroke-width="6"/><circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="'+c+'" stroke-width="6" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'" stroke-linecap="round"/></svg><div class="mkpi-ring-pct" style="color:'+c+'">'+pct+'%</div></div>';
+    h+='<div class="mkpi-ring"><svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="#E5E7EB" stroke-width="6"/><circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="'+c+'" stroke-width="6" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'" stroke-linecap="round"/></svg><div class="mkpi-ring-pct" style="color:'+c+'">'+pct+'%</div></div>';
     h+='<div class="mkpi-stats">';
     h+='<div class="mkpi-stat"><div class="mkpi-stat-n" style="color:#6366F1">'+tot+'</div><div class="mkpi-stat-l"><span class="dot" style="background:'+dotColors[0]+'"></span>총 스타일<br>总款式</div></div>';
     h+='<div class="mkpi-stat"><div class="mkpi-stat-n" style="color:#F59E0B">'+sm+'</div><div class="mkpi-stat-l"><span class="dot" style="background:'+dotColors[1]+'"></span>샘플제작중<br>样品制作中</div></div>';
@@ -294,21 +290,22 @@ function renderStyleKPI(){
     h+='</div></div></div>';
   });
 
-  var dly = allStyles.filter(isSDelay);
+  var dly = allS.filter(isSDelay);
   h+='<div class="delay-card"><div class="delay-card-title">⚠️ 오더 지연 현황 / 订单延误现况</div>';
   h+='<div class="delay-total">'+dly.length+'<span>건 지연 / 件延误</span></div><div class="delay-list">';
   dly.forEach(function(r){ var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU"); h+='<div class="delay-item"><div class="delay-mo">'+escH(sku)+'</div><div class="delay-style">'+escH(g(r,"Style_Name"))+'</div></div>'; });
-  h+='</div><div style="font-size:9px;color:#94A3B8;text-align:center;padding-top:8px;border-top:1px dashed #FECACA;margin-top:6px">당월 20일까지 미오더 시 지연</div></div>';
+  h+='</div><div class="delay-desc">당월 20일까지 오더 미진행 시 지연으로 간주<br>若当月20日前未下订单，视为延误</div></div>';
   document.getElementById("styleKpiRow").innerHTML = h;
 }
 
-function renderMOKPI(){
+/* MO KPI (원본 v28 디자인 100% 반영) */
+function renderMOKpis(){
   var h = "";
-  var colors = ["#10B981", "#34D399", "#A7F3D0"];
+  var colors = ["#10B981", "#FDE68A", "#A7F3D0"];
   var dotColors = ["#A5B4FC", "#FDE68A", "#A7F3D0", "#FCA5A5"];
   
   mList.forEach(function(m, i){
-    var items = allMO.filter(function(r){ return pN(g(r,"Plan_Year"))%100===(m.y%100) && pN(g(r,"Plan_Month"))===m.m; });
+    var items = allM.filter(function(r){ return pN(g(r,"Plan_Year"))%100===(m.y%100) && pN(g(r,"Plan_Month"))===m.m; });
     var tot=items.length, ip=0, dv=0, dl=0, tq=0, sq=0;
     items.forEach(function(r){
       var os=g(r,"Order_Status").toLowerCase();
@@ -321,10 +318,10 @@ function renderMOKPI(){
     var c = colors[i%3];
     var r36=36, circ=2*Math.PI*r36, offset=circ-(pct/100)*circ;
 
-    h+='<div class="mkpi-card mc-'+(i%3)+'">';
+    h+='<div class="mkpi-card mo-c mc-'+(i%3)+'">';
     h+='<div class="mkpi-header"><div class="mkpi-title">📅 '+m.label+' Production KPI / '+m.txt+' 生产 KPI</div></div>';
     h+='<div class="mkpi-body">';
-    h+='<div class="mkpi-ring"><svg width="75" height="75" viewBox="0 0 80 80"><circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="#E5E7EB" stroke-width="6"/><circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="'+c+'" stroke-width="6" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'" stroke-linecap="round"/></svg><div class="mkpi-ring-pct" style="color:'+c+'">'+pct+'%</div></div>';
+    h+='<div class="mkpi-ring"><svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="#E5E7EB" stroke-width="6"/><circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="'+c+'" stroke-width="6" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'" stroke-linecap="round"/></svg><div class="mkpi-ring-pct" style="color:'+c+'">'+pct+'%</div></div>';
     h+='<div class="mkpi-stats">';
     h+='<div class="mkpi-stat"><div class="mkpi-stat-n" style="color:#6366F1">'+tot+'</div><div class="mkpi-stat-l"><span class="dot" style="background:'+dotColors[0]+'"></span>총 오더<br>总订单</div></div>';
     h+='<div class="mkpi-stat"><div class="mkpi-stat-n" style="color:#F59E0B">'+ip+'</div><div class="mkpi-stat-l"><span class="dot" style="background:'+dotColors[1]+'"></span>진행중<br>进行中</div></div>';
@@ -334,14 +331,15 @@ function renderMOKPI(){
     h+='<div class="mkpi-footer"><span>진행수량 进行数量 <b>'+tq.toLocaleString()+' pcs</b></span><span>출고수량 出货数量 <b>'+sq.toLocaleString()+' pcs</b></span></div></div>';
   });
 
-  var dly = allMO.filter(isMDelay);
+  var dly = allM.filter(isMDelay);
   h+='<div class="delay-card"><div class="delay-card-title">⚠️ 생산 지연 현황 / 生产延误现况</div>';
   h+='<div class="delay-total">'+dly.length+'<span>건 지연 / 件延误</span></div><div class="delay-list">';
-  dly.forEach(function(r){ h+='<div class="delay-item"><div class="delay-mo">'+escH(g(r,"MO_Number"))+' <span class="delay-badge">지연</span></div><div class="delay-style">'+escH(g(r,"Style_Name"))+'</div></div>'; });
+  dly.forEach(function(r){ h+='<div class="delay-item"><div class="delay-mo">'+escH(g(r,"MO_Number"))+'</div><div class="delay-style">'+escH(g(r,"Style_Name"))+'</div></div>'; });
   h+='</div></div>';
   document.getElementById("moKpiRow").innerHTML = h;
 }
 
+/* 파이프라인 (원본 디자인) */
 function renderPipe(){
   var st=["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
   var em=["⏳","🧵","✂️","🧷","📦","✅","🚚"];
@@ -349,7 +347,7 @@ function renderPipe(){
   var lb=["미시작 / 未开始","원단 / 面料","재단 / 裁剪","봉제 / 车缝","포장 / 包装","완료 / 完成","출고 / 出货"];
   var cn=[0,0,0,0,0,0,0];
   
-  allMO.forEach(function(r){
+  allM.forEach(function(r){
     var s=g(r,"Production_Status").toLowerCase(); var idx=0;
     if(s.indexOf("fabric")>=0)idx=1; else if(s.indexOf("cutting")>=0)idx=2; else if(s.indexOf("sewing")>=0)idx=3; else if(s.indexOf("packing")>=0)idx=4; else if(s.indexOf("complete")>=0||s.indexOf("done")>=0)idx=5; else if(s.indexOf("shipped")>=0)idx=6;
     cn[idx]++;
@@ -362,8 +360,9 @@ function renderPipe(){
   document.getElementById("pipeRow").innerHTML = h;
 }
 
+/* 테이블 렌더링 (필터 없음, 원본 표 디자인 그대로) */
 function renderStyleTable(){
-  var curS = allStyles.filter(function(r){ return pN(g(r,"Plan_Year"))%100===(CUR_YEAR%100) && pN(g(r,"Plan_Month"))===CUR_MONTH; });
+  var curS = allS.filter(function(r){ return pN(g(r,"Plan_Year"))%100===(CUR_YEAR%100) && pN(g(r,"Plan_Month"))===CUR_MONTH; });
   document.getElementById("styleTblTitle").textContent = "📅 "+mList[0].label+" Styles Table / "+mList[0].txt+" 款式表";
   document.getElementById("styleTblCnt").textContent = curS.length + " styles";
   
@@ -381,11 +380,11 @@ function renderStyleTable(){
     h+='<td>'+(moSkus.has(sku)?'<span class="tag tag-appr">Ordered</span>':'<span class="tag tag-fail">Not Ordered</span>')+'</td></tr>';
     if(img) qImg(id, img);
   });
-  document.getElementById("styleTbody").innerHTML = h || '<tr><td colspan="7" style="text-align:center;color:#94A3B8;padding:20px">데이터가 없습니다.</td></tr>';
+  document.getElementById("styleTbody").innerHTML = h || '<tr><td colspan="7" style="text-align:center;color:#94A3B8;padding:20px">당월 데이터가 없습니다.</td></tr>';
 }
 
 function renderMOTable(){
-  var curM = allMO.filter(function(r){ return pN(g(r,"Plan_Year"))%100===(CUR_YEAR%100) && pN(g(r,"Plan_Month"))===CUR_MONTH; });
+  var curM = allM.filter(function(r){ return pN(g(r,"Plan_Year"))%100===(CUR_YEAR%100) && pN(g(r,"Plan_Month"))===CUR_MONTH; });
   document.getElementById("moTblTitle").textContent = "📅 "+mList[0].label+" Production Schedule / "+mList[0].txt+" 生产安排";
   document.getElementById("moTblCnt").textContent = curM.length + " MOs";
 
@@ -395,7 +394,7 @@ function renderMOTable(){
     var dly = isMDelay(r);
     h+='<tr class="'+(dly?'delayed-row':'')+'">';
     h+='<td class="mo-num">'+escH(g(r,"MO_Number"))+'</td>';
-    h+='<td><div style="font-weight:700">'+escH(g(r,"Style_Name"))+'</div><div style="font-size:9px;color:var(--tm)">'+escH(sku)+'</div></td>';
+    h+='<td><span style="font-weight:700;color:var(--tx)">'+escH(g(r,"Style_Name"))+'</span><br><small style="font-size:9px;color:var(--tm)">'+escH(sku)+'</small></td>';
     h+='<td>'+escH(cleanFac(g(r,"Factory")))+'</td>';
     h+='<td style="font-weight:800">'+escH(g(r,"Total_Quantity"))+'</td>';
     h+='<td><span class="tag '+tcM(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span></td>';
@@ -403,7 +402,7 @@ function renderMOTable(){
     h+='<td>'+escH(g(r,"Expected_Delivery"))+'</td>';
     h+='<td>'+escH(g(r,"Ship_Date"))+'</td></tr>';
   });
-  document.getElementById("moTbody").innerHTML = h || '<tr><td colspan="8" style="text-align:center;color:#94A3B8;padding:20px">데이터가 없습니다.</td></tr>';
+  document.getElementById("moTbody").innerHTML = h || '<tr><td colspan="8" style="text-align:center;color:#94A3B8;padding:20px">당월 데이터가 없습니다.</td></tr>';
 }
 </script>
 </body>
