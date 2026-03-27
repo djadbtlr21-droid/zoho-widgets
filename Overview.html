@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Overview v6</title>
+<title>Overview v7</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -165,6 +165,13 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .t-bl{background:#EFF6FF;color:#1E40AF;border:1px solid #BFDBFE}
 .dly-badge2{display:inline-block;padding:1px 4px;border-radius:3px;font-size:7px;font-weight:700;background:#FEF2F2;color:#DC2626;margin-left:2px;animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ========== 새롭게 추가된 Production Progress Bar 스타일 ========== */
+.p-prog{display:flex;flex-direction:column;gap:5px;width:100%;padding:0 4px}
+.p-bars{display:flex;gap:3px;width:100%;height:6px}
+.p-bar{flex:1;border-radius:2px}
+.p-lbls{display:flex;gap:3px;width:100%}
+.p-lbl{flex:1;font-size:8.5px;text-align:center;letter-spacing:-0.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ========== 팝업 (Style KPI) ========== */
 .pop-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:2000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
@@ -443,7 +450,10 @@ function isOrderDelayed(r){
 function isMODelayed(r){
   var os=(g(r,"Order_Status")||"").toLowerCase();
   if(os.indexOf("delivered")>=0||os.indexOf("shipped")>=0||os.indexOf("done")>=0)return false;
-  var ds=g(r,"Delivery_Status");return ds.indexOf("Delay")>=0||ds.indexOf("지연")>=0}
+  var ds=g(r,"Delivery_Status").toLowerCase();
+  /* Delivery_Status 뿐만 아니라 Order_Status 에서도 지연 요소를 감지합니다 */
+  return ds.indexOf("delay")>=0||ds.indexOf("지연")>=0||os.indexOf("hold")>=0||os.indexOf("delay")>=0;
+}
 
 function getMOProdStage(r){var s=g(r,"Production_Status").toLowerCase();
   if(s.indexOf("shipped")>=0)return"Shipped";if(s.indexOf("complete")>=0||s.indexOf("done")>=0)return"Done";
@@ -558,7 +568,7 @@ function s_renderTables(){
   Object.keys(groups).sort().forEach(function(key){
     var items=groups[key];var ym=parseYM(key);
     
-    // ▼ V6 추가 부분: 2026년 4월 및 5월 테이블 제외
+    // 2026년 4월 및 5월 테이블 제외
     if(ym && (ym.y === 2026 || ym.y === 26) && (ym.m === 4 || ym.m === 5)) return;
     
     var yy=ym?ym.y.toString().slice(-2):"";var mm2=ym?(ym.m<10?"0"+ym.m:ym.m):"";
@@ -643,6 +653,32 @@ function closeLightbox(){document.getElementById("lightboxOverlay").style.displa
 /* ══════════════════════════════════════
    MO View v28 함수들 (원본 100%)
 ══════════════════════════════════════ */
+/* ── Production 게이지 UI 렌더링 ── */
+function renderProdProgress(r){
+  var st=["FAB","CUT","SEW","PAK","DON","SHP"];
+  var map={"Not Started":-1,"Fabric":0,"Cutting":1,"Sewing":2,"Packing":3,"Done":4,"Shipped":5};
+  var cIdx=map[getMOProdStage(r)];
+  var isDly=isMODelayed(r);
+  var bh='<div class="p-bars">', lh='<div class="p-lbls">';
+  
+  for(var i=0;i<6;i++){
+    var s=st[i], bc="#E2E8F0", lc="#94A3B8", lt=s, fw="600";
+    if(cIdx===-1){
+      if(i===0){bc="#94A3B8";lt="WAIT";lc="#475569";fw="800"}
+    }else{
+      if(i<cIdx){bc="#10B981"}
+      else if(i===cIdx){
+        if(isDly){bc="#EF4444";lt=s+"_DLY";lc="#DC2626";fw="800"}
+        else{bc="#3B82F6";lc="#2563EB";fw="800"}
+      }
+    }
+    bh+='<div class="p-bar" style="background:'+bc+'"></div>';
+    lh+='<div class="p-lbl" style="color:'+lc+';font-weight:'+fw+'">'+lt+'</div>';
+  }
+  bh+='</div>'; lh+='</div>';
+  return '<div class="p-prog">'+bh+lh+'</div>';
+}
+
 function mo_renderAll(){mo_renderMKPI();mo_renderPipeline();mo_renderMonthly()}
 
 function mo_renderMKPI(){
@@ -729,7 +765,7 @@ function mo_renderMonthly(){
   Object.keys(groups).sort().forEach(function(key){
     var items=groups[key],ym=parseYM(key),idx=mi++;
     
-    // ▼ V6 추가 부분: 2026년 4월 및 5월 테이블 제외
+    // 2026년 4월 및 5월 테이블 제외
     if(ym && (ym.y === 2026 || ym.y === 26) && (ym.m === 4 || ym.m === 5)) return;
     
     var mFac={},mProd={},mCat={};
@@ -747,14 +783,18 @@ function mo_renderMonthly(){
     html+='<select class="mo-fsel mof" data-m="'+idx+'" data-t="ps"><option value="">All Prod Status</option>';
     Object.keys(mProd).sort().forEach(function(k){html+='<option value="'+escH(k)+'">'+escH(k)+'</option>'});html+='</select></div>';
     html+='<div class="tbl-scroll"><table class="zt"><thead><tr>';
-    html+='<th style="width:5%">MO#</th><th style="width:8%">SKU</th><th style="width:9%">Style</th><th style="width:11%">Category</th><th style="width:10%">Factory</th><th style="width:7%">Qty</th><th style="width:16%">Production</th><th style="width:13%">Order</th><th style="width:11%">Exp.Del</th><th style="width:10%">Ship</th>';
+    // 헤더 너비 조정 (Production 컬럼명 및 너비 변경)
+    html+='<th style="width:5%">MO#</th><th style="width:8%">SKU</th><th style="width:9%">Style</th><th style="width:11%">Category</th><th style="width:10%">Factory</th><th style="width:7%">Qty</th><th style="width:20%">Production Progress</th><th style="width:10%">Order</th><th style="width:10%">Exp.Del</th><th style="width:10%">Ship</th>';
     html+='</tr></thead><tbody>';
     items.forEach(function(r){var dl=isMODelayed(r);
       html+='<tr data-id="'+r["ID"]+'" data-m="'+idx+'" data-ca="'+escH(g(r,"Category"))+'" data-fa="'+escH(g(r,"Factory"))+'" data-ps="'+escH(g(r,"Production_Status"))+'" data-st="'+(g(r,"MO_Number")+" "+g(r,"Style_SKU")+" "+g(r,"Style_Name")+" "+g(r,"Factory")).toLowerCase()+'"'+(dl?' style="background:#FEF2F2"':'')+'>';
       html+='<td class="mo-num">'+escH(g(r,"MO_Number"))+'</td>';html+='<td style="font-size:9px;font-weight:600">'+escH(g(r,"Style_SKU"))+'</td>';
       html+='<td>'+escH(g(r,"Style_Name"))+'</td>';html+='<td style="font-size:9px">'+escH(catName(g(r,"Category")))+'</td>';
       html+='<td>'+escH(cleanFactory(g(r,"Factory")))+'</td>';html+='<td style="font-weight:700">'+escH(g(r,"Total_Quantity"))+'</td>';
-      html+='<td><span class="tag '+mo_tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span></td>';
+      
+      // 기존 단일 태그에서 Progress Bar 형태 함수 호출로 변경
+      html+='<td>'+renderProdProgress(r)+'</td>';
+      
       html+='<td><span class="tag '+mo_tc(g(r,"Order_Status"))+'">'+escH(g(r,"Order_Status"))+'</span></td>';
       var ed=g(r,"Expected_Delivery");html+='<td>'+escH(ed)+(dl?' <span class="dly-badge2">DELAYED</span>':'')+'</td>';
       html+='<td>'+escH(g(r,"Ship_Date"))+'</td></tr>'});
@@ -781,7 +821,7 @@ function mo_openModal(r){
   h+=it("Expected Delivery / 예상납기",dv(g(r,"Expected_Delivery")));h+=it("Delivery Status / 납기상태",isMODelayed(r)?'<span class="tag t-dg">DELAYED / 지연 / 延误</span>':dv(g(r,"Delivery_Status")));
   h+='</div></div>';
   h+='<div class="mo-m-sec"><div class="mo-m-sec-t">📦 수량 & 금액 / 数量&金额</div><div class="d-grid">';
-  h+=it("Total Qty / 총수량 / 总数量",dv(g(r,"Total_Quantity")));h+=it("Grand Total / 총금액 / 总金额",dv(g(r,"Grand_Total")));h+=it("Notes / 메모 / 备注",dv(g(r,"Notes")));
+  h+=it("Total Qty / 총수량 / 总数量",dv(g(r,"Total_Quantity")));h+=it("Grand Total / 총금액 / 총금액",dv(g(r,"Grand_Total")));h+=it("Notes / 메모 / 备注",dv(g(r,"Notes")));
   h+='</div></div>';
   h+='<div class="mo-m-sec"><div class="mo-m-sec-t">🏭 생산 추적 / 生产跟踪</div><div class="d-grid">';
   h+=it("Production Status / 생산상태",'<span class="tag '+mo_tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span>');
