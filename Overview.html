@@ -14,6 +14,7 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .spinner{width:40px;height:40px;border:4px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;gap:12px;color:var(--tm);font-size:13px;font-weight:600}
+.error-screen{display:none;padding:50px;text-align:center;color:#EF4444;font-weight:700}
 
 /* Header */
 .page-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:8px}
@@ -25,7 +26,7 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .sec-title{font-size:15px;font-weight:900;color:var(--tx);display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--bd)}
 .sec-ic{width:24px;height:24px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:900}
 
-/* KPI Row (3 Months + Delay) */
+/* KPI Grid: 3 Monthly Cards + 1 Delay Card */
 .kpi-row{display:grid;grid-template-columns:repeat(3, 1fr) 380px;gap:12px;margin-bottom:20px}
 
 /* KPI Card Custom */
@@ -85,6 +86,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
 
 .style-info{display:flex;align-items:center;gap:8px}
 .style-thumb{width:36px;height:36px;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:5px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.style-thumb img{width:100%;height:100%;object-fit:cover}
 .style-sku{font-weight:800;color:var(--pr);font-size:11px;display:block}
 .style-name{font-size:9px;color:var(--tm);display:block}
 
@@ -95,22 +97,29 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
 .tag-fail, .t-dg{background:#FEF2F2;color:#B91C1C;border:1px solid #FECACA}
 .tag-draft, .t-dr{background:#F1F5F9;color:#475569;border:1px solid #CBD5E1}
 .t-bl{background:#EFF6FF;color:#1E40AF;border:1px solid #BFDBFE}
+
+/* Filters */
+.mf-bar{display:flex;justify-content:flex-end;align-items:center;padding:8px 16px;gap:8px;background:#FAFBFC;border-bottom:1px solid var(--bd);flex-wrap:wrap}
+.search-box{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 10px;font-size:11px;outline:none}
+.fsel{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 8px;font-size:11px;cursor:pointer}
 </style>
 </head>
 <body>
 
-<div id="loadingScreen" class="loading"><div class="spinner"></div>Overview 데이터를 불러오는 중...</div>
+<div id="loadingScreen" class="loading"><div class="spinner"></div>Overview 데이터를 취합 중입니다...</div>
+<div id="errorScreen" class="error-screen"><b>Data Sync Failed</b><div id="errMsg" style="font-size:12px;margin-top:10px"></div></div>
 
 <div id="mainContent" style="display:none">
   <div class="page-hdr">
-    <h1><span class="ic">OV</span> Overview / 전체현황 / 总览</h1>
+    <h1><span class="ic">OV</span> Overview / 신세현황 / 总览</h1>
   </div>
 
-    <div class="ov-section">
-    <div class="sec-title"><span class="sec-ic" style="background:#6366F1">S</span> Style Progress Status / 스타일 현황 / 款式现况</div>
+    <div class="ov-section" id="s_ov_sec">
+    <div class="sec-title"><span class="sec-ic" style="background:#6366F1">S</span> Style View / 스타일 현황표 / 款式现况表 <span id="sYM" style="font-size:12px;color:var(--tm);margin-left:8px"></span></div>
     <div class="kpi-row" id="styleKpiRow"></div>
     <div class="tbl-card">
-      <div class="tbl-hd"><div class="tbl-title" id="styleTblTitle">📅 Styles Table</div><span class="tbl-cnt" id="styleTblCnt">-</span></div>
+      <div class="tbl-hd"><div class="tbl-title" id="styleTblTitle">📅 당월 Style Table</div><span class="tbl-cnt" id="styleTblCnt">-</span></div>
+      <div class="mf-bar" id="sf_bar"></div>
       <div class="tbl-scroll">
         <table class="zt">
           <thead><tr><th style="width:25%">Style Info</th><th style="width:10%">Brand</th><th style="width:10%">Season</th><th style="width:15%">Category</th><th style="width:15%">Material</th><th style="width:15%">Status</th><th style="width:10%">Order</th></tr></thead>
@@ -120,8 +129,8 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
     </div>
   </div>
 
-    <div class="ov-section">
-    <div class="sec-title"><span class="sec-ic" style="background:#10B981">M</span> Production & Order Status / 생산 현황 / 生产现况</div>
+    <div class="ov-section" id="m_ov_sec">
+    <div class="sec-title"><span class="sec-ic" style="background:#10B981">M</span> MO View / 생산현황표 / 生产现况表 <span id="mYM" style="font-size:12px;color:var(--tm);margin-left:8px"></span></div>
     <div class="kpi-row" id="moKpiRow"></div>
     
     <div class="pipe-card">
@@ -129,33 +138,55 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
     </div>
 
     <div class="tbl-card">
-      <div class="tbl-hd"><div class="tbl-title" id="moTblTitle">📅 MO Table</div><span class="tbl-cnt" id="moTblCnt">-</span></div>
+      <div class="tbl-hd"><div class="tbl-title" id="moTblTitle">📅 당월 MO Table</div><span class="tbl-cnt" id="moTblCnt">-</span></div>
+      <div class="mf-bar" id="mf_bar"></div>
       <div class="tbl-scroll">
         <table class="zt">
           <thead><tr><th style="width:10%">MO#</th><th style="width:22%">Style Info</th><th style="width:15%">Factory</th><th style="width:10%">Qty</th><th style="width:15%">Production</th><th style="width:15%">Order</th><th style="width:13%">Exp.Del</th></tr></thead>
           <tbody id="moTbody"></tbody>
         </table>
-      </div>
     </div>
   </div>
 </div>
 
+</div>
+
 <script>
-var APP="eom", S_REP="All_Styles", M_REP="All_MO";
-var allS=[], allM=[], moSkus=new Set();
-var today=new Date();
-var T_YR=today.getFullYear(), T_MO=today.getMonth()+1;
+var APP="eom", S_REP="All_Styles", M_REP="All_MO", allS=[], allM=[], moSkus=new Set();
+var filteredS=[], filteredM=[];
+var today=new Date(), CUR_Y=today.getFullYear(), CUR_M=today.getMonth()+1;
 
 var monthList = [];
 for(var i=0; i<3; i++){
-  var d = new Date(T_YR, T_MO-1+i, 1);
+  var d = new Date(CUR_Y, CUR_M-1+i, 1);
   monthList.push({y:d.getFullYear(), m:d.getMonth()+1, label: (d.getFullYear()%100)+"."+((d.getMonth()+1)<10?"0":"")+(d.getMonth()+1)});
 }
 
+/* 헬퍼 함수 및 필드 매핑 복구 */
 function g(r,f){var v=r[f]; if(!v||v==="")return"-"; return (typeof v==="object")?v.display_value:String(v);}
 function pN(v){var n=parseInt(String(v).replace(/[^0-9]/g,"")); return isNaN(n)?0:n;}
 
-/* 이미지 큐 시스템 */
+var S_MAP = {
+Brand:{f:"Business_Entity"},
+Season:{f:"Season"},
+Category:{f:"Category", v:{"S":"Set / 세트 / 套装","I":"Individual / 단품 / 单品"}},
+Gender:{f:"Gender", v:{"W":"Women / 여성 / 女","M":"Men / 남성 / 男","U":"Unisex / 남녀 / 通用"}},
+Material:{f:"Material_Type", v:{"P":"Polyester / 폴리 / 涤纶","N":"Nylon / 나일론 / 尼龙","D":"Polyamide / 폴리아미드","C":"Cotton / 코튼 / 棉","H":"Mesh / 메쉬 / 网布","M":"Modal / 모달","L":"Lycra / 라이크라"}},
+Status:{f:"Style_Status"}
+};
+function mvS(f,v){return (S_MAP[f] && S_MAP[f].v && S_MAP[f].v[v]) ? S_MAP[f].v[v] : v;}
+
+var M_MAP = {
+Category:{v:{"S":"Set / 세트 / 套装","I":"Individual / 단품 / 单品"}},
+Factory:{p:/^[_\s]*\d+[_\s]*/}
+};
+function mvM(f,v){
+  if(f==="Category") return (M_MAP.Category.v[v] || v);
+  if(f==="Factory") return v==="-"?v:v.replace(M_MAP.Factory.p,"");
+  return v;
+}
+
+/* 이미지 큐 시스템 복구 */
 var _safeQ=[], _busy=false;
 function _runQ(){
   if(_safeQ.length===0){_busy=false; return;} _busy=true;
@@ -166,30 +197,38 @@ function _runQ(){
   setTimeout(function(){ if(!img.parentNode) setTimeout(_runQ,80); }, 3000);
 }
 
-/* 태그 컬러 함수 (v33 & v28 로직 그대로) */
-function tcS(s){s=(s||"").toLowerCase(); if(s.indexOf("active")>=0||s.indexOf("approved")>=0)return"tag-appr"; if(s.indexOf("progress")>=0||s.indexOf("sampling")>=0)return"tag-prog"; if(s.indexOf("rejected")>=0||s.indexOf("cancel")>=0)return"tag-fail"; return"tag-draft";}
-function tcM(s){var l=(s||"").toLowerCase(); if(l.indexOf("confirmed")>=0||l.indexOf("delivered")>=0||l.indexOf("complete")>=0||l.indexOf("shipped")>=0||l.indexOf("done")>=0)return"t-ok"; if(l.indexOf("progress")>=0||l.indexOf("cutting")>=0||l.indexOf("sewing")>=0||l.indexOf("fabric")>=0||l.indexOf("packing")>=0)return"t-wn"; if(l.indexOf("delay")>=0||l.indexOf("cancel")>=0)return"t-dg"; if(l.indexOf("pending")>=0)return"t-bl"; return"t-dr";}
-
 ZOHO.CREATOR.init().then(function(){
-  ZOHO.CREATOR.API.getAllRecords({appName:APP, reportName:M_REP, page:1, pageSize:200}).then(function(resM){
-    if(resM.data) allM = resM.data;
-    allM.forEach(function(m){ var sku=g(m,"Style_SKU"); if(sku!=="-") moSkus.add(sku); });
-    ZOHO.CREATOR.API.getAllRecords({appName:APP, reportName:S_REP, page:1, pageSize:200}).then(function(resS){
-      if(resS.data) allS = resS.data;
-      renderAll();
-      document.getElementById("loadingScreen").style.display="none";
-      document.getElementById("mainContent").style.display="block";
-    });
+  Promise.all([
+    ZOHO.CREATOR.API.getAllRecords({appName:APP, reportName:M_REP, page:1, pageSize:200}),
+    ZOHO.CREATOR.API.getAllRecords({appName:APP, reportName:S_REP, page:1, pageSize:200})
+  ]).then(function(res){
+    if(res[0].code===3000) allM=res[0].data || [];
+    if(res[1].code===3000) allS=res[1].data || [];
+    res[0].data.forEach(function(m){ var sku=g(m,"Style_SKU"); if(sku!=="-") moSkus.add(sku); });
+    renderAll();
+    document.getElementById("loadingScreen").style.display="none";
+    document.getElementById("mainContent").style.display="block";
+  }).catch(function(e){ 
+    document.getElementById("loadingScreen").style.display="none";
+    document.getElementById("errorScreen").style.display="block";
+    document.getElementById("errMsg").textContent=JSON.stringify(e);
   });
+}).catch(function(e){ 
+  document.getElementById("errorScreen").style.display="block";
+  document.getElementById("errMsg").textContent="Zoho SDK Init Failed";
 });
 
 function renderAll(){
+  document.getElementById("sYM").textContent = "["+monthList[0].label+"]";
+  document.getElementById("mYM").textContent = "["+monthList[0].label+"]";
   renderStyleKpis();
   renderMOKpis();
   renderPipeline();
   renderTables();
+  buildFilters();
 }
 
+/* Style KPI & MO KPI 렌더링 복구 (4컬럼 레이아웃, 텍스트 중앙 정렬, 풋터 복구) */
 function renderStyleKpis(){
   var h = "";
   monthList.forEach(function(m, idx){
@@ -215,13 +254,13 @@ function renderStyleKpis(){
     h += '</div></div></div>';
   });
   
-  var delayed = allS.filter(function(r){
+  var dlyS = allS.filter(function(r){
     var sku=g(r,"Style_SKU")!=="-"?g(r,"Style_SKU"):g(r,"SKU"); if(moSkus.has(sku)) return false;
-    var py=pN(g(r,"Plan_Year")), pm=pN(g(r,"Plan_Month"));
+    var py=pN(g(r,"Plan_Year")), pm=pN(g(r,"Plan_Month")); if(!py||!pm)return false;
     return new Date() > new Date(py<100?py+2000:py, pm-1, 20);
   });
-  h += '<div class="delay-card"><div class="delay-t">⚠️ 오더 지연 현황 / 订单延误现况</div><div class="delay-n">'+delayed.length+'<span>건 지연 / 件延误</span></div><div class="delay-list">';
-  delayed.forEach(function(r){ h += '<div class="delay-item"><div class="delay-mo">'+g(r,"Style_SKU")+'</div><div class="delay-style">'+g(r,"Style_Name")+'</div></div>'; });
+  h += '<div class="delay-card"><div class="delay-t">⚠️ 오더 지연 현황 / 订单延误现况</div><div class="delay-n">'+dlyS.length+'<span>건 지연 / 件延误</span></div><div class="delay-list">';
+  dlyS.forEach(function(r){ h += '<div class="delay-item"><div class="delay-mo">'+g(r,"Style_SKU")+'</div><div class="delay-style">'+g(r,"Style_Name")+'</div></div>'; });
   h += '</div><div style="font-size:8px;color:#94A3B8;text-align:center;margin-top:8px;border-top:1px dashed #FECACA;padding-top:5px">당월 20일까지 미오더 시 지연</div></div>';
   document.getElementById("styleKpiRow").innerHTML = h;
 }
@@ -250,18 +289,18 @@ function renderMOKpis(){
     h += '</div></div><div class="mkpi-footer"><span>진행수량 <b>'+tq.toLocaleString()+'</b></span><span>출고수량 <b>'+sq.toLocaleString()+'</b></span></div></div>';
   });
 
-  var delayed = allM.filter(function(r){
+  var delayedM = allM.filter(function(r){
     var os=g(r,"Order_Status").toLowerCase(); if(os.indexOf("delivered")>=0||os.indexOf("shipped")>=0||os.indexOf("done")>=0) return false;
     var ds=g(r,"Delivery_Status"); return ds.indexOf("Delay")>=0 || ds.indexOf("지연")>=0;
   });
-  h += '<div class="delay-card"><div class="delay-t">⚠️ 생산 지연 현황 / 生产延误现况</div><div class="delay-n">'+delayed.length+'<span>건 지연 / 件延误</span></div><div class="delay-list">';
-  delayed.forEach(function(r){ h += '<div class="delay-item"><div class="delay-mo">'+g(r,"MO_Number")+'</div><div class="delay-style">'+g(r,"Style_Name")+'</div></div>'; });
+  h += '<div class="delay-card"><div class="delay-t">⚠️ 생산 지연 현황 / 生产延误现况</div><div class="delay-n">'+delayedM.length+'<span>건 지연 / 件延误</span></div><div class="delay-list">';
+  delayedM.forEach(function(r){ h += '<div class="delay-item"><div class="delay-mo">'+g(r,"MO_Number")+'</div><div class="delay-style">'+g(r,"Style_Name")+'</div></div>'; });
   h += '</div></div>';
   document.getElementById("moKpiRow").innerHTML = h;
 }
 
 function renderPipeline(){
-  var em=["⏳","🧵","✂️","🧷","📦","✅","🚚"], co=["#94A3B8","#A78BFA","#FDBA74","#7DD3FC","#34D399","#10B981","#3B82F6"], lb=["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"], lb2=["미시작 / 未开始","원단 / 面料","재단 / 裁剪","봉제 / 车缝","포장 / 包装","완료 / 完成","출고 / 出货"], cn=[0,0,0,0,0,0,0];
+  var em=["⏳","🧵","✂️","🧷","📦","✅","🚚"], co=["#94A3B8","#A78BFA","#FDBA74","#7DD3FC","#34D399","#10B981","#3B82F6"], lb=["미시작 / 未开始","원단 / 面料","재단 / 裁剪","봉제 / 车缝","포장 / 包装","완료 / 完成","출고 / 出货"], cn=[0,0,0,0,0,0,0];
   allM.forEach(function(r){
     var s=g(r,"Production_Status").toLowerCase(); var idx=0;
     if(s.indexOf("fabric")>=0)idx=1; else if(s.indexOf("cutting")>=0)idx=2; else if(s.indexOf("sewing")>=0)idx=3; else if(s.indexOf("packing")>=0)idx=4; else if(s.indexOf("complete")>=0||s.indexOf("done")>=0)idx=5; else if(s.indexOf("shipped")>=0)idx=6;
@@ -270,36 +309,67 @@ function renderPipeline(){
   var h="";
   lb.forEach(function(s,i){
     if(i>0) h+='<div class="pipe-arr">▶</div>';
-    h+='<div class="pipe-step"><div class="pipe-n" style="color:'+co[i]+'">'+cn[i]+'</div><div class="pipe-lb" style="color:'+co[i]+'"><span style="font-size:1.3em">'+em[i]+'</span> '+lb2[i]+'</div><div class="pipe-bar" style="background:'+co[i]+'"></div></div>';
+    h+='<div class="pipe-step"><div class="pipe-n" style="color:'+co[i]+'">'+cn[i]+'</div><div class="pipe-lb" style="color:'+co[i]+'"><span style="font-size:1.3em">'+em[i]+'</span> '+s+'</div><div class="pipe-bar" style="background:'+co[i]+'"></div></div>';
   });
   document.getElementById("pipeRow").innerHTML = h;
 }
 
 function renderTables(){
-  var curS = allS.filter(function(r){ return pN(g(r,"Plan_Year"))%100===(T_YR%100) && pN(g(r,"Plan_Month"))===T_MO; });
+  var curS = allS.filter(function(r){ return pN(g(r,"Plan_Year"))%100===(CUR_Y%100) && pN(g(r,"Plan_Month"))===CUR_M; });
   var sh = "";
   curS.forEach(function(r, i){
     var sku=g(r,"Style_SKU")!=="-"?g(r,"Style_SKU"):g(r,"SKU");
-    var dly = (function(){ if(moSkus.has(sku)) return false; var py=pN(g(r,"Plan_Year")), pm=pN(g(r,"Plan_Month")); return new Date() > new Date(py<100?py+2000:py, pm-1, 20); })();
+    var delayed = (function(){ if(moSkus.has(sku)) return false; var py=pN(g(r,"Plan_Year")), pm=pN(g(r,"Plan_Month")); return new Date() > new Date(py<100?py+2000:py, pm-1, 20); })();
     var iu= (r.Style_Image && r.Style_Image.length > 0) ? r.Style_Image[0] : null;
-    sh += '<tr class="'+(dly?'delayed-row':'')+'"><td><div class="style-info"><div class="style-thumb" id="si_'+i+'">👕</div><div><span class="style-sku">'+sku+'</span><span class="style-name">'+g(r,"Style_Name")+'</span></div></div></td>';
-    sh += '<td>'+g(r,"Business_Entity")+'</td><td>'+g(r,"Season")+'</td><td>'+g(r,"Category")+'</td><td>'+g(r,"Material_Type")+'</td><td><span class="tag '+tcS(g(r,"Style_Status"))+'">'+g(r,"Style_Status")+'</span></td><td>'+(moSkus.has(sku)?'<span class="tag t-ok">Ordered</span>':'<span class="tag tag-fail">Not Ordered</span>')+'</td></tr>';
+    sh += '<tr class="'+(delayed?'delayed-row':'')+'"><td><div class="style-info"><div class="style-thumb" id="si_'+i+'">👕</div><div><span class="style-sku">'+sku+'</span><span class="style-name">'+g(r,"Style_Name")+'</span></div></div></td>';
+    sh += '<td>'+g(r,"Business_Entity")+'</td><td>'+g(r,"Season")+'</td><td>'+mvS("Gender",g(r,"Gender"))+'</td><td>'+mvS("Category",g(r,"Category"))+'</td><td>'+mvS("Material",g(r,"Material_Type"))+'</td><td>'+dtS(g(r,"Style_Status"))+'</td><td>'+(moSkus.has(sku)?'<span class="tag t-ok">Ordered</span>':'<span class="tag tag-fail">Not Ordered</span>')+'</td></tr>';
     if(iu) _safeQ.push({id:"si_"+i, url:iu});
   });
   document.getElementById("styleTbody").innerHTML = sh;
   document.getElementById("styleTblCnt").textContent = curS.length + " Styles";
   document.getElementById("styleTblTitle").textContent = "📅 " + monthList[0].label + " Styles Table";
 
-  var curM = allM.filter(function(r){ return pN(g(r,"Plan_Year"))%100===(T_YR%100) && pN(g(r,"Plan_Month"))===T_MO; });
+  var curM = allM.filter(function(r){ return pN(g(r,"Plan_Year"))%100===(CUR_Y%100) && pN(g(r,"Plan_Month"))===CUR_M; });
   var mh = "";
   curM.forEach(function(r){
-    var dly = (function(){ var os=g(r,"Order_Status").toLowerCase(); if(os.indexOf("delivered")>=0||os.indexOf("shipped")>=0||os.indexOf("done")>=0) return false; var ds=g(r,"Delivery_Status"); return ds.indexOf("Delay")>=0 || ds.indexOf("지연")>=0; })();
-    mh += '<tr class="'+(dly?'delayed-row':'')+'"><td style="font-weight:900;color:var(--pr)">'+g(r,"MO_Number")+'</td><td><span style="font-weight:700">'+g(r,"Style_Name")+'</span><br><small>'+g(r,"Style_SKU")+'</small></td><td>'+g(r,"Factory")+'</td><td style="font-weight:800">'+g(r,"Total_Quantity")+'</td><td><span class="tag '+tcM(g(r,"Production_Status"))+'">'+g(r,"Production_Status")+'</span></td><td><span class="tag '+tcM(g(r,"Order_Status"))+'">'+g(r,"Order_Status")+'</span></td><td>'+g(r,"Expected_Delivery")+'</td></tr>';
+    var delayed = (function(){ var os=g(r,"Order_Status").toLowerCase(); if(os.indexOf("delivered")>=0||os.indexOf("shipped")>=0||os.indexOf("done")>=0) return false; var ds=g(r,"Delivery_Status"); return ds.indexOf("Delay")>=0 || ds.indexOf("지연")>=0; })();
+    mh += '<tr class="'+(delayed?'delayed-row':'')+'"><td style="font-weight:900;color:var(--pr)">'+g(r,"MO_Number")+'</td><td><span style="font-weight:700">'+g(r,"Style_Name")+'</span><br><small>'+g(r,"Style_SKU")+'</small></td><td>'+mvM("Factory",g(r,"Factory"))+'</td><td style="font-weight:800">'+g(r,"Total_Quantity")+'</td><td><span class="tag '+tcM(g(r,"Production_Status"))+'">'+g(r,"Production_Status")+'</span></td><td><span class="tag '+tcM(g(r,"Order_Status"))+'">'+g(r,"Order_Status")+'</span></td><td>'+g(r,"Expected_Delivery")+'</td></tr>';
   });
   document.getElementById("moTbody").innerHTML = mh;
   document.getElementById("moTblCnt").textContent = curM.length + " MOs";
-  document.getElementById("moTblTitle").textContent = "📅 " + monthList[0].label + " MO Table";
+  document.getElementById("moTblTitle").textContent = "📅 " + monthList[0].label + " Production Table";
   if(!_busy) _runQ();
+}
+function dtS(v){return '<span class="tag '+tcS(v)+'">'+v+'</span>';}
+
+/* 필터 바 구성 복구 */
+function buildFilters(){
+  var fListS = {Brand:new Set(),Season:new Set(),Category:new Set(),Gender:new Set(),Material:new Set(),Status:new Set()};
+  allS.forEach(function(r){
+    Object.keys(fListS).forEach(function(f){
+      var fieldName = (S_MAP[f] && S_MAP[f].f) ? S_MAP[f].f : f;
+      var val=g(r,fieldName); if(val!=="-") fListS[f].add(val);
+    });
+  });
+  var sfh = '<input type="text" class="search-box" id="s_search" placeholder="🔍 SKU, 스타일명, Brand 검색...">';
+  Object.keys(fListS).forEach(function(f){
+    var options = '<option value="">All '+f+'</option>';
+    Array.from(fListS[f]).sort().forEach(function(opt){ options+='<option value="'+opt+'">'+opt+'</option>'; });
+    sfh += '<select class="fsel" id="s_'+f+'">'+options+'</select>';
+  });
+  document.getElementById("sf_bar").innerHTML = sfh;
+
+  var fListM = {Category:new Set(),Factory:new Set(),Status:new Set()};
+  allM.forEach(function(r){
+    var cat = g(r,"Category"); if(cat!=="-") fListM.Category.add(cat);
+    var fac = g(r,"Factory"); if(fac!=="-") fListM.Factory.add(fac);
+    var stat = g(r,"Order_Status"); if(stat!=="-") fListM.Status.add(stat);
+  });
+  var mfh = '<input type="text" class="search-box" id="m_search" placeholder="🔍 MO#, SKU, 스타일명, 공장 검색...">';
+  var catOps='<option value="">All Category</option>'; Array.from(fListM.Category).sort().forEach(function(opt){ catOps+='<option value="'+opt+'">'+mvM("Category",opt)+'</option>'; }); mfh += '<select class="fsel" id="m_Category">'+catOps+'</select>';
+  var facOps='<option value="">All Factory</option>'; Array.from(fListM.Factory).sort().forEach(function(opt){ facOps+='<option value="'+opt+'">'+mvM("Factory",opt)+'</option>'; }); mfh += '<select class="fsel" id="m_Factory">'+facOps+'</select>';
+  var statOps='<option value="">All Status</option>'; Array.from(fListM.Status).sort().forEach(function(opt){ statOps+='<option value="'+opt+'">'+opt+'</option>'; }); mfh += '<select class="fsel" id="m_Status">'+statOps+'</select>';
+  document.getElementById("mf_bar").innerHTML = mfh;
 }
 </script>
 </body>
