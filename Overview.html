@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Overview v2.1 (Fix & Vertical Layout)</title>
+<title>Overview v3 (Stabilized)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -14,230 +14,204 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .spinner{width:40px;height:40px;border:4px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;gap:12px;color:var(--tm);font-size:13px;font-weight:600}
+.error-screen{display:none;padding:50px;text-align:center;color:#EF4444;font-weight:700}
 
-/* Header */
-.page-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:8px}
-.page-hdr h1{font-size:19px;font-weight:900;color:var(--tx);display:flex;align-items:center;gap:10px}
-.page-hdr h1 .ic{width:32px;height:32px;background:var(--pr);border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900}
+/* Layout Parts */
+.ov-section{margin-bottom:42px}
+.sec-title{font-size:17px;font-weight:900;color:var(--tx);display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--bd)}
+.sec-ic{width:26px;height:26px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:900}
 
-/* Section Style */
-.ov-section{margin-bottom:40px}
-.sec-title{font-size:16px;font-weight:900;color:var(--tx);display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--bd)}
-.sec-ic{width:24px;height:24px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:900}
+/* KPI Grid: 3 Monthly Cards + 1 Delay Card */
+.kpi-row{display:grid;grid-template-columns:repeat(3, 1fr) 350px;gap:14px;margin-bottom:20px}
+.mkpi-card{background:var(--cw);border:1px solid var(--bd);border-radius:12px;padding:16px;position:relative;overflow:hidden}
+.mkpi-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:4px}
+.s-c::before{background:#818CF8}
+.m-c::before{background:#10B981}
 
-/* KPI Row: 3 Months + Delay (Grid 4 col) */
-.kpi-row{display:grid;grid-template-columns:repeat(3, 1fr) 340px;gap:12px;margin-bottom:20px}
-.mkpi-card{background:var(--cw);border:1px solid var(--bd);border-radius:10px;padding:14px;position:relative;overflow:hidden}
-.mkpi-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px}
-.style-c::before{background:#818CF8}
-.mo-c::before{background:#10B981}
-
-.mkpi-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.mkpi-title{font-size:13px;font-weight:800;color:var(--tx)}
-.mkpi-body{display:flex;align-items:center;gap:12px}
-.mkpi-ring{position:relative;width:64px;height:64px;flex-shrink:0}
+.mkpi-header{font-size:13px;font-weight:800;color:var(--tx);margin-bottom:10px}
+.mkpi-body{display:flex;align-items:center;gap:15px}
+.mkpi-ring{position:relative;width:68px;height:68px;flex-shrink:0}
 .mkpi-ring svg{transform:rotate(-90deg)}
-.mkpi-ring-pct{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;font-weight:900;color:var(--tx)}
-.mkpi-stats{display:grid;grid-template-columns:1fr 1fr;gap:5px;flex:1}
-.mkpi-stat{text-align:center;padding:5px 4px;border-radius:6px;background:#FAFBFC;border:1px solid #F1F5F9;cursor:pointer}
-.mkpi-stat:hover{background:#EFF6FF;border-color:#BFDBFE}
-.mkpi-stat-n{font-size:18px;font-weight:900;line-height:1}
-.mkpi-stat-l{font-size:8px;font-weight:700;color:var(--tm);margin-top:3px}
+.mkpi-ring-pct{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:15px;font-weight:900}
+.mkpi-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1}
+.mkpi-stat{text-align:center;padding:6px;border-radius:8px;background:#FAFBFC;border:1px solid #F1F5F9}
+.mkpi-stat-n{font-size:19px;font-weight:900;line-height:1}
+.mkpi-stat-l{font-size:8px;font-weight:700;color:var(--tm);margin-top:4px}
 
-/* Delay Card */
-.delay-card{background:#FFF5F5;border:1px solid #FECACA;border-radius:10px;padding:12px;position:relative;display:flex;flex-direction:column}
-.delay-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:#EF4444}
-.delay-t{font-size:11px;font-weight:800;color:#DC2626;margin-bottom:4px}
-.delay-n{font-size:22px;font-weight:900;color:#DC2626;text-align:center;margin-bottom:6px}
-.delay-list{flex:1;overflow-y:auto;max-height:110px;display:flex;flex-direction:column;gap:4px}
-.delay-item{background:#fff;border:1px solid #FECACA;border-radius:5px;padding:5px 8px;cursor:pointer}
+/* Delay Card (Red Theme) */
+.delay-card{background:#FFF5F5;border:1px solid #FECACA;border-radius:12px;padding:14px;position:relative;display:flex;flex-direction:column}
+.delay-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:4px;background:#EF4444}
+.delay-t{font-size:12px;font-weight:900;color:#DC2626;margin-bottom:5px}
+.delay-n{font-size:24px;font-weight:900;color:#DC2626;text-align:center}
+.delay-n span{font-size:10px;color:#EF4444;display:block}
+.delay-list{flex:1;overflow-y:auto;max-height:100px;margin-top:10px;display:flex;flex-direction:column;gap:5px}
+.delay-item{background:#fff;border:1px solid #FECACA;border-radius:6px;padding:6px 10px;font-size:10px;font-weight:600}
 
 /* Pipeline */
-.pipe-card{background:var(--cw);border:1px solid var(--bd);border-radius:10px;padding:18px;margin-bottom:20px}
-.pipe-row{display:flex;align-items:center;gap:4px;overflow-x:auto}
-.pipe-step{flex:1;text-align:center;padding:10px 4px;border-radius:8px;cursor:pointer}
+.pipe-card{background:var(--cw);border:1px solid var(--bd);border-radius:12px;padding:20px;margin-bottom:20px}
+.pipe-row{display:flex;align-items:center;gap:5px;overflow-x:auto}
+.pipe-step{flex:1;text-align:center;padding:10px 4px;border-radius:8px;transition:background .2s}
 .pipe-step:hover{background:#F8FAFC}
-.pipe-n{font-size:22px;font-weight:900;line-height:1}
-.pipe-lb{font-size:10px;font-weight:800;margin-top:4px}
+.pipe-n{font-size:24px;font-weight:900;line-height:1}
+.pipe-lb{font-size:10px;font-weight:800;margin-top:5px}
+.pipe-bar{height:5px;border-radius:3px;margin-top:10px}
 
 /* Table */
-.tbl-card{background:var(--cw);border:1px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:20px}
-.tbl-hd{padding:10px 16px;background:#F8FAFC;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
-.tbl-title{font-size:13px;font-weight:800;color:var(--tx)}
-.tbl-scroll{overflow-x:auto}
+.tbl-card{background:var(--cw);border:1px solid var(--bd);border-radius:12px;overflow:hidden}
+.tbl-hd{padding:12px 18px;background:#F8FAFC;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
+.tbl-title{font-size:14px;font-weight:900;color:var(--tx)}
+.zt-scroll{overflow-x:auto}
 table.zt{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
-.zt th{background:#F1F5F9;padding:8px;color:var(--tm);font-weight:800;font-size:10px;border-bottom:1px solid var(--bd);text-align:left}
-.zt td{padding:8px;border-bottom:1px solid #F1F5F9;color:var(--tx);vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.zt tr:hover td{background:#EFF6FF}
-.style-info{display:flex;align-items:center;gap:8px}
-.style-thumb{width:32px;height:32px;background:#F1F5F9;border-radius:4px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.zt th{background:#F1F5F9;padding:10px 8px;color:var(--tm);font-weight:800;font-size:10px;border-bottom:1px solid var(--bd);text-align:left}
+.zt td{padding:10px 8px;border-bottom:1px solid #F1F5F9;color:var(--tx);vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.zt tr:hover td{background:#EFF6FF;cursor:pointer}
+.style-info{display:flex;align-items:center;gap:10px}
+.style-thumb{width:36px;height:36px;background:#F1F5F9;border-radius:6px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .style-thumb img{width:100%;height:100%;object-fit:cover}
-.tag{padding:2px 6px;border-radius:4px;font-size:8px;font-weight:700;display:inline-block}
-.tag-appr{background:#D1FAE5;color:#065F46}
+.style-sku{font-weight:900;color:var(--pr);font-size:11px;display:block}
+.tag{padding:3px 7px;border-radius:5px;font-size:9px;font-weight:800}
+.tag-ok{background:#D1FAE5;color:#065F46}
 .tag-fail{background:#FEF2F2;color:#B91C1C}
 
-.error-screen{display:none;padding:40px;text-align:center;color:var(--dg)}
+@media(max-width:1400px){.kpi-row{grid-template-columns:repeat(2, 1fr)}}
+@media(max-width:800px){.kpi-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<div id="loadingScreen" class="loading"><div class="spinner"></div><div id="loadingText">Overview 데이터를 불러오는 중...</div></div>
-<div id="errorScreen" class="error-screen"><b>데이터 로드 실패</b><div id="errorMsg" style="font-size:12px;margin-top:8px"></div></div>
+<div id="loadScr" class="loading"><div class="spinner"></div><div id="loadMsg">Overview 데이터를 연동 중입니다...</div></div>
+<div id="errScr" class="error-screen"><b>Data Sync Failed</b><div id="errMsg" style="font-size:12px;margin-top:10px"></div></div>
 
 <div id="mainContent" style="display:none">
-  <div class="page-hdr">
-    <h1><span class="ic">OV</span> Overview / 전체현황 / 总览</h1>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:25px">
+    <h1 style="font-size:20px;font-weight:900;display:flex;align-items:center;gap:10px"><span style="background:var(--pr);color:#fff;padding:4px 10px;border-radius:6px;font-size:14px">OV</span> Overview / 전체현황 / 总览</h1>
   </div>
 
-    <div class="ov-section" id="styleSection">
-    <div class="sec-title"><span class="sec-ic" style="background:#6366F1">S</span> Style KPI & Current Status</div>
-    <div class="kpi-row" id="styleKpiRow"></div>
+    <div class="ov-section">
+    <div class="sec-title"><span class="sec-ic" style="background:#6366F1">S</span> Style Progress Status</div>
+    <div class="kpi-row" id="sKpiRow"></div>
+    
     <div class="tbl-card">
-      <div class="tbl-hd"><div class="tbl-title" id="styleTblTitle">📅 Style Details</div></div>
-      <div class="tbl-scroll">
+      <div class="tbl-hd"><div class="tbl-title" id="sTblTitle">📅 당월 Style 리스트</div></div>
+      <div class="zt-scroll">
         <table class="zt">
           <thead><tr><th style="width:25%">Style Info</th><th style="width:10%">Brand</th><th style="width:10%">Season</th><th style="width:15%">Category</th><th style="width:15%">Material</th><th style="width:15%">Status</th><th style="width:10%">Order</th></tr></thead>
-          <tbody id="styleTbody"></tbody>
+          <tbody id="sTbody"></tbody>
         </table>
       </div>
     </div>
   </div>
 
-    <div class="ov-section" id="moSection">
-    <div class="sec-title"><span class="sec-ic" style="background:#10B981">M</span> Production KPI & Status</div>
-    <div class="kpi-row" id="moKpiRow"></div>
-    
+    <div class="ov-section">
+    <div class="sec-title"><span class="sec-ic" style="background:#10B981">M</span> Production & Order Status</div>
+    <div class="kpi-row" id="mKpiRow"></div>
+
     <div class="pipe-card">
-      <div class="pipe-row" id="pipeRow"></div>
+      <div class="pipe-row" id="pRow"></div>
     </div>
 
     <div class="tbl-card">
-      <div class="tbl-hd"><div class="tbl-title" id="moTblTitle">📅 Production Details</div></div>
-      <div class="tbl-scroll">
+      <div class="tbl-hd"><div class="tbl-title" id="mTblTitle">📅 당월 MO 리스트</div></div>
+      <div class="zt-scroll">
         <table class="zt">
           <thead><tr><th style="width:10%">MO#</th><th style="width:20%">Style Info</th><th style="width:15%">Factory</th><th style="width:10%">Qty</th><th style="width:15%">Production</th><th style="width:15%">Order</th><th style="width:15%">Exp.Del</th></tr></thead>
-          <tbody id="moTbody"></tbody>
+          <tbody id="mTbody"></tbody>
         </table>
-      </div>
     </div>
   </div>
 </div>
 
 <script>
-var APP="eom", S_REP="All_Styles", M_REP="All_MO";
-var allS=[], allM=[], moSkus=new Set();
-var today=new Date();
-var T_YR=today.getFullYear(), T_MO=today.getMonth()+1;
+var APP="eom", S_REP="All_Styles", M_REP="All_MO", allS=[], allM=[], moSkus=new Set();
+var now=new Date(), CUR_Y=now.getFullYear(), CUR_M=now.getMonth()+1;
 
-/* 3개월 월 데이터 생성 */
-var monthList = [];
+/* 3개월 목록 (3,4,5월) */
+var mList = [];
 for(var i=0; i<3; i++){
-  var d = new Date(T_YR, T_MO-1+i, 1);
-  monthList.push({y:d.getFullYear(), m:d.getMonth()+1, label: (d.getFullYear()%100)+"."+((d.getMonth()+1)<10?"0":"")+(d.getMonth()+1)});
+  var d = new Date(CUR_Y, CUR_M-1+i, 1);
+  mList.push({y:d.getFullYear(), m:d.getMonth()+1, label: (d.getFullYear()%100)+"."+((d.getMonth()+1)<10?"0":"")+(d.getMonth()+1)});
 }
 
-/* 헬퍼 함수 */
-function g(r,f){var v=r[f];if(!v||v==="")return"-";return (typeof v==="object")?v.display_value:String(v);}
-function parseN(v){var n=parseInt(v); return isNaN(n)?0:n;}
+function g(r,f){var v=r[f]; if(!v||v==="")return"-"; return (typeof v==="object")?v.display_value:String(v);}
+function pN(v){var n=parseInt(v); return isNaN(n)?0:n;}
 
-/* 이미지 큐 (v33 기반) */
-var _safeQ=[], _busy=false;
-function _runQ(){
-  if(_safeQ.length===0){_busy=false; return;} _busy=true;
-  var t=_safeQ.shift(); var el=document.getElementById(t.id);
-  if(!el){setTimeout(_runQ,50); return;}
-  var img=document.createElement("img");
-  ZOHO.CREATOR.UTIL.setImageData(img, t.url, function(){ el.innerHTML=""; el.appendChild(img); setTimeout(_runQ,80); });
-  setTimeout(function(){ if(img.parentNode===null) setTimeout(_runQ,80); }, 3000);
-}
-
-/* 초기화 및 로드 */
 ZOHO.CREATOR.init().then(function(){
-  Promise.all([
-    ZOHO.CREATOR.API.getAllRecords({appName:APP, reportName:M_REP, page:1, pageSize:200}),
-    ZOHO.CREATOR.API.getAllRecords({appName:APP, reportName:S_REP, page:1, pageSize:200})
-  ]).then(function(res){
-    if(res[0].code===3000) allM=res[0].data || [];
-    if(res[1].code===3000) allS=res[1].data || [];
-    
+  // 순차적 로드로 안정성 확보
+  ZOHO.CREATOR.API.getAllRecords({appName:APP, reportName:M_REP, page:1, pageSize:200}).then(function(resM){
+    if(resM && resM.data) allM = resM.data;
     allM.forEach(function(m){ var sku=g(m,"Style_SKU"); if(sku!=="-") moSkus.add(sku); });
-    
-    renderAll();
-    document.getElementById("loadingScreen").style.display="none";
-    document.getElementById("mainContent").style.display="block";
-  }).catch(function(err){
-    document.getElementById("loadingScreen").style.display="none";
-    document.getElementById("errorScreen").style.display="block";
-    document.getElementById("errorMsg").textContent=JSON.stringify(err);
-  });
-}).catch(function(e){ 
-  document.getElementById("errorScreen").style.display="block";
-  document.getElementById("errorMsg").textContent="Zoho SDK Init Failed";
-});
 
-function renderAll(){
-  renderStyleKpis();
-  renderMOKpis();
-  renderPipeline();
-  renderDetailedTables();
+    ZOHO.CREATOR.API.getAllRecords({appName:APP, reportName:S_REP, page:1, pageSize:200}).then(function(resS){
+      if(resS && resS.data) allS = resS.data;
+      
+      renderUI();
+      document.getElementById("loadScr").style.display="none";
+      document.getElementById("mainContent").style.display="block";
+    }).catch(function(e){ fail(e); });
+  }).catch(function(e){ fail(e); });
+}).catch(function(e){ fail("SDK Init Error"); });
+
+function fail(e){
+  document.getElementById("loadScr").style.display="none";
+  document.getElementById("errScr").style.display="block";
+  document.getElementById("errMsg").textContent = JSON.stringify(e);
 }
 
-/* Style KPI 렌더링 */
-function renderStyleKpis(){
+function renderUI(){
+  renderSKpi();
+  renderMKpi();
+  renderPipe();
+  renderTables();
+}
+
+function renderSKpi(){
   var h = "";
-  monthList.forEach(function(m){
-    var items = allS.filter(function(r){ return parseN(g(r,"Plan_Year"))%100===(m.y%100) && parseN(g(r,"Plan_Month"))===m.m; });
+  mList.forEach(function(m){
+    var items = allS.filter(function(r){ return pN(g(r,"Plan_Year"))%100===(m.y%100) && pN(g(r,"Plan_Month"))===m.m; });
     var tot=items.length, ord=0;
     items.forEach(function(r){ var sku=g(r,"Style_SKU")!=="-"?g(r,"Style_SKU"):g(r,"SKU"); if(moSkus.has(sku)) ord++; });
     var pct=tot>0?Math.round((ord/tot)*100):0;
-    
-    h += '<div class="mkpi-card style-c"><div class="mkpi-header"><div class="mkpi-title">📅 '+m.label+' Style KPI</div></div>';
-    h += '<div class="mkpi-body"><div class="mkpi-ring"><svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="none" stroke="#E5E7EB" stroke-width="5"/><circle cx="32" cy="32" r="28" fill="none" stroke="#818CF8" stroke-width="5" stroke-dasharray="176" stroke-dashoffset="'+(176-(pct/100)*176)+'" stroke-linecap="round"/></svg><div class="mkpi-ring-pct">'+pct+'%</div></div>';
-    h += '<div class="mkpi-stats"><div class="mkpi-stat"><div class="mkpi-stat-n">'+tot+'</div><div class="mkpi-stat-l">Total</div></div><div class="mkpi-stat"><div class="mkpi-stat-n" style="color:#10B981">'+ord+'</div><div class="mkpi-stat-l">Ordered</div></div></div></div></div>';
+    h += '<div class="mkpi-card s-c"><div class="mkpi-header">📅 '+m.label+' Style KPI</div><div class="mkpi-body">';
+    h += '<div class="mkpi-ring"><svg width="68" height="68" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="none" stroke="#E5E7EB" stroke-width="5"/><circle cx="32" cy="32" r="28" fill="none" stroke="#818CF8" stroke-width="5" stroke-dasharray="176" stroke-dashoffset="'+(176-(pct/100)*176)+'" stroke-linecap="round"/></svg><div class="mkpi-ring-pct">'+pct+'%</div></div>';
+    h += '<div class="mkpi-stats"><div class="mkpi-stat"><div class="mkpi-stat-n">'+tot+'</div><div class="mkpi-stat-l">Styles</div></div><div class="mkpi-stat"><div class="mkpi-stat-n" style="color:#10B981">'+ord+'</div><div class="mkpi-stat-l">Ordered</div></div></div></div></div>';
   });
-  
-  var delayed = allS.filter(function(r){
+  var dly = allS.filter(function(r){
     var sku=g(r,"Style_SKU")!=="-"?g(r,"Style_SKU"):g(r,"SKU"); if(moSkus.has(sku)) return false;
-    var py=parseN(g(r,"Plan_Year")), pm=parseN(g(r,"Plan_Month")); if(!py||!pm) return false;
+    var py=pN(g(r,"Plan_Year")), pm=pN(g(r,"Plan_Month")); if(!py||!pm)return false;
     return new Date() > new Date(py<100?py+2000:py, pm-1, 20);
   });
-  
-  h += '<div class="delay-card"><div class="delay-t">⚠️ Style 지연 (20일 기준)</div><div class="delay-n">'+delayed.length+' 건</div><div class="delay-list">';
-  delayed.forEach(function(r){ h += '<div class="delay-item"><div class="delay-mo">'+g(r,"Style_SKU")+'</div><div class="delay-style">'+g(r,"Style_Name")+'</div></div>'; });
+  h += '<div class="delay-card"><div class="delay-t">⚠️ Style 지연 (20일 기준)</div><div class="delay-n">'+dly.length+'<span>건 지연</span></div><div class="delay-list">';
+  dly.forEach(function(r){ h+='<div class="delay-item">'+g(r,"Style_SKU")+' ('+g(r,"Style_Name")+')</div>'; });
   h += '</div></div>';
-  document.getElementById("styleKpiRow").innerHTML = h;
+  document.getElementById("sKpiRow").innerHTML = h;
 }
 
-/* MO KPI 렌더링 */
-function renderMOKpis(){
+function renderMKpi(){
   var h = "";
-  monthList.forEach(function(m){
-    var items = allM.filter(function(r){ return parseN(g(r,"Plan_Year"))%100===(m.y%100) && parseN(g(r,"Plan_Month"))===m.m; });
+  mList.forEach(function(m){
+    var items = allM.filter(function(r){ return pN(g(r,"Plan_Year"))%100===(m.y%100) && pN(g(r,"Plan_Month"))===m.m; });
     var tot=items.length, dv=0, tq=0, sq=0;
     items.forEach(function(r){ 
       var os=g(r,"Order_Status").toLowerCase(); if(os.indexOf("delivered")>=0||os.indexOf("shipped")>=0) dv++;
-      tq += parseN(g(r,"Total_Quantity")); sq += parseN(g(r,"Shipped_Quantity"));
+      tq += pN(g(r,"Total_Quantity")); sq += pN(g(r,"Shipped_Quantity"));
     });
     var pct=tq>0?Math.round((sq/tq)*100):0;
-
-    h += '<div class="mkpi-card mo-c"><div class="mkpi-header"><div class="mkpi-title">📅 '+m.label+' MO KPI</div></div>';
-    h += '<div class="mkpi-body"><div class="mkpi-ring"><svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="none" stroke="#E5E7EB" stroke-width="5"/><circle cx="32" cy="32" r="28" fill="none" stroke="#10B981" stroke-width="5" stroke-dasharray="176" stroke-dashoffset="'+(176-(pct/100)*176)+'" stroke-linecap="round"/></svg><div class="mkpi-ring-pct">'+pct+'%</div></div>';
-    h += '<div class="mkpi-stats"><div class="mkpi-stat"><div class="mkpi-stat-n">'+tot+'</div><div class="mkpi-stat-l">Orders</div></div><div class="mkpi-stat"><div class="mkpi-stat-n" style="color:#10B981">'+dv+'</div><div class="mkpi-stat-l">Done</div></div></div></div>';
-    h += '<div class="mkpi-footer" style="display:flex;justify-content:space-between;font-size:9px;margin-top:8px;border-top:1px solid #F1F5F9;padding-top:4px"><span>Qty <b>'+tq.toLocaleString()+'</b></span><span>Ship <b>'+sq.toLocaleString()+'</b></span></div></div>';
+    h += '<div class="mkpi-card m-c"><div class="mkpi-header">📅 '+m.label+' MO KPI</div><div class="mkpi-body">';
+    h += '<div class="mkpi-ring"><svg width="68" height="68" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="none" stroke="#E5E7EB" stroke-width="5"/><circle cx="32" cy="32" r="28" fill="none" stroke="#10B981" stroke-width="5" stroke-dasharray="176" stroke-dashoffset="'+(176-(pct/100)*176)+'" stroke-linecap="round"/></svg><div class="mkpi-ring-pct">'+pct+'%</div></div>';
+    h += '<div class="mkpi-stats"><div class="mkpi-stat"><div class="mkpi-stat-n">'+tot+'</div><div class="mkpi-stat-l">Orders</div></div><div class="mkpi-stat"><div class="mkpi-stat-n" style="color:#10B981">'+dv+'</div><div class="mkpi-stat-l">Shipped</div></div></div></div>';
+    h += '<div style="margin-top:8px;font-size:9px;color:var(--tm);display:flex;justify-content:space-between;border-top:1px solid #F1F5F9;padding-top:4px"><span>Qty <b>'+tq.toLocaleString()+'</b></span><span>Ship <b>'+sq.toLocaleString()+'</b></span></div></div>';
   });
-
-  var delayed = allM.filter(function(r){
+  var dly = allM.filter(function(r){
     var os=g(r,"Order_Status").toLowerCase(); if(os.indexOf("delivered")>=0||os.indexOf("shipped")>=0||os.indexOf("done")>=0) return false;
     var ds=g(r,"Delivery_Status"); return ds.indexOf("Delay")>=0 || ds.indexOf("지연")>=0;
   });
-
-  h += '<div class="delay-card"><div class="delay-t">⚠️ 생산 지연 현황 (Delay)</div><div class="delay-n">'+delayed.length+' 건</div><div class="delay-list">';
-  delayed.forEach(function(r){ h += '<div class="delay-item"><div class="delay-mo">'+g(r,"MO_Number")+'</div><div class="delay-style">'+g(r,"Style_Name")+'</div></div>'; });
+  h += '<div class="delay-card"><div class="delay-t">⚠️ 생산 지연 현황 (Delay)</div><div class="delay-n">'+dly.length+'<span>건 지연</span></div><div class="delay-list">';
+  dly.forEach(function(r){ h+='<div class="delay-item">'+g(r,"MO_Number")+' ('+g(r,"Style_Name")+')</div>'; });
   h += '</div></div>';
-  document.getElementById("moKpiRow").innerHTML = h;
+  document.getElementById("mKpiRow").innerHTML = h;
 }
 
-function renderPipeline(){
+function renderPipe(){
   var em=["⏳","🧵","✂️","🧷","📦","✅","🚚"], co=["#94A3B8","#A78BFA","#FDBA74","#7DD3FC","#34D399","#10B981","#3B82F6"], cn=[0,0,0,0,0,0,0];
   allM.forEach(function(r){
     var s=g(r,"Production_Status").toLowerCase(); var idx=0;
@@ -246,34 +220,30 @@ function renderPipeline(){
   });
   var h="";
   ["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"].forEach(function(s,i){
-    if(i>0) h+='<div class="pipe-arr">▶</div>';
+    if(i>0) h+='<div style="color:#CBD5E1">▶</div>';
     h+='<div class="pipe-step"><div class="pipe-n" style="color:'+co[i]+'">'+cn[i]+'</div><div class="pipe-lb">'+em[i]+' '+s+'</div><div class="pipe-bar" style="background:'+co[i]+'"></div></div>';
   });
-  document.getElementById("pipeRow").innerHTML = h;
+  document.getElementById("pRow").innerHTML = h;
 }
 
-function renderDetailedTables(){
-  var curS = allS.filter(function(r){ return parseN(g(r,"Plan_Year"))%100===(T_YR%100) && parseN(g(r,"Plan_Month"))===T_MO; });
-  var sH = "";
-  curS.forEach(function(r, i){
+function renderTables(){
+  var curS = allS.filter(function(r){ return pN(g(r,"Plan_Year"))%100===(CUR_Y%100) && pN(g(r,"Plan_Month"))===CUR_M; });
+  var sh = "";
+  curS.forEach(function(r){
     var sku=g(r,"Style_SKU")!=="-"?g(r,"Style_SKU"):g(r,"SKU");
-    var imgUrl = (r.Style_Image && r.Style_Image.length > 0) ? r.Style_Image[0] : null;
-    var id = "s_img_"+i;
-    sH += '<tr><td><div class="style-info"><div class="style-thumb" id="'+id+'">👕</div><div><span class="style-code">'+sku+'</span><span style="font-size:9px;color:var(--tm)">'+g(r,"Style_Name")+'</span></div></div></td>';
-    sH += '<td>'+g(r,"Business_Entity")+'</td><td>'+g(r,"Season")+'</td><td>'+g(r,"Category")+'</td><td>'+g(r,"Material_Type")+'</td><td><span class="tag tag-appr">'+g(r,"Style_Status")+'</span></td><td>'+(moSkus.has(sku)?'✅':'❌')+'</td></tr>';
-    if(imgUrl) _safeQ.push({id:id, url:imgUrl});
+    sh += '<tr><td><div class="style-info"><div class="style-thumb">👕</div><div><span class="style-sku">'+sku+'</span><span style="font-size:9px;color:var(--tm)">'+g(r,"Style_Name")+'</span></div></div></td>';
+    sh += '<td>'+g(r,"Business_Entity")+'</td><td>'+g(r,"Season")+'</td><td>'+g(r,"Category")+'</td><td>'+g(r,"Material_Type")+'</td><td><span class="tag tag-ok">'+g(r,"Style_Status")+'</span></td><td>'+(moSkus.has(sku)?'✅':'❌')+'</td></tr>';
   });
-  document.getElementById("styleTbody").innerHTML = sH;
-  document.getElementById("styleTblTitle").textContent = "📅 " + monthList[0].label + " Styles 상세 리스트";
+  document.getElementById("sTbody").innerHTML = sh;
+  document.getElementById("sTblTitle").textContent = "📅 " + mList[0].label + " Styles 상세 리스트";
 
-  var curM = allM.filter(function(r){ return parseN(g(r,"Plan_Year"))%100===(T_YR%100) && parseN(g(r,"Plan_Month"))===T_MO; });
-  var mH = "";
+  var curM = allM.filter(function(r){ return pN(g(r,"Plan_Year"))%100===(CUR_Y%100) && pN(g(r,"Plan_Month"))===CUR_M; });
+  var mh = "";
   curM.forEach(function(r){
-    mH += '<tr><td style="font-weight:800;color:var(--pr)">'+g(r,"MO_Number")+'</td><td>'+g(r,"Style_Name")+'<br><small>'+g(r,"Style_SKU")+'</small></td><td>'+g(r,"Factory")+'</td><td>'+g(r,"Total_Quantity")+'</td><td>'+g(r,"Production_Status")+'</td><td>'+g(r,"Order_Status")+'</td><td>'+g(r,"Expected_Delivery")+'</td></tr>';
+    mh += '<tr><td style="font-weight:900;color:var(--pr)">'+g(r,"MO_Number")+'</td><td>'+g(r,"Style_Name")+'<br><small>'+g(r,"Style_SKU")+'</small></td><td>'+g(r,"Factory")+'</td><td>'+g(r,"Total_Quantity")+'</td><td>'+g(r,"Production_Status")+'</td><td>'+g(r,"Order_Status")+'</td><td>'+g(r,"Expected_Delivery")+'</td></tr>';
   });
-  document.getElementById("moTbody").innerHTML = mH;
-  document.getElementById("moTblTitle").textContent = "📅 " + monthList[0].label + " MO 생산 상세 리스트";
-  if(!_busy) _runQ();
+  document.getElementById("mTbody").innerHTML = mh;
+  document.getElementById("mTblTitle").textContent = "📅 " + mList[0].label + " MO 생산 상세 리스트";
 }
 </script>
 </body>
