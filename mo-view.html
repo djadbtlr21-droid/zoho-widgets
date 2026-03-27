@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MO View v26 (Speed & Safe Boost)</title>
+<title>MO View v27 (Safe & Fast)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -235,11 +235,6 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 </div></div>
 
 <script>
-/* =====================================================================
-   ★★★ 스피드 부스트 (해결책 2): All_MO 리포트용 퍼블릭 키 ★★★
-===================================================================== */
-var PRIVATE_LINK = "4NZzupGtWhsM3PMeXUYkw7N2Sx1mdzvuy5afQ8MGXt0C7w48KVFWWGv4DaVmOHOOpd8R3WMsRMNqpGgEmwH7W6Dq9qqy0a8889x2"; 
-
 var APP="eom",REP="All_MO",allRec=[],today=new Date(),todayStr=today.toISOString().split("T")[0];
 var CAT_MAP={"S":"Set / 세트 / 套装","I":"Individual / 단품 / 单品"};
 function catName(v){return(!v||v==="-")?"-":(CAT_MAP[v]||v)}
@@ -250,16 +245,6 @@ function pd(v){
   var m=v.match(/^(\d{1,2})-([A-Za-z]+)-(\d{4})/);
   if(m){var mo={Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};
   return m[3]+"-"+(mo[m[2]]||"01")+"-"+(m[1].length===1?"0"+m[1]:m[1])}return null}
-
-/* ★ 핵심 1: 퍼블릭 URL 도메인 수정 (zohopublic.com) ★ */
-function getFastImageUrl(u) {
-  if (PRIVATE_LINK && PRIVATE_LINK.length > 5 && u.indexOf("/api/v2/") > -1) {
-    var fastUrl = "https://creatorapp.zohopublic.com" + u.replace("/api/v2/", "/publishapi/v2/");
-    fastUrl += (fastUrl.indexOf("?") > -1 ? "&" : "?") + "privatelink=" + PRIVATE_LINK;
-    return fastUrl;
-  }
-  return null;
-}
 
 ZOHO.CREATOR.init().then(function(){
   ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:REP,page:1,pageSize:200}).then(function(r){
@@ -404,11 +389,11 @@ function openModalFromPop(id){
   var r=allRec.find(function(x){return x["ID"]===id});
   if(r){document.getElementById("kpiPopOv").classList.remove("active");openModal(r)}}
 
-/* ★ 핵심 2: 에러 발생 시 자동으로 안전한 SDK 방식으로 우회하는 백업 로직 탑재 ★ */
+/* ★ 지연 로딩 (Lazy Loading) 안전 모드 ★ */
 function loadTlImgs() {
   var els = document.querySelectorAll("[data-tlimg]");
   if (els.length === 0) return;
-  
+
   if ("IntersectionObserver" in window) {
     var obs = new IntersectionObserver(function(entries, observer) {
       entries.forEach(function(ent) {
@@ -416,33 +401,20 @@ function loadTlImgs() {
           var el = ent.target;
           var url = el.getAttribute("data-tlimg");
           if (url) {
-            var fastUrl = getFastImageUrl(url);
-            if(fastUrl) {
-              var img = document.createElement("img");
-              img.style.cssText = "width:100%;height:100%;object-fit:cover";
-              img.onerror = function() {
-                this.onerror = null;
-                ZOHO.CREATOR.UTIL.setImageData(this, url, function(){});
-              };
-              img.src = fastUrl;
-              el.innerHTML = "";
-              el.appendChild(img);
-            } else {
-              var img = document.createElement("img");
-              img.style.cssText = "width:100%;height:100%;object-fit:cover";
-              try {
-                ZOHO.CREATOR.UTIL.setImageData(img, url, function() {
-                  el.innerHTML = "";
-                  el.appendChild(img);
-                });
-              } catch(e) {}
-            }
+            var img = document.createElement("img");
+            img.style.cssText = "width:100%;height:100%;object-fit:cover";
+            try {
+              ZOHO.CREATOR.UTIL.setImageData(img, url, function() {
+                el.innerHTML = "";
+                el.appendChild(img);
+              });
+            } catch(e) {}
           }
           observer.unobserve(el);
         }
       });
     }, { rootMargin: "200px" });
-    
+
     els.forEach(function(el) { obs.observe(el); });
   }
 }
@@ -546,7 +518,6 @@ function renderMonthly(){
   document.querySelectorAll(".tl-mo-info").forEach(function(el){el.addEventListener("click",function(){var id=this.getAttribute("data-id");var r=allRec.find(function(x){return x["ID"]===id});if(r)openModal(r)})});
   document.querySelectorAll(".mf").forEach(function(el){el.addEventListener(el.tagName==="INPUT"?"input":"change",function(){mFilter(this.getAttribute("data-m"))})});
   
-  /* 타임라인 썸네일 이미지 로딩 트리거 */
   setTimeout(loadTlImgs,500)}
 
 function mFilter(mi){
