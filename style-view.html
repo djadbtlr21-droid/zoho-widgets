@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Style View v27</title>
+<title>Style View v30 (VIP Image Loading)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -22,8 +22,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 
 /* KPI 상단 행 */
 .mkpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 420px;gap:12px;margin-bottom:21px}
-
-/* 월별 KPI 카드 */
 .mkpi-card{background:var(--z-card-bg);border:1px solid var(--z-border);border-radius:10px;padding:14px;position:relative;overflow:hidden}
 .mkpi-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px}
 .mkpi-card:nth-child(1)::before{background:#A5B4FC}
@@ -42,7 +40,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .mkpi-stat-l{font-size:10px;font-weight:700;color:var(--z-text-muted);margin-top:4px;line-height:1.3}
 .mkpi-stat .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;vertical-align:middle}
 
-/* 생산 지연 현황 카드 (미오더 지연) */
+/* 생산 지연 현황 카드 */
 .delay-card{background:#FFF5F5;border:1px solid #FECACA;border-radius:10px;padding:14px;position:relative;overflow:hidden;display:flex;flex-direction:column}
 .delay-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:#FCA5A5}
 .delay-card-title{font-size:12px;font-weight:800;color:#DC2626;margin-bottom:4px;display:flex;align-items:center;gap:6px}
@@ -69,7 +67,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .z-table td{padding:7px 8px;border-bottom:1px solid #F1F5F9;color:var(--z-text-main);vertical-align:middle;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .z-table tr{cursor:pointer;transition:background .1s}
 .z-table tbody tr:hover td{background:#EFF6FF}
-/* Not Ordered 일 경우 연한 빨간색 호버 유지 */
 .z-table tbody tr.not-ordered:hover td{background:#FEE2E2}
 .style-info{display:flex;align-items:center;gap:8px}
 .style-thumb{width:34px;height:34px;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#94A3B8;flex-shrink:0;overflow:hidden}
@@ -82,7 +79,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .tag-appr{background:#D1FAE5;color:#065F46;border:1px solid #A7F3D0}
 .tag-fail{background:#FEF2F2;color:#B91C1C;border:1px solid #FECACA}
 
-/* KPI 탭 팝업 (MO View 이식) */
+/* KPI 팝업 */
 .pop-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:2000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
 .pop-ov.active{display:flex}
 .pop-box{background:#fff;border-radius:12px;width:92%;max-width:700px;max-height:82vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:modalIn .2s ease-out}
@@ -127,7 +124,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .modal-img-box:hover{border-color:var(--z-accent);box-shadow:0 2px 8px rgba(59,130,246,.15)}
 .modal-img-label{font-size:8px;color:var(--z-text-muted);margin-top:3px;font-weight:600}
 
-/* Bar Chart */
+/* Chart */
 .chart-card{background:#fff;border:1px solid var(--z-border);border-radius:8px;padding:16px;margin-top:20px}
 .chart-title{font-size:13px;font-weight:800;color:var(--z-text-main);margin-bottom:14px;display:flex;align-items:center;gap:6px}
 .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:5px}
@@ -193,11 +190,15 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 </div></div>
 
 <script>
+/* =====================================================================
+   ★★★ 사용자님이 직접 찾아주신 완벽한 보안 키 입력 완료 ★★★
+===================================================================== */
+var PRIVATE_LINK = "8R1ZTqGEWvuz5qpZ9u4aeJHuUUj6s1duwEgXOXYEQZzBsXTd8KVAEqWk32RTX9ZCzGAncFCF2EzteCqbKS3JnfpQF9k2OEGfeRb6"; 
+
 var APP="eom",REP="All_Styles",MO_REP="All_MO";
 var allRec=[],filtered=[],moSkus=new Set();
 var today=new Date();
 
-/* ── Full-name mappings ── */
 var MAP={
 Gender:{"W":"Women / 여성 / 女","M":"Men / 남성 / 男","U":"Unisex / 남녀공용 / 男女通用"},
 Category:{"S":"Set / 세트 / 套装","I":"Individual / 단품 / 单品"},
@@ -243,11 +244,74 @@ function tc(s){s=(s||"").toLowerCase();if(s.indexOf("active")>=0||s.indexOf("app
 function getImg1(r){var i=r["Style_Image"];if(!i)return null;if(Array.isArray(i)&&i.length>0)return i[0];if(typeof i==="string"&&i.length>5)return i;if(typeof i==="object"&&i.display_value)return i.display_value;return null}
 function getAllImgs(r,field){var i=r[field];if(!i)return[];if(Array.isArray(i))return i.filter(function(x){return x&&typeof x==="string"&&x.length>5});if(typeof i==="object"&&!Array.isArray(i)){var u=[];Object.keys(i).forEach(function(k){var v=i[k];if(v&&typeof v==="string"&&v.length>5)u.push(v)});return u}if(typeof i==="string"&&i.length>5)return[i];return[]}
 
-function loadTableImgs(){document.querySelectorAll("[data-img]").forEach(function(el){var url=el.getAttribute("data-img");if(!url)return;var img=document.createElement("img");img.style.cssText="width:100%;height:100%;object-fit:cover";try{ZOHO.CREATOR.UTIL.setImageData(img,url,function(){el.innerHTML="";el.appendChild(img)})}catch(e){}})}
+/* ★ 퍼블릭 URL 생성기 (보안 키가 있으면 렉 제로 링크 반환) */
+function getFastImageUrl(u) {
+  if (PRIVATE_LINK && PRIVATE_LINK.length > 5 && u.indexOf("/api/v2/") > -1) {
+    var fastUrl = "https://creatorapp.zoho.com" + u.replace("/api/v2/", "/publishapi/v2/");
+    fastUrl += (fastUrl.indexOf("?") > -1 ? "&" : "?") + "privatelink=" + PRIVATE_LINK;
+    return fastUrl;
+  }
+  return null;
+}
+
+/* ★ 테이블 목록 썸네일: Intersection Observer (지연 로딩) + 퍼블릭 URL */
+function loadTableImgs(){
+  var els = document.querySelectorAll("[data-img]");
+  if(els.length === 0) return;
+  if("IntersectionObserver" in window){
+    var obs = new IntersectionObserver(function(entries, observer){
+      entries.forEach(function(ent){
+        if(ent.isIntersecting){
+          var el = ent.target;
+          var url = el.getAttribute("data-img");
+          if(url){
+            var fastUrl = getFastImageUrl(url);
+            if (fastUrl) {
+              var img = document.createElement("img");
+              img.style.cssText = "width:100%;height:100%;object-fit:cover";
+              img.src = fastUrl;
+              el.innerHTML = "";
+              el.appendChild(img);
+            } else {
+              var img = document.createElement("img");
+              img.style.cssText = "width:100%;height:100%;object-fit:cover";
+              try{ ZOHO.CREATOR.UTIL.setImageData(img, url, function(){ el.innerHTML=""; el.appendChild(img); }); } catch(e){}
+            }
+          }
+          observer.unobserve(el);
+        }
+      });
+    }, {rootMargin:"200px"});
+    els.forEach(function(el){ obs.observe(el); });
+  }
+}
 
 var _imgQ=[],_imgBusy=false;
-function queueImg(id,url){_imgQ.push({id:id,url:url});if(!_imgBusy)_processNext()}
-function _processNext(){if(_imgQ.length===0){_imgBusy=false;return}_imgBusy=true;var task=_imgQ.shift();var el=document.getElementById(task.id);if(!el){_imgBusy=false;setTimeout(_processNext,100);return}var img=document.createElement("img");img.style.cssText="width:100%;height:100%;object-fit:contain;cursor:pointer";img.onclick=function(){openLightbox(this.src)};var done=false;function finish(s){if(done)return;done=true;if(s){el.innerHTML="";el.appendChild(img)}setTimeout(_processNext,1000)}try{ZOHO.CREATOR.UTIL.setImageData(img,task.url,function(){if(img.src&&img.src.length>20&&img.src!=="about:blank")finish(true);else finish(false)})}catch(e){finish(false)}setTimeout(function(){if(!done){done=true;setTimeout(_processNext,1000)}},30000)}
+/* ★ 팝업창(Modal) 갤러리 이미지: 퍼블릭 URL이면 큐 패스하고 즉각(동시) 꽂음 */
+function queueImg(id,url){
+  var fastUrl = getFastImageUrl(url);
+  var el = document.getElementById(id);
+  if(!el) return;
+
+  if (fastUrl) {
+    var img = document.createElement("img");
+    img.style.cssText = "width:100%;height:100%;object-fit:contain;cursor:pointer";
+    img.src = fastUrl;
+    img.onclick = function(){ openLightbox(this.src) };
+    el.innerHTML = "";
+    el.appendChild(img);
+  } else {
+    _imgQ.push({id:id,url:url});
+    if(!_imgBusy)_processNext();
+  }
+}
+
+function _processNext(){
+  if(_imgQ.length===0){_imgBusy=false;return}
+  _imgBusy=true;var task=_imgQ.shift();var el=document.getElementById(task.id);
+  if(!el){_imgBusy=false;setTimeout(_processNext,100);return}
+  var img=document.createElement("img");img.style.cssText="width:100%;height:100%;object-fit:contain;cursor:pointer";img.onclick=function(){openLightbox(this.src)};var done=false;function finish(s){if(done)return;done=true;if(s){el.innerHTML="";el.appendChild(img)}setTimeout(_processNext,1000)}try{ZOHO.CREATOR.UTIL.setImageData(img,task.url,function(){if(img.src&&img.src.length>20&&img.src!=="about:blank")finish(true);else finish(false)})}catch(e){finish(false)}setTimeout(function(){if(!done){done=true;setTimeout(_processNext,1000)}},30000)}
+
 function loadAllModalImgs(rec){_imgQ=[];_imgBusy=false;var si=getAllImgs(rec,"Style_Image"),fi=getAllImgs(rec,"Flat_Sketch"),smi=getAllImgs(rec,"Sample_Images");si.forEach(function(u,i){queueImg("sImg"+i,u)});fi.forEach(function(u,i){queueImg("fImg"+i,u)});smi.forEach(function(u,i){queueImg("smImg"+i,u)})}
 
 function goTo(url){window.open(url,"_blank")}
@@ -255,29 +319,21 @@ var _currentRecId=null;
 function editStyle(){if(!_currentRecId)return;goTo("https://creatorapp.zoho.com/jeramoda/eom/#Report:All_Styles")}
 function newMO(){goTo("https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_MO")}
 
-/* ★ 오더 지연 추적 로직 (해당 월 20일 기준) */
 function isOrderDelayed(r) {
   var sku = g(r, "Style_SKU");
   if (sku === "-") sku = g(r, "SKU");
   if (moSkus.has(sku)) return false; 
-  
   var py = parseInt(g(r, "Plan_Year"));
   var pm = parseInt(g(r, "Plan_Month"));
   if (isNaN(py) || isNaN(pm)) return false;
-
-  /* 연도 인식 버그 패치 */
   if (py < 100) py += 2000;
-
-  /* ★ 데드라인을 해당 월(Plan_Month)의 20일로 설정 */
   var deadline = new Date(py, pm - 1, 20); 
   var todayD = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  
   return todayD > deadline;
 }
 
 function parseYM(key){var m=key.match(/(\d+)년\s*(\d+)월/);if(!m)return null;var y=parseInt(m[1]);if(y<100)y+=2000;return{y:y,m:parseInt(m[2])}}
 
-/* ★★★ STYLE VIEW MONTHLY KPI + 생산 지연 현황 카드 ★★★ */
 function renderMKPI(){
   var groups={};
   filtered.forEach(function(r){
@@ -309,7 +365,6 @@ function renderMKPI(){
     var ym=parseYM(key);
     var yy = ym ? ym.y.toString().slice(-2) : "";
     var mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
-    /* ★ KPI 카드 제목 형식 정확히 적용: YY.MM Style KPI / YY年 M月 款式 KPI */
     var titleText = ym ? (yy+"."+mm+" Style KPI / "+yy+"年 "+ym.m+"月 款式 KPI") : "Style KPI / 款式 KPI";
 
     h+='<div class="mkpi-card">';
@@ -327,7 +382,6 @@ function renderMKPI(){
     h+='</div></div>';
     h+='</div>'});
 
-  // 생산 지연 현황 카드
   var delayedAll=filtered.filter(function(r){return isOrderDelayed(r)});
   h+='<div class="delay-card">';
   h+='<div class="delay-card-title">⚠️ 오더 지연 현황<br><span style="font-size:10px;color:#EF4444;font-weight:600">订单延误现况</span></div>';
@@ -344,14 +398,12 @@ function renderMKPI(){
       h+='</div>'});
   }
   h+='</div>';
-  /* ★ 지연 안내 문구 크기 10% 확대 및 볼드 처리 */
   h+='<div style="font-size:10px;font-weight:bold;color:#94A3B8;text-align:center;padding-top:8px;border-top:1px dashed #FECACA;line-height:1.4">당월 20일까지 오더 미진행 시 지연으로 간주<br>若当月20日前未下订单，视为延误</div>';
   h+='</div>';
 
   document.getElementById("kpiRow").innerHTML=h;
 }
 
-/* KPI 탭 팝업 열기 */
 function openKpiPop(keyEnc,type){
   var key=decodeURIComponent(keyEnc);
   var groups={};
@@ -395,10 +447,8 @@ function openModalFromPop(id){
 document.getElementById("kpiPopClose").addEventListener("click",function(){document.getElementById("kpiPopOv").classList.remove("active")});
 document.getElementById("kpiPopOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
 
-/* ── Filters ── */
 function buildFilters(){var cat={},gen={},se={},st={};allRec.forEach(function(r){var c=g(r,"Category");if(c!=="-")cat[c]=mv("Category",c);var ge=g(r,"Gender");if(ge!=="-")gen[ge]=mv("Gender",ge);var s=g(r,"Season");if(s!=="-")se[s]=1;var t=g(r,"Style_Status");if(t!=="-")st[t]=1});var el;el=document.getElementById("filterCategory");Object.keys(cat).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+escH(cat[k])+'</option>'});el=document.getElementById("filterGender");Object.keys(gen).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+escH(gen[k])+'</option>'});el=document.getElementById("filterSeason");Object.keys(se).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});el=document.getElementById("filterStatus");Object.keys(st).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'})}
 
-/* ── Chart ── */
 var COLORS=["#3B82F6","#8B5CF6","#EC4899","#F97316","#10B981","#06B6D4","#EF4444","#F59E0B","#6366F1","#14B8A6","#E11D48","#84CC16","#0EA5E9","#A855F7","#F43F5E"];
 function renderChart(){
 var combos={};
@@ -434,7 +484,6 @@ h+='<div class="bar-count">'+item.count+'</div>';
 h+='</div>'});
 document.getElementById("barChart").innerHTML=h}
 
-/* ── Tables ── */
 function renderTables(){
   var groups={};
   filtered.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[key])groups[key]=[];groups[key].push(r)});
@@ -444,8 +493,6 @@ function renderTables(){
     var ym=parseYM(key);
     var yy = ym ? ym.y.toString().slice(-2) : "";
     var mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
-    
-    /* ★ 월별 표 제목 100% 적용: YY.MM Styles Table / YY年 M月 款式表 */
     var tableTitle = ym ? (yy+"."+mm+" Styles Table / "+yy+"年 "+ym.m+"月 款式表") : "Styles Table / 款式表";
 
     html+='<div class="month-section"><div class="month-card"><div class="month-header"><div class="month-title">📅 '+tableTitle+'</div><span class="month-count">'+items.length+' styles</span></div><div class="table-scroll"><table class="z-table"><thead><tr><th style="width:18%">Style Info</th><th style="width:7%">Brand</th><th style="width:7%">Season</th><th style="width:12%">Gender</th><th style="width:12%">Category</th><th style="width:14%">Material_Type</th><th style="width:8%">Target_Cost</th><th style="width:10%">Status</th><th style="width:6%">Sample</th><th style="width:8%">Order</th></tr></thead><tbody>';
@@ -454,7 +501,6 @@ function renderTables(){
       var name=g(r,"Style_Name");
       var iu=getImg1(r),ia=iu?' data-img="'+iu+'"':'';
       var ordered=moSkus.has(sku);
-      /* Not Ordered 행(Row) 빨간색 경고 배경 처리 */
       var trStyle = (!ordered) ? ' style="background:#FEF2F2"' : '';
       var trClass = (!ordered) ? ' class="not-ordered"' : '';
       
@@ -464,12 +510,32 @@ function renderTables(){
   setTimeout(loadTableImgs,500);
   document.querySelectorAll("#monthlyTables tr[data-id]").forEach(function(row){row.addEventListener("click",function(){var id=this.getAttribute("data-id");var r=allRec.find(function(x){return x["ID"]===id});if(r)openModal(r)})})}
 
-/* ── Filter events ── */
 ["searchBox","filterCategory","filterGender","filterSeason","filterStatus"].forEach(function(id){document.getElementById(id).addEventListener(id==="searchBox"?"input":"change",af)});
 function af(){var q=document.getElementById("searchBox").value.toLowerCase().trim();var fc=document.getElementById("filterCategory").value;var fg=document.getElementById("filterGender").value;var fs=document.getElementById("filterSeason").value;var ft=document.getElementById("filterStatus").value;filtered=allRec.filter(function(r){if(q){var h=(g(r,"Style_SKU")+" "+g(r,"Style_Name")+" "+g(r,"Business_Entity")).toLowerCase();if(h.indexOf(q)<0)return false}if(fc&&g(r,"Category")!==fc)return false;if(fg&&g(r,"Gender")!==fg)return false;if(fs&&g(r,"Season")!==fs)return false;if(ft&&g(r,"Style_Status")!==ft)return false;return true});renderMKPI();renderTables()}
 
-/* ── Modal ── */
-function openModal(rec){_currentRecId=rec["ID"];document.getElementById("modalTitle").textContent=g(rec,"Style_SKU");document.getElementById("modalSubtitle").textContent=g(rec,"Style_Name");var te=document.getElementById("modalThumb");te.innerHTML="👕";var iu=getImg1(rec);if(iu){var hi=document.createElement("img");hi.style.cssText="width:100%;height:100%;object-fit:cover";try{ZOHO.CREATOR.UTIL.setImageData(hi,iu,function(){te.innerHTML="";te.appendChild(hi)})}catch(e){}}document.getElementById("modalBody").innerHTML=buildDetail(rec);document.getElementById("modalOverlay").classList.add("active");setTimeout(function(){loadAllModalImgs(rec)},500)}
+function openModal(rec){
+  _currentRecId=rec["ID"];
+  document.getElementById("modalTitle").textContent=g(rec,"Style_SKU");
+  document.getElementById("modalSubtitle").textContent=g(rec,"Style_Name");
+  
+  /* ★ 모달 썸네일도 퍼블릭 링크 연동 로직 적용 완료 */
+  var te=document.getElementById("modalThumb");
+  te.innerHTML="👕";
+  var iu=getImg1(rec);
+  if(iu){
+    var fastUrl = getFastImageUrl(iu);
+    if (fastUrl) {
+      te.innerHTML = '<img src="' + fastUrl + '" style="width:100%;height:100%;object-fit:cover">';
+    } else {
+      var hi=document.createElement("img");
+      hi.style.cssText="width:100%;height:100%;object-fit:cover";
+      try{ZOHO.CREATOR.UTIL.setImageData(hi,iu,function(){te.innerHTML="";te.appendChild(hi)})}catch(e){}
+    }
+  }
+  
+  document.getElementById("modalBody").innerHTML=buildDetail(rec);
+  document.getElementById("modalOverlay").classList.add("active");
+  setTimeout(function(){loadAllModalImgs(rec)},500)}
 
 function buildDetail(d){
 var h='';
