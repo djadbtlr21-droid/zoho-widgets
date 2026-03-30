@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Overview v7</title>
+<title>Overview v8</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -166,12 +166,12 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .dly-badge2{display:inline-block;padding:1px 4px;border-radius:3px;font-size:7px;font-weight:700;background:#FEF2F2;color:#DC2626;margin-left:2px;animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* ========== 새롭게 추가된 Production Progress Bar 스타일 ========== */
-.p-prog{display:flex;flex-direction:column;gap:5px;width:100%;padding:0 4px}
-.p-bars{display:flex;gap:3px;width:100%;height:6px}
-.p-bar{flex:1;border-radius:2px}
-.p-lbls{display:flex;gap:3px;width:100%}
-.p-lbl{flex:1;font-size:8.5px;text-align:center;letter-spacing:-0.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* ========== Production Progress Bar 스타일 (크기 축소 및 파스텔 톤 수정) ========== */
+.p-prog{display:flex;flex-direction:column;gap:4px;width:100%;padding:0 2px} /* gap, padding 미세 축소 */
+.p-bars{display:flex;gap:2px;width:100%;height:5px} /* gap 축소, height 6px -> 5px (약 16.7% 축소) */
+.p-bar{flex:1;border-radius:1px} /* radius 미세 축소 */
+.p-lbls{display:flex;gap:2px;width:100%} /* gap 축소 */
+.p-lbl{flex:1;font-size:8px;text-align:center;letter-spacing:-0.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} /* font-size 8.5px -> 8px, letter-spacing 조정 */
 
 /* ========== 팝업 (Style KPI) ========== */
 .pop-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:2000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
@@ -275,7 +275,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 
 <div id="loadingScreen" class="loading-screen">
   <div class="spinner"></div>
-  <div class="loading-text">Overview 데이터를 불러오는 중 / 加载数据中...</div>
+  <div class="loading-text">Overview 데이터를 불러오는 중 / 加载数据중...</div>
 </div>
 <div id="errorScreen" style="display:none"><div class="error-box"><b>데이터를 불러올 수 없습니다</b><div id="errorMsg" style="font-size:11px;margin-top:6px"></div></div></div>
 
@@ -351,7 +351,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
       <div><div class="mo-pop-title" id="mo_pipePopTitle">-</div><div class="mo-pop-sub" id="mo_pipePopSub">-</div></div>
       <div class="mo-pop-close" id="mo_pipePopClose">✕</div>
     </div>
-    <div class="mo-pop-body" id="mo_pipePopBody"></div>
+    <div class="pop-body" id="mo_pipePopBody"></div>
   </div>
 </div>
 
@@ -407,7 +407,7 @@ var S_MAP={
   Sleeve:{"L":"Long / 긴팔 / 长袖","S":"Short / 반팔 / 短袖","N":"None / 민소매 / 无袖"},
   Fit:{"O":"Oversize / 루즈핏 / 宽松版","R":"Regular / 레귤러핏 / 标准版","S":"Slim / 슬림핏 / 修身版"},
   Details:{"Z":"Zip-up(Full) / 짚업 / 全开拉链","H":"Half-zip / 반짚업 / 半拉链","N":"Round-neck / 라운드넥 / 圆领","C":"Cami-strap / 끈나시 / 吊带","W":"Wide-strap / 와이드 / 宽肩带","D":"Hood / 후드 / 连帽"},
-  Bottom_Type:{"L":"Leggings / 레깅스 / 紧身裤","W":"Wide / 와이드 / 宽腿裤","J":"Jogger / 조거 / 束脚裤","F":"Flare / 나팔 / 喇叭裤","P":"Pleats / 플리츠 / 褶皱","A":"A-line / A라인 / A字版","B":"Shorts / 반바지 / 短裤"},
+  Bottom_Type:{"L":"Leggings / 레깅스 / 紧身裤","W":"Wide / 와이드 / 宽腿裤","J":"Jogger / 조거 / 束脚裤","F":"Flare / 나팔 / 喇叭裤","P":"Pleats / 플리츠 / 褶皱","A":"A-line / A라인 / A字版","B":"Shorts / 반바지 / 단裤"},
   Bottom_Length:{"3":"3-Tier(Short) / 3부 / 三分","5":"5-Tier(Mid) / 5부 / 五分","7":"7-Tier(Mid-full) / 7부 / 七分","9":"9-Tier(Full) / 9부 / 九分"},
   Material_Type:{"P":"Polyester / 폴리에스터 / 涤纶","N":"Nylon / 나일론 / 尼龙","D":"Polyamide / 폴리아미드 / 聚酰胺","C":"Cotton / 코튼 / 棉","H":"Mesh / 메쉬 / 网布","M":"Modal / 모달 / 莫代尔","L":"Lycra / 라이크라 / 莱卡"},
   Lining_Type:{"B":"Brushed / 기모 / 磨毛","F":"Fur / 퍼 / 毛皮","N":"None / 없음 / 无"}
@@ -528,7 +528,7 @@ function s_renderMKPI(){
   var delayedAll=s_filtered.filter(function(r){return isOrderDelayed(r)});
   h+='<div class="s-delay-card"><div class="s-delay-card-title">⚠️ 오더 지연 현황<br><span style="font-size:10px;color:#EF4444;font-weight:600">订单延误现况</span></div>';
   h+='<div class="s-delay-total">'+delayedAll.length+'<span>건 지연 / 件延误</span></div><div class="s-delay-list">';
-  if(delayedAll.length===0){h+='<div style="text-align:center;padding:16px;color:#94A3B8;font-size:11px">지연 없음 / 无延误 ✓</div>'}
+  if(delayedAll.length===0){h+='<div style="text-align:center;padding:16px;color:#94A3B8;font-size:11px">지연 없음 / 무延誤 ✓</div>'}
   else{delayedAll.forEach(function(r){var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");h+='<div class="s-delay-item" onclick="s_openModal(allRec.find(function(x){return x[\'ID\']==='+"'"+r["ID"]+"'"+'}))""><div class="s-delay-mo">'+escH(sku)+'</div><div class="s-delay-style">'+escH(g(r,"Style_Name"))+'</div></div>'})}
   h+='</div><div style="font-size:10px;font-weight:bold;color:#94A3B8;text-align:center;padding-top:8px;border-top:1px dashed #FECACA;line-height:1.4">당월 20일까지 오더 미진행 시 지연으로 간주<br>若当月20日前未下订单，视为延误</div></div>';
   document.getElementById("s_kpiRow").innerHTML=h}
@@ -618,7 +618,7 @@ function s_buildDetail(d){
   var ordered=moSkus.has(g(d,"Style_SKU"));
   h+='<div class="modal-section"><div class="modal-section-title">📌 기본 정보 / Identity / 基本信息</div><div class="detail-grid">';
   h+=it("Style SKU / 스타일SKU / 款式SKU",dv(g(d,"Style_SKU")));h+=it("Style Name / 스타일명 / 款式名",dv(g(d,"Style_Name")));h+=it("Style Number / 스타일번호 / 款式序号",dv(g(d,"Style_Number")));
-  h+=it("Season / 시즌 / 季节",dv(g(d,"Season")));h+=it("Plan Year / 진행년도 / 进行年度",dv(g(d,"Plan_Year")));h+=it("Plan Month / 진행월 / 进行月度",dv(g(d,"Plan_Month")));
+  h+=it("Season / 시즌 / 季節",dv(g(d,"Season")));h+=it("Plan Year / 진행년도 / 进行年度",dv(g(d,"Plan_Year")));h+=it("Plan Month / 진행월 / 进行月度",dv(g(d,"Plan_Month")));
   h+=it("Brand / 사업주체 / 业务主体",dv(g(d,"Business_Entity")));h+=it("Style Status / 상태 / 款式状态",dt(g(d,"Style_Status")));h+=it("Order Status / 오더상태 / 订单状态",ordered?'<span class="tag tag-appr">Ordered</span>':'<span class="tag tag-fail">Not Ordered</span>');
   h+='</div></div>';
   h+='<div class="modal-section"><div class="modal-section-title">👗 제품 정의 / Product Definition / 产品定义</div><div class="detail-grid">';
@@ -635,8 +635,8 @@ function s_buildDetail(d){
   h+='<div class="modal-section"><div class="modal-section-title">✂️ 샘플 정보 / Sample Info / 样品信息</div><div class="detail-grid">';
   h+=it("Sample Status / 샘플상태 / 样品状态",dt(g(d,"Sample_Status")));h+=it("Sample Date / 샘플날짜 / 样品日期",dv(g(d,"Sample_Date")));h+=it("Sample Notes / 샘플메모 / 样品备注",dv(g(d,"Sample_Notes")));
   h+='</div></div>';
-  h+='<div class="modal-section"><div class="modal-section-title">💰 원가 정보 / Costing / 成本信息</div><div class="detail-grid">';
-  h+=it("Target Cost / 목표원가 / 目标成本",dv(g(d,"Target_Cost")));h+=it("Final Cost / 최종원가 / 最终成本",dv(g(d,"Final_Cost")));h+=it("Total BOM Cost / 총BOM원가 / BOM总成本",dv(g(d,"Total_BOM_Cost")));h+=it("Cost Notes / 원가메모 / 成本备注",dv(g(d,"Cost_Notes")));
+  h+='<div class="modal-section"><div class="modal-section-title">💰 원가 정보 / Costing / 成本정보</div><div class="detail-grid">';
+  h+=it("Target Cost / 목표원가 / 目标成本",dv(g(d,"Target_Cost")));h+=it("Final Cost / 최종원가 / 최종成本",dv(g(d,"Final_Cost")));h+=it("Total BOM Cost / 총BOM원가 / BOM총成本",dv(g(d,"Total_BOM_Cost")));h+=it("Cost Notes / 원가메모 / 成本备注",dv(g(d,"Cost_Notes")));
   h+='</div></div>';
   var si=getAllImgs(d,"Style_Image"),fi=getAllImgs(d,"Flat_Sketch"),smi=getAllImgs(d,"Sample_Images");
   if(si.length||fi.length||smi.length){
@@ -653,23 +653,43 @@ function closeLightbox(){document.getElementById("lightboxOverlay").style.displa
 /* ══════════════════════════════════════
    MO View v28 함수들 (원본 100%)
 ══════════════════════════════════════ */
-/* ── Production 게이지 UI 렌더링 ── */
+/* ── Production 게이지 UI 렌더링 (크기 및 색상 수정, 라벨 병행 표기 적용) ── */
 function renderProdProgress(r){
-  var st=["FAB","CUT","SEW","PAK","DON","SHP"];
+  // 한글/중국어 병행 표기 라벨 배열
+  var st=["원단 / 面料", "재단 / 裁剪", "봉제 / 车缝", "포장 / 包装", "완료 / 完成", "출고 / 出货"];
   var map={"Not Started":-1,"Fabric":0,"Cutting":1,"Sewing":2,"Packing":3,"Done":4,"Shipped":5};
   var cIdx=map[getMOProdStage(r)];
   var isDly=isMODelayed(r);
+  
+  // 기본 대기 상태 색상 (연한 회색 파스텔)
   var bh='<div class="p-bars">', lh='<div class="p-lbls">';
   
   for(var i=0;i<6;i++){
-    var s=st[i], bc="#E2E8F0", lc="#94A3B8", lt=s, fw="600";
+    var s=st[i], bc="#F1F5F9", lc="#94A3B8", lt=s, fw="600"; // bc: #E2E8F0 -> #F1F5F9 (더 연하게)
+    
     if(cIdx===-1){
-      if(i===0){bc="#94A3B8";lt="WAIT";lc="#475569";fw="800"}
+      // 시작 전 대기 상태 (연한 회색 파스텔)
+      if(i===0){bc="#CBD5E1";lt="대기 / 等待";lc="#94A3B8";fw="800"} // bc: #94A3B8 -> #CBD5E1, lc: #475569 -> #94A3B8 (연하게)
     }else{
-      if(i<cIdx){bc="#10B981"}
+      if(i<cIdx){
+        // 완료된 단계 (연한 민트 파스텔)
+        bc="#D1FAE5"; // #10B981 -> #D1FAE5 (연하게)
+      }
       else if(i===cIdx){
-        if(isDly){bc="#EF4444";lt=s+"_DLY";lc="#DC2626";fw="800"}
-        else{bc="#3B82F6";lc="#2563EB";fw="800"}
+        if(isDly){
+          // 지연된 현재 단계 (연한 핑크 파스텔, 라벨 병행 표기)
+          bc="#FECACA"; // #EF4444 -> #FECACA (연하게)
+          // 라벨에 지연 병행 표기 추가 (예: 원단_지연 / 面料_延误)
+          lt=s.split(" / ")[0]+"_지연 / "+s.split(" / ")[1]+"_延误";
+          lc="#FCA5A5"; // #DC2626 -> #FCA5A5 (연하게)
+          fw="800";
+        }
+        else{
+          // 진행중인 현재 단계 (연한 하늘색 파스텔)
+          bc="#EFF6FF"; // #3B82F6 -> #EFF6FF (연하게)
+          lc="#60A5FA"; // #2563EB -> #60A5FA (연하게)
+          fw="800";
+        }
       }
     }
     bh+='<div class="p-bar" style="background:'+bc+'"></div>';
@@ -688,7 +708,7 @@ function mo_renderMKPI(){
   Object.keys(groups).sort().forEach(function(key){
     var items=groups[key],c=colors[ci%colors.length];ci++;
     var tot=items.length,ip=0,dl=0,dv=0,tq=0,sq=0;
-    items.forEach(function(r){var os=(g(r,"Order_Status")||"").toLowerCase();if(os.indexOf("progress")>=0)ip++;if(isMODelayed(r))dl++;if(os.indexOf("delivered")>=0||os.indexOf("shipped")>=0)dv++;tq+=parseInt(g(r,"Total_Quantity"))||0;sq+=parseInt(g(r,"Shipped_Quantity"))||0});
+    items.forEach(function(r){var os=(g(r,"Order_Status")||"").toLowerCase();if( os.indexOf("progress")>=0)ip++;if(isMODelayed(r))dl++;if(os.indexOf("delivered")>=0||os.indexOf("shipped")>=0)dv++;tq+=parseInt(g(r,"Total_Quantity"))||0;sq+=parseInt(g(r,"Shipped_Quantity"))||0});
     var pct=tq>0?Math.round((sq/tq)*100):0;
     var r36=36,circ=2*Math.PI*r36,offset=circ-(pct/100)*circ;
     var ym=parseYM(key);var yy=ym?ym.y.toString().slice(-2):"";var mm2=ym?(ym.m<10?"0"+ym.m:ym.m):"";
@@ -714,7 +734,7 @@ function mo_renderMKPI(){
 function mo_openKpiPop(keyEnc,type){
   var key=decodeURIComponent(keyEnc);
   var groups={};allMO_rec.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var k=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[k])groups[k]=[];groups[k].push(r)});
-  var items=groups[key]||[];var typeNames={all:"총 오더 / 总订单",ip:"진행중 / 进行中",dl:"지연 / 延误",dv:"출고완료 / 已出货"};
+  var items=groups[key]||[];var typeNames={all:"총 오더 / 总订单",ip:"진행중 / 进行중",dl:"지연 / 延誤",dv:"출고완료 / 已出貨"};
   var filtered=items.filter(function(r){var os=(g(r,"Order_Status")||"").toLowerCase();
     if(type==="all")return true;if(type==="ip")return os.indexOf("progress")>=0;if(type==="dl")return isMODelayed(r);if(type==="dv")return os.indexOf("delivered")>=0||os.indexOf("shipped")>=0;return true});
   document.getElementById("mo_kpiPopTitle").textContent=key+" — "+typeNames[type];
@@ -818,10 +838,10 @@ function mo_openModal(r){
   h+=it("MO Number / MO번호",dv(g(r,"MO_Number")));h+=it("Style SKU",dv(g(r,"Style_SKU")));h+=it("Style Name / 스타일명",dv(g(r,"Style_Name")));
   h+=it("Season / 시즌",dv(g(r,"Season")));h+=it("Category / 구분",dv(catName(g(r,"Category"))));h+=it("Factory / 공장",dv(cleanFactory(g(r,"Factory"))));
   h+=it("Order Date / 주문일",dv(g(r,"Order_Date")));h+=it("Order Status / 주문상태",'<span class="tag '+mo_tc(g(r,"Order_Status"))+'">'+escH(g(r,"Order_Status"))+'</span>');
-  h+=it("Expected Delivery / 예상납기",dv(g(r,"Expected_Delivery")));h+=it("Delivery Status / 납기상태",isMODelayed(r)?'<span class="tag t-dg">DELAYED / 지연 / 延误</span>':dv(g(r,"Delivery_Status")));
+  h+=it("Expected Delivery / 예상납기",dv(g(r,"Expected_Delivery")));h+=it("Delivery Status / 납기상태",isMODelayed(r)?'<span class="tag t-dg">DELAYED / 지연 / 延誤</span>':dv(g(r,"Delivery_Status")));
   h+='</div></div>';
   h+='<div class="mo-m-sec"><div class="mo-m-sec-t">📦 수량 & 금액 / 数量&金额</div><div class="d-grid">';
-  h+=it("Total Qty / 총수량 / 总数量",dv(g(r,"Total_Quantity")));h+=it("Grand Total / 총금액 / 총금액",dv(g(r,"Grand_Total")));h+=it("Notes / 메모 / 备注",dv(g(r,"Notes")));
+  h+=it("Total Qty / 총수량 / 总数量",dv(g(r,"Total_Quantity")));h+=it("Grand Total / 총금액 / 总金額",dv(g(r,"Grand_Total")));h+=it("Notes / 메모 / 备注",dv(g(r,"Notes")));
   h+='</div></div>';
   h+='<div class="mo-m-sec"><div class="mo-m-sec-t">🏭 생산 추적 / 生产跟踪</div><div class="d-grid">';
   h+=it("Production Status / 생산상태",'<span class="tag '+mo_tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span>');
