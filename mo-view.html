@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MO View v24</title>
+<title>MO View v25</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -234,7 +234,6 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
   <div class="pop-box"><div class="pop-hd"><div><div class="pop-title" id="pipePopTitle">-</div><div class="pop-sub" id="pipePopSub">-</div></div><div class="pop-close" id="pipePopClose">✕</div></div><div class="pop-body" id="pipePopBody"></div></div>
 </div>
 
-<!-- ★ MO 상세 모달 -->
 <div class="modal-ov" id="modalOv">
   <div class="modal-box">
     <div class="m-hd">
@@ -249,7 +248,6 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
   </div>
 </div>
 
-<!-- ★ Style Info 모달 -->
 <div class="style-modal-ov" id="styleModalOv">
   <div class="style-modal-box">
     <div class="m-hd">
@@ -263,7 +261,6 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
   </div>
 </div>
 
-<!-- Lightbox -->
 <div id="lightboxOv" onclick="closeLightbox()">
   <img id="lightboxImg">
   <div class="lb-close" onclick="closeLightbox()">✕</div>
@@ -435,7 +432,7 @@ function buildTimeline(items,yr,mo,label){
 function dayInMo(v,curMM){var p=pd(v);if(!p||p.substring(0,7)!==curMM)return 0;return parseInt(p.substring(8,10))||0}
 function buildBarRow(days,todayD,fab,cs,ce,ss,se,ps,pe,ship,isPlan){var pf=isPlan?"pb":"ab",map=new Array(days+2);for(var i=0;i<=days+1;i++)map[i]=null;if(fab>0&&fab<=days)map[fab]="fab";if(cs>0){for(var i=cs;i<=(ce||cs)&&i<=days;i++)map[i]="cut"}if(ss>0){for(var i=ss;i<=(se||ss)&&i<=days;i++)map[i]="sew"}if(ps>0){for(var i=ps;i<=(pe||ps)&&i<=days;i++)map[i]="pack"}if(ship>0&&ship<=days)map[ship]="ship";var lb={fab:"FAB",cut:"CUT",sew:"SEW",pack:"PACK",ship:"SHIP"},h="",d=1;while(d<=days){var t=map[d],tc2=(d===todayD)?' class="today-col"':'';if(!t){h+='<td'+tc2+'></td>';d++}else{var sp=1;while(d+sp<=days&&map[d+sp]===t)sp++;h+='<td'+(sp>1?' colspan="'+sp+'"':'')+tc2+'><div class="tl-bar '+pf+'-'+t+'">'+lb[t]+'</div></td>';d+=sp}}return h}
 
-/* ★ MO 상세 모달 (대폭 확장) */
+/* ★ MO 상세 모달 (섹션 순서 및 수량&금액 변경 반영 - v25) */
 function openModal(r){
   currentMO=r;
   document.getElementById("mTitle").textContent=g(r,"MO_Number");
@@ -444,14 +441,14 @@ function openModal(r){
   function dv(v){return v==="-"?'<span class="d-val empty">미입력</span>':escH(v)}
   function it(l,v){return'<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'}
   
-  // ★ 이미지 갤러리 (최대 5개)
+  // 이미지 갤러리 (최대 5개)
   var imgs=getAllImgs(r,"Style_Image").slice(0,5);
   if(imgs.length>0){
     h+='<div class="m-img-gallery">';
     imgs.forEach(function(u,i){h+='<div class="m-img-box" id="moImg'+i+'"><div class="spinner-sm"></div></div>'});
     h+='</div>';}
   
-  // 기본 정보
+  // 1. 기본 정보
   h+='<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 订单信息</div><div class="d-grid">';
   h+=it("MO Number / MO번호",dv(g(r,"MO_Number")));
   h+=it("Style SKU / 스타일SKU / 款式SKU",dv(g(r,"Style_SKU")));
@@ -466,32 +463,53 @@ function openModal(r){
   h+=it("Gender / 성별 / 性别",dv(mv("Gender",g(r,"Gender"))));
   h+=it("Plan Year-Month / 진행년월 / 进行年月",dv(g(r,"Plan_Year"))+"-"+dv(g(r,"Plan_Month")));
   h+='</div></div>';
+
+  // 2. 제품 정의
+  h+='<div class="m-sec"><div class="m-sec-t">👗 제품 정의 / 产品定义</div><div class="d-grid">';
+  h+=it("Top Type / 상의 유형 / 上衣类型",dv(mv("Top_Type",g(r,"Top_Type"))));
+  h+=it("Sleeve / 소매 유형 / 衣袖类型",dv(mv("Sleeve",g(r,"Sleeve"))));
+  h+=it("Fit / 핏 / 版型",dv(mv("Fit",g(r,"Fit"))));
+  h+=it("Details / 디테일 / 类型详情",dv(mv("Details",g(r,"Details"))));
+  h+=it("Bottom Type / 하의 유형 / 下装类型",dv(mv("Bottom_Type",g(r,"Bottom_Type"))));
+  h+=it("Bottom Length / 하의 기장 / 下装长短",dv(mv("Bottom_Length",g(r,"Bottom_Length"))));
+  h+='</div></div>';
   
-  // ★ 수량 & 금액 (확장: 단가 추가)
-  h+='<div class="m-sec"><div class="m-sec-t">📦 수량 & 금액 / 数量 & 金额</div><div class="d-grid-4">';
+  // 3. 원단 정보
+  h+='<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料信息</div><div class="d-grid">';
+  h+=it("Material Type / 원단 종류 / 面料种类",dv(mv("Material_Type",g(r,"Material_Type"))));
+  h+=it("blended % / 혼방 % / 混纺 %",dv(g(r,"blended_percentage")));
+  h+=it("Lining Type / 안감유형 / 里料类型",dv(mv("Lining_Type",g(r,"Lining_Type"))));
+  h+='</div></div>';
+  
+  // 4. 수량 & 금액 (V25 수정사항 반영)
+  h+='<div class="m-sec"><div class="m-sec-t">📦 수량 & 금액 / 数量 & 金额</div>';
+  // Row 1: 총수량 / 단가 / 총금액
+  h+='<div class="d-grid">';
   h+=it("Total Qty / 총수량 / 总数量",dv(g(r,"Total_Quantity")));
   h+=it("Unit Price / 단가 / 单价",dv(g(r,"Unit_Price")));
   h+=it("Grand Total / 총금액 / 总金额",dv(g(r,"Grand_Total")));
-  h+=it("Currency / 통화 / 货币",dv(g(r,"Currency")));
-  h+='</div><div class="d-grid" style="margin-top:12px">';
+  h+='</div>';
+  // Row 2: 재단수량 / 완제품 수량 / 로스율
+  h+='<div class="d-grid" style="margin-top:12px">';
   h+=it("Cut Quantity / 재단수량 / 裁剪数量",dv(g(r,"Cut_Quantity")));
   h+=it("Finished Quantity / 완제품 수량 / 成衣数量",dv(g(r,"Finished_Quantity")));
   h+=it("Loss Rate (%) / 로스율 / 损耗率",dv(g(r,"Loss_Rate")));
-  h+='</div><div class="d-grid" style="margin-top:12px">';
+  h+='</div>';
+  // Row 3: 메모 (전체 너비)
+  h+='<div style="margin-top:12px">';
   h+=it("Notes / 메모 / 备注",dv(g(r,"Notes")));
   h+='</div></div>';
   
-  // 생산 추적
+  // 5. 생산 추적
   h+='<div class="m-sec"><div class="m-sec-t">🏭 생산 추적 / 生产跟踪</div><div class="d-grid">';
   h+=it("Production Status / 생산상태 / 生产状态",'<span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span>');
   h+=it("Fabric Status / 원단상태 / 面料进度",dv(g(r,"Fabric_Status")));
   h+=it("Progress / 진척률 / 进度",dv(g(r,"Progress")));
   h+='</div></div>';
   
-  // ★ Plan vs Actual 일정 비교 (좌우 나란히)
+  // 6. 생산 일정 (Plan vs Actual)
   h+='<div class="m-sec"><div class="m-sec-t">📅 생산 일정 / 生产日期</div><div class="schedule-compare">';
-  
-  // Plan 일정 (좌측)
+  // Plan 일정
   h+='<div class="schedule-col"><div class="schedule-col-title plan">📋 Plan 일정 / 计划日期</div>';
   var planItems=[
     {l:"Fabric In / 원단입고 / 面料入库",k:"Plan_Fabric_Date"},
@@ -510,7 +528,7 @@ function openModal(r){
   });
   h+='</div>';
   
-  // Actual 일정 (우측)
+  // Actual 일정
   h+='<div class="schedule-col"><div class="schedule-col-title actual">✅ Actual 일정 / 实际日期</div>';
   var actualItems=[
     {l:"Fabric In / 원단입고 / 面料入库",k:"Fabric_In_house_Date"},
@@ -529,7 +547,7 @@ function openModal(r){
   });
   h+='</div></div></div>';
   
-  // 출고 정보
+  // 7. 출고
   h+='<div class="m-sec"><div class="m-sec-t">🚢 출고 / 出货信息</div><div class="d-grid">';
   h+=it("Ready to Ship / 출고준비 / 待出货",dv(g(r,"Ready_to_Ship")));
   h+=it("Final QC / 최종QC / 最终QC",dv(g(r,"Final_QC_Passed")));
@@ -539,7 +557,7 @@ function openModal(r){
   h+=it("Carrier / 운송사 / 承运商",dv(g(r,"Carrier")));
   h+='</div></div>';
   
-  // ★ QC 정보 섹션 (서브폼)
+  // 8. QC 정보
   h+='<div class="m-sec"><div class="m-sec-t">🔍 QC 정보 / 质检信息</div><div class="d-grid">';
   h+=it("QC Status / QC상태 / 质检状态",dv(g(r,"QC_Status")));
   h+=it("QC Date / QC일자 / 质检日期",dv(g(r,"QC_Date")));
@@ -549,27 +567,9 @@ function openModal(r){
   h+=it("Rework Qty / 재작업수량 / 返工数量",dv(g(r,"Rework_Quantity")));
   h+='</div></div>';
   
-  // ★ 제품 정의 정보 (이미지2 필드 추가)
-  h+='<div class="m-sec"><div class="m-sec-t">👗 제품 정의 / 产品定义</div><div class="d-grid">';
-  h+=it("Top Type / 상의 유형 / 上衣类型",dv(mv("Top_Type",g(r,"Top_Type"))));
-  h+=it("Sleeve / 소매 유형 / 衣袖类型",dv(mv("Sleeve",g(r,"Sleeve"))));
-  h+=it("Fit / 핏 / 版型",dv(mv("Fit",g(r,"Fit"))));
-  h+=it("Details / 디테일 / 类型详情",dv(mv("Details",g(r,"Details"))));
-  h+=it("Bottom Type / 하의 유형 / 下装类型",dv(mv("Bottom_Type",g(r,"Bottom_Type"))));
-  h+=it("Bottom Length / 하의 기장 / 下装长短",dv(mv("Bottom_Length",g(r,"Bottom_Length"))));
-  h+='</div></div>';
-  
-  // ★ 원단 정보 (이미지2 필드 추가)
-  h+='<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料信息</div><div class="d-grid">';
-  h+=it("Material Type / 원단 종류 / 面料种类",dv(mv("Material_Type",g(r,"Material_Type"))));
-  h+=it("blended % / 혼방 % / 混纺 %",dv(g(r,"blended_percentage")));
-  h+=it("Lining Type / 안감유형 / 里料类型",dv(mv("Lining_Type",g(r,"Lining_Type"))));
-  h+='</div></div>';
-  
   document.getElementById("mBody").innerHTML=h;
   document.getElementById("modalOv").classList.add("active");
   
-  // 이미지 로딩
   setTimeout(function(){
     imgs.forEach(function(u,i){qImg("moImg"+i,u,"width:100%;height:100%;object-fit:cover;cursor:pointer",true)});
   },100);
@@ -595,7 +595,6 @@ function openStyleModal(s){
   function dv(v){return v==="-"?'<span class="d-val empty">미입력</span>':escH(v)}
   function it(l,v){return'<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'}
   
-  // 이미지 갤러리
   var imgs=getAllImgs(s,"Style_Image").slice(0,5);
   if(imgs.length>0){
     h+='<div class="m-img-gallery">';
