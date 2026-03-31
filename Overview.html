@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Overview v10</title>
+<title>Overview v11</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
-/* ========== Style View v32 CSS (원본 100% 동일) ========== */
+/* ========== Style View v32 CSS (원본 유지) ========== */
 :root{--z-primary:#1E3A8A;--z-accent:#3B82F6;--z-bg:#F1F5F9;--z-border:#E2E8F0;--z-text-main:#0F172A;--z-text-muted:#64748B;--z-card-bg:#FFF;--st-appr:#10B981;--st-prog:#F59E0B;--st-danger:#EF4444;--st-draft:#94A3B8}
-/* MO View 변수도 겸용 */
 :root{--pr:#1E3A8A;--ac:#3B82F6;--bg:#F1F5F9;--bd:#E2E8F0;--tx:#0F172A;--tm:#64748B;--cw:#FFF;--ok:#10B981;--wn:#F59E0B;--dg:#EF4444;--dr:#94A3B8}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Noto Sans KR',-apple-system,sans-serif}
 body{background:var(--z-bg);padding:16px;min-height:100vh}
 
-/* 로딩 */
+/* 로딩 & 헤더 */
 .loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;gap:16px}
 .spinner{width:40px;height:40px;border:4px solid var(--z-border);border-top-color:var(--z-accent);border-radius:50%;animation:spin .8s linear infinite}
 .spinner-sm{width:18px;height:18px;border:3px solid var(--z-border);border-top-color:var(--z-accent);border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
@@ -23,22 +22,68 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .loading-text{font-size:13px;color:var(--z-text-muted);font-weight:600}
 .error-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C}
 
-/* ── 페이지 구분 헤더 ── */
 .ov-page-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:8px}
 .ov-page-hdr h1{font-size:19px;font-weight:900;color:var(--z-text-main);display:flex;align-items:center;gap:8px}
 .ov-page-hdr h1 .icon-s{width:30px;height:30px;background:var(--z-primary);border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900}
-
-/* 섹션 구분선 */
 .ov-section{margin-bottom:40px}
 .ov-sec-divider{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:12px;border-bottom:2px solid var(--z-border)}
 .ov-sec-divider .sec-ic{width:26px;height:26px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:900}
 .ov-sec-divider span{font-size:16px;font-weight:900;color:var(--z-text-main)}
 
-/* ========== Style View v32 스타일 (원본 완전 동일) ========== */
-.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
-.page-header h1{font-size:17px;font-weight:900;color:var(--z-text-main);display:flex;align-items:center;gap:8px}
-.page-header h1 .icon-s{width:26px;height:26px;background:var(--z-primary);border-radius:5px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900}
+/* ========== V11 추가: 상단 대시보드 4종 (파스텔톤) ========== */
+.dash-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:30px}
+.dash-card{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:16px;display:flex;flex-direction:column;box-shadow:0 4px 6px -1px rgba(0,0,0,.02)}
+.dash-title{font-size:13px;font-weight:800;color:var(--tx);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.dash-title span{color:var(--tm);font-size:10px;font-weight:600}
 
+/* Chart 1: Bar */
+.ch-bar-wrap{display:flex;align-items:flex-end;justify-content:space-around;flex:1;padding-top:10px;gap:8px;height:120px}
+.ch-bar-group{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;cursor:pointer}
+.ch-bars{display:flex;align-items:flex-end;gap:4px;height:90px;width:100%;justify-content:center}
+.ch-b-p{width:14px;background:#E2E8F0;border-radius:3px 3px 0 0;transition:opacity .15s} /* 계획 파스텔회색 */
+.ch-b-a{width:14px;background:#93C5FD;border-radius:3px 3px 0 0;transition:opacity .15s} /* 실적 파스텔블루 */
+.ch-bar-group:hover .ch-b-p, .ch-bar-group:hover .ch-b-a{opacity:.8}
+.ch-b-lbl{font-size:9px;font-weight:700;color:var(--tm)}
+.ch-legend{display:flex;justify-content:center;gap:12px;font-size:9px;color:var(--tm);margin-top:8px}
+.ch-legend span{display:flex;align-items:center;gap:4px}
+.ch-legend i{width:8px;height:8px;border-radius:2px;display:inline-block}
+
+/* Chart 2: Donut */
+.ch-donut-wrap{display:flex;align-items:center;justify-content:center;flex:1;gap:16px}
+.donut-svg{width:100px;height:100px;transform:rotate(-90deg)}
+.donut-center{position:absolute;font-size:16px;font-weight:900;color:var(--tx);display:flex;flex-direction:column;align-items:center;margin-top:38px;margin-left:33px}
+.donut-center span{font-size:8px;color:var(--tm)}
+.ch-donut-leg{display:flex;flex-direction:column;gap:8px}
+.ch-d-leg-item{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:700;color:var(--tm);cursor:pointer}
+.ch-d-leg-item:hover{opacity:.7}
+.ch-d-leg-item b{font-size:11px;color:var(--tx)}
+.ch-d-leg-item i{width:10px;height:10px;border-radius:50%}
+
+/* Chart 3: Waffle */
+.ch-waffle-wrap{display:flex;align-items:center;justify-content:center;flex:1;gap:16px}
+.ch-waffle-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;width:100px;height:100px}
+.ch-waffle-cell{background:#F1F5F9;border-radius:1px}
+.ch-waffle-cell.s{background:#FDE047} /* 파스텔 옐로우 */
+.ch-waffle-cell.i{background:#93C5FD} /* 파스텔 블루 */
+.ch-waf-leg{display:flex;flex-direction:column;gap:8px}
+.ch-waf-leg-item{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:700;color:var(--tm);cursor:pointer}
+.ch-waf-leg-item:hover{opacity:.7}
+.ch-waf-leg-item b{font-size:11px;color:var(--tx)}
+.ch-waf-leg-item i{width:10px;height:10px;border-radius:2px}
+
+/* Chart 4: Heatmap Table */
+.ch-heat-wrap{display:flex;flex-direction:column;flex:1;justify-content:center}
+.ch-heat-tbl{width:100%;border-collapse:separate;border-spacing:2px;font-size:9px}
+.ch-heat-tbl th{color:var(--tm);font-weight:700;padding-bottom:4px}
+.ch-heat-tbl td{background:#F1F5F9;border-radius:4px;padding:6px;text-align:center;font-weight:800;color:var(--pr);cursor:pointer;transition:opacity .15s}
+.ch-heat-tbl td:hover{opacity:.7}
+.ch-heat-label{text-align:right;font-weight:700;color:var(--tm);padding-right:8px;width:35%}
+
+/* ========== 대시보드 리스트 모달 ========== */
+.dash-modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:2500;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
+.dash-modal-ov.active{display:flex}
+
+/* ========== 하위 스타일 요소 (기존) ========== */
 .mkpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 420px;gap:12px;margin-bottom:21px}
 .mkpi-card{background:var(--z-card-bg);border:1px solid var(--z-border);border-radius:10px;padding:14px;position:relative;overflow:hidden}
 .mkpi-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px}
@@ -57,8 +102,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .mkpi-stat-n{font-size:20px;font-weight:900;line-height:1}
 .mkpi-stat-l{font-size:10px;font-weight:700;color:var(--z-text-muted);margin-top:4px;line-height:1.3}
 .mkpi-stat .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;vertical-align:middle}
-
-/* 지연 카드 (Style) */
 .s-delay-card{background:#FFF5F5;border:1px solid #FECACA;border-radius:10px;padding:14px;position:relative;overflow:hidden;display:flex;flex-direction:column}
 .s-delay-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:#FCA5A5}
 .s-delay-card-title{font-size:12px;font-weight:800;color:#DC2626;margin-bottom:4px;display:flex;align-items:center;gap:6px}
@@ -69,14 +112,10 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .s-delay-item:hover{background:#FEF2F2}
 .s-delay-mo{font-size:10px;font-weight:800;color:#DC2626}
 .s-delay-style{font-size:8px;color:#64748B;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-/* Style 필터 바 */
 .filter-bar{display:flex;justify-content:flex-end;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
 .search-box{background:#fff;border:1px solid var(--z-border);border-radius:6px;padding:5px 10px;font-size:11px;width:200px;outline:none;font-family:inherit}
 .search-box:focus{border-color:var(--z-accent);box-shadow:0 0 0 2px rgba(59,130,246,.1)}
 .filter-select{background:#fff;border:1px solid var(--z-border);border-radius:6px;padding:5px 8px;font-size:11px;outline:none;font-family:inherit;cursor:pointer}
-
-/* Style 테이블 */
 .month-section{margin-bottom:16px}
 .month-card{background:var(--z-card-bg);border:1px solid var(--z-border);border-radius:8px;overflow:hidden}
 .month-header{padding:8px 16px;background:#F8FAFC;border-bottom:1px solid var(--z-border);display:flex;justify-content:space-between;align-items:center}
@@ -99,9 +138,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .tag-prog{background:#FEF3C7;color:#B45309;border:1px solid #FDE68A}
 .tag-appr{background:#D1FAE5;color:#065F46;border:1px solid #A7F3D0}
 .tag-fail{background:#FEF2F2;color:#B91C1C;border:1px solid #FECACA}
-
-/* ========== MO View v28 스타일 (원본 완전 동일) ========== */
-/* MO KPI - Style KPI와 같은 클래스지만 색상만 다름 */
 .mo-mkpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 420px;gap:12px;margin-bottom:21px}
 .mo-mkpi-card{background:var(--cw);border:1px solid var(--bd);border-radius:10px;padding:14px;position:relative;overflow:hidden}
 .mo-mkpi-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px}
@@ -110,8 +146,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .mo-mkpi-card:nth-child(3)::before{background:#A7F3D0}
 .mo-mkpi-footer{margin-top:12px;padding-top:10px;border-top:1px solid #F1F5F9;font-size:11px;color:var(--tm);display:flex;justify-content:center;gap:24px}
 .mo-mkpi-footer b{font-size:12px;color:var(--tx);font-weight:800}
-
-/* MO 지연 카드 */
 .delay-card{background:#FFF5F5;border:1px solid #FECACA;border-radius:10px;padding:14px;position:relative;overflow:hidden;display:flex;flex-direction:column}
 .delay-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:#FCA5A5}
 .delay-card-title{font-size:12px;font-weight:800;color:#DC2626;margin-bottom:4px;display:flex;align-items:center;gap:6px}
@@ -123,8 +157,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .delay-mo{font-size:10px;font-weight:800;color:#DC2626}
 .delay-style{font-size:8px;color:#64748B;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .delay-badge{display:inline-block;font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:#FEE2E2;color:#DC2626;margin-left:4px}
-
-/* MO 파이프라인 */
 .pipe-card{background:var(--cw);border:1px solid var(--bd);border-radius:8px;padding:22px 20px;margin-bottom:21px}
 .pipe-title-txt{font-size:13px;font-weight:800;color:var(--tm);text-transform:uppercase;margin-bottom:14px;letter-spacing:.5px}
 .pipe-row{display:flex;align-items:center;gap:4px;overflow-x:auto}
@@ -136,24 +168,18 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .pipe-emoji{font-size:1.3em;margin-right:4px}
 .pipe-bar{height:5px;border-radius:2px;margin-top:8px}
 .pipe-arr{color:#CBD5E1;font-size:12px;flex-shrink:0}
-
-/* MO 필터 바 */
 .mo-search-box{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 10px;font-size:11px;outline:none;font-family:inherit}
 .mo-search-box:focus{border-color:var(--ac);box-shadow:0 0 0 2px rgba(59,130,246,.1)}
 .mo-fsel{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 8px;font-size:11px;outline:none;font-family:inherit;cursor:pointer}
-
-/* MO 월별 테이블 */
 .mt-sec{margin-bottom:83px}
 .mt-card{background:var(--cw);border:1px solid var(--bd);border-radius:8px;overflow:hidden}
 .mt-hd{padding:10px 16px;background:#F8FAFC;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
 .mt-title-txt{font-size:16px;font-weight:800;color:var(--tx)}
 .mt-cnt{font-size:11px;color:var(--tm);font-weight:600;background:#F1F5F9;padding:2px 8px;border-radius:10px;border:1px solid #CBD5E1}
 .mf-bar{display:flex;justify-content:flex-end;align-items:center;padding:8px 16px;gap:8px;background:#FAFBFC;border-bottom:1px solid var(--bd);flex-wrap:wrap}
-.tbl-scroll{overflow-x:auto}
 table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;table-layout:fixed}
 .zt th{background:#F1F5F9;padding:9px 8px;color:var(--tm);font-weight:800;font-size:10px;border-bottom:1px solid var(--bd);white-space:nowrap;text-align:center}
 .zt th:nth-child(1),.zt th:nth-child(2),.zt th:nth-child(3){text-align:left}
-/* ★ MO 테이블 행 높이 확대 (Style 테이블과 동일하게) */
 .zt td{padding:12px 8px;border-bottom:1px solid #F1F5F9;color:var(--tx);vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;height:48px;text-align:center}
 .zt td:nth-child(1),.zt td:nth-child(2),.zt td:nth-child(3){text-align:left}
 .zt tbody tr{cursor:pointer;transition:background .1s}
@@ -166,93 +192,56 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .t-bl{background:#EFF6FF;color:#1E40AF;border:1px solid #BFDBFE}
 .dly-badge2{display:inline-block;padding:1px 4px;border-radius:3px;font-size:7px;font-weight:700;background:#FEF2F2;color:#DC2626;margin-left:2px;animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
-
-/* ========== Production Progress Bar 스타일 (★ 색상 연하게 수정) ========== */
 .p-prog{display:flex;flex-direction:column;gap:4px;width:100%;padding:0 2px} 
 .p-bars{display:flex;gap:2px;width:100%;height:6px} 
 .p-bar{flex:1;border-radius:2px} 
 .p-lbls{display:flex;gap:2px;width:100%} 
 .p-lbl{flex:1;font-size:8px;text-align:center;letter-spacing:-0.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* ========== 팝업 (Style KPI) ========== */
-.pop-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:2000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
-.pop-ov.active{display:flex}
-.pop-box{background:#fff;border-radius:12px;width:92%;max-width:700px;max-height:82vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .2s ease-out}
-.pop-hd{padding:16px 20px 12px;border-bottom:1px solid var(--z-border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:10;border-radius:12px 12px 0 0}
-.pop-title{font-size:15px;font-weight:800;color:var(--z-primary)}
-.pop-sub{font-size:11px;color:var(--z-text-muted);margin-top:2px}
-.pop-close{width:28px;height:28px;border-radius:6px;border:1px solid var(--z-border);background:#F8FAFC;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--z-text-muted)}
-.pop-close:hover{background:#FEF2F2;color:var(--st-danger)}
-.pop-body{padding:16px 20px}
-.pop-item{padding:10px 12px;border:1px solid var(--z-border);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:background .1s;display:flex;justify-content:space-between;align-items:center}
-.pop-item:hover{background:#EFF6FF;border-color:#BFDBFE}
-.pop-item-left .pi-mo{font-size:12px;font-weight:800;color:var(--z-primary)}
-.pop-item-left .pi-name{font-size:10px;color:var(--z-text-muted);margin-top:2px}
-.pop-item-left .pi-meta{font-size:9px;color:#94A3B8;margin-top:2px}
-.pop-empty{text-align:center;padding:30px;color:var(--z-text-muted);font-size:13px}
+/* Modals */
+.pop-ov, .mo-pop-ov, .dash-modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:2000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
+.pop-ov.active, .mo-pop-ov.active, .dash-modal-ov.active{display:flex}
+.pop-box, .mo-pop-box, .dash-modal-box{background:#fff;border-radius:12px;width:92%;max-width:700px;max-height:82vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .2s ease-out}
+.pop-hd, .mo-pop-hd, .dash-modal-hd{padding:16px 20px 12px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:10;border-radius:12px 12px 0 0}
+.pop-title, .mo-pop-title, .dash-modal-title{font-size:15px;font-weight:800;color:var(--pr)}
+.pop-sub, .mo-pop-sub, .dash-modal-sub{font-size:11px;color:var(--tm);margin-top:2px}
+.pop-close, .mo-pop-close, .dash-modal-close{width:28px;height:28px;border-radius:6px;border:1px solid var(--bd);background:#F8FAFC;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--tm)}
+.pop-close:hover, .mo-pop-close:hover, .dash-modal-close:hover{background:#FEF2F2;color:var(--dg)}
+.pop-body, .mo-pop-body, .dash-modal-body{padding:16px 20px}
+.pop-item, .mo-pop-item, .dash-list-item{padding:10px 12px;border:1px solid var(--bd);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:background .1s;display:flex;justify-content:space-between;align-items:center}
+.pop-item:hover, .mo-pop-item:hover, .dash-list-item:hover{background:#EFF6FF;border-color:#BFDBFE}
+.pop-item-left .pi-mo, .mo-pop-item .pi-mo, .dash-list-item .pi-mo{font-size:12px;font-weight:800;color:var(--pr)}
+.pop-item-left .pi-name, .mo-pop-item .pi-name, .dash-list-item .pi-name{font-size:10px;color:var(--tm);margin-top:2px}
+.pop-item-left .pi-meta, .mo-pop-item .pi-meta, .dash-list-item .pi-meta{font-size:9px;color:#94A3B8;margin-top:2px}
+.pop-empty, .mo-pop-empty, .dash-empty{text-align:center;padding:30px;color:var(--tm);font-size:13px}
 
-/* ========== MO KPI 팝업 / 파이프라인 팝업 ========== */
-.mo-pop-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:2000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
-.mo-pop-ov.active{display:flex}
-.mo-pop-box{background:#fff;border-radius:12px;width:92%;max-width:700px;max-height:82vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .2s ease-out}
-.mo-pop-hd{padding:16px 20px 12px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:10;border-radius:12px 12px 0 0}
-.mo-pop-title{font-size:15px;font-weight:800;color:var(--pr)}
-.mo-pop-sub{font-size:11px;color:var(--tm);margin-top:2px}
-.mo-pop-close{width:28px;height:28px;border-radius:6px;border:1px solid var(--bd);background:#F8FAFC;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--tm)}
-.mo-pop-close:hover{background:#FEF2F2;color:var(--dg)}
-.mo-pop-body{padding:16px 20px}
-.mo-pop-item{padding:10px 12px;border:1px solid var(--bd);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:background .1s;display:flex;justify-content:space-between;align-items:center}
-.mo-pop-item:hover{background:#EFF6FF;border-color:#BFDBFE}
-.mo-pop-item .pi-mo{font-size:12px;font-weight:800;color:var(--pr)}
-.mo-pop-item .pi-name{font-size:10px;color:var(--tm);margin-top:2px}
-.mo-pop-item .pi-meta{font-size:9px;color:#94A3B8;margin-top:2px}
-.mo-pop-empty{text-align:center;padding:30px;color:var(--tm);font-size:13px}
-
-/* ========== Style 상세 모달 ========== */
-.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:3000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
-.modal-overlay.active{display:flex}
-.modal-box-lg{background:#fff;border-radius:12px;width:92%;max-width:760px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .25s ease-out}
+/* Detail Modals */
+.modal-overlay, .mo-modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:3000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
+.modal-overlay.active, .mo-modal-ov.active{display:flex}
+.modal-box-lg, .mo-modal-box{background:#fff;border-radius:12px;width:92%;max-width:760px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .25s ease-out}
 @keyframes mIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.modal-header{padding:20px 24px 16px;border-bottom:1px solid var(--z-border);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:#fff;z-index:10;border-radius:12px 12px 0 0}
+.modal-header, .mo-m-hd{padding:20px 24px 16px;border-bottom:1px solid var(--z-border);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:#fff;z-index:10;border-radius:12px 12px 0 0}
 .modal-header-left{display:flex;align-items:center;gap:14px}
 .modal-thumb-lg{width:64px;height:64px;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
 .modal-thumb-lg img{width:100%;height:100%;object-fit:cover}
-.modal-title{font-size:18px;font-weight:900;color:var(--z-primary)}
-.modal-subtitle{font-size:12px;color:var(--z-text-muted);margin-top:2px}
-.modal-close-lg{width:32px;height:32px;border-radius:8px;border:1px solid var(--z-border);background:#F8FAFC;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--z-text-muted)}
-.modal-close-lg:hover{background:#FEF2F2;color:var(--st-danger)}
-.modal-body{padding:20px 24px}
-.modal-section{margin-bottom:24px}
-.modal-section-title{font-size:12px;font-weight:800;color:var(--z-primary);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #EFF6FF}
-.detail-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-.detail-item{display:flex;flex-direction:column;gap:3px;padding:6px 8px;background:#FAFBFC;border-radius:6px;border:1px solid #F1F5F9}
-.detail-label{font-size:9px;font-weight:700;color:var(--z-text-muted);line-height:1.4}
-.detail-value{font-size:13px;font-weight:600;color:var(--z-text-main)}
-.detail-value.empty{color:#CBD5E1;font-weight:400;font-style:italic}
+.modal-title, .mo-m-title{font-size:18px;font-weight:900;color:var(--z-primary)}
+.modal-subtitle, .mo-m-sub{font-size:12px;color:var(--z-text-muted);margin-top:2px}
+.modal-close-lg, .mo-m-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--z-border);background:#F8FAFC;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--z-text-muted)}
+.modal-close-lg:hover, .mo-m-close:hover{background:#FEF2F2;color:var(--st-danger)}
+.modal-body, .mo-m-body{padding:20px 24px}
+.modal-section, .mo-m-sec{margin-bottom:24px}
+.modal-section-title, .mo-m-sec-t{font-size:12px;font-weight:800;color:var(--z-primary);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #EFF6FF}
+.detail-grid, .d-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.detail-item, .d-item{display:flex;flex-direction:column;gap:3px;padding:6px 8px;background:#FAFBFC;border-radius:6px;border:1px solid #F1F5F9}
+.detail-label, .d-label{font-size:9px;font-weight:700;color:var(--z-text-muted);line-height:1.4}
+.detail-value, .d-val{font-size:13px;font-weight:600;color:var(--z-text-main)}
+.detail-value.empty, .d-val.empty{color:#CBD5E1;font-weight:400;font-style:italic}
 .modal-images{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
 .modal-img-wrap{text-align:center}
 .modal-img-box{width:120px;height:120px;background:#F8FAFC;border:1px solid var(--z-border);border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;color:#CBD5E1}
 .modal-img-box img{width:100%;height:100%;object-fit:contain;cursor:pointer}
 .modal-img-box:hover{border-color:var(--z-accent)}
 .modal-img-label{font-size:8px;color:var(--z-text-muted);margin-top:3px;font-weight:600}
-
-/* ========== MO 상세 모달 ========== */
-.mo-modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:3000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
-.mo-modal-ov.active{display:flex}
-.mo-modal-box{background:#fff;border-radius:12px;width:92%;max-width:800px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .25s ease-out}
-.mo-m-hd{padding:20px 24px 16px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:#fff;z-index:10;border-radius:12px 12px 0 0}
-.mo-m-title{font-size:18px;font-weight:900;color:var(--pr)}
-.mo-m-sub{font-size:12px;color:var(--tm);margin-top:2px}
-.mo-m-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--bd);background:#F8FAFC;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--tm)}
-.mo-m-close:hover{background:#FEF2F2;color:var(--dg)}
-.mo-m-body{padding:20px 24px}
-.mo-m-sec{margin-bottom:24px}
-.mo-m-sec-t{font-size:12px;font-weight:800;color:var(--pr);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #EFF6FF}
-.d-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-.d-item{display:flex;flex-direction:column;gap:3px;padding:6px 8px;background:#FAFBFC;border-radius:6px;border:1px solid #F1F5F9}
-.d-label{font-size:9px;font-weight:700;color:var(--tm)}
-.d-val{font-size:13px;font-weight:600;color:var(--tx)}
-.d-val.empty{color:#CBD5E1;font-style:italic}
 .tl-modal{margin-top:8px}
 .tl-item{display:flex;align-items:flex-start;gap:12px;padding:6px 0;position:relative}
 .tl-item:not(:last-child)::before{content:'';position:absolute;left:11px;top:28px;width:2px;height:calc(100% - 14px);background:#E2E8F0}
@@ -264,12 +253,12 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .tl-lb-m{font-size:12px;font-weight:700;color:var(--tx)}
 .tl-dt-m{font-size:10px;color:var(--tm);margin-top:1px}
 
-/* Lightbox */
 #lightboxOverlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:4000;justify-content:center;align-items:center;cursor:pointer;backdrop-filter:blur(4px)}
 
 /* 반응형 */
+@media(max-width:1200px){.dash-row{grid-template-columns:1fr 1fr}}
 @media(max-width:1100px){.mkpi-row,.mo-mkpi-row{grid-template-columns:1fr 1fr}.detail-grid,.d-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:768px){.mkpi-row,.mo-mkpi-row{grid-template-columns:1fr}.bar-label{min-width:200px;max-width:200px}}
+@media(max-width:768px){.dash-row{grid-template-columns:1fr}.mkpi-row,.mo-mkpi-row{grid-template-columns:1fr}.bar-label{min-width:200px;max-width:200px}}
 </style>
 </head>
 <body>
@@ -289,6 +278,9 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
     <button onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_MO','_blank')" style="background:#86EFAC;color:#065F46;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer">+ New MO</button>
   </div>
 </div>
+
+<div class="dash-row" id="topDashboard">
+  </div>
 
 <div class="ov-section">
   <div class="ov-sec-divider">
@@ -355,6 +347,16 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
       <div class="mo-pop-close" id="mo_pipePopClose">✕</div>
     </div>
     <div class="mo-pop-body" id="mo_pipePopBody"></div>
+  </div>
+</div>
+
+<div class="dash-modal-ov" id="dashModalOv">
+  <div class="dash-modal-box">
+    <div class="dash-modal-hd">
+      <div><div class="dash-modal-title" id="dashModalTitle">-</div><div class="dash-modal-sub" id="dashModalSub">-</div></div>
+      <div class="dash-modal-close" id="dashModalClose">✕</div>
+    </div>
+    <div class="dash-modal-body" id="dashModalBody"></div>
   </div>
 </div>
 
@@ -426,7 +428,6 @@ var S_SHORT={
 function mv(f,v){return(!v||v==="-")?"-":(S_MAP[f]&&S_MAP[f][v])?S_MAP[f][v]:v}
 function sv(f,v){return(!v||v==="-")?null:(S_SHORT[f]&&S_SHORT[f][v])?S_SHORT[f][v]:v}
 
-/* MO 공통 유틸 */
 var CAT_MAP={"S":"Set / 세트 / 套装","I":"Individual / 단품 / 单品"};
 function catName(v){return(!v||v==="-")?"-":(CAT_MAP[v]||v)}
 function cleanFactory(v){if(!v||v==="-")return"-";return v.replace(/^[_\s]*\d+[_\s]*/,"")}
@@ -464,7 +465,7 @@ function getMOProdStage(r){var s=g(r,"Production_Status").toLowerCase();
 
 function parseYM(key){var m=key.match(/(\d+)년\s*(\d+)월/);if(!m)return null;var y=parseInt(m[1]);if(y<100)y+=2000;return{y:y,m:parseInt(m[2])}}
 
-/* ── 하이브리드 이미지 큐 (★ 최적화: 대기시간 단축) ── */
+/* ── 이미지 로드 ── */
 var _safeQ=[],_safeBusy=false;
 function _runSafeQ(){
   if(_safeQ.length===0){_safeBusy=false;return}_safeBusy=true;
@@ -492,6 +493,7 @@ ZOHO.CREATOR.init().then(function(){
   .then(function(r){
     if(r&&r.code===3000&&r.data){
       allRec=r.data;s_filtered=allRec.slice();
+      renderTopDashboard(); // ★ V11 4종 차트 렌더링 호출
       s_renderMKPI();s_buildFilters();s_renderTables();
       mo_renderAll();
       document.getElementById("loadingScreen").style.display="none";
@@ -501,7 +503,191 @@ ZOHO.CREATOR.init().then(function(){
   .catch(function(e){document.getElementById("errorMsg").textContent=JSON.stringify(e);document.getElementById("loadingScreen").style.display="none";document.getElementById("errorScreen").style.display="block"})});
 
 /* ══════════════════════════════════════
-   Style View v32 함수들 (★ 제목 한/중으로 변경)
+   ★ V11 대시보드 4종 렌더링 함수
+══════════════════════════════════════ */
+function renderTopDashboard(){
+  let moByM = {}, stByM = {};
+  allMO_rec.forEach(r=>{
+    let py=g(r,"Plan_Year"), pm=g(r,"Plan_Month");
+    let k=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"-";
+    if(k!=="-"){
+      if(!moByM[k]) moByM[k]={plan:0, actual:0, mos:[]};
+      moByM[k].plan += (parseInt(g(r,"Total_Quantity"))||0);
+      moByM[k].actual += (parseInt(g(r,"Shipped_Quantity")) || parseInt(g(r,"Finished_Quantity")) || 0);
+      moByM[k].mos.push(r);
+    }
+  });
+
+  // 최근 3개월 구하기 (소팅 후 앞 3개)
+  let mKeys = Object.keys(moByM).sort().slice(0,3);
+  
+  // 1. 월별 생산 계획 대비 실적 (Bar)
+  let h1 = '<div class="dash-card"><div class="dash-title">월별 생산 계획 대비 실적 <span>每月生产计划与实际</span></div><div class="ch-bar-wrap">';
+  let maxQty = 1;
+  mKeys.forEach(k => { maxQty = Math.max(maxQty, moByM[k].plan, moByM[k].actual); });
+  mKeys.forEach(k => {
+    let mObj = moByM[k];
+    let pH = Math.max(5, (mObj.plan/maxQty)*100);
+    let aH = Math.max(5, (mObj.actual/maxQty)*100);
+    let lbl = parseYM(k).m+"월";
+    let kEnc = encodeURIComponent(k);
+    h1 += `<div class="ch-bar-group" onclick="openDashList('bar','${kEnc}')" title="Plan: ${mObj.plan}, Actual: ${mObj.actual}">
+             <div class="ch-bars"><div class="ch-b-p" style="height:${pH}%"></div><div class="ch-b-a" style="height:${aH}%"></div></div>
+             <div class="ch-b-lbl">${lbl}</div>
+           </div>`;
+  });
+  h1 += `</div><div class="ch-legend"><span><i style="background:#E2E8F0"></i>계획/计划</span><span><i style="background:#93C5FD"></i>실적/实际</span></div></div>`;
+
+  // 2. 오더 건전성 현황 (Donut)
+  let oT=0, aR=0, dL=0; 
+  allMO_rec.forEach(r => {
+    if(isMODelayed(r)) dL++;
+    else if(getMOProdStage(r)==="Shipped" || getMOProdStage(r)==="Done") aR++; // 완료
+    else oT++; // 정상 진행
+  });
+  let totalMO = allMO_rec.length;
+  let pOT = totalMO ? Math.round(oT/totalMO*100) : 0;
+  let pAR = totalMO ? Math.round(aR/totalMO*100) : 0;
+  let pDL = totalMO ? Math.round(dL/totalMO*100) : 0;
+  // SVG Donut (r=15.915 -> 100 둘레)
+  let offAR = 100 - pOT;
+  let offDL = 100 - pOT - pAR;
+  let h2 = `<div class="dash-card"><div class="dash-title">오더 건전성 현황 <span>订单健康度</span></div><div class="ch-donut-wrap">
+              <div style="position:relative;width:100px;height:100px">
+                <svg viewBox="0 0 36 36" class="donut-svg">
+                  <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#E2E8F0" stroke-width="5"></circle>
+                  ${pOT>0 ? `<circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#93C5FD" stroke-width="5" stroke-dasharray="${pOT} ${100-pOT}" stroke-dashoffset="25"></circle>` : ''}
+                  ${pAR>0 ? `<circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#A7F3D0" stroke-width="5" stroke-dasharray="${pAR} ${100-pAR}" stroke-dashoffset="${offAR+25}"></circle>` : ''}
+                  ${pDL>0 ? `<circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#FCA5A5" stroke-width="5" stroke-dasharray="${pDL} ${100-pDL}" stroke-dashoffset="${offDL+25}"></circle>` : ''}
+                </svg>
+                <div class="donut-center">${totalMO}<span>TOTAL</span></div>
+              </div>
+              <div class="ch-donut-leg">
+                <div class="ch-d-leg-item" onclick="openDashList('health','ot')"><i style="background:#93C5FD"></i>정상/正常 <b>${pOT}%</b></div>
+                <div class="ch-d-leg-item" onclick="openDashList('health','ar')"><i style="background:#A7F3D0"></i>완료/完成 <b>${pAR}%</b></div>
+                <div class="ch-d-leg-item" onclick="openDashList('health','dl')"><i style="background:#FCA5A5"></i>지연/延误 <b>${pDL}%</b></div>
+              </div>
+            </div></div>`;
+
+  // 3. 품목 카테고리 비율 (Waffle)
+  let cS=0, cI=0;
+  allRec.forEach(r => { if(g(r,"Category")==="S") cS++; else if(g(r,"Category")==="I") cI++; });
+  let totalSt = cS + cI;
+  let pS = totalSt ? Math.round(cS/totalSt*100) : 0;
+  let pI = 100 - pS;
+  let waf = '';
+  for(let i=0; i<100; i++){
+    waf += `<div class="ch-waffle-cell ${i<pS ? 's' : 'i'}"></div>`;
+  }
+  let h3 = `<div class="dash-card"><div class="dash-title">품목 카테고리 비율 <span>品类占比</span></div><div class="ch-waffle-wrap">
+              <div class="ch-waffle-grid" onclick="openDashList('cat','all')">${waf}</div>
+              <div class="ch-waf-leg">
+                <div class="ch-waf-leg-item" onclick="openDashList('cat','s')"><i style="background:#FDE047"></i>세트/套装 <b>${pS}%</b></div>
+                <div class="ch-waf-leg-item" onclick="openDashList('cat','i')"><i style="background:#93C5FD"></i>단품/单品 <b>${pI}%</b></div>
+              </div>
+            </div></div>`;
+
+  // 4. 세부 스타일 진행 빈도 (Heatmap Table)
+  // 카테고리별 주요 디테일을 뽑기 (Top 5)
+  let fMap = {};
+  allRec.forEach(r=>{
+    let c = g(r,"Category")==="S" ? "Set" : "Ind";
+    let dt = g(r,"Top_Type")!=="-" ? S_SHORT.Top_Type[g(r,"Top_Type")] : (g(r,"Bottom_Type")!=="-" ? S_SHORT.Bottom_Type[g(r,"Bottom_Type")] : "Basic");
+    let name = c+"-"+dt;
+    let ym = g(r,"Plan_Year")+"년 "+g(r,"Plan_Month")+"월";
+    if(!fMap[name]) fMap[name]={ total:0, m:{} };
+    fMap[name].total++;
+    if(!fMap[name].m[ym]) fMap[name].m[ym]=0;
+    fMap[name].m[ym]++;
+  });
+  let topFreq = Object.keys(fMap).sort((a,b)=>fMap[b].total - fMap[a].total).slice(0,5);
+  
+  let h4 = `<div class="dash-card"><div class="dash-title">세부 스타일 빈도 <span>款式频率</span></div><div class="ch-heat-wrap"><table class="ch-heat-tbl"><tr><th></th>`;
+  mKeys.forEach(k => { h4 += `<th>${parseYM(k).m}월/月</th>`; });
+  h4 += `</tr>`;
+  topFreq.forEach(f => {
+    let nm = f.replace("Set-","세트-").replace("Ind-","단품-");
+    h4 += `<tr><td class="ch-heat-label">${nm}</td>`;
+    mKeys.forEach(k => {
+      let cnt = fMap[f].m[k] || 0;
+      let alpha = Math.min(0.8, cnt/10 + 0.1); // 색상 농도
+      let bg = cnt>0 ? `rgba(147,197,253,${alpha})` : `#F1F5F9`;
+      h4 += `<td style="background:${bg}" onclick="openDashList('freq','${f}')">${cnt}</td>`;
+    });
+    h4 += `</tr>`;
+  });
+  h4 += `</table></div></div>`;
+
+  document.getElementById("topDashboard").innerHTML = h1 + h2 + h3 + h4;
+}
+
+// 대시보드 리스트 모달 처리
+function openDashList(type, param){
+  let items = [], t="", sub="";
+  
+  if(type==="bar"){
+    let k = decodeURIComponent(param);
+    items = allMO_rec.filter(r => (g(r,"Plan_Year")+"년 "+g(r,"Plan_Month")+"월") === k);
+    t = k + " 생산 실적 / 生产业绩"; sub = "총 "+items.length+"건의 MO";
+  }
+  else if(type==="health"){
+    items = allMO_rec.filter(r => {
+      let isDly = isMODelayed(r);
+      let isDone = getMOProdStage(r)==="Shipped" || getMOProdStage(r)==="Done";
+      if(param==="ot") return !isDly && !isDone;
+      if(param==="ar") return isDone;
+      if(param==="dl") return isDly;
+    });
+    let nms = {ot:"정상 진행 / 正常进行", ar:"완료 / 完成", dl:"지연 / 延误"};
+    t = nms[param]; sub = "총 "+items.length+"건의 MO";
+  }
+  else if(type==="cat"){
+    if(param==="all") items = allRec;
+    else items = allRec.filter(r => g(r,"Category").toLowerCase() === param);
+    t = "카테고리 분류 / 品类分类"; sub = "총 "+items.length+"건의 Style";
+  }
+  else if(type==="freq"){
+    items = allRec.filter(r => {
+      let c = g(r,"Category")==="S" ? "Set" : "Ind";
+      let dt = g(r,"Top_Type")!=="-" ? S_SHORT.Top_Type[g(r,"Top_Type")] : (g(r,"Bottom_Type")!=="-" ? S_SHORT.Bottom_Type[g(r,"Bottom_Type")] : "Basic");
+      return (c+"-"+dt) === param;
+    });
+    t = param.replace("Set-","세트-").replace("Ind-","단품-") + " 스타일"; sub = "총 "+items.length+"건의 Style";
+  }
+
+  document.getElementById("dashModalTitle").textContent = t;
+  document.getElementById("dashModalSub").textContent = sub;
+  
+  let h="";
+  if(!items.length) h='<div class="dash-empty">데이터가 없습니다</div>';
+  else {
+    let isMO = type==="bar" || type==="health";
+    items.forEach(r => {
+      if(isMO){
+        let dly = isMODelayed(r) ? '<span class="dly-badge2">DELAYED</span>' : '';
+        h+=`<div class="dash-list-item" onclick="document.getElementById('dashModalOv').classList.remove('active'); mo_openModal(allMO_rec.find(x=>x['ID']==='${r.ID}'))">
+              <div><div class="pi-mo">${escH(g(r,"MO_Number"))}${dly}</div><div class="pi-name">${escH(g(r,"Style_Name"))}</div><div class="pi-meta">수량: ${g(r,"Total_Quantity")} pcs</div></div>
+              <span class="tag ${mo_tc(g(r,"Production_Status"))}">${escH(g(r,"Production_Status"))}</span>
+            </div>`;
+      } else {
+        let sku = g(r,"Style_SKU"); if(sku==="-") sku=g(r,"SKU");
+        h+=`<div class="dash-list-item" onclick="document.getElementById('dashModalOv').classList.remove('active'); s_openModal(allRec.find(x=>x['ID']==='${r.ID}'))">
+              <div><div class="pi-mo">${escH(sku)}</div><div class="pi-name">${escH(g(r,"Style_Name"))}</div><div class="pi-meta">Category: ${escH(mv("Category",g(r,"Category")))}</div></div>
+              <span class="tag ${s_tc(g(r,"Style_Status"))}">${escH(g(r,"Style_Status"))}</span>
+            </div>`;
+      }
+    });
+  }
+  document.getElementById("dashModalBody").innerHTML = h;
+  document.getElementById("dashModalOv").classList.add("active");
+}
+
+document.getElementById("dashModalClose").addEventListener("click", function(){ document.getElementById("dashModalOv").classList.remove("active"); });
+document.getElementById("dashModalOv").addEventListener("click", function(e){ if(e.target===this) this.classList.remove("active"); });
+
+
+/* ══════════════════════════════════════
+   Style View v32 함수들 (원본 유지)
 ══════════════════════════════════════ */
 var s_currentRecId=null;
 
@@ -517,7 +703,6 @@ function s_renderMKPI(){
     var pct=tot>0?Math.round((ord/tot)*100):0;
     var r36=36,circ=2*Math.PI*r36,offset=circ-(pct/100)*circ;
     var ym=parseYM(key);var yy=ym?ym.y.toString().slice(-2):"";var mm2=ym?(ym.m<10?"0"+ym.m:ym.m):"";
-    /* ★ 한/중 병행표기 */
     var titleText=ym?(yy+"."+mm2+" 스타일 KPI / "+yy+"年 "+ym.m+"月 款式 KPI"):"스타일 KPI";
     var keyEnc=encodeURIComponent(key);
     h+='<div class="mkpi-card"><div class="mkpi-header"><div class="mkpi-title">📅 '+titleText+'</div></div>';
@@ -572,7 +757,6 @@ function s_renderTables(){
     var items=groups[key];var ym=parseYM(key);
     if(ym && (ym.y === 2026 || ym.y === 26) && (ym.m === 4 || ym.m === 5)) return;
     var yy=ym?ym.y.toString().slice(-2):"";var mm2=ym?(ym.m<10?"0"+ym.m:ym.m):"";
-    /* ★ 한/중 병행표기 */
     var tableTitle=ym?(yy+"."+mm2+" 스타일 진행표 / "+yy+"年 "+ym.m+"月 款式表"):"스타일 진행표";
     html+='<div class="month-section"><div class="month-card"><div class="month-header"><div class="month-title">📅 '+tableTitle+'</div><span class="month-count">'+items.length+' styles</span></div>';
     html+='<div class="table-scroll"><table class="z-table"><thead><tr><th style="width:18%">Style Info</th><th style="width:7%">Brand</th><th style="width:7%">Season</th><th style="width:12%">Gender</th><th style="width:12%">Category</th><th style="width:14%">Material_Type</th><th style="width:8%">Target_Cost</th><th style="width:10%">Status</th><th style="width:6%">Sample</th><th style="width:8%">Order</th></tr></thead><tbody>';
@@ -652,15 +836,12 @@ function openLightbox(src){if(!src)return;document.getElementById("lightboxImg")
 function closeLightbox(){document.getElementById("lightboxOverlay").style.display="none";document.getElementById("lightboxImg").src=""}
 
 /* ══════════════════════════════════════
-   MO View v28 함수들 (★ 색상 연하게 + 제목 한/중)
+   MO View v28 함수들 (원본 유지)
 ══════════════════════════════════════ */
-
-/* ── Production 게이지 UI 렌더링 (★ 색상 연하게 수정) ── */
 function renderProdProgress(r){
   var st=["원단 / 面料", "재단 / 裁剪", "봉제 / 车缝", "포장 / 包装", "완료 / 完成", "출고 / 出货"];
   var map={"Not Started":-1,"Fabric":0,"Cutting":1,"Sewing":2,"Packing":3,"Done":4,"Shipped":5};
   
-  /* ★ 색상을 더 연하게 (파스텔톤) */
   var pipeColors = ["#DDD6FE", "#FEF3C7", "#BAE6FD", "#BBF7D0", "#A7F3D0", "#BFDBFE"];
   var textColors = ["#8B5CF6", "#D97706", "#0EA5E9", "#22C55E", "#10B981", "#3B82F6"];
   
@@ -668,27 +849,19 @@ function renderProdProgress(r){
   var isDly=isMODelayed(r);
   
   var bh='<div class="p-bars">', lh='<div class="p-lbls">';
-  
   for(var i=0;i<6;i++){
     var s=st[i], bc="#E2E8F0", lc="#94A3B8", lt=s, fw="600";
-    
     if(cIdx===-1){
       if(i===0){ bc="#CBD5E1"; lt="대기 / 等待"; lc="#64748B"; fw="800"; }
     } else {
       if(i < cIdx){
-        bc = pipeColors[i];
-        lc = textColors[i];
-        fw = "700";
+        bc = pipeColors[i]; lc = textColors[i]; fw = "700";
       } else if(i === cIdx){
         if(isDly){
-          bc = "#FECACA"; 
-          lc = "#DC2626";
-          fw = "800";
+          bc = "#FECACA"; lc = "#DC2626"; fw = "800";
           lt = s.split(" / ")[0]+"_지연 / "+s.split(" / ")[1]+"_延误";
         } else {
-          bc = pipeColors[i];
-          lc = textColors[i];
-          fw = "800";
+          bc = pipeColors[i]; lc = textColors[i]; fw = "800";
         }
       }
     }
@@ -712,7 +885,6 @@ function mo_renderMKPI(){
     var pct=tq>0?Math.round((sq/tq)*100):0;
     var r36=36,circ=2*Math.PI*r36,offset=circ-(pct/100)*circ;
     var ym=parseYM(key);var yy=ym?ym.y.toString().slice(-2):"";var mm2=ym?(ym.m<10?"0"+ym.m:ym.m):"";
-    /* ★ 한/중 병행표기 */
     var titleText=ym?(yy+"."+mm2+" 생산 KPI / "+yy+"年 "+ym.m+"月 生产 KPI"):"생산 KPI";
     var keyEnc=encodeURIComponent(key);
     h+='<div class="mo-mkpi-card"><div class="mkpi-header"><div class="mkpi-title">📅 '+titleText+'</div></div>';
@@ -755,7 +927,6 @@ function mo_renderPipeline(){
   var st=["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
   var emojis=["\u23F3","\uD83E\uDDF5","\u2702\uFE0F","\uD83E\uDDF7","\uD83D\uDCE6","\u2705","\uD83D\uDE9A"];
   var co=["#94A3B8","#A78BFA","#FDBA74","#7DD3FC","#34D399","#10B981","#3B82F6"];
-  /* ★ 한/중 병행표기 */
   var lb2=["미시작 / 未开始","원단 / 面料","재단 / 裁剪","봉제 / 车缝","포장 / 包装","완료 / 完成","출고 / 出货"];
   var cn=[0,0,0,0,0,0,0];
   allMO_rec.forEach(function(r){var i=st.indexOf(getMOProdStage(r));if(i>=0)cn[i]++});
@@ -790,7 +961,6 @@ function mo_renderMonthly(){
     var mFac={},mProd={},mCat={};
     items.forEach(function(r){var f=g(r,"Factory");if(f!=="-")mFac[f]=1;var p=g(r,"Production_Status");if(p!=="-")mProd[p]=1;var c=g(r,"Category");if(c!=="-")mCat[c]=catName(c)});
     var yy=ym?ym.y.toString().slice(-2):"",mm2=ym?(ym.m<10?"0"+ym.m:ym.m):"";
-    /* ★ 한/중 병행표기 */
     var titleText=ym?(yy+"."+mm2+" 생산 안배표 / "+yy+"年 "+ym.m+"月 生产安排"):"생산 안배표";
     html+='<div class="mt-sec" id="mo_ms'+idx+'"><div class="mt-card">';
     html+='<div class="mt-hd"><div class="mt-title-txt">📅 '+titleText+'</div><span class="mt-cnt" id="mo_mc'+idx+'">'+items.length+' MOs</span></div>';
@@ -870,8 +1040,16 @@ document.getElementById("mo_modalOv").addEventListener("click",function(e){if(e.
 document.addEventListener("keydown",function(e){
   if(e.key==="Escape"){
     if(document.getElementById("lightboxOverlay").style.display==="flex")closeLightbox();
-    else{document.getElementById("s_modalOverlay").classList.remove("active");document.getElementById("mo_modalOv").classList.remove("active");
-    document.getElementById("s_kpiPopOv").classList.remove("active");document.getElementById("mo_kpiPopOv").classList.remove("active");document.getElementById("mo_pipePopOv").classList.remove("active")}}});
+    else{
+      document.getElementById("s_modalOverlay").classList.remove("active");
+      document.getElementById("mo_modalOv").classList.remove("active");
+      document.getElementById("s_kpiPopOv").classList.remove("active");
+      document.getElementById("mo_kpiPopOv").classList.remove("active");
+      document.getElementById("mo_pipePopOv").classList.remove("active");
+      document.getElementById("dashModalOv").classList.remove("active"); // V11 추가
+    }
+  }
+});
 </script>
 </body>
 </html>
