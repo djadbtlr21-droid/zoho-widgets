@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Overview v12</title>
+<title>Overview v13</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -30,14 +30,14 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .ov-sec-divider .sec-ic{width:26px;height:26px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:900}
 .ov-sec-divider span{font-size:16px;font-weight:900;color:var(--z-text-main)}
 
-/* ========== V12 수정: 상단 대시보드 4종 (크기 확대, 한/중 병행 좌측 정렬) ========== */
+/* ========== V13 수정: 상단 대시보드 4종 ========== */
 .dash-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:30px}
 .dash-card{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:20px 16px;display:flex;flex-direction:column;box-shadow:0 4px 6px -1px rgba(0,0,0,.02);min-height:240px}
 .dash-title{font-size:14px;font-weight:800;color:var(--tx);margin-bottom:16px;display:block}
 
 /* Chart 1: Waffle (세트/단품 비율) */
 .ch-waffle-wrap{display:flex;align-items:center;justify-content:center;flex:1;gap:20px}
-.ch-waffle-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;width:125px;height:125px} /* 크기 대폭 확대 */
+.ch-waffle-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;width:140px;height:140px} /* V13: 10% 확대 */
 .ch-waffle-cell{background:#F1F5F9;border-radius:2px}
 .ch-waffle-cell.s{background:#FDE047} 
 .ch-waffle-cell.i{background:#93C5FD} 
@@ -53,12 +53,15 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .ch-heat-tbl th{color:var(--tm);font-weight:700;padding-bottom:6px;font-size:10px}
 .ch-heat-tbl td{background:#F1F5F9;border-radius:4px;padding:8px;text-align:center;font-weight:800;color:var(--pr);cursor:pointer;transition:opacity .15s}
 .ch-heat-tbl td:hover{opacity:.7}
-.ch-heat-label{text-align:right;font-weight:700;color:var(--tm);padding-right:10px;width:40%;font-size:10px}
+/* V13: 항목명 호버 시 클릭 가능함 표시 */
+.ch-heat-label{text-align:right;font-weight:700;color:var(--tm);padding-right:10px;width:40%;font-size:10px;cursor:pointer;transition:color .15s}
+.ch-heat-label:hover{color:var(--pr)}
 
 /* Chart 3: Donut (건전성) */
 .ch-donut-wrap{display:flex;align-items:center;justify-content:center;flex:1;gap:20px}
-/* 도넛 차트 크기 확대 및 테두리 잘림 완벽 해결 (SVG viewBox 최적화) */
-.donut-svg{width:145px;height:145px;transform:rotate(-90deg)} 
+/* V13: 도넛 크기 10% 확대 및 Total 제거 */
+.donut-container{position:relative;width:160px;height:160px;display:flex;align-items:center;justify-content:center}
+.donut-svg{width:160px;height:160px;transform:rotate(-90deg);position:absolute;top:0;left:0} 
 .ch-donut-leg{display:flex;flex-direction:column;gap:8px}
 .ch-d-leg-item{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--tm);cursor:pointer}
 .ch-d-leg-item:hover{opacity:.7}
@@ -66,12 +69,13 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .ch-d-leg-item i{width:12px;height:12px;border-radius:50%}
 
 /* Chart 4: Bar (3막대) */
-.ch-bar-wrap{display:flex;align-items:flex-end;justify-content:space-around;flex:1;padding-top:10px;gap:8px;height:170px} /* 높이 확대 */
+.ch-bar-wrap{display:flex;align-items:flex-end;justify-content:space-around;flex:1;padding-top:10px;gap:8px;height:170px} 
 .ch-bar-group{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;cursor:pointer}
 .ch-bars{display:flex;align-items:flex-end;gap:4px;height:130px;width:100%;justify-content:center}
-.ch-b-o{width:16px;background:#E2E8F0;border-radius:3px 3px 0 0;transition:opacity .15s} /* 오더(Plan) - 회색 */
-.ch-b-s{width:16px;background:#A7F3D0;border-radius:3px 3px 0 0;transition:opacity .15s} /* 출고(Shipped) - 초록 */
-.ch-b-w{width:16px;background:#93C5FD;border-radius:3px 3px 0 0;transition:opacity .15s} /* 창고(Warehouse) - 파랑 */
+/* V13: 막대 굵기 확대 (16px -> 18px) */
+.ch-b-o{width:18px;background:#E2E8F0;border-radius:3px 3px 0 0;transition:opacity .15s} 
+.ch-b-s{width:18px;background:#A7F3D0;border-radius:3px 3px 0 0;transition:opacity .15s} 
+.ch-b-w{width:18px;background:#93C5FD;border-radius:3px 3px 0 0;transition:opacity .15s} 
 .ch-bar-group:hover .ch-b-o, .ch-bar-group:hover .ch-b-s, .ch-bar-group:hover .ch-b-w{opacity:.8}
 .ch-b-lbl{font-size:10px;font-weight:700;color:var(--tm);margin-top:2px}
 .ch-legend{display:flex;justify-content:center;gap:12px;font-size:10px;color:var(--tm);margin-top:12px}
@@ -424,6 +428,15 @@ var S_SHORT={
   Bottom_Length:{"3":"3-Tier(Short)","5":"5-Tier(Mid)","7":"7-Tier(Mid-full)","9":"9-Tier(Full)"},
   Gender:{"W":"Women","M":"Men","U":"Unisex"}
 };
+
+// V13 전역에서 사용되는 타입 한국어/중국어 병행 변환 맵
+var C_TYPE_MAP = {
+  "Bra-top":"브라탑/运动内衣", "Crop":"크롭/露脐装", "Tank":"탱크/背心", 
+  "Leggings":"레깅스/紧身裤", "Wide":"와이드/宽腿裤", "Jogger":"조거/束脚裤", 
+  "Flare":"나팔/喇叭裤", "Pleats":"플리츠/褶皱", "A-line":"A라인/A字版", 
+  "Shorts":"반바지/短裤", "Basic":"기본/基础"
+};
+
 function mv(f,v){return(!v||v==="-")?"-":(S_MAP[f]&&S_MAP[f][v])?S_MAP[f][v]:v}
 function sv(f,v){return(!v||v==="-")?null:(S_SHORT[f]&&S_SHORT[f][v])?S_SHORT[f][v]:v}
 
@@ -492,7 +505,7 @@ ZOHO.CREATOR.init().then(function(){
   .then(function(r){
     if(r&&r.code===3000&&r.data){
       allRec=r.data;s_filtered=allRec.slice();
-      renderTopDashboard(); // ★ V12 대시보드 렌더링
+      renderTopDashboard(); // ★ V13 대시보드 렌더링
       s_renderMKPI();s_buildFilters();s_renderTables();
       mo_renderAll();
       document.getElementById("loadingScreen").style.display="none";
@@ -502,7 +515,7 @@ ZOHO.CREATOR.init().then(function(){
   .catch(function(e){document.getElementById("errorMsg").textContent=JSON.stringify(e);document.getElementById("loadingScreen").style.display="none";document.getElementById("errorScreen").style.display="block"})});
 
 /* ══════════════════════════════════════
-   ★ V12 대시보드 4종 렌더링 함수
+   ★ V13 대시보드 4종 렌더링 함수
 ══════════════════════════════════════ */
 function renderTopDashboard(){
   let moByM = {};
@@ -517,7 +530,7 @@ function renderTopDashboard(){
       
       moByM[k].order += tQty;
       moByM[k].shipped += sQty;
-      moByM[k].warehouse += Math.max(0, fQty - sQty); // 보유 = 완제품 - 출고
+      moByM[k].warehouse += Math.max(0, fQty - sQty); 
       moByM[k].mos.push(r);
     }
   });
@@ -543,8 +556,6 @@ function renderTopDashboard(){
 
   /* ================= 2. 세부 스타일 진행 빈도 (Heatmap) ================= */
   let fMap = {};
-  let typeMap = {"Bra-top":"Bra-top/运动内衣", "Crop":"Crop/露脐装", "Tank":"Tank/背心", "Leggings":"Leggings/紧身裤", "Wide":"Wide/宽腿裤", "Jogger":"Jogger/束脚裤", "Flare":"Flare/喇叭裤", "Pleats":"Pleats/褶皱", "A-line":"A-line/A字版", "Shorts":"Shorts/短裤", "Basic":"기본/基础"};
-  
   allRec.forEach(r=>{
     let dtRaw = g(r,"Top_Type")!=="-" ? S_SHORT.Top_Type[g(r,"Top_Type")] : (g(r,"Bottom_Type")!=="-" ? S_SHORT.Bottom_Type[g(r,"Bottom_Type")] : "Basic");
     let nameKey = (g(r,"Category")==="S"?"Set":"Ind") + "-" + dtRaw;
@@ -565,15 +576,19 @@ function renderTopDashboard(){
   topFreq.forEach(f => {
     let parts = f.split("-");
     let cName = parts[0]==="Set" ? "세트/套装" : "단품/单品";
-    let tName = typeMap[parts[1]] || parts[1];
-    let nm = cName + " - " + tName;
+    let tName = C_TYPE_MAP[parts[1]] || parts[1];
+    let nm = cName + " - " + tName; // 완벽한 한/중 병행 표기
     
-    h2 += `<tr><td class="ch-heat-label">${nm}</td>`;
+    // 항목 이름 클릭 시 월 구분 없는 모달 (freq_all)
+    h2 += `<tr><td class="ch-heat-label" onclick="openDashList('freq_all','${f}')" title="전체 데이터 보기">${nm}</td>`;
+    
     mKeys.forEach(k => {
       let cnt = fMap[f].m[k] || 0;
       let alpha = Math.min(0.8, cnt/10 + 0.1); 
       let bg = cnt>0 ? `rgba(147,197,253,${alpha})` : `#F1F5F9`;
-      h2 += `<td style="background:${bg}" onclick="openDashList('freq','${f}')">${cnt}</td>`;
+      let kEnc = encodeURIComponent(k);
+      // 월별 칸 클릭 시 해당 월 모달 (freq_month)
+      h2 += `<td style="background:${bg}" onclick="openDashList('freq_month','${f}|${kEnc}')" title="${k} 데이터 보기">${cnt}</td>`;
     });
     h2 += `</tr>`;
   });
@@ -594,21 +609,20 @@ function renderTopDashboard(){
   let pAR = totalMO ? Math.round(aR/totalMO*100) : 0;
   let pDL = totalMO ? Math.round(dL/totalMO*100) : 0;
   
-  // SVG Donut viewBox="0 0 42 42" & stroke-width="6" ensures no clipping.
-  // 2 * π * 15.915 ≈ 100 
+  // SVG Donut viewBox="0 0 42 42" & stroke-width="7" 완벽 원형 및 굵기 확대
   let offNS = 25;
   let offOT = 100 - pNS + 25;
   let offAR = 100 - pNS - pOT + 25;
   let offDL = 100 - pNS - pOT - pAR + 25;
   
   let h3 = `<div class="dash-card"><div class="dash-title">오더 건전성 현황 / 订单健康度</div><div class="ch-donut-wrap">
-              <div style="position:relative;width:145px;height:145px">
+              <div class="donut-container">
                 <svg viewBox="0 0 42 42" class="donut-svg">
-                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#F1F5F9" stroke-width="6"></circle>
-                  ${pNS>0 ? `<circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#CBD5E1" stroke-width="6" stroke-dasharray="${pNS} ${100-pNS}" stroke-dashoffset="${offNS}"></circle>` : ''}
-                  ${pOT>0 ? `<circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#93C5FD" stroke-width="6" stroke-dasharray="${pOT} ${100-pOT}" stroke-dashoffset="${offOT}"></circle>` : ''}
-                  ${pAR>0 ? `<circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#A7F3D0" stroke-width="6" stroke-dasharray="${pAR} ${100-pAR}" stroke-dashoffset="${offAR}"></circle>` : ''}
-                  ${pDL>0 ? `<circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#FCA5A5" stroke-width="6" stroke-dasharray="${pDL} ${100-pDL}" stroke-dashoffset="${offDL}"></circle>` : ''}
+                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#F1F5F9" stroke-width="7"></circle>
+                  ${pNS>0 ? `<circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#CBD5E1" stroke-width="7" stroke-dasharray="${pNS} ${100-pNS}" stroke-dashoffset="${offNS}"></circle>` : ''}
+                  ${pOT>0 ? `<circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#93C5FD" stroke-width="7" stroke-dasharray="${pOT} ${100-pOT}" stroke-dashoffset="${offOT}"></circle>` : ''}
+                  ${pAR>0 ? `<circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#A7F3D0" stroke-width="7" stroke-dasharray="${pAR} ${100-pAR}" stroke-dashoffset="${offAR}"></circle>` : ''}
+                  ${pDL>0 ? `<circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#FCA5A5" stroke-width="7" stroke-dasharray="${pDL} ${100-pDL}" stroke-dashoffset="${offDL}"></circle>` : ''}
                 </svg>
               </div>
               <div class="ch-donut-leg">
@@ -647,7 +661,7 @@ function renderTopDashboard(){
           <span><i style="background:#93C5FD"></i>중국창고 보유/仓库库存</span>
          </div></div>`;
 
-  // 요청된 순서대로 삽입: 1.카테고리 -> 2.빈도 -> 3.건전성 -> 4.월별실적
+  // 요청된 순서: 1.카테고리 -> 2.빈도 -> 3.건전성 -> 4.월별실적
   document.getElementById("topDashboard").innerHTML = h1 + h2 + h3 + h4;
 }
 
@@ -680,7 +694,7 @@ function openDashList(type, param){
     else items = allRec.filter(r => g(r,"Category").toLowerCase() === param);
     t = "카테고리 분류 / 品类分类"; sub = "총 "+items.length+"건의 Style";
   }
-  else if(type==="freq"){
+  else if(type==="freq_all"){
     items = allRec.filter(r => {
       let dtRaw = g(r,"Top_Type")!=="-" ? S_SHORT.Top_Type[g(r,"Top_Type")] : (g(r,"Bottom_Type")!=="-" ? S_SHORT.Bottom_Type[g(r,"Bottom_Type")] : "Basic");
       let nameKey = (g(r,"Category")==="S"?"Set":"Ind") + "-" + dtRaw;
@@ -688,7 +702,23 @@ function openDashList(type, param){
     });
     let parts = param.split("-");
     let cName = parts[0]==="Set" ? "세트" : "단품";
-    t = cName + "-" + parts[1] + " 스타일"; sub = "총 "+items.length+"건의 Style";
+    let tName = C_TYPE_MAP[parts[1]] || parts[1];
+    t = cName + "-" + tName.split("/")[0] + " 전체 / 全部"; sub = "총 "+items.length+"건의 Style";
+  }
+  else if(type==="freq_month"){
+    let parts = param.split("|");
+    let fParam = parts[0];
+    let kParam = decodeURIComponent(parts[1]);
+    items = allRec.filter(r => {
+      let dtRaw = g(r,"Top_Type")!=="-" ? S_SHORT.Top_Type[g(r,"Top_Type")] : (g(r,"Bottom_Type")!=="-" ? S_SHORT.Bottom_Type[g(r,"Bottom_Type")] : "Basic");
+      let nameKey = (g(r,"Category")==="S"?"Set":"Ind") + "-" + dtRaw;
+      let ym = g(r,"Plan_Year")+"년 "+g(r,"Plan_Month")+"월";
+      return nameKey === fParam && ym === kParam;
+    });
+    let p2 = fParam.split("-");
+    let cName = p2[0]==="Set" ? "세트" : "단품";
+    let tName = C_TYPE_MAP[p2[1]] || p2[1];
+    t = cName + "-" + tName.split("/")[0] + " (" + kParam + ")"; sub = "총 "+items.length+"건의 Style";
   }
 
   document.getElementById("dashModalTitle").textContent = t;
