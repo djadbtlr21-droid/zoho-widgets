@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Overview v14</title>
+<title>Overview v15</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -378,10 +378,6 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
     <span>생산현황표 / 生产现况表</span>
   </div>
   <div class="mo-mkpi-row" id="mo_mkpiRow"></div>
-  <div class="pipe-card">
-    <div class="pipe-title-txt">생산 파이프라인 / 生产流水表</div>
-    <div class="pipe-row" id="mo_pipeRow"></div>
-  </div>
   <div id="mo_monthlyContent"></div>
 </div>
 
@@ -869,7 +865,7 @@ function renderProdProgress(r){
   bh+='</div>';lh+='</div>';
   return'<div class="p-prog">'+bh+lh+'</div>';}
 
-function mo_renderAll(){mo_renderMKPI();mo_renderPipeline();mo_renderMonthly()}
+function mo_renderAll(){mo_renderMKPI();mo_renderMonthly()}
 
 /* ★ MO KPI - Plan_Total_Quantity 대비 Acture_Total_Quantity */
 function mo_renderMKPI(){
@@ -923,21 +919,32 @@ function mo_openKpiPop(keyEnc,type){
 
 function mo_openModalFromPop(id){var r=allMO_rec.find(function(x){return x["ID"]===id});if(r){document.getElementById("mo_kpiPopOv").classList.remove("active");mo_openModal(r)}}
 
-function mo_renderPipeline(){
+/* ★ 월별 로컬 파이프라인 렌더링 (MO View renderLocalPipeline 동일) */
+function mo_renderLocalPipeline(idx, items){
   var st=["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
   var emojis=["\u23F3","\uD83E\uDDF5","\u2702\uFE0F","\uD83E\uDDF7","\uD83D\uDCE6","\u2705","\uD83D\uDE9A"];
   var co=["#94A3B8","#A78BFA","#FDBA74","#7DD3FC","#34D399","#10B981","#3B82F6"];
   var lb2=["미시작 / 未开始","원단 / 面料","재단 / 裁剪","봉제 / 车缝","포장 / 包装","완료 / 完成","출고 / 出货"];
   var cn=[0,0,0,0,0,0,0];
-  allMO_rec.forEach(function(r){var i=st.indexOf(getMOProdStage(r));if(i>=0)cn[i]++});
+  items.forEach(function(r){var i=st.indexOf(getMOProdStage(r));if(i>=0)cn[i]++});
   var h="";
-  st.forEach(function(s,i){if(i>0)h+='<div class="pipe-arr">▶</div>';h+='<div class="pipe-step" onclick="mo_openPipePop(\''+s+'\')">';h+='<div class="pipe-n" style="color:'+co[i]+'">'+cn[i]+'</div>';h+='<div class="pipe-lb" style="color:'+co[i]+'"><span class="pipe-emoji">'+emojis[i]+'</span>'+lb2[i]+'</div>';h+='<div class="pipe-bar" style="background:'+co[i]+'"></div></div>'});
-  document.getElementById("mo_pipeRow").innerHTML=h}
+  st.forEach(function(s,i){
+    if(i>0)h+='<div class="pipe-arr">▶</div>';
+    h+='<div class="pipe-step" onclick="mo_openLocalPipePop(\''+s+'\','+idx+')">';
+    h+='<div class="pipe-n" style="color:'+co[i]+'">'+cn[i]+'</div>';
+    h+='<div class="pipe-lb" style="color:'+co[i]+'"><span class="pipe-emoji">'+emojis[i]+'</span>'+lb2[i]+'</div>';
+    h+='<div class="pipe-bar" style="background:'+co[i]+'"></div></div>';
+  });
+  var el=document.getElementById("mo_pipeRow_"+idx);
+  if(el)el.innerHTML=h;}
 
-function mo_openPipePop(stage){
-  var items=allMO_rec.filter(function(r){return getMOProdStage(r)===stage});
+/* ★ 월별 파이프라인 팝업 (MO View openPipePop 동일) */
+function mo_openLocalPipePop(stage, idx){
+  var baseItems=window['mo_visible_'+idx]||[];
+  var items=baseItems.filter(function(r){return getMOProdStage(r)===stage});
   var stageNames={"Not Started":"미시작 / 未开始","Fabric":"원단 / 面料","Cutting":"재단 / 裁剪","Sewing":"봉제 / 车缝","Packing":"포장 / 包装","Done":"완료 / 完成","Shipped":"출고 / 出货"};
-  document.getElementById("mo_pipePopTitle").textContent="🏭 "+stageNames[stage];document.getElementById("mo_pipePopSub").textContent="총 "+items.length+"건의 오더가 이 단계에 있습니다";
+  document.getElementById("mo_pipePopTitle").textContent="🏭 "+stageNames[stage];
+  document.getElementById("mo_pipePopSub").textContent="총 "+items.length+"건의 오더가 이 단계에 있습니다";
   var h="";if(!items.length){h='<div class="mo-pop-empty">해당 단계의 오더가 없습니다</div>'}
   else{items.forEach(function(r){
     var dl=isMODelayed(r);var pq=parseInt(g(r,"Plan_Total_Quantity"))||0;var aq=parseInt(g(r,"Acture_Total_Quantity"))||0;
@@ -945,11 +952,11 @@ function mo_openPipePop(stage){
     h+='<div><div class="pi-mo">'+escH(g(r,"MO_Number"))+(dl?'<span class="dly-badge2">DELAYED</span>':'')+'</div><div class="pi-name">'+escH(g(r,"Style_Name"))+'</div>';
     h+='<div class="pi-meta"><span style="color:#6D28D9;font-weight:700">P:'+pq.toLocaleString()+'</span> / <span style="color:#047857;font-weight:700">A:'+aq.toLocaleString()+'</span> pcs · 예상납기: '+escH(g(r,"Expected_Delivery"))+'</div></div>';
     h+='<span class="tag '+mo_tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span></div>'})}
-  document.getElementById("mo_pipePopBody").innerHTML=h;document.getElementById("mo_pipePopOv").classList.add("active")}
+  document.getElementById("mo_pipePopBody").innerHTML=h;document.getElementById("mo_pipePopOv").classList.add("active");}
 
 function mo_openModalFromPipe(id){var r=allMO_rec.find(function(x){return x["ID"]===id});if(r){document.getElementById("mo_pipePopOv").classList.remove("active");mo_openModal(r)}}
 
-/* ★ 월별 MO 테이블 - Plan Qty / Act Qty 컬럼 분리 */
+/* ★ 월별 MO 테이블 + 파이프라인 내장 (MO View v28 동일 구조) */
 function mo_renderMonthly(){
   var groups={};allMO_rec.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[key])groups[key]=[];groups[key].push(r)});
   var html="",mi=0;
@@ -959,12 +966,19 @@ function mo_renderMonthly(){
     items.forEach(function(r){var f=g(r,"Factory");if(f!=="-")mFac[f]=1;var p=g(r,"Production_Status");if(p!=="-")mProd[p]=1;var c=g(r,"Category");if(c!=="-")mCat[c]=catName(c)});
     var yy=ym?ym.y.toString().slice(-2):"",mm2=ym?(ym.m<10?"0"+ym.m:ym.m):"";
     var titleText=ym?(yy+"."+mm2+" 생산 안배표 / "+yy+"年 "+ym.m+"月 生产安排"):"생산 안배표";
+
+    /* ── 테이블 카드 ── */
     html+='<div class="mt-sec" id="mo_ms'+idx+'"><div class="mt-card">';
     html+='<div class="mt-hd"><div class="mt-title-txt">📅 '+titleText+'</div><span class="mt-cnt" id="mo_mc'+idx+'">'+items.length+' MOs</span></div>';
-    html+='<div class="mf-bar"><input type="text" class="mo-search-box mof" data-m="'+idx+'" data-t="q" placeholder="🔍 검색..." style="width:150px">';
-    html+='<select class="mo-fsel mof" data-m="'+idx+'" data-t="ca"><option value="">All Category</option>';Object.keys(mCat).sort().forEach(function(k){html+='<option value="'+escH(k)+'">'+escH(mCat[k])+'</option>'});html+='</select>';
-    html+='<select class="mo-fsel mof" data-m="'+idx+'" data-t="fa"><option value="">All Factory</option>';Object.keys(mFac).sort().forEach(function(k){html+='<option value="'+escH(k)+'">'+escH(cleanFactory(k))+'</option>'});html+='</select>';
-    html+='<select class="mo-fsel mof" data-m="'+idx+'" data-t="ps"><option value="">All Prod Status</option>';Object.keys(mProd).sort().forEach(function(k){html+='<option value="'+escH(k)+'">'+escH(k)+'</option>'});html+='</select></div>';
+    html+='<div class="mf-bar">';
+    html+='<input type="text" class="mo-search-box mof" data-m="'+idx+'" data-t="q" placeholder="🔍 검색..." style="width:150px">';
+    html+='<select class="mo-fsel mof" data-m="'+idx+'" data-t="ca"><option value="">All Category / 分类筛选</option>';
+    Object.keys(mCat).sort().forEach(function(k){html+='<option value="'+escH(k)+'">'+escH(mCat[k])+'</option>'});html+='</select>';
+    html+='<select class="mo-fsel mof" data-m="'+idx+'" data-t="fa"><option value="">All Factory / 工厂筛选</option>';
+    Object.keys(mFac).sort().forEach(function(k){html+='<option value="'+escH(k)+'">'+escH(cleanFactory(k))+'</option>'});html+='</select>';
+    html+='<select class="mo-fsel mof" data-m="'+idx+'" data-t="ps"><option value="">All Prod Status / 状态筛选</option>';
+    Object.keys(mProd).sort().forEach(function(k){html+='<option value="'+escH(k)+'">'+escH(k)+'</option>'});html+='</select></div>';
+
     html+='<div class="table-scroll"><table class="zt"><thead><tr>';
     html+='<th style="width:5%">MO#</th><th style="width:7%">SKU</th><th style="width:9%">Style</th>';
     html+='<th style="width:9%">Category</th><th style="width:9%">Factory</th>';
@@ -989,18 +1003,52 @@ function mo_renderMonthly(){
       var ed=g(r,"Expected_Delivery");html+='<td>'+escH(ed)+(dl?'<span class="dly-badge2">DELAY</span>':'')+'</td>';
       html+='<td>'+escH(g(r,"Ship_Date"))+'</td></tr>';
     });
-    html+='</tbody></table></div></div></div>'});
-  document.getElementById("mo_monthlyContent").innerHTML=html;
-  document.querySelectorAll("#mo_monthlyContent tr[data-id]").forEach(function(row){row.addEventListener("click",function(){var id=this.getAttribute("data-id");var r=allMO_rec.find(function(x){return x["ID"]===id});if(r)mo_openModal(r)})});
-  document.querySelectorAll(".mof").forEach(function(el){el.addEventListener(el.tagName==="INPUT"?"input":"change",function(){mo_mFilter(this.getAttribute("data-m"))})})}
+    html+='</tbody></table></div></div>';
 
+    /* ── ★ 월별 파이프라인 (MO View v28과 동일하게 테이블 바로 아래 배치) ── */
+    html+='<div class="pipe-card" style="margin-top:16px;margin-bottom:0;box-shadow:none;border-color:#EEF2F6;padding:16px">';
+    html+='<div class="pipe-title-txt" style="font-size:12px;margin-bottom:10px">생산 파이프라인 / 生产流水表</div>';
+    html+='<div class="pipe-row" id="mo_pipeRow_'+idx+'"></div></div>';
+
+    html+='</div>'; /* close mt-sec */
+  });
+
+  document.getElementById("mo_monthlyContent").innerHTML=html;
+
+  /* ★ 파이프라인 초기 렌더링 + visible 배열 초기화 */
+  var mi2=0;
+  Object.keys(groups).sort().forEach(function(key){
+    var idx=mi2++;
+    window['mo_visible_'+idx]=groups[key];
+    mo_renderLocalPipeline(idx,groups[key]);
+  });
+
+  document.querySelectorAll("#mo_monthlyContent tr[data-id]").forEach(function(row){
+    row.addEventListener("click",function(){var id=this.getAttribute("data-id");var r=allMO_rec.find(function(x){return x["ID"]===id});if(r)mo_openModal(r)})});
+  document.querySelectorAll(".mof").forEach(function(el){
+    el.addEventListener(el.tagName==="INPUT"?"input":"change",function(){mo_mFilter(this.getAttribute("data-m"))})});}
+
+/* ★ 필터 - 파이프라인 연동 (MO View v28 mFilter 동일) */
 function mo_mFilter(mi){
   var sec=document.getElementById("mo_ms"+mi);if(!sec)return;
   var q="",ca="",fa="",ps="";
   sec.querySelectorAll(".mof").forEach(function(el){var t=el.getAttribute("data-t"),v=el.value;if(t==="q")q=v.toLowerCase().trim();else if(t==="ca")ca=v;else if(t==="fa")fa=v;else if(t==="ps")ps=v});
-  var rows=sec.querySelectorAll('tr[data-m="'+mi+'"]');var cnt=0;
-  rows.forEach(function(row){var ok=true;if(q&&row.getAttribute("data-st").indexOf(q)<0)ok=false;if(ca&&row.getAttribute("data-ca")!==ca)ok=false;if(fa&&row.getAttribute("data-fa")!==fa)ok=false;if(ps&&row.getAttribute("data-ps")!==ps)ok=false;row.style.display=ok?"":"none";if(ok)cnt++});
-  var c=document.getElementById("mo_mc"+mi);if(c)c.textContent=cnt+" MOs"}
+  var rows=sec.querySelectorAll('tr[data-m="'+mi+'"]');
+  var cnt=0;var visibleIds=[];
+  rows.forEach(function(row){
+    var ok=true;
+    if(q&&row.getAttribute("data-st").indexOf(q)<0)ok=false;
+    if(ca&&row.getAttribute("data-ca")!==ca)ok=false;
+    if(fa&&row.getAttribute("data-fa")!==fa)ok=false;
+    if(ps&&row.getAttribute("data-ps")!==ps)ok=false;
+    row.style.display=ok?"":"none";
+    if(ok){cnt++;visibleIds.push(row.getAttribute("data-id"))}
+  });
+  var c=document.getElementById("mo_mc"+mi);if(c)c.textContent=cnt+" MOs";
+  /* ★ 파이프라인 실시간 갱신 */
+  var filteredItems=allMO_rec.filter(function(r){return visibleIds.indexOf(r["ID"])>=0});
+  window['mo_visible_'+mi]=filteredItems;
+  mo_renderLocalPipeline(mi,filteredItems);}
 
 /* ★ MO 상세 모달 - MO View v28 openModal() 완전 동일 구조 */
 function mo_openModal(r){
