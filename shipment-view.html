@@ -3,46 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shipment View v3</title>
+<title>Shipment View v4</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
-/* ═══════════════════════════════════════
-   Shipment View v2
-   Overview / MO View 동일 파스텔 톤
-═══════════════════════════════════════ */
-:root{
-  --pr:#1E3A8A;--ac:#3B82F6;--bg:#F1F5F9;--bd:#E2E8F0;
-  --tx:#0F172A;--tm:#64748B;--cw:#FFF;
-  --ok:#10B981;--wn:#F59E0B;--dg:#EF4444;--dr:#94A3B8;
-}
+:root{--pr:#1E3A8A;--ac:#3B82F6;--bg:#F1F5F9;--bd:#E2E8F0;--tx:#0F172A;--tm:#64748B;--cw:#FFF;--ok:#10B981;--wn:#F59E0B;--dg:#EF4444;--dr:#94A3B8}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Noto Sans KR',-apple-system,sans-serif}
 body{background:var(--bg);padding:16px;min-height:100vh}
 
-/* ── 로딩 ── */
 .spinner{width:40px;height:40px;border:4px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
 .spinner-sm{width:16px;height:16px;border:2px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;gap:12px;color:var(--tm);font-size:13px;font-weight:600}
 
-/* ── 헤더 ── */
+/* 헤더 */
 .hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:8px}
-.hdr-left{display:flex;align-items:center;gap:10px}
 .hdr-ic{width:30px;height:30px;background:var(--pr);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px}
 .hdr-title{font-size:17px;font-weight:900;color:var(--tx)}
 .hdr-sub{font-size:11px;color:var(--tm);font-weight:500;margin-top:2px}
 .btn-new{background:#A5B4FC;color:#1E1B4B;border:none;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer}
 .btn-new:hover{background:#818CF8}
 
-/* ── KPI 카드 (월별 최근 3개월) ── */
+/* 알림 배너 */
+.alert-bar{margin-bottom:14px}
+.al-item{display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:8px;margin-bottom:5px;font-size:11px;font-weight:700;cursor:pointer}
+.al-hold{background:#FEE2E2;color:#B91C1C;border:1px solid #FECACA}
+.al-eta{background:#FEF9C3;color:#A16207;border:1px solid #FDE68A}
+.al-x{width:16px;height:16px;border-radius:3px;background:rgba(0,0,0,.08);display:flex;align-items:center;justify-content:center;font-size:9px;cursor:pointer;flex-shrink:0;margin-left:auto}
+
+/* KPI 카드 */
 .kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
 .kpi-card{background:var(--cw);border:1px solid var(--bd);border-radius:12px;padding:16px 18px;position:relative;overflow:hidden}
 .kpi-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:4px}
-.kpi-c0::before{background:linear-gradient(90deg,#A5B4FC,#818CF8)}
-.kpi-c1::before{background:linear-gradient(90deg,#FDE68A,#F59E0B)}
-.kpi-c2::before{background:linear-gradient(90deg,#A7F3D0,#34D399)}
-
+.kc0::before{background:linear-gradient(90deg,#A5B4FC,#818CF8)}
+.kc1::before{background:linear-gradient(90deg,#FDE68A,#F59E0B)}
+.kc2::before{background:linear-gradient(90deg,#A7F3D0,#34D399)}
 .kpi-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .kpi-month{font-size:20px;font-weight:900;color:var(--tx)}
 .kpi-month-en{font-size:12px;color:var(--tm);font-weight:600;margin-left:5px}
@@ -50,105 +46,78 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .kb-done{background:#D1FAE5;color:#065F46}
 .kb-transit{background:#E0F2FE;color:#0369A1}
 .kb-planned{background:#FEF9C3;color:#A16207}
-
 .kpi-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
 .kpi-m{text-align:center;padding:8px 4px;background:#FAFBFC;border-radius:8px;border:1px solid #F1F5F9}
-.kpi-m-val{font-size:17px;font-weight:900;line-height:1;margin-bottom:4px}
-.kpi-m-lbl{font-size:9px;font-weight:700;color:var(--tm);line-height:1.3}
-
-.kpi-modes{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;padding-top:10px;border-top:1px solid #F1F5F9}
-.mode-tag{font-size:9px;font-weight:700;padding:3px 8px;border-radius:5px}
+.kpi-m-val{font-size:15px;font-weight:900;line-height:1.2;margin-bottom:4px}
+.kpi-m-lbl{font-size:9px;font-weight:700;color:var(--tm)}
+.kpi-modes{display:flex;gap:5px;flex-wrap:wrap;padding-top:10px;border-top:1px solid #F1F5F9;margin-bottom:10px}
+.mt{font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px}
 .mt-ocean{background:#BAE6FD;color:#0284C7}
 .mt-air{background:#DDD6FE;color:#7C3AED}
 .mt-courier{background:#BBF7D0;color:#047857}
 .mt-other{background:#F1F5F9;color:#475569}
 
-/* 프로세스 트래커 (KPI 카드 내) */
-.kpi-tracker{display:flex;align-items:center;gap:2px}
-.kt-wrap{flex:1;text-align:center}
-.kt-dot{width:20px;height:20px;border-radius:50%;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;color:#fff}
-.kt-done{background:#34D399}
-.kt-curr{background:#3B82F6}
-.kt-wait{background:#E2E8F0;color:#94A3B8}
-.kt-lbl{font-size:8px;font-weight:700;color:var(--tm)}
-.kt-line{flex:0;width:6px;height:2px}
+/* KPI 파이프라인 */
+.kpi-pipe{display:flex;align-items:center;padding-top:10px;border-top:1px solid #F1F5F9}
+.kpi-pipe-title{font-size:9px;font-weight:700;color:var(--tm);margin-bottom:6px}
+.kpb{flex:1;text-align:center;cursor:pointer}
+.kpb-dot{width:22px;height:22px;border-radius:50%;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#fff}
+.kpb-lbl{font-size:7px;font-weight:700;color:var(--tm)}
+.kpb-lbl2{font-size:6px;color:var(--tm)}
+.kpb-line{flex:0;height:2px;width:4px}
 
-/* ── 전체 요약 ── */
-.summary-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
+/* 요약 바 */
+.sum-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
 .sum-card{background:var(--cw);border:1px solid var(--bd);border-radius:10px;padding:12px;text-align:center}
-.sum-val{font-size:20px;font-weight:900;line-height:1}
+.sum-val{font-size:18px;font-weight:900;line-height:1}
 .sum-lbl{font-size:9px;font-weight:700;color:var(--tm);margin-top:4px;line-height:1.4}
 
-/* ── 이슈 알림 ── */
-.alert-bar{margin-bottom:14px}
-.alert-item{display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:8px;margin-bottom:5px;font-size:11px;font-weight:700;cursor:pointer;transition:opacity .15s}
-.alert-item:hover{opacity:.85}
-.al-hold{background:#FEE2E2;color:#B91C1C;border:1px solid #FECACA}
-.al-eta{background:#FEF9C3;color:#A16207;border:1px solid #FDE68A}
-.al-doc{background:#E0F2FE;color:#0369A1;border:1px solid #BAE6FD}
-.al-x{width:16px;height:16px;border-radius:3px;background:rgba(0,0,0,.08);display:flex;align-items:center;justify-content:center;font-size:9px;cursor:pointer;flex-shrink:0;margin-left:auto}
-
-/* ── 월별 섹션 ── */
+/* 월별 섹션 */
 .month-sec{margin-bottom:24px}
 .month-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid var(--bd)}
 .month-title{font-size:15px;font-weight:900;color:var(--tx);display:flex;align-items:center;gap:8px}
 .month-cnt{font-size:11px;color:var(--tm);font-weight:600;background:#F1F5F9;padding:2px 10px;border-radius:10px;border:1px solid #CBD5E1}
-
-/* 필터 */
 .filter-bar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-.f-search{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 10px;font-size:11px;outline:none;font-family:inherit;width:170px}
-.f-search:focus{border-color:var(--ac)}
+.f-search{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 10px;font-size:11px;outline:none;font-family:inherit;width:160px}
 .f-sel{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 8px;font-size:11px;outline:none;font-family:inherit;cursor:pointer}
 
-/* ── 컨테이너 카드 그리드 ── */
+/* 컨테이너 카드 */
 .ship-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px}
 .ship-card{background:var(--cw);border:1px solid var(--bd);border-radius:10px;padding:14px;cursor:pointer;transition:box-shadow .15s,transform .1s;position:relative}
 .ship-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);transform:translateY(-1px)}
 .ship-card.is-hold{border-color:#FECACA;background:#FFF8F8}
 .ship-card.is-hold::after{content:'HOLD';position:absolute;top:10px;right:10px;background:#EF4444;color:#fff;font-size:8px;font-weight:900;padding:2px 6px;border-radius:3px}
-
-/* 카드 헤더 */
 .sc-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
 .sc-id{font-size:13px;font-weight:900;color:var(--pr)}
 .sc-type{font-size:10px;color:var(--tm);font-weight:600;margin-top:2px}
-
-/* 카드 루트 */
 .sc-route{display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:11px;font-weight:700}
 .sc-port{padding:3px 8px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:5px;font-size:10px}
 .sc-arr{color:#94A3B8}
-.sc-mode{font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:2px}
-
-/* 카드 수치 */
+.sc-mode{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:2px}
 .sc-nums{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px}
-.sc-num-box{background:#FAFBFC;border:1px solid #F1F5F9;border-radius:6px;padding:5px;text-align:center}
-.sc-num-val{font-size:12px;font-weight:800;color:var(--tx)}
-.sc-num-lbl{font-size:8px;color:var(--tm);font-weight:600;margin-top:1px}
-
-/* 카드 MO 라인 */
-.sc-mo-lines{margin-bottom:10px}
-.sc-mo-item{display:flex;align-items:center;gap:6px;font-size:10px;padding:3px 0;border-bottom:1px solid #F8FAFC}
-.sc-mo-item:last-child{border-bottom:none}
-.sc-mo-num{font-weight:800;color:var(--pr);font-size:10px}
-.sc-mo-style{color:var(--tm);font-size:9px}
-.sc-mo-qty{font-weight:700;color:var(--tx);margin-left:auto;font-size:10px}
-
-/* 카드 프로세스 트래커 */
-.sc-tracker{display:flex;align-items:center;gap:0;margin-bottom:8px}
-.sct-wrap{flex:1;text-align:center}
+.sc-nb{background:#FAFBFC;border:1px solid #F1F5F9;border-radius:6px;padding:5px;text-align:center}
+.sc-nv{font-size:11px;font-weight:800;color:var(--tx)}
+.sc-nl{font-size:8px;color:var(--tm);font-weight:600;margin-top:1px}
+.sc-mos{margin-bottom:10px}
+.sc-mo-row{display:flex;align-items:center;gap:6px;font-size:10px;padding:3px 0;border-bottom:1px solid #F8FAFC}
+.sc-mo-row:last-child{border-bottom:none}
+.sc-mo-num{font-weight:800;color:var(--pr);font-size:10px;flex-shrink:0}
+.sc-mo-style{color:var(--tm);font-size:9px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc-mo-qty{font-weight:700;color:var(--tx);font-size:10px;flex-shrink:0}
+.sc-tracker{display:flex;align-items:center}
+.sct-w{flex:1;text-align:center}
 .sct-dot{width:18px;height:18px;border-radius:50%;margin:0 auto 2px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:900;color:#fff}
 .sct-done{background:#34D399}
 .sct-curr{background:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.2)}
 .sct-wait{background:#E2E8F0;color:#94A3B8}
 .sct-hold{background:#EF4444;box-shadow:0 0 0 3px rgba(239,68,68,.2)}
-.sct-lbl{font-size:7px;font-weight:700;color:var(--tm);white-space:nowrap}
+.sct-lbl{font-size:7px;font-weight:700;color:var(--tm)}
 .sct-line{flex:0;height:2px;width:4px}
-
-/* 카드 날짜 */
 .sc-dates{display:flex;justify-content:space-between;font-size:9px;color:var(--tm);padding-top:8px;border-top:1px solid #F1F5F9;flex-wrap:wrap;gap:4px}
 .sc-dates b{color:var(--tx);font-weight:700}
-.sc-dates .delayed{color:#EF4444;font-weight:700}
+.delayed{color:#EF4444!important;font-weight:700!important}
 
-/* ── 태그 ── */
+/* 태그 */
 .tag{padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;display:inline-flex;align-items:center;white-space:nowrap}
 .t-ok{background:#D1FAE5;color:#065F46;border:1px solid #A7F3D0}
 .t-wn{background:#FEF3C7;color:#B45309;border:1px solid #FDE68A}
@@ -157,14 +126,12 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .t-pu{background:#F5F3FF;color:#6D28D9;border:1px solid #C4B5FD}
 .t-dr{background:#F1F5F9;color:#475569;border:1px solid #CBD5E1}
 
-/* ── 빈 상태 ── */
-.empty-state{text-align:center;padding:40px;color:var(--tm);font-size:12px;grid-column:1/-1}
-.empty-icon{font-size:36px;margin-bottom:10px}
-
-/* ── 상세 모달 ── */
+/* 모달 공통 */
 .modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:3000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
 .modal-ov.active{display:flex}
 .modal-box{background:#fff;border-radius:12px;width:94%;max-width:950px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .25s ease-out}
+.modal-box-sm{max-width:620px}
+.modal-box-mo{max-width:1000px}
 @keyframes mIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .m-hd{padding:18px 22px 14px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:#fff;z-index:10;border-radius:12px 12px 0 0}
 .m-title{font-size:16px;font-weight:900;color:var(--pr)}
@@ -174,20 +141,18 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .m-body{padding:18px 22px}
 .m-sec{margin-bottom:22px}
 .m-sec-t{font-size:12px;font-weight:800;color:var(--pr);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #EFF6FF;display:flex;align-items:center;gap:6px}
-
-/* 모달 그리드 */
 .d-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.d-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.d-grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
+.d-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.d-grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
 .d-item{display:flex;flex-direction:column;gap:3px;padding:8px 10px;background:#FAFBFC;border-radius:6px;border:1px solid #F1F5F9}
 .d-label{font-size:9px;font-weight:700;color:var(--tm)}
 .d-val{font-size:12px;font-weight:700;color:var(--tx)}
 .d-val.empty{color:#CBD5E1;font-style:italic;font-weight:400;font-size:11px}
 
-/* 모달 프로세스 트래커 */
-.big-tracker{display:flex;align-items:flex-start;padding:16px;background:#FAFBFC;border-radius:10px;border:1px solid #E2E8F0;margin-bottom:4px}
-.bt-wrap{flex:1;text-align:center;position:relative}
-.bt-dot{width:32px;height:32px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
+/* 모달 트래커 */
+.big-track{display:flex;align-items:flex-start;padding:16px;background:#FAFBFC;border-radius:10px;border:1px solid #E2E8F0}
+.bt-w{flex:1;text-align:center}
+.bt-dot{width:30px;height:30px;border-radius:50%;margin:0 auto 5px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
 .bt-done{background:#34D399}
 .bt-curr{background:#3B82F6;box-shadow:0 0 0 5px rgba(59,130,246,.15)}
 .bt-wait{background:#E2E8F0;color:#94A3B8}
@@ -196,68 +161,66 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .bt-lbl.done-lbl{color:#059669}
 .bt-lbl.curr-lbl{color:#2563EB}
 .bt-lbl.hold-lbl{color:#DC2626}
-.bt-line{position:absolute;top:16px;left:65%;width:70%;height:3px;z-index:0}
+.bt-lbl2{font-size:8px;color:#94A3B8}
 
-/* Container Lines 모달 테이블 */
-.cl-tbl{width:100%;border-collapse:collapse;font-size:11px}
-.cl-tbl th{background:#F1F5F9;padding:7px 8px;color:var(--tm);font-weight:800;font-size:10px;border-bottom:1px solid var(--bd);text-align:center}
-.cl-tbl td{padding:8px;border-bottom:1px solid #F8FAFC;text-align:center;color:var(--tx)}
-.cl-tbl tbody tr:hover td{background:#EFF6FF}
-.cl-tbl .mo-cell{font-weight:800;color:var(--pr)}
-
-/* 날짜 타임라인 */
-.date-timeline{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+/* 날짜 비교 */
+.dt-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .dt-col{background:#FAFBFC;border-radius:8px;padding:12px;border:1px solid #E2E8F0}
 .dt-col-t{font-size:11px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px dashed #E2E8F0}
 .dt-col-t.plan{color:#7C3AED}
 .dt-col-t.actual{color:#059669}
-.dt-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #F1F5F9}
-.dt-item:last-child{border-bottom:none}
+.dt-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #F1F5F9}
+.dt-row:last-child{border-bottom:none}
 .dt-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;color:#fff;flex-shrink:0}
 .dt-done{background:#86EFAC;color:#065F46}
 .dt-curr{background:#93C5FD;color:#1E40AF}
 .dt-wait{background:#E2E8F0;color:#64748B}
-.dt-info{flex:1}
 .dt-lbl{font-size:10px;font-weight:700;color:var(--tx)}
 .dt-val{font-size:10px;color:var(--tm);margin-top:1px}
 
-/* MO 클릭 가능 셀 */
-.mo-cell-btn{
-  color:var(--pr);font-weight:800;cursor:pointer;
-  text-decoration:underline;text-underline-offset:2px;
-  transition:color .15s;background:none;border:none;
-  font-family:inherit;font-size:11px;padding:0;
-}
-.mo-cell-btn:hover{color:#3B82F6}
+/* Container Lines 테이블 */
+.cl-wrap{overflow-x:auto}
+.cl-tbl{width:100%;border-collapse:collapse;font-size:11px;min-width:700px}
+.cl-tbl th{background:#F1F5F9;padding:7px 8px;color:var(--tm);font-weight:800;font-size:9px;border-bottom:1px solid var(--bd);text-align:center;white-space:nowrap}
+.cl-tbl td{padding:8px;border-bottom:1px solid #F8FAFC;text-align:center;color:var(--tx)}
+.cl-tbl tbody tr:hover td{background:#EFF6FF}
+.cl-mo-btn{color:var(--pr);font-weight:800;cursor:pointer;text-decoration:underline;text-underline-offset:2px;background:none;border:none;font-family:inherit;font-size:11px;padding:0}
+.cl-mo-btn:hover{color:#3B82F6}
+.cl-tfoot td{font-weight:900;background:#F1F5F9;border-top:2px solid var(--bd)}
 
-/* MO 모달 내부 스타일 */
-.mo-m-img-gallery{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
-.mo-m-img-box{width:90px;height:90px;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:24px;color:#CBD5E1}
+/* 팝업 리스트 */
+.pop-item{padding:12px 14px;border:1px solid var(--bd);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:background .1s}
+.pop-item:hover{background:#EFF6FF;border-color:#BFDBFE}
+.pop-item.is-hold{border-color:#FECACA;background:#FFF8F8}
+.pop-item.is-hold:hover{background:#FEF2F2}
 
-/* Plan/Actual 수량 비교 박스 */
-.pa-compare-sm{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-.pa-box-sm{padding:10px 12px;border-radius:8px;text-align:center}
-.pa-box-sm.plan{background:#F5F3FF;border:2px solid #C4B5FD}
-.pa-box-sm.actual{background:#ECFDF5;border:2px solid #6EE7B7}
+/* MO 모달 내부 */
+.pa-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.pa-box{padding:10px 12px;border-radius:8px;text-align:center}
+.pa-box.plan{background:#F5F3FF;border:2px solid #C4B5FD}
+.pa-box.actual{background:#ECFDF5;border:2px solid #6EE7B7}
 .pa-box-lbl{font-size:9px;font-weight:800;margin-bottom:4px}
-.pa-box-sm.plan .pa-box-lbl{color:#7C3AED}
-.pa-box-sm.actual .pa-box-lbl{color:#059669}
+.pa-box.plan .pa-box-lbl{color:#7C3AED}
+.pa-box.actual .pa-box-lbl{color:#059669}
 .pa-box-qty{font-size:20px;font-weight:900}
-.pa-box-sm.plan .pa-box-qty{color:#6D28D9}
-.pa-box-sm.actual .pa-box-qty{color:#047857}
-.pa-box-amt{font-size:10px;font-weight:600;margin-top:2px}
-.pa-box-sm.plan .pa-box-amt{color:#7C3AED}
-.pa-box-sm.actual .pa-box-amt{color:#059669}
-
-/* 서브폼 테이블 (MO 모달용) */
+.pa-box.plan .pa-box-qty{color:#6D28D9}
+.pa-box.actual .pa-box-qty{color:#047857}
+.pa-box-amt{font-size:10px;margin-top:2px}
+.pa-box.plan .pa-box-amt{color:#7C3AED}
+.pa-box.actual .pa-box-amt{color:#059669}
 .mo-sub-tbl{width:100%;border-collapse:collapse;font-size:10px}
-.mo-sub-tbl th{background:#F1F5F9;padding:6px 8px;color:var(--tm);font-weight:800;font-size:9px;border-bottom:1px solid var(--bd);text-align:center}
-.mo-sub-tbl td{padding:6px 8px;border-bottom:1px solid #F8FAFC;text-align:center;color:var(--tx)}
+.mo-sub-tbl th{background:#F1F5F9;padding:5px 7px;color:var(--tm);font-weight:800;font-size:9px;border-bottom:1px solid var(--bd);text-align:center}
+.mo-sub-tbl td{padding:5px 7px;border-bottom:1px solid #F8FAFC;text-align:center;color:var(--tx)}
 .mo-sub-tbl tfoot td{background:#F1F5F9;font-weight:800;border-top:2px solid var(--bd)}
 
-.pipe-list-item:hover{background:#EFF6FF !important;border-color:#BFDBFE !important}
-@media(max-width:900px){.kpi-row{grid-template-columns:1fr 1fr}.summary-row{grid-template-columns:repeat(3,1fr)}.ship-grid{grid-template-columns:1fr}.d-grid{grid-template-columns:1fr 1fr}.date-timeline{grid-template-columns:1fr}}
-@media(max-width:600px){.kpi-row{grid-template-columns:1fr}.summary-row{grid-template-columns:1fr 1fr}.kpi-metrics{grid-template-columns:1fr 1fr}}
+/* 빈 상태 */
+.empty-st{text-align:center;padding:40px;color:var(--tm);font-size:12px}
+
+/* hover */
+.pipe-list-item:hover{background:#EFF6FF!important;border-color:#BFDBFE!important}
+
+@media(max-width:900px){.kpi-row{grid-template-columns:1fr 1fr}.sum-row{grid-template-columns:repeat(3,1fr)}.ship-grid{grid-template-columns:1fr}.d-grid{grid-template-columns:1fr 1fr}.dt-cols{grid-template-columns:1fr}.pa-cols{grid-template-columns:1fr}}
+@media(max-width:600px){.kpi-row{grid-template-columns:1fr}.sum-row{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -268,78 +231,58 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 </div>
 
 <div id="mainContent" style="display:none">
-
-  <!-- 헤더 -->
   <div class="hdr">
-    <div class="hdr-left">
+    <div style="display:flex;align-items:center;gap:10px">
       <div class="hdr-ic">🚢</div>
       <div>
         <div class="hdr-title">Shipment View / 선적 현황표 / 集装箱现况表</div>
-        <div class="hdr-sub" id="hdrSub">데이터 로딩 중...</div>
+        <div class="hdr-sub" id="hdrSub">로딩 중...</div>
       </div>
     </div>
     <button class="btn-new" onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_Shipment','_blank')">+ New Shipment</button>
   </div>
-
-  <!-- 이슈 알림 -->
   <div class="alert-bar" id="alertBar"></div>
-
-  <!-- KPI 카드 -->
   <div class="kpi-row" id="kpiRow"></div>
-
-  <!-- 전체 요약 -->
-  <div class="summary-row" id="summaryRow"></div>
-
-  <!-- 월별 선적 목록 -->
+  <div class="sum-row" id="sumRow"></div>
   <div id="monthlyContent"></div>
-
 </div>
 
-<!-- 상세 모달 -->
-<div class="modal-ov" id="modalOv">
+<!-- 컨테이너 상세 모달 -->
+<div class="modal-ov" id="shipModalOv">
   <div class="modal-box">
     <div class="m-hd">
-      <div>
-        <div class="m-title" id="mTitle">-</div>
-        <div class="m-sub" id="mSub">-</div>
-      </div>
+      <div><div class="m-title" id="smTitle">-</div><div class="m-sub" id="smSub">-</div></div>
       <div style="display:flex;align-items:center;gap:8px">
         <button onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Report:All_Shipment','_blank')" style="background:#EFF6FF;color:var(--pr);border:1px solid #BFDBFE;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit</button>
-        <div class="m-close" id="mClose">✕</div>
+        <div class="m-close" id="smClose">✕</div>
       </div>
     </div>
-    <div class="m-body" id="mBody"></div>
+    <div class="m-body" id="smBody"></div>
   </div>
 </div>
 
 <!-- 파이프라인 리스트 팝업 -->
-<div class="modal-ov" id="pipeListOv" style="z-index:2500">
-  <div class="modal-box" style="max-width:600px;max-height:70vh">
+<div class="modal-ov" id="pipePopOv" style="z-index:3500">
+  <div class="modal-box modal-box-sm">
     <div class="m-hd">
-      <div>
-        <div class="m-title" id="pipeListTitle">-</div>
-        <div class="m-sub" id="pipeListSub">-</div>
-      </div>
-      <div class="m-close" id="pipeListClose">✕</div>
+      <div><div class="m-title" id="ppTitle">-</div><div class="m-sub" id="ppSub">-</div></div>
+      <div class="m-close" id="ppClose">✕</div>
     </div>
-    <div class="m-body" id="pipeListBody"></div>
+    <div class="m-body" id="ppBody"></div>
   </div>
 </div>
 
-<!-- MO 상세 모달 (Container 모달 위 레이어) -->
+<!-- MO 상세 모달 -->
 <div class="modal-ov" id="moModalOv" style="z-index:4000">
-  <div class="modal-box" style="max-width:1000px">
+  <div class="modal-box modal-box-mo">
     <div class="m-hd">
-      <div>
-        <div class="m-title" id="moMTitle">-</div>
-        <div class="m-sub" id="moMSub">-</div>
-      </div>
+      <div><div class="m-title" id="moTitle">-</div><div class="m-sub" id="moSub">-</div></div>
       <div style="display:flex;align-items:center;gap:8px">
         <button onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Report:All_MO','_blank')" style="background:#EFF6FF;color:var(--pr);border:1px solid #BFDBFE;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit MO</button>
-        <div class="m-close" id="moMClose">✕</div>
+        <div class="m-close" id="moClose">✕</div>
       </div>
     </div>
-    <div class="m-body" id="moMBody">
+    <div class="m-body" id="moBody">
       <div style="text-align:center;padding:40px"><div class="spinner"></div><div style="margin-top:12px;color:var(--tm);font-size:12px">MO 데이터 불러오는 중...</div></div>
     </div>
   </div>
@@ -347,20 +290,23 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 
 <script>
 /* ════════════════════════════════════════
-   Shipment View v2
-   Form   : Add_Shipment
+   Shipment View v4
    Report : All_Shipment
+   Form   : Add_Shipment
 ════════════════════════════════════════ */
-var APP="eom", SHIP_REP="All_Shipment";
-var allShip=[];
-var today=new Date(), todayStr=today.toISOString().split("T")[0];
+var APP = "eom";
+var SHIP_REP = "All_Shipment";
+var MO_REP = "All_MO";
+var allShip = [];
+var today = new Date();
+var todayStr = today.toISOString().split("T")[0];
 
-/* ── 프로세스 단계 ── */
-var STEPS=["Loaded","Booking","Boarded","In Transit","Customs","Delivered"];
-var STEP_KO=["적재/装载","부킹/预订","선적/装船","운송/运输","통관/清关","완료/完成"];
-var STEP_ZH=["装载","预订","装船","运输","清关","完成"]; /* 중국어 */
-var STEP_MAP={
-  "Loaded":0,"Loading":0,"적재":0,
+/* 6단계 프로세스 */
+var STEPS    = ["Loaded","Booking","Boarded","In Transit","Customs","Delivered"];
+var STEP_KO  = ["적재","부킹","선적","운송","통관","완료"];
+var STEP_ZH  = ["装载","预订","装船","运输","清关","完成"];
+var STEP_MAP = {
+  "Loaded":0,"Loading":0,
   "Booking Pending":1,"Booked":1,"Booking Confirmed":1,
   "On Board":2,"Boarded":2,
   "In Transit":3,"Transit":3,
@@ -368,815 +314,798 @@ var STEP_MAP={
   "Delivered":5,"Completed":5,"Done":5
 };
 
+/* 통화 심볼 */
+var CUR_SYM = {"USD":"$","CNY":"¥","MXN":"MX$","KRW":"₩","EUR":"€"};
+
 /* ── 유틸 ── */
-function g(r,f){
-  var v=r[f];
-  if(v==null||v==="")return"-";
-  if(typeof v==="object"&&v.display_value)return v.display_value;
+function gv(r, f) {
+  var v = r[f];
+  if (v == null || v === "") return "-";
+  if (typeof v === "object" && v.display_value) return v.display_value;
   return String(v);
 }
-function escH(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
-function pd(v){
-  if(!v||v==="-")return null;
-  if(/^\d{4}-\d{2}-\d{2}/.test(v))return v.substring(0,10);
-  var m=v.match(/^(\d{1,2})-([A-Za-z]+)-(\d{4})/);
-  if(m){var mo={Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};
-    return m[3]+"-"+(mo[m[2]]||"01")+"-"+(m[1].length===1?"0"+m[1]:m[1])}
+function esc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+function pd(v) {
+  if (!v || v === "-") return null;
+  if (/^\d{4}-\d{2}-\d{2}/.test(v)) return v.substring(0, 10);
+  var m = v.match(/^(\d{1,2})-([A-Za-z]+)-(\d{4})/);
+  if (m) {
+    var mo = {Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};
+    return m[3] + "-" + (mo[m[2]] || "01") + "-" + (m[1].length === 1 ? "0" + m[1] : m[1]);
+  }
   return null;
 }
-function fmtD(v){var p=pd(v);if(!p)return"-";var a=p.split("-");return a[1]+"/"+a[2]+"/"+a[0].slice(2)}
-function getYM(r){
-  var etd=pd(g(r,"ETD"));
-  if(etd){var a=etd.split("-");return{y:parseInt(a[0]),m:parseInt(a[1]),key:a[0]+"년 "+parseInt(a[1])+"월"}}
-  return null;
+function fmtD(v) {
+  var p = pd(v);
+  if (!p) return "-";
+  var a = p.split("-");
+  return a[1] + "/" + a[2] + "/" + a[0].slice(2);
 }
-function getStepIdx(r){
-  var s=(g(r,"Container_Status")||"").trim();
-  return STEP_MAP[s]!==undefined?STEP_MAP[s]:-1;
+function getYM(r) {
+  var etd = pd(gv(r, "ETD"));
+  if (!etd) return null;
+  var a = etd.split("-");
+  return { y: parseInt(a[0]), m: parseInt(a[1]), key: a[0] + "년 " + parseInt(a[1]) + "월" };
 }
-function isHold(r){return(g(r,"Container_Status")||"").toLowerCase().indexOf("hold")>=0}
-function isDelayed(r){
-  var eta=pd(g(r,"ETA"));
-  if(!eta)return false;
-  var st=(g(r,"Container_Status")||"").toLowerCase();
-  if(st.indexOf("delivered")>=0||st.indexOf("done")>=0||st.indexOf("complet")>=0)return false;
-  var delayDays=parseInt(g(r,"Delay_Days"))||0;
-  return eta<todayStr||delayDays>0;
+function getStep(r) {
+  var s = (gv(r, "Container_Status") || "").trim();
+  return STEP_MAP[s] !== undefined ? STEP_MAP[s] : -1;
 }
-function getModeTag(m){
-  var l=(m||"").toLowerCase();
-  if(l.indexOf("air")>=0)return{cls:"mt-air",icon:"✈️",label:m};
-  if(l.indexOf("courier")>=0||l.indexOf("express")>=0)return{cls:"mt-courier",icon:"📦",label:m};
-  if(l.indexOf("ocean")>=0||l.indexOf("sea")>=0||l.indexOf("해운")>=0)return{cls:"mt-ocean",icon:"🚢",label:m};
-  return{cls:"mt-other",icon:"🚛",label:m||"Sea"};
+function isHold(r) { return (gv(r, "Container_Status") || "").toLowerCase().indexOf("hold") >= 0; }
+function isDelayed(r) {
+  var st = (gv(r, "Container_Status") || "").toLowerCase();
+  if (st.indexOf("delivered") >= 0 || st.indexOf("done") >= 0 || st.indexOf("complet") >= 0) return false;
+  var eta = pd(gv(r, "ETA"));
+  var dd = parseInt(gv(r, "Delay_Days")) || 0;
+  return (eta && eta < todayStr) || dd > 0;
 }
-function statusTag(s){
-  var l=(s||"").toLowerCase();
-  if(l.indexOf("delivered")>=0||l.indexOf("done")>=0||l.indexOf("complet")>=0)return'<span class="tag t-ok">'+escH(s)+'</span>';
-  if(l.indexOf("transit")>=0)return'<span class="tag t-bl">'+escH(s)+'</span>';
-  if(l.indexOf("hold")>=0)return'<span class="tag t-dg">'+escH(s)+'</span>';
-  if(l.indexOf("customs")>=0)return'<span class="tag t-wn">'+escH(s)+'</span>';
-  if(l.indexOf("board")>=0||l.indexOf("booking")>=0)return'<span class="tag t-pu">'+escH(s)+'</span>';
-  return'<span class="tag t-dr">'+escH(s||"미입력")+'</span>';
+function modeInfo(m) {
+  var l = (m || "").toLowerCase();
+  if (l.indexOf("air") >= 0) return { cls:"mt-air", icon:"✈️", label: m };
+  if (l.indexOf("courier") >= 0 || l.indexOf("express") >= 0) return { cls:"mt-courier", icon:"📦", label: m };
+  if (l.indexOf("ocean") >= 0 || l.indexOf("sea") >= 0 || l.indexOf("해운") >= 0) return { cls:"mt-ocean", icon:"🚢", label: m };
+  return { cls:"mt-other", icon:"🚛", label: m || "Sea" };
 }
-function getSubLines(r){
-  var v=r["Container_Lines"];
-  if(!v)return[];
-  if(Array.isArray(v))return v;
-  if(typeof v==="object")return Object.values(v);
-  return[];
+function stTag(s) {
+  var l = (s || "").toLowerCase();
+  if (l.indexOf("delivered") >= 0 || l.indexOf("done") >= 0 || l.indexOf("complet") >= 0) return '<span class="tag t-ok">' + esc(s) + '</span>';
+  if (l.indexOf("transit") >= 0) return '<span class="tag t-bl">' + esc(s) + '</span>';
+  if (l.indexOf("hold") >= 0) return '<span class="tag t-dg">' + esc(s) + '</span>';
+  if (l.indexOf("customs") >= 0) return '<span class="tag t-wn">' + esc(s) + '</span>';
+  if (l.indexOf("board") >= 0 || l.indexOf("booking") >= 0) return '<span class="tag t-pu">' + esc(s) + '</span>';
+  return '<span class="tag t-dr">' + esc(s || "미입력") + '</span>';
+}
+function getLines(r) {
+  var v = r["Container_Lines"];
+  if (!v) return [];
+  if (Array.isArray(v)) return v;
+  if (typeof v === "object") return Object.values(v);
+  return [];
+}
+function lineVal(line, key) {
+  var v = line[key];
+  if (v == null || v === "") return "-";
+  if (typeof v === "object" && v.display_value) return v.display_value;
+  return String(v);
+}
+function groupByMonth() {
+  var g = {};
+  allShip.forEach(function(r) {
+    var ym = getYM(r);
+    var key = ym ? ym.key : "미지정";
+    if (!g[key]) g[key] = [];
+    g[key].push(r);
+  });
+  return g;
+}
+function freightStr(items) {
+  var byCur = {};
+  items.forEach(function(r) {
+    var fc = parseFloat(gv(r, "Freight_Cost")) || 0;
+    var cur = (gv(r, "Currency") || "USD").trim().toUpperCase();
+    if (fc > 0) { if (!byCur[cur]) byCur[cur] = 0; byCur[cur] += fc; }
+  });
+  var parts = [];
+  Object.keys(byCur).sort().forEach(function(cur) {
+    var amt = byCur[cur];
+    var sym = CUR_SYM[cur] || cur;
+    parts.push(sym + (amt >= 1000 ? (amt / 1000).toFixed(1) + "k" : amt.toFixed(0)));
+  });
+  return { str: parts.length ? parts.join(" + ") : "—", multi: parts.length > 1 };
 }
 
 /* ── 데이터 로드 ── */
-ZOHO.CREATOR.init().then(function(){
-  ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:SHIP_REP,page:1,pageSize:200})
-  .then(function(res){
-    if(res&&res.code===3000&&res.data)allShip=res.data;
+ZOHO.CREATOR.init().then(function() {
+  ZOHO.CREATOR.API.getAllRecords({ appName: APP, reportName: SHIP_REP, page: 1, pageSize: 200 })
+  .then(function(res) {
+    if (res && res.code === 3000 && res.data) allShip = res.data;
     renderAll();
-    document.getElementById("loadingScreen").style.display="none";
-    document.getElementById("mainContent").style.display="block";
-  }).catch(function(e){
-    console.warn("Shipment load error:", e);
+    document.getElementById("loadingScreen").style.display = "none";
+    document.getElementById("mainContent").style.display = "block";
+  }).catch(function(e) {
+    console.warn("load:", e);
     renderAll();
-    document.getElementById("loadingScreen").style.display="none";
-    document.getElementById("mainContent").style.display="block";
+    document.getElementById("loadingScreen").style.display = "none";
+    document.getElementById("mainContent").style.display = "block";
   });
-}).catch(function(e){
-  console.warn("ZOHO init error:", e);
+}).catch(function(e) {
+  console.warn("init:", e);
   renderAll();
-  document.getElementById("loadingScreen").style.display="none";
-  document.getElementById("mainContent").style.display="block";
+  document.getElementById("loadingScreen").style.display = "none";
+  document.getElementById("mainContent").style.display = "block";
 });
 
 /* ── 전체 렌더 ── */
-function renderAll(){
-  if(allShip.length===0){
-    document.getElementById("hdrSub").textContent="데이터 없음 — Add Shipment에서 데이터를 입력해주세요";
-    document.getElementById("alertBar").innerHTML="";
-    document.getElementById("kpiRow").innerHTML='<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">📭</div><div>선적 데이터가 없습니다</div><div style="font-size:10px;margin-top:6px;color:#94A3B8">Add Shipment 폼에서 데이터를 입력하면 여기에 표시됩니다</div></div>';
-    document.getElementById("summaryRow").innerHTML="";
-    document.getElementById("monthlyContent").innerHTML="";
+function renderAll() {
+  if (allShip.length === 0) {
+    document.getElementById("hdrSub").textContent = "데이터 없음 — Add Shipment에서 데이터를 입력해주세요";
+    document.getElementById("alertBar").innerHTML = "";
+    document.getElementById("kpiRow").innerHTML = '<div class="empty-st" style="grid-column:1/-1">📭 선적 데이터가 없습니다<br><span style="font-size:10px;color:#94A3B8;display:block;margin-top:6px">Add Shipment 폼에서 데이터를 추가하면 여기에 표시됩니다</span></div>';
+    document.getElementById("sumRow").innerHTML = "";
+    document.getElementById("monthlyContent").innerHTML = "";
     return;
   }
-  var groups=groupByMonth();
-  var keys=Object.keys(groups).filter(function(k){return k!=="미지정"}).sort();
-  document.getElementById("hdrSub").textContent="총 "+allShip.length+"건 · "+keys.length+"개월 데이터";
+  var groups = groupByMonth();
+  var keys = Object.keys(groups).filter(function(k) { return k !== "미지정"; }).sort();
+  document.getElementById("hdrSub").textContent = "총 " + allShip.length + "건 · " + keys.length + "개월 데이터";
   renderAlerts();
   renderKPI(groups, keys);
-  renderSummary();
+  renderSum();
   renderMonthly(groups, keys);
 }
 
-function groupByMonth(){
-  var groups={};
-  allShip.forEach(function(r){
-    var ym=getYM(r);
-    var key=ym?ym.key:"미지정";
-    if(!groups[key])groups[key]=[];
-    groups[key].push(r);
-  });
-  return groups;
-}
-
 /* ── 이슈 알림 ── */
-function renderAlerts(){
-  var h="";
-  allShip.forEach(function(r){
-    if(isHold(r)){
-      h+='<div class="alert-item al-hold" onclick="openModal(\''+r["ID"]+'\')">⚠️ <b>'+escH(g(r,"Container_ID"))+'</b> — 통관 보류 (Customs Hold) · 즉시 확인 요망<span class="al-x" onclick="event.stopPropagation();this.closest(\'.alert-item\').remove()">✕</span></div>';
-    } else if(isDelayed(r)){
-      var dd=g(r,"Delay_Days");
-      h+='<div class="alert-item al-eta" onclick="openModal(\''+r["ID"]+'\')">🕐 <b>'+escH(g(r,"Container_ID"))+'</b> — ETA 지연'+(dd!=="-"?" "+dd+"일":"")+" · "+escH(g(r,"Origin_Port"))+" → "+escH(g(r,"Destination_Port"))+'<span class="al-x" onclick="event.stopPropagation();this.closest(\'.alert-item\').remove()">✕</span></div>';
+function renderAlerts() {
+  var h = "";
+  allShip.forEach(function(r) {
+    var cid = gv(r, "Container_ID");
+    var rid = r["ID"];
+    if (isHold(r)) {
+      h += '<div class="al-item al-hold" data-open="' + rid + '">⚠️ <b>' + esc(cid) + '</b> — 통관 보류 (Customs Hold) · 즉시 확인 요망<span class="al-x">✕</span></div>';
+    } else if (isDelayed(r)) {
+      var dd = gv(r, "Delay_Days");
+      h += '<div class="al-item al-eta" data-open="' + rid + '">🕐 <b>' + esc(cid) + '</b> — ETA 지연' + (dd !== "-" ? " " + dd + "일" : "") + ' · ' + esc(gv(r, "Origin_Port")) + ' → ' + esc(gv(r, "Destination_Port")) + '<span class="al-x">✕</span></div>';
     }
   });
-  document.getElementById("alertBar").innerHTML=h;
+  document.getElementById("alertBar").innerHTML = h;
 }
 
-/* ── KPI 카드 (최근 3개월) ── */
-function renderKPI(groups, keys){
-  var recent=keys.slice(-3);
-  var colors=["kpi-c0","kpi-c1","kpi-c2"];
-  var h="";
+/* ── KPI 카드 ── */
+function renderKPI(groups, keys) {
+  var recent = keys.slice(-3);
+  var colors = ["kc0", "kc1", "kc2"];
+  var MO_EN = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var h = "";
 
-  recent.forEach(function(key, ki){
-    var items=groups[key];
-    var totalKG=0,freightByCur={};
-    var cntOcean=0,cntAir=0,cntCourier=0,cntOther=0;
-    var cntDone=0,cntTransit=0,cntHold=0;
-    var otifOk=0;
-    var stepCounts=[0,0,0,0,0];
+  recent.forEach(function(key, ki) {
+    var items = groups[key];
+    var ym = getYM(items[0]) || { m: 0, y: 0 };
+    var totalKG = 0;
+    var cntO = 0, cntA = 0, cntC = 0, cntX = 0;
+    var cntDone = 0, cntTransit = 0, cntHold = 0;
+    var otifOk = 0;
+    var stepCounts = [0, 0, 0, 0, 0, 0];
 
-    items.forEach(function(r){
-      totalKG+=parseFloat(g(r,"Total_Weight_KG"))||0;
-      /* ★ 통화별 운임 분리 */
-      var fc=parseFloat(g(r,"Freight_Cost"))||0;
-      var cur=(g(r,"Currency")||"USD").trim().toUpperCase();
-      if(fc>0){
-        if(!freightByCur[cur])freightByCur[cur]=0;
-        freightByCur[cur]+=fc;
-      }
-      var ml=(g(r,"Shipment_Mode")||"").toLowerCase();
-      if(ml.indexOf("air")>=0)cntAir++;
-      else if(ml.indexOf("courier")>=0||ml.indexOf("express")>=0)cntCourier++;
-      else if(ml.indexOf("ocean")>=0||ml.indexOf("sea")>=0||ml.indexOf("해운")>=0)cntOcean++;
-      else cntOther++;
-      var si=getStepIdx(r);if(si>=0)stepCounts[si]++;
-      var st=(g(r,"Container_Status")||"").toLowerCase();
-      if(st.indexOf("delivered")>=0||st.indexOf("done")>=0)cntDone++;
-      else if(st.indexOf("transit")>=0)cntTransit++;
-      if(isHold(r))cntHold++;
-      var eta=pd(g(r,"ETA")),ata=pd(g(r,"ATA"));
-      var dd=parseInt(g(r,"Delay_Days"))||0;
-      if(eta&&ata&&ata<=eta)otifOk++;
-      else if(eta&&!ata&&eta>=todayStr&&dd===0)otifOk++;
+    items.forEach(function(r) {
+      totalKG += parseFloat(gv(r, "Total_Weight_KG")) || 0;
+      var ml = (gv(r, "Shipment_Mode") || "").toLowerCase();
+      if (ml.indexOf("air") >= 0) cntA++;
+      else if (ml.indexOf("courier") >= 0 || ml.indexOf("express") >= 0) cntC++;
+      else if (ml.indexOf("ocean") >= 0 || ml.indexOf("sea") >= 0 || ml.indexOf("해운") >= 0) cntO++;
+      else cntX++;
+      var si = getStep(r);
+      if (si >= 0 && si < 6) stepCounts[si]++;
+      var st = (gv(r, "Container_Status") || "").toLowerCase();
+      if (st.indexOf("delivered") >= 0 || st.indexOf("done") >= 0) cntDone++;
+      else if (st.indexOf("transit") >= 0) cntTransit++;
+      if (isHold(r)) cntHold++;
+      var eta = pd(gv(r, "ETA")), ata = pd(gv(r, "ATA"));
+      var dd = parseInt(gv(r, "Delay_Days")) || 0;
+      if (eta && ata && ata <= eta) otifOk++;
+      else if (eta && !ata && eta >= todayStr && dd === 0) otifOk++;
     });
 
-    var otif=items.length>0?Math.round((otifOk/items.length)*100):0;
-    var allDone=items.every(function(r){var st=(g(r,"Container_Status")||"").toLowerCase();return st.indexOf("delivered")>=0||st.indexOf("done")>=0||st.indexOf("complet")>=0});
-    var hasTrans=items.some(function(r){return(g(r,"Container_Status")||"").toLowerCase().indexOf("transit")>=0});
-    var statusTxt=allDone?"Closed":hasTrans?"In Transit":"Planned";
-    var statusCls=allDone?"kb-done":hasTrans?"kb-transit":"kb-planned";
+    var otif = items.length > 0 ? Math.round((otifOk / items.length) * 100) : 0;
+    var otifColor = otif >= 95 ? "#10B981" : otif >= 85 ? "#F59E0B" : "#EF4444";
+    var allDone = items.every(function(r) { var st = (gv(r,"Container_Status")||"").toLowerCase(); return st.indexOf("delivered")>=0||st.indexOf("done")>=0||st.indexOf("complet")>=0; });
+    var hasTrans = items.some(function(r) { return (gv(r,"Container_Status")||"").toLowerCase().indexOf("transit")>=0; });
+    var statusTxt = allDone ? "Closed" : hasTrans ? "In Transit" : "Planned";
+    var statusCls = allDone ? "kb-done" : hasTrans ? "kb-transit" : "kb-planned";
+    var maxStep = 0; for (var x = 5; x >= 0; x--) { if (stepCounts[x] > 0) { maxStep = x; break; } }
+    var fInfo = freightStr(items);
+    var fColor = fInfo.multi ? "#7C3AED" : "#10B981";
+    var keyEnc = encodeURIComponent(key);
 
-    /* 월/년 파싱 */
-    var ym=null;
-    allShip.forEach(function(r){if(getYM(r)&&getYM(r).key===key)ym=getYM(r);});
-    var mEN=ym?["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][ym.m]:"";
-    var maxStep=0;for(var i=4;i>=0;i--){if(stepCounts[i]>0){maxStep=i;break}}
-
-    h+='<div class="kpi-card '+colors[ki]+'">';
-    h+='<div class="kpi-hd"><div><span class="kpi-month">'+(ym?ym.m+"월":"?")+'</span><span class="kpi-month-en">'+mEN+'</span></div><span class="kpi-badge '+statusCls+'">'+statusTxt+'</span></div>';
-
-    /* ★ 통화별 운임 표시 텍스트 생성 */
-    var CUR_SYMBOL={"USD":"$","CNY":"¥","MXN":"MX$","KRW":"₩","EUR":"€"};
-    var freightParts=[];
-    Object.keys(freightByCur).sort().forEach(function(cur){
-      var amt=freightByCur[cur];
-      var sym=CUR_SYMBOL[cur]||cur;
-      var disp=sym+(amt>=1000?(amt/1000).toFixed(1)+"k":amt.toFixed(0));
-      freightParts.push(disp);
-    });
-    var freightDisp=freightParts.length>0?freightParts.join(" + "):"—";
-    var multiF=freightParts.length>1;
-
-    h+='<div class="kpi-metrics">';
-    h+='<div class="kpi-m"><div class="kpi-m-val" style="color:#3B82F6">'+items.length+'</div><div class="kpi-m-lbl">컨테이너/CNTR</div></div>';
-    h+='<div class="kpi-m"><div class="kpi-m-val" style="color:'+(multiF?"#7C3AED":"#10B981")+';font-size:15px;font-weight:900;line-height:1.2">'+freightDisp+'</div><div class="kpi-m-lbl">운임/运费</div></div>';
-    h+='<div class="kpi-m"><div class="kpi-m-val" style="color:'+(otif>=95?"#10B981":otif>=85?"#F59E0B":"#EF4444")+'">'+otif+'%</div><div class="kpi-m-lbl">OTIF</div></div>';
-    h+='</div>';
-
-    h+='<div class="kpi-modes">';
-    if(cntOcean>0)h+='<span class="mode-tag mt-ocean">🚢 Ocean '+cntOcean+'건</span>';
-    if(cntAir>0)h+='<span class="mode-tag mt-air">✈️ Air '+cntAir+'건</span>';
-    if(cntCourier>0)h+='<span class="mode-tag mt-courier">📦 Courier '+cntCourier+'건</span>';
-    if(cntOther>0)h+='<span class="mode-tag mt-other">🚛 기타 '+cntOther+'건</span>';
-    h+='</div>';
-
-    /* ★ 파이프라인 트래커 (클릭 가능) */
-    var keyEncPipe=encodeURIComponent(key);
-    h+='<div style="margin-top:10px;padding-top:10px;border-top:1px solid #F1F5F9">';
-    h+='<div style="font-size:9px;font-weight:700;color:var(--tm);margin-bottom:6px">선적 파이프라인 / 出货流水</div>';
-    h+='<div style="display:flex;align-items:center;gap:0">';
-    STEPS.forEach(function(s,i){
-      var cnt=stepCounts[i];
-      var bg=cnt>0?(i<maxStep?"#34D399":i===maxStep?"#3B82F6":"#E2E8F0"):"#E2E8F0";
-      var tc=(bg==="rgb(226,232,240)"||bg==="#E2E8F0")?"#94A3B8":"#fff";
-      var lc=bg==="#34D399"?"#059669":bg==="#3B82F6"?"#2563EB":"#94A3B8";
-      var clickable=cnt>0;
-      if(i>0)h+='<div style="flex:0;height:2px;width:4px;background:'+(stepCounts[i-1]>0?"#34D399":"#E2E8F0")+'"></div>';
-      h+='<div class="pipe-bubble" style="flex:1;text-align:center;cursor:'+(clickable?"pointer":"default")+'" data-key="'+keyEncPipe+'" data-step="'+i+'" data-clickable="'+(clickable?"1":"0")+'">'
-      h+='<div style="flex:1;text-align:center;cursor:'+(clickable?"pointer":"default")+'"'+_oc+'>';
-      h+='<div style="width:22px;height:22px;border-radius:50%;background:'+bg+';color:'+tc+';font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 2px">'+cnt+'</div>';
-      h+='<div style="font-size:7px;font-weight:700;color:'+lc+'">'+STEP_KO[i].split("/")[0]+'</div>';
-      h+='<div style="font-size:6px;color:'+lc+'">'+STEP_ZH[i]+'</div>';
-      h+='</div>';
-    });
-    h+='</div></div></div>';
-  });
-
-  if(!h)h='<div class="empty-state" style="grid-column:1/-1">데이터가 없습니다</div>';
-  document.getElementById("kpiRow").innerHTML=h;
-}
-
-      h+='<div class="pipe-list-item" data-id="'+r["ID"]+'" style="padding:12px 14px;border:1px solid '+(hold?"#FECACA":"var(--bd)")+';border-radius:8px;margin-bottom:8px;cursor:pointer;background:'+(hold?"#FFF8F8":"#fff")+'">'
-function renderSummary(){
-  var tot=allShip.length,cntDone=0,cntTransit=0,cntHold=0;
-  var freightAll={};
-  allShip.forEach(function(r){
-    var st=(g(r,"Container_Status")||"").toLowerCase();
-    if(st.indexOf("delivered")>=0||st.indexOf("done")>=0)cntDone++;
-    else if(st.indexOf("transit")>=0)cntTransit++;
-    if(isHold(r))cntHold++;
-    var fc=parseFloat(g(r,"Freight_Cost"))||0;
-    var cur=(g(r,"Currency")||"USD").trim().toUpperCase();
-    if(fc>0){if(!freightAll[cur])freightAll[cur]=0;freightAll[cur]+=fc;}
-  });
-  var CUR_SYMBOL={"USD":"$","CNY":"¥","MXN":"MX$","KRW":"₩","EUR":"€"};
-  var freightStr=Object.keys(freightAll).sort().map(function(cur){
-    var amt=freightAll[cur];
-    var sym=CUR_SYMBOL[cur]||cur;
-    return sym+(amt>=1000?(amt/1000).toFixed(1)+"k":amt.toFixed(0));
-  }).join(" + ")||"—";
-  var multiCur=Object.keys(freightAll).length>1;
-
-  var h="";
-  h+='<div class="sum-card"><div class="sum-val" style="color:#3B82F6">'+tot+'</div><div class="sum-lbl">총 컨테이너<br>Total Containers</div></div>';
-  h+='<div class="sum-card"><div class="sum-val" style="color:'+(multiCur?"#7C3AED":"#6366F1")+';font-size:18px;font-weight:900">'+freightStr+'</div><div class="sum-lbl">총 운임<br>Total Freight</div></div>';
-  h+='<div class="sum-card"><div class="sum-val" style="color:#10B981">'+cntDone+'</div><div class="sum-lbl">도착완료<br>Delivered</div></div>';
-  h+='<div class="sum-card"><div class="sum-val" style="color:#F59E0B">'+cntTransit+'</div><div class="sum-lbl">운송중<br>In Transit</div></div>';
-  h+='<div class="sum-card"><div class="sum-val" style="color:#EF4444">'+cntHold+'</div><div class="sum-lbl">통관보류<br>Customs Hold</div></div>';
-  document.getElementById("summaryRow").innerHTML=h;}
-
-/* ── 월별 컨테이너 목록 ── */
-function renderMonthly(groups, keys){
-  var html="",mi=0;
-  keys.slice().reverse().forEach(function(key){
-    var items=groups[key],idx=mi++;
-    var mMode={},mStatus={};
-    items.forEach(function(r){
-      var md=g(r,"Shipment_Mode");if(md!=="-")mMode[md]=1;
-      var st=g(r,"Container_Status");if(st!=="-")mStatus[st]=1;
-    });
-
-    var ym=null;
-    items.forEach(function(r){if(!ym&&getYM(r))ym=getYM(r);});
-    var yy=ym?ym.y.toString().slice(-2):"";
-    var mm=ym?(ym.m<10?"0"+ym.m:""+ym.m):"";
-    var title=ym?(yy+"."+mm+" 선적 현황 / "+yy+"年 "+ym.m+"月 出货现况"):"선적 현황";
-
-    html+='<div class="month-sec" id="ms'+idx+'">';
-    html+='<div class="month-hd"><div class="month-title">🚢 '+title+'</div><span class="month-cnt" id="mc'+idx+'">'+items.length+' Containers</span></div>';
-
-    /* 필터 바 */
-    html+='<div class="filter-bar">';
-    html+='<input type="text" class="f-search sf" data-m="'+idx+'" data-t="q" placeholder="🔍 검색...">';
-    html+='<select class="f-sel sf" data-m="'+idx+'" data-t="md"><option value="">All Mode / 운송수단</option>';
-    Object.keys(mMode).sort().forEach(function(k){html+='<option value="'+escH(k)+'">'+escH(k)+'</option>'});
-    html+='</select>';
-    html+='<select class="f-sel sf" data-m="'+idx+'" data-t="st"><option value="">All Status / 상태</option>';
-    Object.keys(mStatus).sort().forEach(function(k){html+='<option value="'+escH(k)+'">'+escH(k)+'</option>'});
-    html+='</select></div>';
-
-    /* 카드 그리드 */
-    html+='<div class="ship-grid" id="sg'+idx+'">';
-    items.forEach(function(r){html+=buildCard(r,idx)});
-    html+='</div></div>';
-  });
-
-  document.getElementById("monthlyContent").innerHTML=html;
-  document.querySelectorAll(".sf").forEach(function(el){el.addEventListener(el.tagName==="INPUT"?"input":"change",function(){doFilter(this.getAttribute("data-m"))})});
-  /* ★ 이벤트 위임 — 동적 카드 클릭 처리 */
-  document.getElementById("monthlyContent").addEventListener("click",function(e){
-    var card=e.target.closest(".ship-card");
-    if(card&&!e.target.closest(".mo-cell-btn")&&!e.target.closest(".sf")){
-      openModal(card.getAttribute("data-id"));
+    h += '<div class="kpi-card ' + colors[ki] + '">';
+    h += '<div class="kpi-hd"><div><span class="kpi-month">' + ym.m + '월</span><span class="kpi-month-en">' + (MO_EN[ym.m] || "") + '</span></div><span class="kpi-badge ' + statusCls + '">' + statusTxt + '</span></div>';
+    h += '<div class="kpi-metrics">';
+    h += '<div class="kpi-m"><div class="kpi-m-val" style="color:#3B82F6">' + items.length + '</div><div class="kpi-m-lbl">컨테이너/CNTR</div></div>';
+    h += '<div class="kpi-m"><div class="kpi-m-val" style="color:' + fColor + ';font-size:13px">' + fInfo.str + '</div><div class="kpi-m-lbl">운임/运费</div></div>';
+    h += '<div class="kpi-m"><div class="kpi-m-val" style="color:' + otifColor + '">' + otif + '%</div><div class="kpi-m-lbl">OTIF</div></div>';
+    h += '</div>';
+    h += '<div class="kpi-modes">';
+    if (cntO > 0) h += '<span class="mt mt-ocean">🚢 Ocean ' + cntO + '</span>';
+    if (cntA > 0) h += '<span class="mt mt-air">✈️ Air ' + cntA + '</span>';
+    if (cntC > 0) h += '<span class="mt mt-courier">📦 Courier ' + cntC + '</span>';
+    if (cntX > 0) h += '<span class="mt mt-other">🚛 기타 ' + cntX + '</span>';
+    h += '</div>';
+    /* 파이프라인 */
+    h += '<div><div class="kpi-pipe-title">선적 파이프라인 / 出货流水</div>';
+    h += '<div class="kpi-pipe">';
+    for (var i = 0; i < STEPS.length; i++) {
+      var cnt = stepCounts[i];
+      var bg = cnt > 0 ? (i < maxStep ? "#34D399" : i === maxStep ? "#3B82F6" : "#E2E8F0") : "#E2E8F0";
+      var tc = (bg === "#E2E8F0") ? "#94A3B8" : "#fff";
+      var lc = bg === "#34D399" ? "#059669" : bg === "#3B82F6" ? "#2563EB" : "#94A3B8";
+      if (i > 0) h += '<div class="kpb-line" style="background:' + (stepCounts[i-1] > 0 ? "#34D399" : "#E2E8F0") + '"></div>';
+      h += '<div class="kpb" data-pipebubble="1" data-key="' + keyEnc + '" data-step="' + i + '" data-cnt="' + cnt + '">';
+      h += '<div class="kpb-dot" style="background:' + bg + ';color:' + tc + '">' + cnt + '</div>';
+      h += '<div class="kpb-lbl" style="color:' + lc + '">' + STEP_KO[i] + '</div>';
+      h += '<div class="kpb-lbl2" style="color:' + lc + '">' + STEP_ZH[i] + '</div>';
+      h += '</div>';
     }
+    h += '</div></div></div>';
   });
+
+  document.getElementById("kpiRow").innerHTML = h || '<div class="empty-st" style="grid-column:1/-1">데이터 없음</div>';
+}
+
+/* ── 요약 바 ── */
+function renderSum() {
+  var tot = allShip.length, cntDone = 0, cntTransit = 0, cntHold = 0;
+  allShip.forEach(function(r) {
+    var st = (gv(r, "Container_Status") || "").toLowerCase();
+    if (st.indexOf("delivered") >= 0 || st.indexOf("done") >= 0) cntDone++;
+    else if (st.indexOf("transit") >= 0) cntTransit++;
+    if (isHold(r)) cntHold++;
+  });
+  var fInfo = freightStr(allShip);
+  var fColor = fInfo.multi ? "#7C3AED" : "#6366F1";
+  var h = "";
+  h += '<div class="sum-card"><div class="sum-val" style="color:#3B82F6">' + tot + '</div><div class="sum-lbl">총 컨테이너<br>Total Containers</div></div>';
+  h += '<div class="sum-card"><div class="sum-val" style="color:' + fColor + ';font-size:' + (fInfo.multi ? "14px" : "18px") + ';font-weight:900">' + fInfo.str + '</div><div class="sum-lbl">총 운임<br>Total Freight</div></div>';
+  h += '<div class="sum-card"><div class="sum-val" style="color:#10B981">' + cntDone + '</div><div class="sum-lbl">도착완료<br>Delivered</div></div>';
+  h += '<div class="sum-card"><div class="sum-val" style="color:#F59E0B">' + cntTransit + '</div><div class="sum-lbl">운송중<br>In Transit</div></div>';
+  h += '<div class="sum-card"><div class="sum-val" style="color:#EF4444">' + cntHold + '</div><div class="sum-lbl">통관보류<br>Customs Hold</div></div>';
+  document.getElementById("sumRow").innerHTML = h;
+}
+
+/* ── 월별 목록 ── */
+function renderMonthly(groups, keys) {
+  var html = "";
+  var reversed = keys.slice().reverse();
+  reversed.forEach(function(key, mi) {
+    var items = groups[key];
+    var ym = getYM(items[0]) || { y: 0, m: 0 };
+    var yy = String(ym.y).slice(-2);
+    var mm = ym.m < 10 ? "0" + ym.m : "" + ym.m;
+    var title = yy + "." + mm + " 선적 현황 / " + yy + "年 " + ym.m + "月 出货现况";
+    var mMode = {}, mStat = {};
+    items.forEach(function(r) {
+      var md = gv(r, "Shipment_Mode"); if (md !== "-") mMode[md] = 1;
+      var st = gv(r, "Container_Status"); if (st !== "-") mStat[st] = 1;
+    });
+
+    html += '<div class="month-sec" id="ms' + mi + '">';
+    html += '<div class="month-hd"><div class="month-title">🚢 ' + title + '</div><span class="month-cnt" id="mc' + mi + '">' + items.length + ' Containers</span></div>';
+    html += '<div class="filter-bar">';
+    html += '<input type="text" class="f-search sf" data-m="' + mi + '" data-t="q" placeholder="🔍 검색...">';
+    html += '<select class="f-sel sf" data-m="' + mi + '" data-t="md"><option value="">All Mode</option>';
+    Object.keys(mMode).sort().forEach(function(k) { html += '<option value="' + esc(k) + '">' + esc(k) + '</option>'; });
+    html += '</select>';
+    html += '<select class="f-sel sf" data-m="' + mi + '" data-t="st"><option value="">All Status</option>';
+    Object.keys(mStat).sort().forEach(function(k) { html += '<option value="' + esc(k) + '">' + esc(k) + '</option>'; });
+    html += '</select></div>';
+    html += '<div class="ship-grid" id="sg' + mi + '">';
+    items.forEach(function(r) { html += buildCard(r, mi); });
+    html += '</div></div>';
+  });
+  document.getElementById("monthlyContent").innerHTML = html;
 }
 
 /* ── 카드 빌드 ── */
-function buildCard(r,idx){
-  var cid=g(r,"Container_ID");
-  var ctype=g(r,"Container_Type");
-  var mode=g(r,"Shipment_Mode");
-  var status=g(r,"Container_Status");
-  var from=g(r,"Origin_Port");
-  var to=g(r,"Destination_Port");
-  var cbm=parseFloat(g(r,"Total_CBM"))||0;
-  var kg=parseFloat(g(r,"Total_Weight_KG"))||0;
-  var ctn=parseInt(g(r,"Total_Cartons"))||0;
-  var qty=parseInt(g(r,"Total_Quantity"))||0;
-  var etd=g(r,"ETD"),eta=g(r,"ETA"),ata=g(r,"ATA");
-  var dd=g(r,"Delay_Days");
-  var hold=isHold(r),delayed=isDelayed(r);
-  var si=getStepIdx(r);
-  var mt=getModeTag(mode);
-  var lines=getSubLines(r);
-  var srch=(cid+" "+ctype+" "+mode+" "+status+" "+from+" "+to+" "+g(r,"BL_Number")+" "+g(r,"Vessel_Name")).toLowerCase();
+function buildCard(r, mi) {
+  var cid = gv(r, "Container_ID");
+  var ctype = gv(r, "Container_Type");
+  var mode = gv(r, "Shipment_Mode");
+  var status = gv(r, "Container_Status");
+  var from = gv(r, "Origin_Port");
+  var to = gv(r, "Destination_Port");
+  var qty = parseInt(gv(r, "Total_Quantity")) || 0;
+  var kg = parseFloat(gv(r, "Total_Weight_KG")) || 0;
+  var ctn = parseInt(gv(r, "Total_Cartons")) || 0;
+  var etd = gv(r, "ETD"), eta = gv(r, "ETA"), ata = gv(r, "ATA");
+  var dd = gv(r, "Delay_Days");
+  var hold = isHold(r), delayed = isDelayed(r);
+  var si = getStep(r);
+  var mi_info = modeInfo(mode);
+  var lines = getLines(r);
+  var srch = (cid + " " + ctype + " " + mode + " " + status + " " + from + " " + to + " " + gv(r, "BL_Number") + " " + gv(r, "Vessel_Name")).toLowerCase();
 
-  var h='<div class="ship-card'+(hold?" is-hold":"")+'" data-id="'+r["ID"]+'" data-m="'+idx+'" data-md="'+escH(mode)+'" data-st="'+escH(status)+'" data-sr="'+escH(srch)+'">';
+  var h = '<div class="ship-card' + (hold ? " is-hold" : "") + '" data-id="' + r["ID"] + '" data-m="' + mi + '" data-md="' + esc(mode) + '" data-st="' + esc(status) + '" data-sr="' + esc(srch) + '">';
 
   /* 헤더 */
-  h+='<div class="sc-hd"><div>';
-  h+='<div class="sc-id">'+(cid!=="-"?escH(cid):'<span style="color:#94A3B8">ID 미입력</span>')+'</div>';
-  h+='<div class="sc-type">'+(ctype!=="-"?escH(ctype):"-")+'</div>';
-  h+='</div>'+statusTag(status)+'</div>';
+  h += '<div class="sc-hd"><div>';
+  h += '<div class="sc-id">' + (cid !== "-" ? esc(cid) : '<span style="color:#94A3B8">ID 미입력</span>') + '</div>';
+  h += '<div class="sc-type">' + (ctype !== "-" ? esc(ctype) : "-") + '</div>';
+  h += '</div>' + stTag(status) + '</div>';
 
   /* 루트 */
-  h+='<div class="sc-route">';
-  h+='<span class="sc-port">'+escH(from!=="-"?from:"출발항 미입력")+'</span>';
-  h+='<span class="sc-arr">→</span>';
-  h+='<span class="sc-port">'+escH(to!=="-"?to:"도착항 미입력")+'</span>';
-  h+='<span class="mode-tag '+mt.cls+' sc-mode">'+mt.icon+' '+escH(mt.label!=="-"?mt.label:"Sea")+'</span>';
-  h+='</div>';
+  h += '<div class="sc-route">';
+  h += '<span class="sc-port">' + esc(from !== "-" ? from : "?") + '</span>';
+  h += '<span class="sc-arr">→</span>';
+  h += '<span class="sc-port">' + esc(to !== "-" ? to : "?") + '</span>';
+  h += '<span class="mt ' + mi_info.cls + ' sc-mode">' + mi_info.icon + ' ' + esc(mi_info.label !== "-" ? mi_info.label : "Sea") + '</span>';
+  h += '</div>';
 
   /* 수치 */
-  h+='<div class="sc-nums">';
-  h+='<div class="sc-num-box"><div class="sc-num-val" style="color:#6D28D9">'+qty.toLocaleString()+'</div><div class="sc-num-lbl">Pcs / 수량 / 数量</div></div>';
-  h+='<div class="sc-num-box"><div class="sc-num-val" style="font-size:10px;color:#475569">'+(ctype!=="-"?escH(ctype):"-")+'</div><div class="sc-num-lbl">Type / 유형 / 箱型</div></div>';
-  h+='<div class="sc-num-box"><div class="sc-num-val">'+kg.toFixed(0)+'</div><div class="sc-num-lbl">KG / 중량 / 重量</div></div>';
-  h+='<div class="sc-num-box"><div class="sc-num-val">'+ctn+'</div><div class="sc-num-lbl">Cartons / 박스 / 箱数</div></div>';
-  h+='</div>';
+  h += '<div class="sc-nums">';
+  h += '<div class="sc-nb"><div class="sc-nv" style="color:#6D28D9">' + qty.toLocaleString() + '</div><div class="sc-nl">Pcs/수량</div></div>';
+  h += '<div class="sc-nb"><div class="sc-nv" style="font-size:10px;color:#475569">' + (ctype !== "-" ? esc(ctype) : "-") + '</div><div class="sc-nl">Type/유형</div></div>';
+  h += '<div class="sc-nb"><div class="sc-nv">' + kg.toFixed(0) + '</div><div class="sc-nl">KG/중량</div></div>';
+  h += '<div class="sc-nb"><div class="sc-nv">' + ctn + '</div><div class="sc-nl">Cartons/박스</div></div>';
+  h += '</div>';
 
-  /* Container Lines (MO 목록) */
-  if(lines.length>0){
-    h+='<div class="sc-mo-lines">';
-    lines.slice(0,3).forEach(function(line){
-      var mo=line["Manufacturing_Order"];if(mo&&typeof mo==="object")mo=mo.display_value;
-      var sty=line["Style"]||"";if(sty&&typeof sty==="object")sty=sty.display_value;
-      var lqty=parseInt(line["Quantity"])||0;
-      if(mo)h+='<div class="sc-mo-item"><span class="sc-mo-num">'+escH(String(mo))+'</span><span class="sc-mo-style">'+escH(String(sty||""))+'</span><span class="sc-mo-qty">'+lqty.toLocaleString()+' pcs</span></div>';
+  /* MO 라인 */
+  if (lines.length > 0) {
+    h += '<div class="sc-mos">';
+    lines.slice(0, 3).forEach(function(line) {
+      var mo = lineVal(line, "Manufacturing_Order");
+      var sty = lineVal(line, "Style");
+      var lqty = parseInt(lineVal(line, "Quantity")) || 0;
+      if (mo !== "-") {
+        h += '<div class="sc-mo-row">';
+        h += '<span class="sc-mo-num">' + esc(mo) + '</span>';
+        h += '<span class="sc-mo-style">' + esc(sty !== "-" ? sty : "") + '</span>';
+        h += '<span class="sc-mo-qty">' + lqty.toLocaleString() + ' pcs</span>';
+        h += '</div>';
+      }
     });
-    if(lines.length>3)h+='<div style="font-size:9px;color:#94A3B8;text-align:right;padding-top:2px">+'+( lines.length-3)+'건 더보기</div>';
-    h+='</div>';
+    if (lines.length > 3) h += '<div style="font-size:9px;color:#94A3B8;text-align:right;padding-top:2px">+' + (lines.length - 3) + '건 더보기</div>';
+    h += '</div>';
   }
 
-  /* 프로세스 트래커 */
-  h+='<div class="sc-tracker">';
-  STEPS.forEach(function(s,i){
-    var isDone=(si>i)||(si===STEPS.length-1&&si===i);
-    var isCurr=(si===i&&i<STEPS.length-1);
-    var isHoldStep=(hold&&isCurr);
-    var dotCls=isHoldStep?"sct-hold":isDone?"sct-done":isCurr?"sct-curr":"sct-wait";
-    var lc=isHoldStep?"#DC2626":isDone?"#059669":isCurr?"#2563EB":"#94A3B8";
-    if(i>0)h+='<div class="sct-line" style="background:'+(isDone?"#34D399":"#E2E8F0")+'"></div>';
-    h+='<div class="sct-wrap">';
-    h+='<div class="sct-dot '+dotCls+'">'+(isDone?"✓":isHoldStep?"!":i+1)+'</div>';
-    h+='<div class="sct-lbl" style="color:'+lc+'">'+STEP_KO[i].split("/")[0]+'</div>';
-    h+='<div class="sct-lbl" style="color:'+lc+';font-size:6px">'+STEP_ZH[i]+'</div>';
-    h+='</div>';
-  });
-  h+='</div>';
+  /* 트래커 */
+  h += '<div class="sc-tracker">';
+  for (var i = 0; i < STEPS.length; i++) {
+    var isDone = si > i || si === STEPS.length - 1;
+    var isCurr = si === i && i < STEPS.length - 1;
+    var isHoldStep = hold && isCurr;
+    var dotCls = isHoldStep ? "sct-hold" : isDone ? "sct-done" : isCurr ? "sct-curr" : "sct-wait";
+    var lc = isHoldStep ? "#DC2626" : isDone ? "#059669" : isCurr ? "#2563EB" : "#94A3B8";
+    if (i > 0) h += '<div class="sct-line" style="background:' + (isDone ? "#34D399" : "#E2E8F0") + '"></div>';
+    h += '<div class="sct-w">';
+    h += '<div class="sct-dot ' + dotCls + '">' + (isDone ? "✓" : isHoldStep ? "!" : i + 1) + '</div>';
+    h += '<div class="sct-lbl" style="color:' + lc + '">' + STEP_KO[i] + '</div>';
+    h += '<div class="sct-lbl" style="color:' + lc + ';font-size:6px">' + STEP_ZH[i] + '</div>';
+    h += '</div>';
+  }
+  h += '</div>';
 
   /* 날짜 */
-  h+='<div class="sc-dates">';
-  h+='<span>ETD <b>'+escH(fmtD(etd))+'</b></span>';
-  h+='<span>ETA <b class="'+(delayed?"delayed":"")+'">'+escH(fmtD(eta))+'</b></span>';
-  if(ata!=="-")h+='<span>ATA <b style="color:#10B981">'+escH(fmtD(ata))+'</b></span>';
-  if(dd!=="-"&&dd!=="0")h+='<span style="color:#EF4444;font-weight:700">지연 '+escH(dd)+'일</span>';
-  h+='</div>';
-
-  h+='</div>';
+  h += '<div class="sc-dates">';
+  h += '<span>ETD <b>' + esc(fmtD(etd)) + '</b></span>';
+  h += '<span>ETA <b' + (delayed ? ' class="delayed"' : '') + '>' + esc(fmtD(eta)) + '</b></span>';
+  if (ata !== "-") h += '<span>ATA <b style="color:#10B981">' + esc(fmtD(ata)) + '</b></span>';
+  if (dd !== "-" && dd !== "0") h += '<span style="color:#EF4444;font-weight:700">지연 ' + esc(dd) + '일</span>';
+  h += '</div>';
+  h += '</div>';
   return h;
 }
 
 /* ── 필터 ── */
-function doFilter(mi){
-  var sec=document.getElementById("ms"+mi);if(!sec)return;
-  var q="",md="",st="";
-  sec.querySelectorAll(".sf").forEach(function(el){
-    var t=el.getAttribute("data-t"),v=el.value;
-    if(t==="q")q=v.toLowerCase().trim();
-    else if(t==="md")md=v;
-    else if(t==="st")st=v;
+function doFilter(mi) {
+  var sec = document.getElementById("ms" + mi); if (!sec) return;
+  var q = "", md = "", st = "";
+  sec.querySelectorAll(".sf").forEach(function(el) {
+    var t = el.getAttribute("data-t"), v = el.value;
+    if (t === "q") q = v.toLowerCase().trim();
+    else if (t === "md") md = v;
+    else if (t === "st") st = v;
   });
-  var cards=sec.querySelectorAll('.ship-card[data-m="'+mi+'"]');
-  var cnt=0;
-  cards.forEach(function(c){
-    var ok=true;
-    if(q&&c.getAttribute("data-sr").indexOf(q)<0)ok=false;
-    if(md&&c.getAttribute("data-md")!==md)ok=false;
-    if(st&&c.getAttribute("data-st")!==st)ok=false;
-    c.style.display=ok?"":"none";
-    if(ok)cnt++;
+  var cards = sec.querySelectorAll('.ship-card[data-m="' + mi + '"]');
+  var cnt = 0;
+  cards.forEach(function(c) {
+    var ok = true;
+    if (q && c.getAttribute("data-sr").indexOf(q) < 0) ok = false;
+    if (md && c.getAttribute("data-md") !== md) ok = false;
+    if (st && c.getAttribute("data-st") !== st) ok = false;
+    c.style.display = ok ? "" : "none";
+    if (ok) cnt++;
   });
-  var el=document.getElementById("mc"+mi);if(el)el.textContent=cnt+" Containers";
+  var el = document.getElementById("mc" + mi); if (el) el.textContent = cnt + " Containers";
 }
 
-/* ── 상세 모달 ── */
-function openModal(id){
-  var r=allShip.find(function(x){return x["ID"]===id});
-  if(!r)return;
+/* ── 컨테이너 상세 모달 ── */
+function openShipModal(id) {
+  var r = allShip.find(function(x) { return x["ID"] === id; });
+  if (!r) return;
+  document.getElementById("smTitle").textContent = gv(r, "Container_ID") !== "-" ? gv(r, "Container_ID") : "Container";
+  document.getElementById("smSub").textContent = (gv(r, "Origin_Port") !== "-" ? gv(r, "Origin_Port") : "?") + " → " + (gv(r, "Destination_Port") !== "-" ? gv(r, "Destination_Port") : "?") + (gv(r, "Container_Type") !== "-" ? " · " + gv(r, "Container_Type") : "");
+  document.getElementById("smBody").innerHTML = buildShipDetail(r);
+  document.getElementById("shipModalOv").classList.add("active");
+}
 
-  document.getElementById("mTitle").textContent=g(r,"Container_ID")!=="-"?g(r,"Container_ID"):"Container "+id;
-  document.getElementById("mSub").textContent=(g(r,"Origin_Port")!=="-"?g(r,"Origin_Port"):"?")+" → "+(g(r,"Destination_Port")!=="-"?g(r,"Destination_Port"):"?")+(g(r,"Container_Type")!=="-"?" · "+g(r,"Container_Type"):"");
+function dv(v) { return v === "-" ? '<span class="d-val empty">미입력</span>' : esc(v); }
+function it(l, v) { return '<div class="d-item"><span class="d-label">' + l + '</span><span class="d-val">' + v + '</span></div>'; }
 
-  var h="";
-  function dv(v){return v==="-"?'<span class="d-val empty">미입력</span>':escH(v)}
-  function it(l,v){return'<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'}
+function buildShipDetail(r) {
+  var h = "";
+  var si = getStep(r), holdFlg = isHold(r);
 
   /* 1. 기본 정보 */
-  h+='<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 基本信息</div><div class="d-grid">';
-  h+=it("Container ID / 컨테이너ID / 柜号",dv(g(r,"Container_ID")));
-  h+=it("Container Type / 유형 / 柜型",dv(g(r,"Container_Type")));
-  h+=it("Container Status / 상태 / 状态",statusTag(g(r,"Container_Status")));
-  h+=it("Shipment Mode / 운송수단 / 运输方式",dv(g(r,"Shipment_Mode")));
-  h+=it("Incoterms / 인코텀즈 / 贸易术语",dv(g(r,"Incoterms")));
-  h+=it("Origin Port / 출발항 / 起运港",dv(g(r,"Origin_Port")));
-  h+=it("Destination Port / 도착항 / 目的港",dv(g(r,"Destination_Port")));
-  h+=it("B/L Status / 선하증권유형 / 提单类型",dv(g(r,"BL_Status")));
-  h+=it("Delay Days / 지연일수 / 延迟天数",dv(g(r,"Delay_Days")));
-  h+='</div></div>';
+  h += '<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 基本信息</div><div class="d-grid">';
+  h += it("Container ID / 컨테이너ID / 柜号", dv(gv(r, "Container_ID")));
+  h += it("Container Type / 유형 / 柜型", dv(gv(r, "Container_Type")));
+  h += it("Container Status / 상태 / 状态", stTag(gv(r, "Container_Status")));
+  h += it("Shipment Mode / 운송수단 / 运输方式", dv(gv(r, "Shipment_Mode")));
+  h += it("Incoterms / 인코텀즈 / 贸易术语", dv(gv(r, "Incoterms")));
+  h += it("Origin Port / 출발항 / 起运港", dv(gv(r, "Origin_Port")));
+  h += it("Destination Port / 도착항 / 目的港", dv(gv(r, "Destination_Port")));
+  h += it("B/L Status / 선하증권유형 / 提单类型", dv(gv(r, "BL_Status")));
+  h += it("Delay Days / 지연일수 / 延迟天数", dv(gv(r, "Delay_Days")));
+  h += '</div></div>';
 
-  /* 2. 프로세스 트래커 */
-  var si=getStepIdx(r),holdFlg=isHold(r);
-  h+='<div class="m-sec"><div class="m-sec-t">🔄 선적 진행 단계 / 出货进度追踪</div>';
-  h+='<div class="big-tracker">';
-  STEPS.forEach(function(s,i){
-    var isDone=(si>i)||(si===STEPS.length-1&&si===i);
-    var isCurr=(si===i&&i<STEPS.length-1);
-    var isHoldStep=(holdFlg&&isCurr);
-    var dotCls=isHoldStep?"bt-hold":isDone?"bt-done":isCurr?"bt-curr":"bt-wait";
-    var lblCls=isHoldStep?"hold-lbl":isDone?"done-lbl":isCurr?"curr-lbl":"";
-    if(i>0)h+='<div style="flex:0;height:3px;width:14px;background:'+(isDone?"#34D399":"#E2E8F0")+'"></div>';
-    h+='<div class="bt-wrap"><div class="bt-dot '+dotCls+'">'+(isDone?"✓":isHoldStep?"!":i+1)+'</div>';
-    h+='<div class="bt-lbl '+lblCls+'">'+STEP_KO[i].split("/")[0]+'<br><span style="font-size:8px;color:'+(isDone?"#059669":isCurr?"#3B82F6":"#94A3B8")+'">'+STEP_ZH[i]+'</span></div></div>';
-  });
-  h+='</div>';
-  if(g(r,"Delay_Reason")!=="-")h+='<div style="margin-top:8px;padding:8px 12px;background:#FEF9C3;border-radius:6px;font-size:11px;color:#A16207"><b>지연사유:</b> '+escH(g(r,"Delay_Reason"))+'</div>';
-  h+='</div>';
+  /* 2. 선적 진행 단계 */
+  h += '<div class="m-sec"><div class="m-sec-t">🔄 선적 진행 단계 / 出货进度追踪</div>';
+  h += '<div class="big-track">';
+  for (var i = 0; i < STEPS.length; i++) {
+    var isDone = si > i || si === STEPS.length - 1;
+    var isCurr = si === i && i < STEPS.length - 1;
+    var isHoldStep = holdFlg && isCurr;
+    var dotCls = isHoldStep ? "bt-hold" : isDone ? "bt-done" : isCurr ? "bt-curr" : "bt-wait";
+    var lblCls = isHoldStep ? "hold-lbl" : isDone ? "done-lbl" : isCurr ? "curr-lbl" : "";
+    if (i > 0) h += '<div style="flex:0;height:3px;width:14px;background:' + (isDone ? "#34D399" : "#E2E8F0") + '"></div>';
+    h += '<div class="bt-w"><div class="bt-dot ' + dotCls + '">' + (isDone ? "✓" : isHoldStep ? "!" : i + 1) + '</div>';
+    h += '<div class="bt-lbl ' + lblCls + '">' + STEP_KO[i] + '</div>';
+    h += '<div class="bt-lbl2" style="color:' + (isDone ? "#059669" : isCurr ? "#3B82F6" : "#94A3B8") + '">' + STEP_ZH[i] + '</div></div>';
+  }
+  h += '</div>';
+  if (gv(r, "Delay_Reason") !== "-") h += '<div style="margin-top:8px;padding:8px 12px;background:#FEF9C3;border-radius:6px;font-size:11px;color:#A16207"><b>지연사유 / 延迟原因:</b> ' + esc(gv(r, "Delay_Reason")) + '</div>';
+  h += '</div>';
 
-  /* 3. 날짜 일정 (Plan / Actual 2컬럼) */
-  h+='<div class="m-sec"><div class="m-sec-t">📅 선적 일정 / 出货日期</div><div class="date-timeline">';
-  /* Plan 컬럼 */
-  h+='<div class="dt-col"><div class="dt-col-t plan">📋 계획 일정 / 计划日期</div>';
-  [{l:"ETD / 출항예정일 / 预计离港",k:"ETD"},{l:"ETA / 도착예정일 / 预计到港",k:"ETA"}].forEach(function(t,i){
-    var v=g(r,t.k),p=pd(v),cls="dt-wait";
-    if(p)cls=p<=todayStr?"dt-done":"dt-curr";
-    h+='<div class="dt-item"><div class="dt-dot '+cls+'">'+(i+1)+'</div><div class="dt-info"><div class="dt-lbl">'+t.l+'</div><div class="dt-val">'+escH(v)+'</div></div></div>';
+  /* 3. 선적 일정 (Plan/Actual) */
+  h += '<div class="m-sec"><div class="m-sec-t">📅 선적 일정 / 出货日期</div><div class="dt-cols">';
+  h += '<div class="dt-col"><div class="dt-col-t plan">📋 계획 일정 / 计划日期</div>';
+  [{l:"ETD / 출항예정일 / 预计离港", k:"ETD"}, {l:"ETA / 도착예정일 / 预计到港", k:"ETA"}].forEach(function(t, i) {
+    var v = gv(r, t.k), p = pd(v), cls = "dt-wait";
+    if (p) cls = p <= todayStr ? "dt-done" : "dt-curr";
+    h += '<div class="dt-row"><div class="dt-dot ' + cls + '">' + (i + 1) + '</div><div><div class="dt-lbl">' + t.l + '</div><div class="dt-val">' + esc(v) + '</div></div></div>';
   });
-  h+='</div>';
-  /* Actual 컬럼 */
-  h+='<div class="dt-col"><div class="dt-col-t actual">✅ 실제 일정 / 实际日期</div>';
-  [{l:"ATD / 실제출항일 / 实际离港",k:"ATD"},{l:"ATA / 실제도착일 / 实际到港",k:"ATA"},{l:"CCD / 통관완료일 / 清关完成日",k:"CCD"}].forEach(function(t,i){
-    var v=g(r,t.k),p=pd(v),cls="dt-wait";
-    if(p)cls=p<=todayStr?"dt-done":"dt-curr";
-    h+='<div class="dt-item"><div class="dt-dot '+cls+'">'+(i+1)+'</div><div class="dt-info"><div class="dt-lbl">'+t.l+'</div><div class="dt-val">'+escH(v)+'</div></div></div>';
+  h += '</div>';
+  h += '<div class="dt-col"><div class="dt-col-t actual">✅ 실제 일정 / 实际日期</div>';
+  [{l:"ATD / 실제출항일 / 实际离港", k:"ATD"}, {l:"ATA / 실제도착일 / 实际到港", k:"ATA"}, {l:"CCD / 통관완료일 / 清关完成日", k:"CCD"}].forEach(function(t, i) {
+    var v = gv(r, t.k), p = pd(v), cls = "dt-wait";
+    if (p) cls = p <= todayStr ? "dt-done" : "dt-curr";
+    h += '<div class="dt-row"><div class="dt-dot ' + cls + '">' + (i + 1) + '</div><div><div class="dt-lbl">' + t.l + '</div><div class="dt-val">' + esc(v) + '</div></div></div>';
   });
-  h+='</div></div></div>';
+  h += '</div></div></div>';
 
-  /* 4. 수량 정보 */
-  h+='<div class="m-sec"><div class="m-sec-t">📦 수량 & 화물 / 数量&货物</div><div class="d-grid-4">';
-  h+=it("Total Quantity / 총수량 / 总数量",dv(g(r,"Total_Quantity")));
-  h+=it("Total Cartons / 총박스수 / 总箱数",dv(g(r,"Total_Cartons")));
-  h+=it("Total CBM / 총용적 / 总体积",dv(g(r,"Total_CBM")));
-  h+=it("Total Weight(KG) / 총중량 / 总重量",dv(g(r,"Total_Weight_KG")));
-  h+='</div></div>';
+  /* 4. 수량 & 화물 */
+  h += '<div class="m-sec"><div class="m-sec-t">📦 수량 & 화물 / 数量&货物</div><div class="d-grid4">';
+  h += it("Total Quantity / 총수량 / 总数量", dv(gv(r, "Total_Quantity")));
+  h += it("Total Cartons / 총박스수 / 总箱数", dv(gv(r, "Total_Cartons")));
+  h += it("Total CBM / 총용적 / 总体积", dv(gv(r, "Total_CBM")));
+  h += it("Total Weight(KG) / 총중량 / 总重量", dv(gv(r, "Total_Weight_KG")));
+  h += '</div></div>';
 
   /* 5. 선적 정보 */
-  h+='<div class="m-sec"><div class="m-sec-t">🚢 선적 정보 / 船运信息</div><div class="d-grid">';
-  h+=it("Shipping Line / 선사 / 船公司",dv(g(r,"Shipping_Line")));
-  h+=it("Vessel Name / 선박명 / 船名",dv(g(r,"Vessel_Name")));
-  h+=it("Voyage Number / 항차 / 航次",dv(g(r,"Voyage_Number")));
-  h+=it("B/L Number / B/L번호 / 提单号",dv(g(r,"BL_Number")));
-  h+=it("Freight Cost / 운임 / 运费",dv(g(r,"Freight_Cost")));
-  h+=it("Currency / 통화 / 货币",dv(g(r,"Currency")));
-  h+=it("Incoterms / 인코텀즈 / 贸易术语",dv(g(r,"Incoterms")));
-  h+=it("Notes / 메모 / 备注",dv(g(r,"Notes")));
-  h+='</div></div>';
+  h += '<div class="m-sec"><div class="m-sec-t">🚢 선적 정보 / 船运信息</div><div class="d-grid">';
+  h += it("Shipping Line / 선사 / 船公司", dv(gv(r, "Shipping_Line")));
+  h += it("Vessel Name / 선박명 / 船名", dv(gv(r, "Vessel_Name")));
+  h += it("Voyage Number / 항차 / 航次", dv(gv(r, "Voyage_Number")));
+  h += it("B/L Number / B/L번호 / 提单号", dv(gv(r, "BL_Number")));
+  h += it("Freight Cost / 운임 / 运费", dv(gv(r, "Freight_Cost")));
+  h += it("Currency / 통화 / 货币", dv(gv(r, "Currency")));
+  h += it("Incoterms / 인코텀즈 / 贸易术语", dv(gv(r, "Incoterms")));
+  h += it("Notes / 메모 / 备注", dv(gv(r, "Notes")));
+  h += '</div></div>';
 
-  /* 6. Container Lines (MO 상세) */
-  var lines=getSubLines(r);
-  h+='<div class="m-sec"><div class="m-sec-t">📋 Container Lines / 컨테이너라인 / 集装箱明细</div>';
-  if(lines.length===0){
-    h+='<div style="text-align:center;padding:20px;color:#94A3B8;font-size:12px">입력된 라인이 없습니다</div>';
+  /* 6. Container Lines — 핵심 섹션 */
+  var lines = getLines(r);
+  h += '<div class="m-sec"><div class="m-sec-t">📋 Container Lines / 컨테이너라인 / 集装箱明细</div>';
+  if (lines.length === 0) {
+    h += '<div style="text-align:center;padding:20px;color:#94A3B8;font-size:12px">입력된 라인이 없습니다</div>';
   } else {
-    h+='<div style="overflow-x:auto"><table class="cl-tbl"><thead><tr>';
-    h+='<th>MO / 제조오더 / 生产订单</th>';
-    h+='<th>Style / 스타일 / 款式</th>';
-    h+='<th>Color / 색상 / 颜色</th>';
-    h+='<th>Qty / 수량 / 数量</th>';
-    h+='<th>Cartons / 박스수 / 箱数</th>';
-    h+='<th>CBM / 용적 / 体积</th>';
-    h+='<th>Weight(KG) / 중량 / 重量</th>';
-    h+='</tr></thead><tbody>';
-    var totQty=0,totCtn=0,totCBM=0,totKG=0;
-    lines.forEach(function(line){
-      var mo=line["Manufacturing_Order"];if(mo&&typeof mo==="object")mo=mo.display_value;
-      var sty=line["Style"];if(sty&&typeof sty==="object")sty=sty.display_value;
-      var col=line["Color"]||"-";
-      var lqty=parseInt(line["Quantity"])||0;
-      var lctn=parseInt(line["Cartons"])||0;
-      var lcbm=parseFloat(line["CBM"])||0;
-      var lkg=parseFloat(line["Weight_KG"])||0;
-      totQty+=lqty;totCtn+=lctn;totCBM+=lcbm;totKG+=lkg;
-      h+='<tr>';
-      h+='<td><button class="mo-cell-btn" onclick="event.stopPropagation();openMOModal(\''+(String(mo||"-"))+'\')" >'+escH(String(mo||"-"))+'</button></td>';
-      h+='<td>'+escH(String(sty||"-"))+'</td>';
-      h+='<td>'+escH(String(col))+'</td>';
-      h+='<td style="font-weight:700">'+lqty.toLocaleString()+'</td>';
-      h+='<td>'+lctn+'</td>';
-      h+='<td>'+lcbm.toFixed(2)+'</td>';
-      h+='<td>'+lkg.toFixed(1)+'</td>';
-      h+='</tr>';
+    h += '<div class="cl-wrap"><table class="cl-tbl"><thead><tr>';
+    h += '<th>MO / 제조오더 / 生产订单</th>';
+    h += '<th>Style / 스타일 / 款式</th>';
+    h += '<th>Factory / 공장 / 工厂</th>';
+    h += '<th>Color / 색상 / 颜色</th>';
+    h += '<th>Qty / 수량 / 数量</th>';
+    h += '<th>Unit Price / 단가 / 单价</th>';
+    h += '<th>Line Total / 합계 / 总计</th>';
+    h += '<th>Cartons / 박스수 / 箱数</th>';
+    h += '<th>CBM / 용적 / 体积</th>';
+    h += '<th>Weight(KG) / 중량 / 重量</th>';
+    h += '<th>Notes / 메모 / 备注</th>';
+    h += '</tr></thead><tbody>';
+    var totQty = 0, totCtn = 0, totCBM = 0, totKG = 0, totAmt = 0;
+    lines.forEach(function(line) {
+      var mo  = lineVal(line, "Manufacturing_Order");
+      var sty = lineVal(line, "Style");
+      var fac = lineVal(line, "Factory");
+      var col = lineVal(line, "Color");
+      var lqty = parseInt(lineVal(line, "Quantity")) || 0;
+      var uprice = parseFloat(lineVal(line, "Unit_Price")) || 0;
+      var ltotal = parseFloat(lineVal(line, "Line_Total")) || 0;
+      var lctn = parseInt(lineVal(line, "Cartons")) || 0;
+      var lcbm = parseFloat(lineVal(line, "CBM")) || 0;
+      var lkg  = parseFloat(lineVal(line, "Weight_KG")) || 0;
+      var lnote = lineVal(line, "Notes");
+      totQty += lqty; totCtn += lctn; totCBM += lcbm; totKG += lkg; totAmt += ltotal;
+      h += '<tr>';
+      if (mo !== "-") {
+        h += '<td><button class="cl-mo-btn" data-monum="' + esc(mo) + '">' + esc(mo) + '</button></td>';
+      } else {
+        h += '<td><span style="color:#94A3B8">-</span></td>';
+      }
+      h += '<td>' + esc(sty !== "-" ? sty : "-") + '</td>';
+      h += '<td style="font-size:10px">' + esc(fac !== "-" ? fac : "-") + '</td>';
+      h += '<td>' + esc(col !== "-" ? col : "-") + '</td>';
+      h += '<td style="font-weight:700;color:#6D28D9">' + lqty.toLocaleString() + '</td>';
+      h += '<td>' + (uprice > 0 ? uprice.toLocaleString() : "-") + '</td>';
+      h += '<td style="font-weight:700">' + (ltotal > 0 ? ltotal.toLocaleString() : "-") + '</td>';
+      h += '<td>' + (lctn > 0 ? lctn : "-") + '</td>';
+      h += '<td>' + (lcbm > 0 ? lcbm.toFixed(2) : "-") + '</td>';
+      h += '<td>' + (lkg > 0 ? lkg.toFixed(1) : "-") + '</td>';
+      h += '<td style="font-size:10px;color:var(--tm)">' + esc(lnote !== "-" ? lnote : "-") + '</td>';
+      h += '</tr>';
     });
-    h+='<tr style="background:#F1F5F9;font-weight:900"><td colspan="3" style="text-align:right;padding:7px 8px;color:var(--tm)">합계 / 合计</td>';
-    h+='<td>'+totQty.toLocaleString()+'</td><td>'+totCtn+'</td><td>'+totCBM.toFixed(2)+'</td><td>'+totKG.toFixed(1)+'</td></tr>';
-    h+='</tbody></table></div>';
+    h += '</tbody><tfoot><tr class="cl-tfoot">';
+    h += '<td colspan="4" style="text-align:right;padding:7px 8px;color:var(--tm)">합계 / 合计</td>';
+    h += '<td style="color:#6D28D9">' + totQty.toLocaleString() + '</td>';
+    h += '<td>-</td>';
+    h += '<td>' + totAmt.toLocaleString() + '</td>';
+    h += '<td>' + totCtn + '</td>';
+    h += '<td>' + totCBM.toFixed(2) + '</td>';
+    h += '<td>' + totKG.toFixed(1) + '</td>';
+    h += '<td></td>';
+    h += '</tr></tfoot></table></div>';
   }
-  h+='</div>';
-
-  document.getElementById("mBody").innerHTML=h;
-  document.getElementById("modalOv").classList.add("active");
+  h += '</div>';
+  return h;
 }
 
-/* ═══════════════════════════════════════
-   파이프라인 단계별 컨테이너 리스트 팝업
-═══════════════════════════════════════ */
-function openPipeList(keyEnc, stepIdx){
-  var key=decodeURIComponent(keyEnc);
-  /* 해당 월 + 해당 단계 컨테이너 필터링 */
-  var items=allShip.filter(function(r){
-    var ym=getYM(r);
-    if(!ym||ym.key!==key)return false;
-    return getStepIdx(r)===stepIdx;
+/* ── 파이프라인 팝업 ── */
+function openPipeList(keyEnc, stepIdx) {
+  var key = decodeURIComponent(keyEnc);
+  var items = allShip.filter(function(r) {
+    var ym = getYM(r);
+    return ym && ym.key === key && getStep(r) === stepIdx;
   });
-  var stepName=STEP_KO[stepIdx]?STEP_KO[stepIdx].split("/")[0]:"?";
-  var stepZH=STEP_ZH[stepIdx]||"";
-  document.getElementById("pipeListTitle").textContent="🚢 "+stepName+" / "+stepZH;
-  document.getElementById("pipeListSub").textContent=key+" · "+items.length+"개 컨테이너";
-
-  var h="";
-  if(items.length===0){
-    h='<div style="text-align:center;padding:30px;color:#94A3B8;font-size:12px">해당 단계의 컨테이너가 없습니다</div>';
+  document.getElementById("ppTitle").textContent = "🚢 " + STEP_KO[stepIdx] + " / " + STEP_ZH[stepIdx];
+  document.getElementById("ppSub").textContent = key + " · " + items.length + "개 컨테이너";
+  var h = "";
+  if (items.length === 0) {
+    h = '<div class="empty-st">해당 단계의 컨테이너가 없습니다</div>';
   } else {
-    items.forEach(function(r){
-      var cid=g(r,"Container_ID");
-      var ctype=g(r,"Container_Type");
-      var from=g(r,"Origin_Port");
-      var to=g(r,"Destination_Port");
-      var mode=g(r,"Shipment_Mode");
-      var status=g(r,"Container_Status");
-      var eta=g(r,"ETA");
-      var dd=g(r,"Delay_Days");
-      var qty=parseInt(g(r,"Total_Quantity"))||0;
-      var mt=getModeTag(mode);
-      var hold=isHold(r);
-      var delayed=isDelayed(r);
-
-      h+='<div style="padding:12px 14px;border:1px solid '+(hold?"#FECACA":"var(--bd)")+';border-radius:8px;margin-bottom:8px;cursor:pointer;background:'+(hold?"#FFF8F8":"#fff")+';transition:background .1s" onclick="document.getElementById('pipeListOv').classList.remove('active');openModal(''+r["ID"]+'');"#EFF6FF'"'+(hold?"#FFF8F8":"#fff")+''">';
-      h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">';
-      h+='<div>';
-      h+='<div style="font-size:13px;font-weight:900;color:var(--pr)">'+escH(cid!=="-"?cid:"ID 미입력")+'</div>';
-      h+='<div style="font-size:10px;color:var(--tm);margin-top:2px">'+escH(ctype!=="-"?ctype:"")+'</div>';
-      h+='</div>';
-      h+=statusTag(status);
-      h+='</div>';
-      /* 루트 */
-      h+='<div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;margin-bottom:8px">';
-      h+='<span style="padding:2px 7px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:4px;font-size:10px">'+escH(from!=="-"?from:"?")+'</span>';
-      h+='<span style="color:#94A3B8">→</span>';
-      h+='<span style="padding:2px 7px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:4px;font-size:10px">'+escH(to!=="-"?to:"?")+'</span>';
-      h+='<span class="mode-tag '+mt.cls+'" style="font-size:9px;padding:2px 6px">'+mt.icon+' '+escH(mt.label!=="-"?mt.label:"Sea")+'</span>';
-      h+='</div>';
-      /* 수치 + 날짜 */
-      h+='<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--tm)">';
-      h+='<span>수량 <b style="color:var(--tx)">'+qty.toLocaleString()+' pcs</b></span>';
-      h+='<span>ETA <b style="color:'+(delayed?"#EF4444":"var(--tx)")+'">'+escH(fmtD(eta))+'</b></span>';
-      if(dd!=="-"&&dd!=="0")h+='<span style="color:#EF4444;font-weight:700">지연 '+escH(dd)+'일</span>';
-      h+='</div>';
-      h+='</div>';
+    items.forEach(function(r) {
+      var cid = gv(r, "Container_ID");
+      var from = gv(r, "Origin_Port"), to = gv(r, "Destination_Port");
+      var mode = gv(r, "Shipment_Mode");
+      var status = gv(r, "Container_Status");
+      var eta = gv(r, "ETA"), dd = gv(r, "Delay_Days");
+      var qty = parseInt(gv(r, "Total_Quantity")) || 0;
+      var hold = isHold(r), delayed = isDelayed(r);
+      var mi_info = modeInfo(mode);
+      h += '<div class="pop-item' + (hold ? " is-hold" : "") + '" data-pipeid="' + r["ID"] + '">';
+      h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">';
+      h += '<div><div style="font-size:13px;font-weight:900;color:var(--pr)">' + esc(cid !== "-" ? cid : "ID 미입력") + '</div></div>';
+      h += stTag(status);
+      h += '</div>';
+      h += '<div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;margin-bottom:6px">';
+      h += '<span style="padding:2px 7px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:4px;font-size:10px">' + esc(from !== "-" ? from : "?") + '</span>';
+      h += '<span style="color:#94A3B8">→</span>';
+      h += '<span style="padding:2px 7px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:4px;font-size:10px">' + esc(to !== "-" ? to : "?") + '</span>';
+      h += '<span class="mt ' + mi_info.cls + '" style="font-size:9px;padding:2px 6px">' + mi_info.icon + ' ' + esc(mi_info.label !== "-" ? mi_info.label : "Sea") + '</span>';
+      h += '</div>';
+      h += '<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--tm)">';
+      h += '<span>수량 <b style="color:var(--tx)">' + qty.toLocaleString() + ' pcs</b></span>';
+      h += '<span>ETA <b' + (delayed ? ' style="color:#EF4444"' : '') + '>' + esc(fmtD(eta)) + '</b></span>';
+      if (dd !== "-" && dd !== "0") h += '<span style="color:#EF4444;font-weight:700">지연 ' + esc(dd) + '일</span>';
+      h += '</div></div>';
     });
   }
-  document.getElementById("pipeListBody").innerHTML=h;
-  document.getElementById("pipeListOv").classList.add("active");
+  document.getElementById("ppBody").innerHTML = h;
+  document.getElementById("pipePopOv").classList.add("active");
 }
 
-/* ═══════════════════════════════════════
-   MO 상세 모달 — All_MO Report에서 실시간 조회
-═══════════════════════════════════════ */
-var MO_REP="All_MO";
-var S_MAP={
-  Gender:{"W":"Women / 여성 / 女","M":"Men / 남성 / 男","U":"Unisex / 남녀공용 / 男女通용"},
-  Category:{"S":"Set / 세트 / 套装","I":"Individual / 단품 / 单品"},
+/* ── MO 상세 모달 ── */
+function openMOModal(moNum) {
+  if (!moNum || moNum === "-") return;
+  document.getElementById("moTitle").textContent = moNum;
+  document.getElementById("moSub").textContent = "MO 정보 불러오는 중...";
+  document.getElementById("moBody").innerHTML = '<div style="text-align:center;padding:40px"><div class="spinner"></div><div style="margin-top:12px;color:var(--tm);font-size:12px">MO 데이터 불러오는 중...</div></div>';
+  document.getElementById("moModalOv").classList.add("active");
+  ZOHO.CREATOR.API.getAllRecords({ appName: APP, reportName: MO_REP, page: 1, pageSize: 200 })
+  .then(function(res) {
+    if (!res || res.code !== 3000 || !res.data) {
+      document.getElementById("moBody").innerHTML = '<div class="empty-st">MO 데이터를 불러올 수 없습니다</div>';
+      return;
+    }
+    var rec = res.data.find(function(r) { return gv(r, "MO_Number") === moNum; });
+    if (!rec) {
+      document.getElementById("moBody").innerHTML = '<div class="empty-st">🔍 MO번호 <b>' + esc(moNum) + '</b> 의 데이터를 찾을 수 없습니다</div>';
+      return;
+    }
+    document.getElementById("moSub").textContent = gv(rec, "Style_Name") + " — " + gv(rec, "Style_SKU");
+    document.getElementById("moBody").innerHTML = buildMODetail(rec);
+  }).catch(function(e) {
+    console.warn("MO load:", e);
+    document.getElementById("moBody").innerHTML = '<div class="empty-st" style="color:#EF4444">MO 데이터 로드 오류</div>';
+  });
+}
+
+var S_MAP = {
+  Gender:{"W":"Women/여성/女","M":"Men/남성/男","U":"Unisex"},
+  Category:{"S":"Set/세트/套装","I":"Individual/단품/单品"},
   Top_Type:{"B":"Bra-top","C":"Crop","T":"Tank"},
-  Sleeve:{"L":"Long / 긴팔","S":"Short / 반팔","N":"None / 민소매"},
+  Sleeve:{"L":"Long/긴팔","S":"Short/반팔","N":"None/민소매"},
   Fit:{"O":"Oversize","R":"Regular","S":"Slim"},
   Bottom_Type:{"L":"Leggings","W":"Wide","J":"Jogger","F":"Flare","P":"Pleats","A":"A-line","B":"Shorts"},
-  Material_Type:{"P":"Polyester / 폴리에스터","N":"Nylon / 나일론","D":"Polyamide","C":"Cotton / 코튼","H":"Mesh / 메쉬","M":"Modal","L":"Lycra"},
-  Lining_Type:{"B":"Brushed / 기모","F":"Fur / 퍼","N":"None / 없음"}
+  Material_Type:{"P":"Polyester","N":"Nylon","D":"Polyamide","C":"Cotton","H":"Mesh","M":"Modal","L":"Lycra"},
+  Lining_Type:{"B":"Brushed/기모","F":"Fur/퍼","N":"None/없음"}
 };
-function mv(f,v){return(!v||v==="-")?"-":(S_MAP[f]&&S_MAP[f][v])?S_MAP[f][v]:v}
-function cleanFactory(v){if(!v||v==="-")return"-";return v.replace(/^[_\s]*\d+[_\s]*/,"")}
-function getMOSubLines(r,field){var v=r[field];if(!v)return[];if(Array.isArray(v))return v;if(typeof v==="object")return Object.values(v);return[];}
-
-function openMOModal(moNum){
-  if(!moNum||moNum==="-")return;
-  document.getElementById("moMTitle").textContent=moNum;
-  document.getElementById("moMSub").textContent="MO 정보를 불러오는 중...";
-  document.getElementById("moMBody").innerHTML='<div style="text-align:center;padding:40px"><div class="spinner" style="margin:0 auto"></div><div style="margin-top:12px;color:var(--tm);font-size:12px">MO 데이터 불러오는 중...</div></div>';
-  document.getElementById("moModalOv").classList.add("active");
-
-  /* All_MO Report에서 해당 MO 조회 */
-  ZOHO.CREATOR.API.getAllRecords({
-    appName:APP, reportName:MO_REP, page:1, pageSize:200
-  }).then(function(res){
-    if(!res||res.code!==3000||!res.data){
-      document.getElementById("moMBody").innerHTML='<div style="text-align:center;padding:30px;color:var(--tm)">MO 데이터를 불러올 수 없습니다</div>';
-      return;
-    }
-    var moRec=res.data.find(function(r){
-      return g(r,"MO_Number")===moNum;
-    });
-    if(!moRec){
-      document.getElementById("moMBody").innerHTML='<div style="text-align:center;padding:30px;color:var(--tm)"><div style="font-size:24px;margin-bottom:8px">🔍</div>MO번호 <b>'+escH(moNum)+'</b> 의 데이터를 찾을 수 없습니다</div>';
-      return;
-    }
-    renderMOModal(moRec);
-  }).catch(function(e){
-    console.warn("MO load error:", e);
-    document.getElementById("moMBody").innerHTML='<div style="text-align:center;padding:30px;color:#EF4444">MO 데이터 로드 오류</div>';
-  });
+function mv(f, v) { return (!v || v === "-") ? "-" : (S_MAP[f] && S_MAP[f][v]) ? S_MAP[f][v] : v; }
+function cln(v) { if (!v || v === "-") return "-"; return v.replace(/^[_\s]*\d+[_\s]*/, ""); }
+function moTc(s) {
+  var l = (s || "").toLowerCase();
+  if (l.indexOf("confirmed") >= 0 || l.indexOf("delivered") >= 0 || l.indexOf("done") >= 0 || l.indexOf("shipped") >= 0) return "t-ok";
+  if (l.indexOf("progress") >= 0 || l.indexOf("cutting") >= 0 || l.indexOf("sewing") >= 0 || l.indexOf("fabric") >= 0) return "t-wn";
+  if (l.indexOf("delay") >= 0 || l.indexOf("cancel") >= 0) return "t-dg";
+  return "t-dr";
 }
+function getMOLines(r, field) { var v = r[field]; if (!v) return []; if (Array.isArray(v)) return v; if (typeof v === "object") return Object.values(v); return []; }
 
-function renderMOModal(r){
-  document.getElementById("moMTitle").textContent=g(r,"MO_Number");
-  document.getElementById("moMSub").textContent=g(r,"Style_Name")+" — "+g(r,"Style_SKU");
+function buildMODetail(r) {
+  var h = "";
+  var planQty = parseInt(gv(r, "Plan_Total_Quantity")) || 0;
+  var actQty  = parseInt(gv(r, "Acture_Total_Quantity")) || 0;
+  var planGrand = gv(r, "Plan_Grand_Total");
+  var actGrand  = gv(r, "Acture_Grand_Total");
+  var diff = actQty - planQty;
+  var dSign = diff > 0 ? "+" : "";
 
-  var h="";
-  function dv(v){return v==="-"?'<span class="d-val empty">미입력</span>':escH(v)}
-  function it(l,v){return'<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'}
-  function catName(v){var m={"S":"Set / 세트 / 套装","I":"Individual / 단품 / 单品"};return(!v||v==="-")?"-":(m[v]||v)}
-  function moTc(s){var l=(s||"").toLowerCase();if(l.indexOf("confirmed")>=0||l.indexOf("delivered")>=0||l.indexOf("complete")>=0||l.indexOf("shipped")>=0||l.indexOf("done")>=0)return"t-ok";if(l.indexOf("progress")>=0||l.indexOf("cutting")>=0||l.indexOf("sewing")>=0||l.indexOf("fabric")>=0||l.indexOf("packing")>=0)return"t-wn";if(l.indexOf("delay")>=0||l.indexOf("cancel")>=0)return"t-dg";return"t-dr"}
+  /* 기본 정보 */
+  h += '<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 订单信息</div><div class="d-grid">';
+  h += it("MO Number", dv(gv(r, "MO_Number")));
+  h += it("Style SKU", dv(gv(r, "Style_SKU")));
+  h += it("Style Name", dv(gv(r, "Style_Name")));
+  h += it("Season / 시즌", dv(gv(r, "Season")));
+  h += it("Category / 구분", dv(mv("Category", gv(r, "Category"))));
+  h += it("Factory / 공장", dv(cln(gv(r, "Factory"))));
+  h += it("Order Status", '<span class="tag ' + moTc(gv(r, "Order_Status")) + '">' + esc(gv(r, "Order_Status")) + '</span>');
+  h += it("Production Status", '<span class="tag ' + moTc(gv(r, "Production_Status")) + '">' + esc(gv(r, "Production_Status")) + '</span>');
+  h += it("Expected Delivery", dv(gv(r, "Expected_Delivery")));
+  h += '</div></div>';
 
-  /* ── 1. 기본 정보 ── */
-  h+='<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 订单信息</div><div class="d-grid">';
-  h+=it("MO Number / MO번호",dv(g(r,"MO_Number")));
-  h+=it("Style SKU / 스타일SKU",dv(g(r,"Style_SKU")));
-  h+=it("Style Name / 스타일명",dv(g(r,"Style_Name")));
-  h+=it("Season / 시즌",dv(g(r,"Season")));
-  h+=it("Category / 구분",dv(catName(g(r,"Category"))));
-  h+=it("Factory / 공장",dv(cleanFactory(g(r,"Factory"))));
-  h+=it("Order Date / 주문일",dv(g(r,"Order_Date")));
-  h+=it("Order Status / 주문상태",'<span class="tag '+moTc(g(r,"Order_Status"))+'">'+escH(g(r,"Order_Status"))+'</span>');
-  h+=it("Production Status / 생산상태",'<span class="tag '+moTc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span>');
-  h+=it("Expected Delivery / 예상납기",dv(g(r,"Expected_Delivery")));
-  h+=it("Gender / 성별",dv(mv("Gender",g(r,"Gender"))));
-  h+=it("Plan Year-Month / 진행년월",dv(g(r,"Plan_Year"))+"-"+dv(g(r,"Plan_Month")));
-  h+='</div></div>';
-
-  /* ── 2. 핵심: Plan vs Actual 수량 비교 ── */
-  var planQty=parseInt(g(r,"Plan_Total_Quantity"))||0;
-  var actQty=parseInt(g(r,"Acture_Total_Quantity"))||0;
-  var planGrand=g(r,"Plan_Grand_Total");
-  var actGrand=g(r,"Acture_Grand_Total");
-  var diff=actQty-planQty;
-
-  h+='<div class="m-sec"><div class="m-sec-t">📦 오더 내용 vs 실출고 / 订单内容 vs 实际出货</div>';
-  h+='<div class="pa-compare-sm">';
-  h+='<div class="pa-box-sm plan"><div class="pa-box-lbl">📋 PLAN 오더수량 / 订单数量</div><div class="pa-box-qty">'+planQty.toLocaleString()+' <span style="font-size:11px">pcs</span></div><div class="pa-box-amt">총금액: '+escH(planGrand)+'</div></div>';
-  h+='<div class="pa-box-sm actual"><div class="pa-box-lbl">✅ ACTUAL 출고수량 / 出货数量</div><div class="pa-box-qty">'+actQty.toLocaleString()+' <span style="font-size:11px">pcs</span></div><div class="pa-box-amt">총금액: '+escH(actGrand)+'</div></div>';
-  h+='</div>';
-  if(planQty>0){var pct=Math.round((actQty/planQty)*100);var dSign=diff>0?"+":"";h+='<div style="text-align:center;font-size:10px;color:var(--tm);padding:6px;background:#F8FAFC;border-radius:6px;border:1px solid #E2E8F0;margin-bottom:12px">출고율 / 出货率: <b style="color:'+(actQty>=planQty?"#047857":"#DC2626")+'">'+dSign+diff.toLocaleString()+' pcs ('+pct+'%)</b></div>';}
-
-  /* Plan Order Lines */
-  var planLines=getMOSubLines(r,"Plan_MO_Lines");
-  var actLines=getMOSubLines(r,"Acture_Order_Lines");
-  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">';
-
-  /* Plan 테이블 */
-  h+='<div><div style="font-size:11px;font-weight:800;color:#6D28D9;margin-bottom:6px;display:flex;align-items:center;gap:6px"><span style="background:#7C3AED;color:#fff;font-size:8px;font-weight:800;padding:2px 7px;border-radius:4px">PLAN</span>(Plan) Order Lines / 주문 내용</div>';
-  if(planLines.length===0){h+='<div style="text-align:center;padding:14px;color:#94A3B8;font-size:10px;border:1px dashed #E2E8F0;border-radius:6px">입력된 내역 없음</div>';}
-  else{
-    h+='<table class="mo-sub-tbl"><thead><tr><th>Color</th><th>Sizes</th><th>Qty</th><th>Unit Price</th></tr></thead><tbody>';
-    var ptot=0;
-    planLines.forEach(function(line){
-      var col=line["Plan_Color"]||line["Color"]||"-";
-      var sz=line["Plan_Sizes"]||line["Sizes"]||"-";
-      var pq=parseInt(line["Plan_Quantity"]||line["Quantity"])||0;
-      var pp=parseFloat(line["Plan_Unit_Price"]||line["Unit_Price"])||0;
-      ptot+=pq;
-      h+='<tr><td>'+escH(String(col))+'</td><td>'+escH(String(sz))+'</td><td style="font-weight:700">'+pq.toLocaleString()+'</td><td>'+pp.toLocaleString()+'</td></tr>';
-    });
-    h+='</tbody><tfoot><tr><td colspan="2" style="text-align:right">합계</td><td style="font-weight:900">'+ptot.toLocaleString()+'</td><td>-</td></tr></tfoot></table>';
+  /* Plan vs Actual */
+  h += '<div class="m-sec"><div class="m-sec-t">📦 오더 내용 vs 실출고 / 订单内容 vs 实际出货</div>';
+  h += '<div class="pa-cols">';
+  h += '<div class="pa-box plan"><div class="pa-box-lbl">📋 PLAN 오더수량 / 订单数量</div><div class="pa-box-qty">' + planQty.toLocaleString() + ' <span style="font-size:11px">pcs</span></div><div class="pa-box-amt">총금액: ' + esc(planGrand) + '</div></div>';
+  h += '<div class="pa-box actual"><div class="pa-box-lbl">✅ ACTUAL 출고수량 / 出货数量</div><div class="pa-box-qty">' + actQty.toLocaleString() + ' <span style="font-size:11px">pcs</span></div><div class="pa-box-amt">총금액: ' + esc(actGrand) + '</div></div>';
+  h += '</div>';
+  if (planQty > 0) {
+    var pct = Math.round((actQty / planQty) * 100);
+    h += '<div style="text-align:center;font-size:10px;color:var(--tm);padding:6px;background:#F8FAFC;border-radius:6px;border:1px solid #E2E8F0;margin-bottom:12px">출고율 / 出货率: <b style="color:' + (actQty >= planQty ? "#047857" : "#DC2626") + '">' + dSign + diff.toLocaleString() + ' pcs (' + pct + '%)</b></div>';
   }
-  h+='</div>';
-
-  /* Actual 테이블 */
-  h+='<div><div style="font-size:11px;font-weight:800;color:#047857;margin-bottom:6px;display:flex;align-items:center;gap:6px"><span style="background:#059669;color:#fff;font-size:8px;font-weight:800;padding:2px 7px;border-radius:4px">ACTUAL</span>(Acture) Order Lines / 실출고 내역</div>';
-  if(actLines.length===0){h+='<div style="text-align:center;padding:14px;color:#94A3B8;font-size:10px;border:1px dashed #E2E8F0;border-radius:6px">입력된 내역 없음</div>';}
-  else{
-    h+='<table class="mo-sub-tbl"><thead><tr><th>Color</th><th>Sizes</th><th>Qty</th><th>Unit Price</th></tr></thead><tbody>';
-    var atot=0;
-    actLines.forEach(function(line){
-      var col=line["Acture_Color"]||line["Color"]||"-";
-      var sz=line["Acture_Sizes"]||line["Sizes"]||"-";
-      var aq=parseInt(line["Acture_Quantity"]||line["Quantity"])||0;
-      var ap=parseFloat(line["Acture_Unit_Price"]||line["Unit_Price"])||0;
-      atot+=aq;
-      h+='<tr><td>'+escH(String(col))+'</td><td>'+escH(String(sz))+'</td><td style="font-weight:700">'+aq.toLocaleString()+'</td><td>'+ap.toLocaleString()+'</td></tr>';
-    });
-    h+='</tbody><tfoot><tr><td colspan="2" style="text-align:right">합계</td><td style="font-weight:900">'+atot.toLocaleString()+'</td><td>-</td></tr></tfoot></table>';
-  }
-  h+='</div></div></div>';
-
-  /* ── 3. 제품 정의 ── */
-  h+='<div class="m-sec"><div class="m-sec-t">👗 제품 정의 / 产品定义</div><div class="d-grid">';
-  h+=it("Top Type / 상의유형",dv(mv("Top_Type",g(r,"Top_Type"))));
-  h+=it("Sleeve / 소매",dv(mv("Sleeve",g(r,"Sleeve"))));
-  h+=it("Fit / 핏",dv(mv("Fit",g(r,"Fit"))));
-  h+=it("Bottom Type / 하의유형",dv(mv("Bottom_Type",g(r,"Bottom_Type"))));
-  h+=it("Material Type / 원단",dv(mv("Material_Type",g(r,"Material_Type"))));
-  h+=it("Lining Type / 안감",dv(mv("Lining_Type",g(r,"Lining_Type"))));
-  h+='</div></div>';
-
-  /* ── 4. 생산 일정 ── */
-  h+='<div class="m-sec"><div class="m-sec-t">📅 생산 일정 / 生产日期</div>';
-  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">';
-  /* Plan */
-  h+='<div><div class="dt-col-t plan" style="font-size:11px;font-weight:800;color:#7C3AED;margin-bottom:8px">📋 Plan 일정 / 计划日期</div>';
-  [{l:"Fabric In",k:"Plan_Fabric_Date"},{l:"Cutting Start",k:"Plan_Cutting_Start"},{l:"Cutting End",k:"Plan_Cutting_End"},{l:"Sewing Start",k:"Plan_Sewing_Start"},{l:"Sewing End",k:"Plan_Sewing_End"},{l:"Packing Start",k:"Plan_Packing_Start"},{l:"Packing End",k:"Plan_Packing_End"},{l:"Expected Delivery",k:"Expected_Delivery"}].forEach(function(t,i){
-    var v=g(r,t.k),p=pd(v),cls="dt-wait";
-    if(p)cls=p<=todayStr?"dt-done":"dt-curr";
-    h+='<div class="dt-item"><div class="dt-dot '+cls+'">'+(i+1)+'</div><div class="dt-info"><div class="dt-lbl" style="font-size:10px">'+t.l+'</div><div class="dt-val">'+escH(v)+'</div></div></div>';
-  });
-  h+='</div>';
-  /* Actual */
-  h+='<div><div style="font-size:11px;font-weight:800;color:#059669;margin-bottom:8px">✅ Actual 일정 / 实际日期</div>';
-  [{l:"Fabric In",k:"Fabric_In_house_Date"},{l:"Cutting Start",k:"Cutting_Start_Date"},{l:"Cutting End",k:"Cutting_End_Date"},{l:"Sewing Start",k:"Sewing_Start_Date"},{l:"Sewing End",k:"Sewing_Completion_Date"},{l:"Packing Start",k:"Packing_Start_Date"},{l:"Packing End",k:"Packing_End_Date"},{l:"Ship Date",k:"Ship_Date"}].forEach(function(t,i){
-    var v=g(r,t.k),p=pd(v),cls="dt-wait";
-    if(p)cls=p<=todayStr?"dt-done":"dt-curr";
-    h+='<div class="dt-item"><div class="dt-dot '+cls+'">'+(i+1)+'</div><div class="dt-info"><div class="dt-lbl" style="font-size:10px">'+t.l+'</div><div class="dt-val">'+escH(v)+'</div></div></div>';
-  });
-  h+='</div></div></div>';
-
-  document.getElementById("moMBody").innerHTML=h;
-}
-
-/* ── 모달 닫기 ── */
-/* ★ 파이프라인 버블 클릭 이벤트 위임 */
-document.getElementById("kpiRow").addEventListener("click",function(e){
-  var bubble=e.target.closest(".pipe-bubble");
-  if(bubble&&bubble.getAttribute("data-clickable")==="1"){
-    var k=bubble.getAttribute("data-key");
-    var s=parseInt(bubble.getAttribute("data-step"));
-    openPipeList(k,s);
-  }
-});
-/* ★ 파이프라인 버블 클릭 이벤트 위임 */
-document.addEventListener("click",function(e){
-  /* 파이프라인 버블 */
-  var bubble=e.target.closest(".pipe-bubble");
-  if(bubble&&bubble.getAttribute("data-clickable")==="1"){
-    var k=bubble.getAttribute("data-key");
-    var s=parseInt(bubble.getAttribute("data-step"));
-    openPipeList(k,s);
-    return;
-  }
-  /* 파이프 리스트 아이템 */
-  var pItem=e.target.closest(".pipe-list-item");
-  if(pItem){
-    var pid=pItem.getAttribute("data-id");
-    document.getElementById("pipeListOv").classList.remove("active");
-    openModal(pid);
-    return;
-  }
-});
-document.getElementById("pipeListClose").addEventListener("click",function(){document.getElementById("pipeListOv").classList.remove("active")});
-document.getElementById("pipeListOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
-document.getElementById("mClose").addEventListener("click",function(){document.getElementById("modalOv").classList.remove("active")});
-document.getElementById("modalOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
-document.getElementById("moMClose").addEventListener("click",function(){document.getElementById("moModalOv").classList.remove("active")});
-document.getElementById("moModalOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
-document.addEventListener("keydown",function(e){
-  if(e.key==="Escape"){
-    if(document.getElementById("moModalOv").classList.contains("active")){
-      document.getElementById("moModalOv").classList.remove("active");
-    } else if(document.getElementById("pipeListOv").classList.contains("active")){
-      document.getElementById("pipeListOv").classList.remove("active");
+  /* Plan / Actual 라인 테이블 */
+  h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">';
+  var planLines = getMOLines(r, "Plan_MO_Lines");
+  var actLines  = getMOLines(r, "Acture_Order_Lines");
+  [{ lines: planLines, prefix: "Plan_", label: "PLAN", color: "#7C3AED", bg: "#7C3AED" },
+   { lines: actLines,  prefix: "Acture_", label: "ACTUAL", color: "#059669", bg: "#059669" }].forEach(function(col) {
+    h += '<div>';
+    h += '<div style="font-size:11px;font-weight:800;color:' + col.color + ';margin-bottom:6px;display:flex;align-items:center;gap:5px"><span style="background:' + col.bg + ';color:#fff;font-size:8px;font-weight:800;padding:2px 6px;border-radius:3px">' + col.label + '</span>' + (col.label === "PLAN" ? "주문 내용" : "실출고 내역") + '</div>';
+    if (col.lines.length === 0) {
+      h += '<div style="text-align:center;padding:12px;color:#94A3B8;font-size:10px;border:1px dashed #E2E8F0;border-radius:6px">입력된 내역 없음</div>';
     } else {
-      document.getElementById("modalOv").classList.remove("active");
+      h += '<table class="mo-sub-tbl"><thead><tr><th>Color</th><th>Sizes</th><th>Qty</th><th>Unit Price</th></tr></thead><tbody>';
+      var tot = 0;
+      col.lines.forEach(function(line) {
+        var c2  = line[col.prefix + "Color"] || line["Color"] || "-";
+        var sz  = line[col.prefix + "Sizes"] || line["Sizes"] || "-";
+        var lq  = parseInt(line[col.prefix + "Quantity"] || line["Quantity"]) || 0;
+        var lp  = parseFloat(line[col.prefix + "Unit_Price"] || line["Unit_Price"]) || 0;
+        tot += lq;
+        h += '<tr><td>' + esc(String(c2)) + '</td><td>' + esc(String(sz)) + '</td><td style="font-weight:700">' + lq.toLocaleString() + '</td><td>' + (lp > 0 ? lp.toLocaleString() : "-") + '</td></tr>';
+      });
+      h += '</tbody><tfoot><tr><td colspan="2" style="text-align:right">합계</td><td style="font-weight:900">' + tot.toLocaleString() + '</td><td>-</td></tr></tfoot></table>';
     }
+    h += '</div>';
+  });
+  h += '</div></div>';
+
+  /* 생산 일정 */
+  h += '<div class="m-sec"><div class="m-sec-t">📅 생산 일정 / 生产日期</div><div class="dt-cols">';
+  h += '<div class="dt-col"><div class="dt-col-t plan">📋 Plan 일정</div>';
+  [{l:"Fabric In",k:"Plan_Fabric_Date"},{l:"Cutting Start",k:"Plan_Cutting_Start"},{l:"Cutting End",k:"Plan_Cutting_End"},{l:"Sewing Start",k:"Plan_Sewing_Start"},{l:"Sewing End",k:"Plan_Sewing_End"},{l:"Packing Start",k:"Plan_Packing_Start"},{l:"Packing End",k:"Plan_Packing_End"},{l:"Expected Delivery",k:"Expected_Delivery"}].forEach(function(t, i) {
+    var v = gv(r, t.k), p = pd(v), cls = "dt-wait";
+    if (p) cls = p <= todayStr ? "dt-done" : "dt-curr";
+    h += '<div class="dt-row"><div class="dt-dot ' + cls + '">' + (i + 1) + '</div><div><div class="dt-lbl">' + t.l + '</div><div class="dt-val">' + esc(v) + '</div></div></div>';
+  });
+  h += '</div>';
+  h += '<div class="dt-col"><div class="dt-col-t actual">✅ Actual 일정</div>';
+  [{l:"Fabric In",k:"Fabric_In_house_Date"},{l:"Cutting Start",k:"Cutting_Start_Date"},{l:"Cutting End",k:"Cutting_End_Date"},{l:"Sewing Start",k:"Sewing_Start_Date"},{l:"Sewing End",k:"Sewing_Completion_Date"},{l:"Packing Start",k:"Packing_Start_Date"},{l:"Packing End",k:"Packing_End_Date"},{l:"Ship Date",k:"Ship_Date"}].forEach(function(t, i) {
+    var v = gv(r, t.k), p = pd(v), cls = "dt-wait";
+    if (p) cls = p <= todayStr ? "dt-done" : "dt-curr";
+    h += '<div class="dt-row"><div class="dt-dot ' + cls + '">' + (i + 1) + '</div><div><div class="dt-lbl">' + t.l + '</div><div class="dt-val">' + esc(v) + '</div></div></div>';
+  });
+  h += '</div></div></div>';
+  return h;
+}
+
+/* ══════════════════════════════════════
+   이벤트 위임 (모든 클릭 처리)
+══════════════════════════════════════ */
+document.addEventListener("click", function(e) {
+  /* 알림 배너 닫기 */
+  if (e.target.classList.contains("al-x")) {
+    e.stopPropagation();
+    e.target.closest(".al-item").remove();
+    return;
   }
+  /* 알림 배너 클릭 → 컨테이너 모달 */
+  var alItem = e.target.closest(".al-item");
+  if (alItem && !e.target.classList.contains("al-x")) {
+    var rid = alItem.getAttribute("data-open");
+    if (rid) { openShipModal(rid); return; }
+  }
+  /* 파이프라인 버블 클릭 */
+  var bubble = e.target.closest("[data-pipebubble]");
+  if (bubble) {
+    var cnt = parseInt(bubble.getAttribute("data-cnt")) || 0;
+    if (cnt > 0) {
+      openPipeList(bubble.getAttribute("data-key"), parseInt(bubble.getAttribute("data-step")));
+    }
+    return;
+  }
+  /* 파이프 팝업 리스트 아이템 */
+  var pItem = e.target.closest("[data-pipeid]");
+  if (pItem) {
+    document.getElementById("pipePopOv").classList.remove("active");
+    openShipModal(pItem.getAttribute("data-pipeid"));
+    return;
+  }
+  /* 컨테이너 카드 클릭 */
+  var card = e.target.closest(".ship-card");
+  if (card && !e.target.closest(".cl-mo-btn") && !e.target.closest(".sf")) {
+    openShipModal(card.getAttribute("data-id"));
+    return;
+  }
+  /* MO 번호 버튼 클릭 */
+  var moBtn = e.target.closest(".cl-mo-btn");
+  if (moBtn) {
+    e.stopPropagation();
+    openMOModal(moBtn.getAttribute("data-monum"));
+    return;
+  }
+  /* 필터 셀렉트/인풋 */
+  var sf = e.target.closest(".sf");
+  if (sf) return;
+});
+
+/* 필터 이벤트 (input/change) */
+document.addEventListener("input", function(e) {
+  if (e.target.classList.contains("sf")) doFilter(e.target.getAttribute("data-m"));
+});
+document.addEventListener("change", function(e) {
+  if (e.target.classList.contains("sf")) doFilter(e.target.getAttribute("data-m"));
+});
+
+/* 모달 닫기 */
+document.getElementById("smClose").addEventListener("click", function() { document.getElementById("shipModalOv").classList.remove("active"); });
+document.getElementById("shipModalOv").addEventListener("click", function(e) { if (e.target === this) this.classList.remove("active"); });
+document.getElementById("ppClose").addEventListener("click", function() { document.getElementById("pipePopOv").classList.remove("active"); });
+document.getElementById("pipePopOv").addEventListener("click", function(e) { if (e.target === this) this.classList.remove("active"); });
+document.getElementById("moClose").addEventListener("click", function() { document.getElementById("moModalOv").classList.remove("active"); });
+document.getElementById("moModalOv").addEventListener("click", function(e) { if (e.target === this) this.classList.remove("active"); });
+document.addEventListener("keydown", function(e) {
+  if (e.key !== "Escape") return;
+  if (document.getElementById("moModalOv").classList.contains("active")) { document.getElementById("moModalOv").classList.remove("active"); return; }
+  if (document.getElementById("pipePopOv").classList.contains("active")) { document.getElementById("pipePopOv").classList.remove("active"); return; }
+  document.getElementById("shipModalOv").classList.remove("active");
 });
 </script>
 </body>
