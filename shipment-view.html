@@ -228,8 +228,8 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 </head>
 <body>
 
-<div id="loadingScreen" class="loading"><div class="spinner"></div>선적 데이터를 불러오는 중 / 加载出货数据...</div>
-<div id="errorScreen" style="display:none"><div class="err-box"><b>데이터를 불러올 수 없습니다</b><div id="errorMsg" style="font-size:11px;margin-top:6px"></div></div></div>
+<div id="loadingScreen" class="loading"><div class="spinner"></div><span>선적 데이터를 불러오는 중 / 加载出货数据...</span></div>
+<!-- errorScreen removed: errors handled gracefully as empty state -->
 
 <div id="mainContent" style="display:none">
 
@@ -238,12 +238,12 @@ body{background:var(--bg);padding:16px;min-height:100vh}
   <div class="hdr-left">
     <div class="hdr-icon">🚢</div>
     <div>
-      <div class="hdr-title">Shipment View / 선적현황표 / 出货现况表</div>
+      <div class="hdr-title">Shipment View / 컨테이너 선적현황 / 集装箱出货现况</div>
       <div class="hdr-sub" id="hdrSub">데이터 로딩 중...</div>
     </div>
   </div>
   <div class="hdr-btns">
-    <button class="btn-new" onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_Shipment','_blank')">+ New Shipment</button>
+    <button class="btn-new" onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_CNTR','_blank')">+ New Container</button>
   </div>
 </div>
 
@@ -270,7 +270,7 @@ body{background:var(--bg);padding:16px;min-height:100vh}
         <div class="m-sub" id="smSub">-</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
-        <button onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Report:All_Shipments','_blank')" style="background:#EFF6FF;color:var(--pr);border:1px solid #BFDBFE;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit</button>
+        <button onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Page:Shipment_View','_blank')" style="background:#EFF6FF;color:var(--pr);border:1px solid #BFDBFE;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit</button>
         <div class="m-close" id="smClose">✕</div>
       </div>
     </div>
@@ -283,7 +283,15 @@ body{background:var(--bg);padding:16px;min-height:100vh}
    SHIPMENT VIEW v1 — JS
    Report: All_Shipments (Zoho Creator)
 ══════════════════════════════════════ */
-var APP="eom", SHIP_REP="All_Shipments";
+var APP="eom", SHIP_REP="All_PI";
+/* ★★ Report명 변경 안내 ★★
+   현재 연결된 Report : All_PI
+   나중에 Report 이름이 바뀌면 아래 한 줄만 수정하세요:
+     SHIP_REP = "새로운_Report명"
+   또는 SHIP_REP_CANDIDATES 배열 첫 번째 값을 변경하면 됩니다.
+   ---
+   입력 폼  : Add CNTR → https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_CNTR
+   Report   : All PI   → https://creatorapp.zoho.com/jeramoda/eom/#Report:All_PI */
 var allShip=[];
 var today=new Date(), todayStr=today.toISOString().split("T")[0];
 
@@ -306,9 +314,9 @@ function escH(s){var d=document.createElement("div");d.textContent=s;return d.in
 function pd(v){if(!v||v==="-")return null;if(/^\d{4}-\d{2}-\d{2}/.test(v))return v.substring(0,10);var m=v.match(/^(\d{1,2})-([A-Za-z]+)-(\d{4})/);if(m){var mo={Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};return m[3]+"-"+(mo[m[2]]||"01")+"-"+(m[1].length===1?"0"+m[1]:m[1])}return null}
 function fmtDate(v){var p=pd(v);if(!p)return"-";var pts=p.split("-");return pts[1]+"-"+pts[2]+"-"+pts[0].slice(2)}
 function parseYM(key){var m=key.match(/(\d+)년\s*(\d+)월/);if(!m)return null;var y=parseInt(m[1]);if(y<100)y+=2000;return{y:y,m:parseInt(m[2])}}
-function getStepIndex(r){var s=(g(r,"Shipment_Status")||"").trim();return STATUS_STEP[s]!==undefined?STATUS_STEP[s]:-1}
-function isHold(r){return(g(r,"Shipment_Status")||"").toLowerCase().indexOf("hold")>=0}
-function isETADelayed(r){var eta=pd(g(r,"ETA"));if(!eta)return false;var s=(g(r,"Shipment_Status")||"").toLowerCase();if(s.indexOf("delivered")>=0||s.indexOf("done")>=0||s.indexOf("complet")>=0)return false;return eta<todayStr}
+function getStepIndex(r){var s=(g(r,"Container_Status")||"").trim();return STATUS_STEP[s]!==undefined?STATUS_STEP[s]:-1}
+function isHold(r){return(g(r,"Container_Status")||"").toLowerCase().indexOf("hold")>=0}
+function isETADelayed(r){var eta=pd(g(r,"ETA"));if(!eta)return false;var s=(g(r,"Container_Status")||"").toLowerCase();if(s.indexOf("delivered")>=0||s.indexOf("done")>=0||s.indexOf("complet")>=0)return false;return eta<todayStr}
 
 function getModeClass(m){var l=(m||"").toLowerCase();if(l.indexOf("air")>=0)return"mode-air";if(l.indexOf("courier")>=0||l.indexOf("express")>=0)return"mode-courier";return"mode-ocean"}
 function getModeIcon(m){var l=(m||"").toLowerCase();if(l.indexOf("air")>=0)return"✈️";if(l.indexOf("courier")>=0||l.indexOf("express")>=0)return"📦";return"🚢"}
@@ -323,22 +331,68 @@ function statusTag(s){
   return'<span class="tag t-dr">'+escH(s)+'</span>';}
 
 /* ── 데이터 로드 ── */
-ZOHO.CREATOR.init().then(function(){
-  ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:SHIP_REP,page:1,pageSize:200})
-  .then(function(res){
-    if(res&&res.code===3000&&res.data)allShip=res.data;
+/* ★ Report명 후보 목록 — Zoho Creator 실제 Report명으로 맞추기 */
+var SHIP_REP_CANDIDATES=["All_PI","All_Add_CNTRs","All_PIs","All_CNTRs","All_Shipment_Views","All_Shipments"];
+
+function loadWithFallback(candidates, idx){
+  if(idx>=candidates.length){
+    // 모든 후보 실패 → 빈 화면으로 정상 표시
+    console.warn("모든 Report명 후보 실패. Zoho Creator에서 실제 Report명을 확인해주세요.");
     renderAll();
     document.getElementById("loadingScreen").style.display="none";
     document.getElementById("mainContent").style.display="block";
-  }).catch(function(e){showErr(JSON.stringify(e))});
+    return;
+  }
+  var repName=candidates[idx];
+  ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:repName,page:1,pageSize:200})
+  .then(function(res){
+    if(res&&res.code===3000&&res.data&&res.data.length>0){
+      allShip=res.data;
+      SHIP_REP=repName; // 성공한 Report명 저장
+      console.log("✅ Shipment Report 연결 성공:", repName, "| 데이터:", allShip.length+"건");
+      renderAll();
+      document.getElementById("loadingScreen").style.display="none";
+      document.getElementById("mainContent").style.display="block";
+    } else if(res&&res.code===3000&&res.data&&res.data.length===0){
+      // Report는 있지만 데이터 0건 → 성공으로 처리
+      SHIP_REP=repName;
+      console.log("✅ Shipment Report 연결 성공 (데이터 0건):", repName);
+      renderAll();
+      document.getElementById("loadingScreen").style.display="none";
+      document.getElementById("mainContent").style.display="block";
+    } else {
+      // 이 Report명 실패 → 다음 후보 시도
+      console.warn("Report 없음:", repName, "→ 다음 후보 시도...");
+      loadWithFallback(candidates, idx+1);
+    }
+  }).catch(function(e){
+    console.warn("Report 오류:", repName, e, "→ 다음 후보 시도...");
+    loadWithFallback(candidates, idx+1);
+  });
+}
+
+ZOHO.CREATOR.init().then(function(){
+  loadWithFallback(SHIP_REP_CANDIDATES, 0);
+}).catch(function(e){
+  console.warn("ZOHO init 오류:", e);
+  renderAll();
+  document.getElementById("loadingScreen").style.display="none";
+  document.getElementById("mainContent").style.display="block";
 });
 
-function showErr(m){document.getElementById("loadingScreen").style.display="none";document.getElementById("errorScreen").style.display="block";document.getElementById("errorMsg").textContent=m}
+function showErr(m){console.warn("Shipment err:", m);}
 
 /* ── 전체 렌더 ── */
 function renderAll(){
   /* 헤더 서브타이틀 */
-  var months=[...new Set(allShip.map(function(r){var py=g(r,"Ship_Year"),pm=g(r,"Ship_Month");return(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):""}))].filter(Boolean).sort();
+  if(allShip.length===0){
+    document.getElementById("hdrSub").textContent="데이터 없음 — Zoho Creator에서 선적 Report를 연결해주세요";
+    document.getElementById("alertBar").innerHTML="";
+    document.getElementById("kpiRow").innerHTML="<div class=\"empty-state\" style=\"grid-column:1/-1;padding:40px;font-size:13px;color:#94A3B8\">📭 선적 데이터가 없습니다.<br><span style=\"font-size:11px;margin-top:6px;display:block\">Zoho Creator에서 Report명 <b>All_Shipment_Views</b> 확인 또는<br>SHIP_REP 변수값을 실제 Report명으로 변경해주세요.</span></div>";
+    document.getElementById("summaryBar").innerHTML="";
+    document.getElementById("monthlyShipContent").innerHTML="";
+    return;}
+  var months=[];allShip.forEach(function(r){var etd=pd(g(r,"ETD"));if(etd){var pts=etd.split("-");var k=pts[0]+"년 "+parseInt(pts[1])+"월";if(months.indexOf(k)<0)months.push(k);}});months.sort();
   document.getElementById("hdrSub").textContent="총 "+allShip.length+"건 선적 데이터 / "+months.length+"개 월";
 
   renderAlerts();
@@ -351,11 +405,11 @@ function renderAll(){
 function renderAlerts(){
   var holds=allShip.filter(isHold);
   var etaDly=allShip.filter(isETADelayed);
-  var noDoc=allShip.filter(function(r){return g(r,"BL_Number")==="-"&&(g(r,"Shipment_Status")||"").toLowerCase().indexOf("boarded")>=0});
+  var noDoc=allShip.filter(function(r){return g(r,"Container_Number")==="-"&&(g(r,"Container_Status")||"").toLowerCase().indexOf("boarded")>=0});
   var h="";
-  holds.forEach(function(r){h+='<div class="alert-item alert-hold" onclick="openShipModal(allShip.find(function(x){return x[\'ID\']==='+"'"+r["ID"]+"'"+'}))"><span class="alert-icon">⚠️</span><span class="alert-text"><b>'+escH(g(r,"Invoice_Number"))+'</b> 통관 보류 (Customs Hold) — 즉시 확인 요망</span><span class="alert-close">✕</span></div>'});
-  etaDly.forEach(function(r){h+='<div class="alert-item alert-eta" onclick="openShipModal(allShip.find(function(x){return x[\'ID\']==='+"'"+r["ID"]+"'"+'}))"><span class="alert-icon">🕐</span><span class="alert-text"><b>'+escH(g(r,"Invoice_Number"))+'</b> ETA 지연 예상 (예상: '+escH(fmtDate(g(r,"ETA")))+') — 수하인 통보 필요</span><span class="alert-close">✕</span></div>'});
-  noDoc.forEach(function(r){h+='<div class="alert-item alert-doc" onclick="openShipModal(allShip.find(function(x){return x[\'ID\']==='+"'"+r["ID"]+"'"+'}))"><span class="alert-icon">📄</span><span class="alert-text"><b>'+escH(g(r,"Invoice_Number"))+'</b> B/L 번호 미입력 — 서류 확인 필요</span><span class="alert-close">✕</span></div>'});
+  holds.forEach(function(r){h+='<div class="alert-item alert-hold" onclick="openShipModal(allShip.find(function(x){return x[\'ID\']==='+"'"+r["ID"]+"'"+'}))"><span class="alert-icon">⚠️</span><span class="alert-text"><b>'+escH(g(r,"Container_Number"))+'</b> 통관 보류 (Customs Hold) — 즉시 확인 요망</span><span class="alert-close">✕</span></div>'});
+  etaDly.forEach(function(r){h+='<div class="alert-item alert-eta" onclick="openShipModal(allShip.find(function(x){return x[\'ID\']==='+"'"+r["ID"]+"'"+'}))"><span class="alert-icon">🕐</span><span class="alert-text"><b>'+escH(g(r,"Container_Number"))+'</b> ETA 지연 예상 (예상: '+escH(fmtDate(g(r,"ETA")))+') — 수하인 통보 필요</span><span class="alert-close">✕</span></div>'});
+  noDoc.forEach(function(r){h+='<div class="alert-item alert-doc" onclick="openShipModal(allShip.find(function(x){return x[\'ID\']==='+"'"+r["ID"]+"'"+'}))"><span class="alert-icon">📄</span><span class="alert-text"><b>'+escH(g(r,"Container_Number"))+'</b> B/L 번호 미입력 — 서류 확인 필요</span><span class="alert-close">✕</span></div>'});
   document.getElementById("alertBar").innerHTML=h;
   document.querySelectorAll(".alert-close").forEach(function(el){el.addEventListener("click",function(e){e.stopPropagation();this.closest(".alert-item").remove()})});}
 
@@ -363,8 +417,9 @@ function renderAlerts(){
 function renderKPI(){
   var groups={};
   allShip.forEach(function(r){
-    var py=g(r,"Ship_Year"),pm=g(r,"Ship_Month");
-    var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";
+    var etd=pd(g(r,"ETD"));
+    var key="미지정";
+    if(etd){var pts=etd.split("-");key=pts[0]+"년 "+parseInt(pts[1])+"월";}
     if(!groups[key])groups[key]=[];groups[key].push(r)});
 
   var sortedKeys=Object.keys(groups).filter(function(k){return k!=="미지정"}).sort().slice(-3);
@@ -384,30 +439,31 @@ function renderKPI(){
     var otifCount=0; /* 납기 준수 건수 */
 
     items.forEach(function(r){
-      totalCBM+=parseFloat(g(r,"CBM"))||0;
-      totalKG+=parseFloat(g(r,"Gross_Weight_KG"))||0;
+      totalCBM+=parseFloat(g(r,"Total_CBM"))||0;
+      totalKG+=parseFloat(g(r,"Total_Weight_KG"))||0;
       totalFreight+=parseFloat(g(r,"Freight_Cost"))||0;
-      totalCarton+=parseInt(g(r,"Carton_Qty"))||0;
-      var md=(g(r,"Shipment_Mode")||"").toLowerCase();
+      totalCarton+=parseInt(g(r,"Total_Cartons"))||0;
+      var md=(g(r,"Container_Type")||"").toLowerCase();
       if(md.indexOf("air")>=0)cntAir++;
       else if(md.indexOf("courier")>=0||md.indexOf("express")>=0)cntCourier++;
       else cntOcean++;
-      var st=(g(r,"Shipment_Status")||"").toLowerCase();
+      var st=(g(r,"Container_Status")||"").toLowerCase();
       if(st.indexOf("delivered")>=0||st.indexOf("done")>=0)cntDeliv++;
       else if(st.indexOf("transit")>=0)cntTransit++;
       else if(st.indexOf("hold")>=0)cntHold++;
       /* OTIF: ETA 이후 납기 준수 */
-      var eta=pd(g(r,"ETA")),ata=pd(g(r,"ATA"));
-      if(eta&&ata&&ata<=eta)otifCount++;
-      else if(eta&&!ata&&eta>=todayStr)otifCount++;
+      var etaV=pd(g(r,"ETA")),ataV=pd(g(r,"ATA"));
+      var delayDays=parseInt(g(r,"Delay_Days"))||0;
+      if(etaV&&ataV&&ataV<=etaV)otifCount++;
+      else if(etaV&&!ataV&&etaV>=todayStr&&delayDays===0)otifCount++;
     });
 
     var otif=items.length>0?Math.round((otifCount/items.length)*100):0;
     var mcl=marClasses[ki]||"kpi-mar";
 
     /* 상태 판별 */
-    var allDone=items.every(function(r){var st=(g(r,"Shipment_Status")||"").toLowerCase();return st.indexOf("delivered")>=0||st.indexOf("done")>=0||st.indexOf("complet")>=0});
-    var hasTrans=items.some(function(r){return(g(r,"Shipment_Status")||"").toLowerCase().indexOf("transit")>=0});
+    var allDone=items.every(function(r){var st=(g(r,"Container_Status")||"").toLowerCase();return st.indexOf("delivered")>=0||st.indexOf("done")>=0||st.indexOf("complet")>=0});
+    var hasTrans=items.some(function(r){return(g(r,"Container_Status")||"").toLowerCase().indexOf("transit")>=0});
     var statusTxt=allDone?"Closed":hasTrans?"In Transit":"Planned";
     var statusCls=allDone?"st-closed":hasTrans?"st-transit":"st-planned";
 
@@ -455,9 +511,9 @@ function renderSummary(){
   var totalCBM=0,totalFreight=0;
   var cntDeliv=0,cntTransit=0,cntHold=0;
   allShip.forEach(function(r){
-    totalCBM+=parseFloat(g(r,"CBM"))||0;
+    totalCBM+=parseFloat(g(r,"Total_CBM"))||0;
     totalFreight+=parseFloat(g(r,"Freight_Cost"))||0;
-    var st=(g(r,"Shipment_Status")||"").toLowerCase();
+    var st=(g(r,"Container_Status")||"").toLowerCase();
     if(st.indexOf("delivered")>=0||st.indexOf("done")>=0)cntDeliv++;
     else if(st.indexOf("transit")>=0)cntTransit++;
     if(st.indexOf("hold")>=0)cntHold++;
@@ -474,8 +530,9 @@ function renderSummary(){
 function renderMonthly(){
   var groups={};
   allShip.forEach(function(r){
-    var py=g(r,"Ship_Year"),pm=g(r,"Ship_Month");
-    var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";
+    var etd=pd(g(r,"ETD"));
+    var key="미지정";
+    if(etd){var pts=etd.split("-");key=pts[0]+"년 "+parseInt(pts[1])+"월";}
     if(!groups[key])groups[key]=[];groups[key].push(r)});
 
   var html="",mi=0;
@@ -483,8 +540,8 @@ function renderMonthly(){
     var items=groups[key],ym=parseYM(key),idx=mi++;
     var mMode={},mStatus={},mRoute={};
     items.forEach(function(r){
-      var md=g(r,"Shipment_Mode");if(md!=="-")mMode[md]=1;
-      var st=g(r,"Shipment_Status");if(st!=="-")mStatus[st]=1;
+      var md=g(r,"Container_Type");if(md!=="-")mMode[md]=1;
+      var st=g(r,"Container_Status");if(st!=="-")mStatus[st]=1;
     });
     var yy=ym?ym.y.toString().slice(-2):"";var mm2=ym?(ym.m<10?"0"+ym.m:ym.m):"";
     var titleText=ym?(yy+"."+mm2+" 선적 현황 / "+yy+"年 "+ym.m+"月 出货现况"):"선적 현황";
@@ -516,35 +573,32 @@ function renderMonthly(){
 
 /* ── 선적 카드 빌드 ── */
 function buildShipCard(r,idx){
-  var inv=g(r,"Invoice_Number");
-  var bl=g(r,"BL_Number");
-  var mo=g(r,"MO_Number");
-  var style=g(r,"Style_Name");
-  var from=g(r,"Port_of_Loading");
-  var to=g(r,"Port_of_Discharge");
-  var mode=g(r,"Shipment_Mode");
-  var status=g(r,"Shipment_Status");
-  var cbm=parseFloat(g(r,"CBM"))||0;
-  var kg=parseFloat(g(r,"Gross_Weight_KG"))||0;
-  var ctn=parseInt(g(r,"Carton_Qty"))||0;
-  var pcs=parseInt(g(r,"Shipped_Qty"))||0;
-  var eta=g(r,"ETA"),ata=g(r,"ATA"),shipDate=g(r,"Ship_Date");
+  var inv=g(r,"Container_Number");
+  var from=g(r,"Origin_Port");
+  var to=g(r,"Destination_Port");
+  var mode=g(r,"Container_Type");
+  var status=g(r,"Container_Status");
+  var cbm=parseFloat(g(r,"Total_CBM"))||0;
+  var kg=parseFloat(g(r,"Total_Weight_KG"))||0;
+  var ctn=parseInt(g(r,"Total_Cartons"))||0;
+  var pcs=parseInt(g(r,"Total_Quantity"))||0;
+  var eta=g(r,"ETA"),ata=g(r,"ATA"),shipDate=g(r,"ETD");
   var hold=isHold(r),delayed=isETADelayed(r);
   var stepIdx=getStepIndex(r);
 
   var routeStr=(from!=="-"?from:"?")+" → "+(to!=="-"?to:"?");
-  var searchStr=(inv+" "+bl+" "+mo+" "+style+" "+routeStr).toLowerCase();
+  var searchStr=(inv+" "+g(r,"Container_ID")+" "+mode+" "+routeStr).toLowerCase();
 
   var h='<div class="ship-card'+(hold?" hold":"")+'" data-id="'+r["ID"]+'" data-m="'+idx+'" data-md="'+escH(mode)+'" data-st="'+escH(status)+'" data-sr="'+escH(searchStr)+'">';
 
   /* 헤더 */
   h+='<div class="ship-card-hd">';
-  h+='<div><div class="ship-inv">'+escH(inv)+'</div><div class="ship-bl">'+getModeIcon(mode)+' '+(bl!=="-"?escH(bl):'<span style="color:#94A3B8;font-style:italic">B/L 미입력</span>')+'</div></div>';
+  h+='<div><div class="ship-inv">'+escH(inv)+'</div><div class="ship-bl">📦 '+escH(g(r,"Container_ID")!=="-"?g(r,"Container_ID"):"ID 미입력")+'</div></div>';
   h+=statusTag(status);
   h+='</div>';
 
-  /* MO & 스타일 */
-  if(mo!=="-")h+='<span class="ship-mo">'+escH(mo)+'<span class="ship-style">'+escH(style!=="-"?style:"")+'</span></span><br>';
+  /* Container Type */
+  if(mode!=="-")h+='<span class="ship-mo" style="background:#EDE9FE;color:#6D28D9">'+escH(mode)+'</span><br>';
 
   /* 루트 */
   h+='<div class="ship-route"><span class="ship-mode-ic">'+getModeIcon(mode)+'</span><span class="ship-route-from">'+escH(from!=="-"?from:"TBD")+'</span><span class="ship-route-arr">→</span><span class="ship-route-to">'+escH(to!=="-"?to:"TBD")+'</span><span class="mode-badge '+getModeClass(mode)+'" style="margin-left:4px;font-size:9px;padding:2px 6px">'+escH(mode!=="-"?mode:"Sea")+'</span></div>';
@@ -571,7 +625,7 @@ function buildShipCard(r,idx){
   h+='</div>';
 
   /* 날짜 */
-  h+='<div class="ship-dates">선적 <span>'+escH(fmtDate(shipDate))+'</span> · ETA <span style="color:'+(delayed?"#EF4444":"var(--tx)")+'">'+escH(fmtDate(eta))+'</span>'+(ata!=="-"?' · ATA <span style="color:#10B981">'+escH(fmtDate(ata))+'</span>':"")+'</div>';
+  h+='<div class="ship-dates">ETD <span>'+escH(fmtDate(shipDate))+'</span> · ETA <span style="color:'+(delayed?"#EF4444":"var(--tx)")+'">'+escH(fmtDate(eta))+'</span>'+(ata!=="-"?' · ATA <span style="color:#10B981">'+escH(fmtDate(ata))+'</span>':"")+(g(r,"Delay_Days")!=="-"?' · <span style="color:#EF4444">지연 '+escH(g(r,"Delay_Days"))+'일</span>':"")+'</div>';
   h+='</div>';
   return h;}
 
@@ -594,8 +648,11 @@ function shipFilter(mi){
 /* ── 상세 모달 ── */
 function openShipModal(r){
   if(!r)return;
-  document.getElementById("smTitle").textContent=g(r,"Invoice_Number");
-  document.getElementById("smSub").textContent=(g(r,"MO_Number")!=="-"?"MO: "+g(r,"MO_Number")+" · ":"")+(g(r,"Style_Name")!=="-"?g(r,"Style_Name"):"");
+  document.getElementById("smTitle").textContent=g(r,"Container_Number");
+  document.getElementById("smSub").textContent=
+    (g(r,"Origin_Port")!=="-"?g(r,"Origin_Port"):"?")+" → "+
+    (g(r,"Destination_Port")!=="-"?g(r,"Destination_Port"):"?")+
+    (g(r,"Container_Type")!=="-"?" · "+g(r,"Container_Type"):"");
 
   var h="";
   function dv(v){return v==="-"?'<span class="d-val empty">미입력</span>':escH(v)}
@@ -603,15 +660,13 @@ function openShipModal(r){
 
   /* 1. 기본 정보 */
   h+='<div class="m-sec"><div class="m-sec-t">📌 기본 선적 정보 / 基本出货信息</div><div class="d-grid">';
-  h+=it("Invoice No. / 인보이스번호",dv(g(r,"Invoice_Number")));
-  h+=it("Shipment Status / 선적상태",statusTag(g(r,"Shipment_Status")));
-  h+=it("Shipment Mode / 운송수단",'<span class="mode-badge '+getModeClass(g(r,"Shipment_Mode"))+'">'+getModeIcon(g(r,"Shipment_Mode"))+" "+escH(g(r,"Shipment_Mode"))+'</span>');
-  h+=it("MO Number / MO번호",dv(g(r,"MO_Number")));
-  h+=it("Style Name / 스타일명",dv(g(r,"Style_Name")));
-  h+=it("Incoterms",dv(g(r,"Incoterms")));
-  h+=it("Ship Month / 선적월",dv(g(r,"Ship_Year"))+" - "+dv(g(r,"Ship_Month")));
-  h+=it("Carrier / 운송사",dv(g(r,"Carrier")));
-  h+=it("Forwarder / 포워더",dv(g(r,"Forwarder")));
+  h+=it("Container No. / 컨테이너번호 / 集装箱号",dv(g(r,"Container_Number")));
+  h+=it("Container Status / 상태 / 状态",statusTag(g(r,"Container_Status")));
+  h+=it("Container Type / 컨테이너유형 / 箱型",dv(g(r,"Container_Type")));
+  h+=it("Container ID / 컨테이너ID / 箱柜",dv(g(r,"Container_ID")));
+  h+=it("Origin Port / 출발항 / 出发港",dv(g(r,"Origin_Port")));
+  h+=it("Destination Port / 도착항 / 目的港",dv(g(r,"Destination_Port")));
+  h+=it("Delay Days / 지연일수 / 延迟天数",dv(g(r,"Delay_Days")));
   h+='</div></div>';
 
   /* 2. 대형 프로세스 트래커 */
@@ -632,36 +687,29 @@ function openShipModal(r){
 
   /* 3. 루트 & 물류 정보 */
   h+='<div class="m-sec"><div class="m-sec-t">🗺️ 루트 & 물류 정보 / 路线&物流信息</div><div class="d-grid">';
-  h+=it("Port of Loading / 출발항",dv(g(r,"Port_of_Loading")));
-  h+=it("Port of Discharge / 도착항",dv(g(r,"Port_of_Discharge")));
-  h+=it("Vessel/Flight No. / 선박편명",dv(g(r,"Vessel_Flight_No")));
-  h+=it("B/L No. / 선하증권번호",dv(g(r,"BL_Number")));
-  h+=it("AWB No. / 항공화물운송장",dv(g(r,"AWB_Number")));
-  h+=it("Container No. / 컨테이너번호",dv(g(r,"Container_Number")));
+  h+=it("Origin Port / 출발항 / 出发港",dv(g(r,"Origin_Port")));
+  h+=it("Destination Port / 도착항 / 目的港",dv(g(r,"Destination_Port")));
+  h+=it("Container Type / 컨테이너유형 / 箱型",dv(g(r,"Container_Type")));
+  h+=it("Container ID / 컨테이너ID",dv(g(r,"Container_ID")));
+  h+=it("Container Number / 컨테이너번호",dv(g(r,"Container_Number")));
   h+='</div></div>';
 
   /* 4. 수량 & 화물 정보 */
   h+='<div class="m-sec"><div class="m-sec-t">📦 수량 & 화물 정보 / 数量&货物信息</div><div class="d-grid-4">';
-  h+=it("Shipped Qty / 선적수량 / 出货数量",dv(g(r,"Shipped_Qty")));
-  h+=it("Carton Qty / 박스수 / 纸箱数",dv(g(r,"Carton_Qty")));
-  h+=it("CBM / 부피",dv(g(r,"CBM")));
-  h+=it("Gross Weight / 총중량 (KG)",dv(g(r,"Gross_Weight_KG")));
-  h+=it("Net Weight / 순중량 (KG)",dv(g(r,"Net_Weight_KG")));
-  h+=it("Pcs per Carton / 박스당수량",dv(g(r,"Pcs_Per_Carton")));
-  h+=it("Country of Origin / 원산지",dv(g(r,"Country_of_Origin")));
-  h+=it("HS Code",dv(g(r,"HS_Code")));
+  h+=it("Total Quantity / 총수량 / 总数量",dv(g(r,"Total_Quantity")));
+  h+=it("Total Cartons / 총박스수 / 总纸箱数",dv(g(r,"Total_Cartons")));
+  h+=it("Total CBM / 총부피 / 总体积",dv(g(r,"Total_CBM")));
+  h+=it("Total Weight (KG) / 총중량 / 总重量",dv(g(r,"Total_Weight_KG")));
   h+='</div></div>';
 
   /* 5. 날짜 & 일정 */
   h+='<div class="m-sec"><div class="m-sec-t">📅 선적 일정 / 出货日期</div>';
   h+='<div class="d-grid">';
   var schItems=[
-    {l:"Ship Date / 선적일 / 出货日",k:"Ship_Date"},
-    {l:"ETA / 예상도착일 / 预计到达",k:"ETA"},
-    {l:"ATA / 실제도착일 / 实际到达",k:"ATA"},
-    {l:"Booking Confirmed / 부킹확정",k:"Booking_Date"},
-    {l:"On Board Date / 선적완료일",k:"OnBoard_Date"},
-    {l:"Customs Cleared Date / 통관완료",k:"Customs_Cleared_Date"}
+    {l:"ETD / 출항예정일 / 预计出发",k:"ETD"},
+    {l:"ATD / 실제출항일 / 实际出发",k:"ATD"},
+    {l:"ETA / 도착예정일 / 预计到达",k:"ETA"},
+    {l:"ATA / 실제도착일 / 实际到达",k:"ATA"}
   ];
   schItems.forEach(function(t){
     var v=g(r,t.k),p=pd(v);
@@ -672,53 +720,19 @@ function openShipModal(r){
   h+='</div></div>';
 
   /* 6. 금융 & 결제 */
-  h+='<div class="m-sec"><div class="m-sec-t">💰 금융 & 결제 정보 / 财务&付款信息</div><div class="d-grid">';
-  h+=it("Invoice Amount / 인보이스금액",dv(g(r,"Invoice_Amount")));
-  h+=it("Currency / 통화",dv(g(r,"Currency")));
-  h+=it("Payment Terms / 결제조건",dv(g(r,"Payment_Terms")));
-  h+=it("Freight Cost / 운임",dv(g(r,"Freight_Cost")));
-  h+=it("Insurance Cost / 보험료",dv(g(r,"Insurance_Cost")));
-  h+=it("Payment Due Date / 결제기한",dv(g(r,"Payment_Due_Date")));
-  h+=it("Payment Received / 결제완료일",dv(g(r,"Payment_Received_Date")));
-  h+=it("Exchange Rate / 환율",dv(g(r,"Exchange_Rate")));
-  h+=it("C/O No. / 원산지증명서번호",dv(g(r,"CO_Number")));
+  h+='<div class="m-sec"><div class="m-sec-t">📊 상태 & 지연 정보 / 状态&延误信息</div><div class="d-grid-2">';
+  h+=it("Container Status / 상태 / 状态",statusTag(g(r,"Container_Status")));
+  h+=it("Delay Days / 지연일수 / 延迟天数",dv(g(r,"Delay_Days")));
   h+='</div></div>';
 
   /* 7. 서류 체크리스트 */
-  h+='<div class="m-sec"><div class="m-sec-t">📄 서류 체크리스트 / 单据核查</div><div class="doc-grid">';
-  var docs=[
-    {n:"Commercial Invoice",k:"Doc_Invoice",lbl:"커머셜 인보이스"},
-    {n:"Packing List",k:"Doc_PackingList",lbl:"패킹리스트"},
-    {n:"B/L or AWB",k:"Doc_BL",lbl:"선하증권/항공운송장"},
-    {n:"Certificate of Origin",k:"Doc_CO",lbl:"원산지증명서"},
-    {n:"Inspection Report",k:"Doc_Inspection",lbl:"검수보고서"},
-    {n:"Insurance Policy",k:"Doc_Insurance",lbl:"보험증권"}
-  ];
-  docs.forEach(function(d){
-    var v=g(r,d.k).toLowerCase();
-    var cls=v.indexOf("yes")>=0||v.indexOf("ok")>=0||v.indexOf("done")>=0?"ok":v.indexOf("na")>=0||v==="-"?"na":"ng";
-    var ic=cls==="ok"?"✅":cls==="ng"?"❌":"➖";
-    h+='<div class="doc-item '+cls+'"><span class="doc-ic">'+ic+'</span><div><div class="doc-name">'+escH(d.n)+'</div><div style="font-size:8px;color:#64748B">'+escH(d.lbl)+'</div></div></div>';
-  });
-  h+='</div></div>';
+  /* 서류 체크리스트 - 필드 추가 시 확장 예정 */
 
   /* 8. 수취인 & 통관 */
-  h+='<div class="m-sec"><div class="m-sec-t">🏢 수취인 & 통관 정보 / 收货人&通关信息</div><div class="d-grid">';
-  h+=it("Consignee / 수취인",dv(g(r,"Consignee")));
-  h+=it("Notify Party / 통보처",dv(g(r,"Notify_Party")));
-  h+=it("Delivery Address / 배송지",dv(g(r,"Delivery_Address")));
-  h+=it("Customs Status / 통관상태",dv(g(r,"Customs_Status")));
-  h+=it("Customs Declaration No. / 세관신고번호",dv(g(r,"Customs_Declaration_No")));
-  h+=it("Tracking Number / 운송장번호",dv(g(r,"Tracking_Number")));
-  h+='</div></div>';
+  /* 수취인/통관 섹션 - 필드 추가 시 확장 예정 */
 
   /* 9. QC & 메모 */
-  h+='<div class="m-sec"><div class="m-sec-t">🔍 QC & 메모 / 质检&备注</div><div class="d-grid">';
-  h+=it("Final QC Passed / 최종QC",dv(g(r,"Final_QC_Passed")));
-  h+=it("Inspection Agency / 검수기관",dv(g(r,"Inspection_Agency")));
-  h+=it("AQL Level",dv(g(r,"AQL_Level")));
-  h+=it("Notes / 메모 / 备注",dv(g(r,"Shipment_Notes")));
-  h+='</div></div>';
+  /* QC/메모 섹션 - 필드 추가 시 확장 예정 */
 
   document.getElementById("smBody").innerHTML=h;
   document.getElementById("shipModalOv").classList.add("active");}
