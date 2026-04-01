@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shipment View v4</title>
+<title>Shipment View v5</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -66,10 +66,11 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .kpb-lbl2{font-size:6px;color:var(--tm)}
 .kpb-line{flex:0;height:2px;width:4px}
 
-/* 요약 바 */
-.sum-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
-.sum-card{background:var(--cw);border:1px solid var(--bd);border-radius:10px;padding:12px;text-align:center}
-.sum-val{font-size:18px;font-weight:900;line-height:1}
+/* 요약 바 (6단계 파이프라인) */
+.sum-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px}
+.sum-card{background:var(--cw);border:1px solid var(--bd);border-radius:10px;padding:16px 10px;text-align:center;box-shadow:0 2px 4px rgba(0,0,0,0.02)}
+.sum-ic{font-size:26px;margin-bottom:6px;line-height:1}
+.sum-val{font-size:20px;font-weight:900;line-height:1}
 .sum-lbl{font-size:9px;font-weight:700;color:var(--tm);margin-top:4px;line-height:1.4}
 
 /* 월별 섹션 */
@@ -77,9 +78,11 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .month-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid var(--bd)}
 .month-title{font-size:15px;font-weight:900;color:var(--tx);display:flex;align-items:center;gap:8px}
 .month-cnt{font-size:11px;color:var(--tm);font-weight:600;background:#F1F5F9;padding:2px 10px;border-radius:10px;border:1px solid #CBD5E1}
-.filter-bar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-.f-search{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 10px;font-size:11px;outline:none;font-family:inherit;width:160px}
-.f-sel{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 8px;font-size:11px;outline:none;font-family:inherit;cursor:pointer}
+
+/* 필터 바 (균일한 4칸 구조) */
+.filter-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+.sf{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:6px 10px;font-size:11px;outline:none;font-family:inherit;width:100%;color:var(--tx)}
+.f-sel{cursor:pointer}
 
 /* 컨테이너 카드 */
 .ship-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px}
@@ -219,8 +222,20 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 /* hover */
 .pipe-list-item:hover{background:#EFF6FF!important;border-color:#BFDBFE!important}
 
-@media(max-width:900px){.kpi-row{grid-template-columns:1fr 1fr}.sum-row{grid-template-columns:repeat(3,1fr)}.ship-grid{grid-template-columns:1fr}.d-grid{grid-template-columns:1fr 1fr}.dt-cols{grid-template-columns:1fr}.pa-cols{grid-template-columns:1fr}}
-@media(max-width:600px){.kpi-row{grid-template-columns:1fr}.sum-row{grid-template-columns:1fr 1fr}}
+/* 반응형 처리 */
+@media(max-width:900px){
+  .kpi-row{grid-template-columns:1fr 1fr}
+  .sum-row{grid-template-columns:repeat(3,1fr)}
+  .filter-bar{grid-template-columns:repeat(2,1fr)}
+  .ship-grid{grid-template-columns:1fr}
+  .d-grid{grid-template-columns:1fr 1fr}
+  .dt-cols{grid-template-columns:1fr}
+  .pa-cols{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .kpi-row{grid-template-columns:1fr}
+  .filter-bar{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -287,7 +302,7 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 
 <script>
 /* ════════════════════════════════════════
-   Shipment View v4
+   Shipment View v5
    Report : All_Shipment
    Form   : Add_Shipment
 ════════════════════════════════════════ */
@@ -517,6 +532,7 @@ function renderAlerts() {
 
 /* ── KPI 카드 ── */
 function renderKPI(groups, keys) {
+  /* 최근 3개월치만 노출 (현재/미래 KPI에 집중하기 위함) */
   var recent = keys.slice(-3);
   var colors = ["kc0", "kc1", "kc2"];
   var MO_EN = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -566,7 +582,8 @@ function renderKPI(groups, keys) {
     h += '<div class="kpi-metrics">';
     h += '<div class="kpi-m"><div class="kpi-m-val" style="color:#3B82F6">' + items.length + '</div><div class="kpi-m-lbl">컨테이너/CNTR</div></div>';
     h += '<div class="kpi-m"><div class="kpi-m-val" style="color:' + fColor + ';font-size:13px">' + fInfo.str + '</div><div class="kpi-m-lbl">운임/运费</div></div>';
-    h += '<div class="kpi-m"><div class="kpi-m-val" style="color:' + otifColor + '">' + otif + '%</div><div class="kpi-m-lbl">OTIF</div></div>';
+    /* 텍스트 변경: 납기준수율/交货期准确率 */
+    h += '<div class="kpi-m"><div class="kpi-m-val" style="color:' + otifColor + '">' + otif + '%</div><div class="kpi-m-lbl" style="font-size:8.5px;letter-spacing:-0.5px">납기준수율<br>交货期准确率</div></div>';
     h += '</div>';
     h += '<div class="kpi-modes">';
     if (cntO > 0) h += '<span class="mt mt-ocean">🚢 Ocean ' + cntO + '</span>';
@@ -595,27 +612,35 @@ function renderKPI(groups, keys) {
   document.getElementById("kpiRow").innerHTML = h || '<div class="empty-st" style="grid-column:1/-1">데이터 없음</div>';
 }
 
-/* ── 요약 바 ── */
+/* ── 요약 바 (6단계 파이프라인) ── */
 function renderSum() {
-  var tot = allShip.length, cntDone = 0, cntTransit = 0, cntHold = 0;
+  var counts = [0, 0, 0, 0, 0, 0];
   allShip.forEach(function(r) {
-    var st = (gv(r, "Container_Status") || "").toLowerCase();
-    if (st.indexOf("delivered") >= 0 || st.indexOf("done") >= 0) cntDone++;
-    else if (st.indexOf("transit") >= 0) cntTransit++;
-    if (isHold(r)) cntHold++;
+    var si = getStep(r);
+    if(si >= 0 && si < 6) counts[si]++;
   });
-  var fInfo = freightStr(allShip);
-  var fColor = fInfo.multi ? "#7C3AED" : "#6366F1";
+
+  var labels = [
+    { ko: "부킹", zh: "预订", icon: "📝", color: "#64748B" },
+    { ko: "적재", zh: "装载", icon: "📦", color: "#3B82F6" },
+    { ko: "선적", zh: "装船", icon: "🏗️", color: "#8B5CF6" },
+    { ko: "운송", zh: "运输", icon: "🚢", color: "#F59E0B" },
+    { ko: "통관", zh: "清关", icon: "🏢", color: "#EF4444" },
+    { ko: "완료", zh: "完成", icon: "✅", color: "#10B981" }
+  ];
+
   var h = "";
-  h += '<div class="sum-card"><div class="sum-val" style="color:#3B82F6">' + tot + '</div><div class="sum-lbl">총 컨테이너<br>Total Containers</div></div>';
-  h += '<div class="sum-card"><div class="sum-val" style="color:' + fColor + ';font-size:' + (fInfo.multi ? "14px" : "18px") + ';font-weight:900">' + fInfo.str + '</div><div class="sum-lbl">총 운임<br>Total Freight</div></div>';
-  h += '<div class="sum-card"><div class="sum-val" style="color:#10B981">' + cntDone + '</div><div class="sum-lbl">도착완료<br>Delivered</div></div>';
-  h += '<div class="sum-card"><div class="sum-val" style="color:#F59E0B">' + cntTransit + '</div><div class="sum-lbl">운송중<br>In Transit</div></div>';
-  h += '<div class="sum-card"><div class="sum-val" style="color:#EF4444">' + cntHold + '</div><div class="sum-lbl">통관보류<br>Customs Hold</div></div>';
+  for(var i=0; i<6; i++) {
+    h += '<div class="sum-card">';
+    h += '<div class="sum-ic">' + labels[i].icon + '</div>';
+    h += '<div class="sum-val" style="color:' + labels[i].color + '">' + counts[i] + '</div>';
+    h += '<div class="sum-lbl">' + labels[i].ko + '<br>' + labels[i].zh + '</div>';
+    h += '</div>';
+  }
   document.getElementById("sumRow").innerHTML = h;
 }
 
-/* ── 월별 목록 ── */
+/* ── 월별 목록 및 필터 바 ── */
 function renderMonthly(groups, keys) {
   var html = "";
   var reversed = keys.slice().reverse();
@@ -625,22 +650,35 @@ function renderMonthly(groups, keys) {
     var yy = String(ym.y).slice(-2);
     var mm = ym.m < 10 ? "0" + ym.m : "" + ym.m;
     var title = yy + "." + mm + " 선적 현황 / " + yy + "年 " + ym.m + "月 出货现况";
-    var mMode = {}, mStat = {};
+    
+    /* 필터 추출 */
+    var mLine = {}, mStat = {}, mPort = {};
     items.forEach(function(r) {
-      var md = gv(r, "Shipment_Mode"); if (md !== "-") mMode[md] = 1;
+      var sl = gv(r, "Shipping_Line"); if (sl !== "-") mLine[sl] = 1;
       var st = gv(r, "Container_Status"); if (st !== "-") mStat[st] = 1;
+      var dp = gv(r, "Destination_Port"); if (dp !== "-") mPort[dp] = 1;
     });
 
     html += '<div class="month-sec" id="ms' + mi + '">';
     html += '<div class="month-hd"><div class="month-title">🚢 ' + title + '</div><span class="month-cnt" id="mc' + mi + '">' + items.length + ' Containers</span></div>';
+    
+    /* 다국어 패치 적용된 4칸 균일 필터 바 */
     html += '<div class="filter-bar">';
-    html += '<input type="text" class="f-search sf" data-m="' + mi + '" data-t="q" placeholder="🔍 검색...">';
-    html += '<select class="f-sel sf" data-m="' + mi + '" data-t="md"><option value="">All Mode</option>';
-    Object.keys(mMode).sort().forEach(function(k) { html += '<option value="' + esc(k) + '">' + esc(k) + '</option>'; });
+    html += '<input type="text" class="f-search sf" data-m="' + mi + '" data-t="q" placeholder="🔍 검색 / 搜索...">';
+    
+    html += '<select class="f-sel sf" data-m="' + mi + '" data-t="sl"><option value="">선사 / 船公司 (All)</option>';
+    Object.keys(mLine).sort().forEach(function(k) { html += '<option value="' + esc(k) + '">' + esc(k) + '</option>'; });
     html += '</select>';
-    html += '<select class="f-sel sf" data-m="' + mi + '" data-t="st"><option value="">All Status</option>';
+    
+    html += '<select class="f-sel sf" data-m="' + mi + '" data-t="st"><option value="">상태 / 状态 (All)</option>';
     Object.keys(mStat).sort().forEach(function(k) { html += '<option value="' + esc(k) + '">' + esc(k) + '</option>'; });
-    html += '</select></div>';
+    html += '</select>';
+    
+    html += '<select class="f-sel sf" data-m="' + mi + '" data-t="dp"><option value="">도착항 / 到达港 (All)</option>';
+    Object.keys(mPort).sort().forEach(function(k) { html += '<option value="' + esc(k) + '">' + esc(k) + '</option>'; });
+    html += '</select>';
+    html += '</div>';
+
     html += '<div class="ship-grid" id="sg' + mi + '">';
     items.forEach(function(r) { html += buildCard(r, mi); });
     html += '</div></div>';
@@ -656,6 +694,7 @@ function buildCard(r, mi) {
   var status = gv(r, "Container_Status");
   var from = gv(r, "Origin_Port");
   var to = gv(r, "Destination_Port");
+  var sl = gv(r, "Shipping_Line");
   var qty = parseInt(gv(r, "Total_Quantity")) || 0;
   var kg = parseFloat(gv(r, "Total_Weight_KG")) || 0;
   var ctn = parseInt(gv(r, "Total_Cartons")) || 0;
@@ -665,9 +704,10 @@ function buildCard(r, mi) {
   var si = getStep(r);
   var mi_info = modeInfo(mode);
   var lines = getLines(r);
-  var srch = (cid + " " + ctype + " " + mode + " " + status + " " + from + " " + to + " " + gv(r, "BL_Number") + " " + gv(r, "Vessel_Name")).toLowerCase();
+  var srch = (cid + " " + ctype + " " + mode + " " + status + " " + from + " " + to + " " + sl + " " + gv(r, "BL_Number") + " " + gv(r, "Vessel_Name")).toLowerCase();
 
-  var h = '<div class="ship-card' + (hold ? " is-hold" : "") + '" data-id="' + r["ID"] + '" data-m="' + mi + '" data-md="' + esc(mode) + '" data-st="' + esc(status) + '" data-sr="' + esc(srch) + '">';
+  /* 필터 연동을 위해 data-sl, data-dp, data-st 속성 부여 */
+  var h = '<div class="ship-card' + (hold ? " is-hold" : "") + '" data-id="' + r["ID"] + '" data-m="' + mi + '" data-sl="' + esc(sl) + '" data-dp="' + esc(to) + '" data-st="' + esc(status) + '" data-sr="' + esc(srch) + '">';
 
   /* 헤더 */
   h += '<div class="sc-hd"><div>';
@@ -738,23 +778,25 @@ function buildCard(r, mi) {
   return h;
 }
 
-/* ── 필터 ── */
+/* ── 4칸 필터 로직 ── */
 function doFilter(mi) {
   var sec = document.getElementById("ms" + mi); if (!sec) return;
-  var q = "", md = "", st = "";
+  var q = "", sl = "", st = "", dp = "";
   sec.querySelectorAll(".sf").forEach(function(el) {
     var t = el.getAttribute("data-t"), v = el.value;
     if (t === "q") q = v.toLowerCase().trim();
-    else if (t === "md") md = v;
+    else if (t === "sl") sl = v;
     else if (t === "st") st = v;
+    else if (t === "dp") dp = v;
   });
   var cards = sec.querySelectorAll('.ship-card[data-m="' + mi + '"]');
   var cnt = 0;
   cards.forEach(function(c) {
     var ok = true;
     if (q && c.getAttribute("data-sr").indexOf(q) < 0) ok = false;
-    if (md && c.getAttribute("data-md") !== md) ok = false;
+    if (sl && c.getAttribute("data-sl") !== sl) ok = false;
     if (st && c.getAttribute("data-st") !== st) ok = false;
+    if (dp && c.getAttribute("data-dp") !== dp) ok = false;
     c.style.display = ok ? "" : "none";
     if (ok) cnt++;
   });
@@ -846,7 +888,7 @@ function buildShipDetail(r) {
   h += it("Notes / 메모 / 备注", dv(gv(r, "Notes")));
   h += '</div></div>';
 
-  /* 6. Container Lines — 핵심 섹션 */
+  /* 6. Container Lines */
   var lines = getLines(r);
   h += '<div class="m-sec"><div class="m-sec-t">📋 Container Lines / 컨테이너라인 / 集装箱明细</div>';
   if (lines.length === 0) {
@@ -882,7 +924,6 @@ function buildShipDetail(r) {
       var lnote = lineVal(line, "Notes");
       totQty += lqty; totCtn += lctn; totCBM += lcbm; totKG += lkg; totAmt += ltotal;
       h += '<tr>';
-      /* 이미지 셀 (해결된 부분!) */
       if (img) {
         h += '<td><img src="' + img + '" style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #E2E8F0;cursor:pointer" onclick="window.open(\'' + img + '\', \'_blank\')" title="클릭하여 원본 보기"></td>';
       } else {
