@@ -483,16 +483,21 @@ function renderKPI(groups, keys){
 
   recent.forEach(function(key, ki){
     var items=groups[key];
-    var totalCBM=0,totalKG=0,totalFreight=0;
+    var totalKG=0,freightByCur={};
     var cntOcean=0,cntAir=0,cntCourier=0,cntOther=0;
     var cntDone=0,cntTransit=0,cntHold=0;
     var otifOk=0;
     var stepCounts=[0,0,0,0,0];
 
     items.forEach(function(r){
-      totalCBM+=parseFloat(g(r,"Total_CBM"))||0;
       totalKG+=parseFloat(g(r,"Total_Weight_KG"))||0;
-      totalFreight+=parseFloat(g(r,"Freight_Cost"))||0;
+      /* ★ 통화별 운임 분리 */
+      var fc=parseFloat(g(r,"Freight_Cost"))||0;
+      var cur=(g(r,"Currency")||"USD").trim().toUpperCase();
+      if(fc>0){
+        if(!freightByCur[cur])freightByCur[cur]=0;
+        freightByCur[cur]+=fc;
+      }
       var ml=(g(r,"Shipment_Mode")||"").toLowerCase();
       if(ml.indexOf("air")>=0)cntAir++;
       else if(ml.indexOf("courier")>=0||ml.indexOf("express")>=0)cntCourier++;
@@ -524,9 +529,23 @@ function renderKPI(groups, keys){
     h+='<div class="kpi-card '+colors[ki]+'">';
     h+='<div class="kpi-hd"><div><span class="kpi-month">'+(ym?ym.m+"월":"?")+'</span><span class="kpi-month-en">'+mEN+'</span></div><span class="kpi-badge '+statusCls+'">'+statusTxt+'</span></div>';
 
+    /* ★ 통화별 운임 표시 텍스트 생성 */
+    var CUR_SYMBOL={"USD":"$","CNY":"¥","KRW":"₩","EUR":"€"};
+    var freightParts=[];
+    Object.keys(freightByCur).sort().forEach(function(cur){
+      var amt=freightByCur[cur];
+      var sym=CUR_SYMBOL[cur]||cur+" ";
+      var disp=amt>=1000?(sym+(amt/1000).toFixed(1)+"k"):(sym+amt.toFixed(0));
+      freightParts.push(disp);
+    });
+    var freightDisp=freightParts.length>0?freightParts.join(" + "):"$0";
+    var freightColor=freightParts.length>1?"#7C3AED":"#10B981"; /* 혼재시 보라 */
+
     h+='<div class="kpi-metrics">';
-    h+='<div class="kpi-m"><div class="kpi-m-val" style="color:#3B82F6">'+totalCBM.toFixed(1)+'</div><div class="kpi-m-lbl">선적량/CBM</div></div>';
-    h+='<div class="kpi-m"><div class="kpi-m-val" style="color:#10B981">$'+(totalFreight>=1000?(totalFreight/1000).toFixed(1)+"k":totalFreight.toFixed(0))+'</div><div class="kpi-m-lbl">운임/Freight</div></div>';
+    h+='<div class="kpi-m"><div class="kpi-m-val" style="color:#3B82F6">'+items.length+'</div><div class="kpi-m-lbl">컨테이너/CNTR</div></div>';
+    h+='<div class="kpi-m" style="'+(freightParts.length>1?"grid-column:span 1":"")+'">';
+    h+='<div class="kpi-m-val" style="color:'+freightColor+';font-size:'+(freightParts.length>1?"11px":"17px")+'">'+freightDisp+'</div>';
+    h+='<div class="kpi-m-lbl">운임/Freight'+(freightParts.length>1?" (혼재)":"")+' </div></div>';
     h+='<div class="kpi-m"><div class="kpi-m-val" style="color:'+(otif>=95?"#10B981":otif>=85?"#F59E0B":"#EF4444")+'">'+otif+'%</div><div class="kpi-m-lbl">납기준수/OTIF</div></div>';
     h+='</div>';
 
@@ -557,22 +576,32 @@ function renderKPI(groups, keys){
 
 /* ── 전체 요약 ── */
 function renderSummary(){
-  var tot=allShip.length,totalCBM=0,cntDone=0,cntTransit=0,cntHold=0;
+  var tot=allShip.length,cntDone=0,cntTransit=0,cntHold=0;
+  var freightAll={};
   allShip.forEach(function(r){
-    totalCBM+=parseFloat(g(r,"Total_CBM"))||0;
     var st=(g(r,"Container_Status")||"").toLowerCase();
     if(st.indexOf("delivered")>=0||st.indexOf("done")>=0)cntDone++;
     else if(st.indexOf("transit")>=0)cntTransit++;
     if(isHold(r))cntHold++;
+    var fc=parseFloat(g(r,"Freight_Cost"))||0;
+    var cur=(g(r,"Currency")||"USD").trim().toUpperCase();
+    if(fc>0){if(!freightAll[cur])freightAll[cur]=0;freightAll[cur]+=fc;}
   });
+  var CUR_SYMBOL={"USD":"$","CNY":"¥","KRW":"₩","EUR":"€"};
+  var freightStr=Object.keys(freightAll).sort().map(function(cur){
+    var amt=freightAll[cur];
+    var sym=CUR_SYMBOL[cur]||cur+" ";
+    return sym+(amt>=1000?(amt/1000).toFixed(1)+"k":amt.toFixed(0));
+  }).join(" + ")||"$0";
+  var multiCur=Object.keys(freightAll).length>1;
+
   var h="";
   h+='<div class="sum-card"><div class="sum-val" style="color:#3B82F6">'+tot+'</div><div class="sum-lbl">총 컨테이너<br>Total Containers</div></div>';
-  h+='<div class="sum-card"><div class="sum-val" style="color:#6366F1">'+totalCBM.toFixed(1)+'</div><div class="sum-lbl">총 선적량 (CBM)<br>Total Volume</div></div>';
+  h+='<div class="sum-card"><div class="sum-val" style="color:'+(multiCur?"#7C3AED":"#6366F1")+';font-size:'+(multiCur?"13px":"20px")+'">'+freightStr+'</div><div class="sum-lbl">총 운임'+(multiCur?" (혼재)":"")+'<br>Total Freight</div></div>';
   h+='<div class="sum-card"><div class="sum-val" style="color:#10B981">'+cntDone+'</div><div class="sum-lbl">도착완료<br>Delivered</div></div>';
   h+='<div class="sum-card"><div class="sum-val" style="color:#F59E0B">'+cntTransit+'</div><div class="sum-lbl">운송중<br>In Transit</div></div>';
   h+='<div class="sum-card"><div class="sum-val" style="color:#EF4444">'+cntHold+'</div><div class="sum-lbl">통관보류<br>Customs Hold</div></div>';
-  document.getElementById("summaryRow").innerHTML=h;
-}
+  document.getElementById("summaryRow").innerHTML=h;}
 
 /* ── 월별 컨테이너 목록 ── */
 function renderMonthly(groups, keys){
@@ -612,7 +641,13 @@ function renderMonthly(groups, keys){
 
   document.getElementById("monthlyContent").innerHTML=html;
   document.querySelectorAll(".sf").forEach(function(el){el.addEventListener(el.tagName==="INPUT"?"input":"change",function(){doFilter(this.getAttribute("data-m"))})});
-  document.querySelectorAll(".ship-card").forEach(function(c){c.addEventListener("click",function(){openModal(this.getAttribute("data-id"))})});
+  /* ★ 이벤트 위임 — 동적 카드 클릭 처리 */
+  document.getElementById("monthlyContent").addEventListener("click",function(e){
+    var card=e.target.closest(".ship-card");
+    if(card&&!e.target.closest(".mo-cell-btn")&&!e.target.closest(".sf")){
+      openModal(card.getAttribute("data-id"));
+    }
+  });
 }
 
 /* ── 카드 빌드 ── */
@@ -653,10 +688,10 @@ function buildCard(r,idx){
 
   /* 수치 */
   h+='<div class="sc-nums">';
-  h+='<div class="sc-num-box"><div class="sc-num-val">'+qty.toLocaleString()+'</div><div class="sc-num-lbl">Pcs / 수량</div></div>';
-  h+='<div class="sc-num-box"><div class="sc-num-val">'+cbm.toFixed(1)+'</div><div class="sc-num-lbl">CBM</div></div>';
-  h+='<div class="sc-num-box"><div class="sc-num-val">'+kg.toFixed(0)+'</div><div class="sc-num-lbl">KG</div></div>';
-  h+='<div class="sc-num-box"><div class="sc-num-val">'+ctn+'</div><div class="sc-num-lbl">Cartons</div></div>';
+  h+='<div class="sc-num-box"><div class="sc-num-val" style="color:#6D28D9">'+qty.toLocaleString()+'</div><div class="sc-num-lbl">Pcs / 수량 / 数量</div></div>';
+  h+='<div class="sc-num-box"><div class="sc-num-val" style="font-size:10px;color:#475569">'+(ctype!=="-"?escH(ctype):"-")+'</div><div class="sc-num-lbl">Type / 유형 / 箱型</div></div>';
+  h+='<div class="sc-num-box"><div class="sc-num-val">'+kg.toFixed(0)+'</div><div class="sc-num-lbl">KG / 중량 / 重量</div></div>';
+  h+='<div class="sc-num-box"><div class="sc-num-val">'+ctn+'</div><div class="sc-num-lbl">Cartons / 박스 / 箱数</div></div>';
   h+='</div>';
 
   /* Container Lines (MO 목록) */
