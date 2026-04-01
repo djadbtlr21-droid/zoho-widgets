@@ -255,6 +255,7 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .mo-sub-tbl td{padding:6px 8px;border-bottom:1px solid #F8FAFC;text-align:center;color:var(--tx)}
 .mo-sub-tbl tfoot td{background:#F1F5F9;font-weight:800;border-top:2px solid var(--bd)}
 
+.pipe-list-item:hover{background:#EFF6FF !important;border-color:#BFDBFE !important}
 @media(max-width:900px){.kpi-row{grid-template-columns:1fr 1fr}.summary-row{grid-template-columns:repeat(3,1fr)}.ship-grid{grid-template-columns:1fr}.d-grid{grid-template-columns:1fr 1fr}.date-timeline{grid-template-columns:1fr}}
 @media(max-width:600px){.kpi-row{grid-template-columns:1fr}.summary-row{grid-template-columns:1fr 1fr}.kpi-metrics{grid-template-columns:1fr 1fr}}
 </style>
@@ -577,19 +578,17 @@ function renderKPI(groups, keys){
     h+='<div style="display:flex;align-items:center;gap:0">';
     STEPS.forEach(function(s,i){
       var cnt=stepCounts[i];
-      var isDone=(allDone&&i<=maxStep)||(i<maxStep&&cnt===0&&i<maxStep);
-      var isCurr=(!allDone&&i===maxStep)||cnt>0;
-      var hasCnt=cnt>0;
-      var bg=hasCnt?(isDone&&cnt===0?"#E2E8F0":isCurr?"#3B82F6":"#34D399"):"#E2E8F0";
-      if(hasCnt)bg=i<maxStep?"#34D399":i===maxStep?"#3B82F6":"#E2E8F0";
-      var tc=(bg==="#E2E8F0")?"#94A3B8":"#fff";
-      var lc=(bg==="#34D399")?"#059669":(bg==="#3B82F6")?"#2563EB":"#94A3B8";
-      if(i>0)h+='<div style="flex:0;height:2px;width:4px;background:'+(i<=maxStep&&stepCounts[i-1]>0?"#34D399":"#E2E8F0")+'"></div>';
-      h+='<div style="flex:1;text-align:center;cursor:'+(cnt>0?"pointer":"default")+'" onclick="'+(cnt>0?"openPipeList('"+keyEncPipe+"',"+i+")":"")+'">'+
-        '<div style="width:22px;height:22px;border-radius:50%;background:'+bg+';color:'+tc+';font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 2px;transition:transform .1s"'+(cnt>0?' onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'"':'')+'>'+cnt+'</div>'+
-        '<div style="font-size:7px;font-weight:700;color:'+lc+'">'+STEP_KO[i].split("/")[0]+'</div>'+
-        '<div style="font-size:6px;color:'+lc+'">'+STEP_ZH[i]+'</div>'+
-      '</div>';
+      var bg=cnt>0?(i<maxStep?"#34D399":i===maxStep?"#3B82F6":"#E2E8F0"):"#E2E8F0";
+      var tc=(bg==="rgb(226,232,240)"||bg==="#E2E8F0")?"#94A3B8":"#fff";
+      var lc=bg==="#34D399"?"#059669":bg==="#3B82F6"?"#2563EB":"#94A3B8";
+      var clickable=cnt>0;
+      if(i>0)h+='<div style="flex:0;height:2px;width:4px;background:'+(stepCounts[i-1]>0?"#34D399":"#E2E8F0")+'"></div>';
+      h+='<div class="pipe-bubble" style="flex:1;text-align:center;cursor:'+(clickable?"pointer":"default")+'" data-key="'+keyEncPipe+'" data-step="'+i+'" data-clickable="'+(clickable?"1":"0")+'">'
+      h+='<div style="flex:1;text-align:center;cursor:'+(clickable?"pointer":"default")+'"'+_oc+'>';
+      h+='<div style="width:22px;height:22px;border-radius:50%;background:'+bg+';color:'+tc+';font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 2px">'+cnt+'</div>';
+      h+='<div style="font-size:7px;font-weight:700;color:'+lc+'">'+STEP_KO[i].split("/")[0]+'</div>';
+      h+='<div style="font-size:6px;color:'+lc+'">'+STEP_ZH[i]+'</div>';
+      h+='</div>';
     });
     h+='</div></div></div>';
   });
@@ -598,7 +597,7 @@ function renderKPI(groups, keys){
   document.getElementById("kpiRow").innerHTML=h;
 }
 
-/* ── 전체 요약 ── */
+      h+='<div class="pipe-list-item" data-id="'+r["ID"]+'" style="padding:12px 14px;border:1px solid '+(hold?"#FECACA":"var(--bd)")+';border-radius:8px;margin-bottom:8px;cursor:pointer;background:'+(hold?"#FFF8F8":"#fff")+'">'
 function renderSummary(){
   var tot=allShip.length,cntDone=0,cntTransit=0,cntHold=0;
   var freightAll={};
@@ -944,7 +943,7 @@ function openPipeList(keyEnc, stepIdx){
       var hold=isHold(r);
       var delayed=isDelayed(r);
 
-      h+='<div style="padding:12px 14px;border:1px solid '+(hold?"#FECACA":"var(--bd)")+';border-radius:8px;margin-bottom:8px;cursor:pointer;background:'+(hold?"#FFF8F8":"#fff")+';transition:background .1s" onclick="document.getElementById('pipeListOv').classList.remove('active');openModal(''+r["ID"]+'');" onmouseover="this.style.background='#EFF6FF'" onmouseout="this.style.background=''+(hold?"#FFF8F8":"#fff")+''">';
+      h+='<div style="padding:12px 14px;border:1px solid '+(hold?"#FECACA":"var(--bd)")+';border-radius:8px;margin-bottom:8px;cursor:pointer;background:'+(hold?"#FFF8F8":"#fff")+';transition:background .1s" onclick="document.getElementById('pipeListOv').classList.remove('active');openModal(''+r["ID"]+'');"#EFF6FF'"'+(hold?"#FFF8F8":"#fff")+''">';
       h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">';
       h+='<div>';
       h+='<div style="font-size:13px;font-weight:900;color:var(--pr)">'+escH(cid!=="-"?cid:"ID 미입력")+'</div>';
@@ -1134,6 +1133,34 @@ function renderMOModal(r){
 }
 
 /* ── 모달 닫기 ── */
+/* ★ 파이프라인 버블 클릭 이벤트 위임 */
+document.getElementById("kpiRow").addEventListener("click",function(e){
+  var bubble=e.target.closest(".pipe-bubble");
+  if(bubble&&bubble.getAttribute("data-clickable")==="1"){
+    var k=bubble.getAttribute("data-key");
+    var s=parseInt(bubble.getAttribute("data-step"));
+    openPipeList(k,s);
+  }
+});
+/* ★ 파이프라인 버블 클릭 이벤트 위임 */
+document.addEventListener("click",function(e){
+  /* 파이프라인 버블 */
+  var bubble=e.target.closest(".pipe-bubble");
+  if(bubble&&bubble.getAttribute("data-clickable")==="1"){
+    var k=bubble.getAttribute("data-key");
+    var s=parseInt(bubble.getAttribute("data-step"));
+    openPipeList(k,s);
+    return;
+  }
+  /* 파이프 리스트 아이템 */
+  var pItem=e.target.closest(".pipe-list-item");
+  if(pItem){
+    var pid=pItem.getAttribute("data-id");
+    document.getElementById("pipeListOv").classList.remove("active");
+    openModal(pid);
+    return;
+  }
+});
 document.getElementById("pipeListClose").addEventListener("click",function(){document.getElementById("pipeListOv").classList.remove("active")});
 document.getElementById("pipeListOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
 document.getElementById("mClose").addEventListener("click",function(){document.getElementById("modalOv").classList.remove("active")});
