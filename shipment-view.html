@@ -247,7 +247,6 @@ body{background:var(--bg);padding:16px;min-height:100vh}
   <div id="monthlyContent"></div>
 </div>
 
-<!-- 컨테이너 상세 모달 -->
 <div class="modal-ov" id="shipModalOv">
   <div class="modal-box">
     <div class="m-hd">
@@ -261,7 +260,6 @@ body{background:var(--bg);padding:16px;min-height:100vh}
   </div>
 </div>
 
-<!-- 파이프라인 리스트 팝업 -->
 <div class="modal-ov" id="pipePopOv" style="z-index:3500">
   <div class="modal-box modal-box-sm">
     <div class="m-hd">
@@ -272,7 +270,6 @@ body{background:var(--bg);padding:16px;min-height:100vh}
   </div>
 </div>
 
-<!-- MO 상세 모달 -->
 <div class="modal-ov" id="moModalOv" style="z-index:4000">
   <div class="modal-box modal-box-mo">
     <div class="m-hd">
@@ -885,9 +882,9 @@ function buildShipDetail(r) {
       var lnote = lineVal(line, "Notes");
       totQty += lqty; totCtn += lctn; totCBM += lcbm; totKG += lkg; totAmt += ltotal;
       h += '<tr>';
-      /* 이미지 셀 */
+      /* 이미지 셀 (해결된 부분!) */
       if (img) {
-        h += '<td><img src="' + img + '" style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #E2E8F0;cursor:pointer" onclick="window.open('' + img + '','_blank')" title="클릭하여 원본 보기"></td>';
+        h += '<td><img src="' + img + '" style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #E2E8F0;cursor:pointer" onclick="window.open(\'' + img + '\', \'_blank\')" title="클릭하여 원본 보기"></td>';
       } else {
         h += '<td><div style="width:48px;height:48px;background:#F1F5F9;border-radius:6px;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;font-size:18px;color:#CBD5E1;margin:0 auto">📦</div></td>';
       }
