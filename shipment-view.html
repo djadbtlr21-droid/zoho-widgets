@@ -221,6 +221,40 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .dt-lbl{font-size:10px;font-weight:700;color:var(--tx)}
 .dt-val{font-size:10px;color:var(--tm);margin-top:1px}
 
+/* MO 클릭 가능 셀 */
+.mo-cell-btn{
+  color:var(--pr);font-weight:800;cursor:pointer;
+  text-decoration:underline;text-underline-offset:2px;
+  transition:color .15s;background:none;border:none;
+  font-family:inherit;font-size:11px;padding:0;
+}
+.mo-cell-btn:hover{color:#3B82F6}
+
+/* MO 모달 내부 스타일 */
+.mo-m-img-gallery{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.mo-m-img-box{width:90px;height:90px;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:24px;color:#CBD5E1}
+
+/* Plan/Actual 수량 비교 박스 */
+.pa-compare-sm{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.pa-box-sm{padding:10px 12px;border-radius:8px;text-align:center}
+.pa-box-sm.plan{background:#F5F3FF;border:2px solid #C4B5FD}
+.pa-box-sm.actual{background:#ECFDF5;border:2px solid #6EE7B7}
+.pa-box-lbl{font-size:9px;font-weight:800;margin-bottom:4px}
+.pa-box-sm.plan .pa-box-lbl{color:#7C3AED}
+.pa-box-sm.actual .pa-box-lbl{color:#059669}
+.pa-box-qty{font-size:20px;font-weight:900}
+.pa-box-sm.plan .pa-box-qty{color:#6D28D9}
+.pa-box-sm.actual .pa-box-qty{color:#047857}
+.pa-box-amt{font-size:10px;font-weight:600;margin-top:2px}
+.pa-box-sm.plan .pa-box-amt{color:#7C3AED}
+.pa-box-sm.actual .pa-box-amt{color:#059669}
+
+/* 서브폼 테이블 (MO 모달용) */
+.mo-sub-tbl{width:100%;border-collapse:collapse;font-size:10px}
+.mo-sub-tbl th{background:#F1F5F9;padding:6px 8px;color:var(--tm);font-weight:800;font-size:9px;border-bottom:1px solid var(--bd);text-align:center}
+.mo-sub-tbl td{padding:6px 8px;border-bottom:1px solid #F8FAFC;text-align:center;color:var(--tx)}
+.mo-sub-tbl tfoot td{background:#F1F5F9;font-weight:800;border-top:2px solid var(--bd)}
+
 @media(max-width:900px){.kpi-row{grid-template-columns:1fr 1fr}.summary-row{grid-template-columns:repeat(3,1fr)}.ship-grid{grid-template-columns:1fr}.d-grid{grid-template-columns:1fr 1fr}.date-timeline{grid-template-columns:1fr}}
 @media(max-width:600px){.kpi-row{grid-template-columns:1fr}.summary-row{grid-template-columns:1fr 1fr}.kpi-metrics{grid-template-columns:1fr 1fr}}
 </style>
@@ -274,6 +308,25 @@ body{background:var(--bg);padding:16px;min-height:100vh}
       </div>
     </div>
     <div class="m-body" id="mBody"></div>
+  </div>
+</div>
+
+<!-- MO 상세 모달 (Container 모달 위 레이어) -->
+<div class="modal-ov" id="moModalOv" style="z-index:4000">
+  <div class="modal-box" style="max-width:1000px">
+    <div class="m-hd">
+      <div>
+        <div class="m-title" id="moMTitle">-</div>
+        <div class="m-sub" id="moMSub">-</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Report:All_MO','_blank')" style="background:#EFF6FF;color:var(--pr);border:1px solid #BFDBFE;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit MO</button>
+        <div class="m-close" id="moMClose">✕</div>
+      </div>
+    </div>
+    <div class="m-body" id="moMBody">
+      <div style="text-align:center;padding:40px"><div class="spinner"></div><div style="margin-top:12px;color:var(--tm);font-size:12px">MO 데이터 불러오는 중...</div></div>
+    </div>
   </div>
 </div>
 
@@ -775,7 +828,7 @@ function openModal(id){
       var lkg=parseFloat(line["Weight_KG"])||0;
       totQty+=lqty;totCtn+=lctn;totCBM+=lcbm;totKG+=lkg;
       h+='<tr>';
-      h+='<td class="mo-cell">'+escH(String(mo||"-"))+'</td>';
+      h+='<td><button class="mo-cell-btn" onclick="event.stopPropagation();openMOModal(\''+(String(mo||"-"))+'\')" >'+escH(String(mo||"-"))+'</button></td>';
       h+='<td>'+escH(String(sty||"-"))+'</td>';
       h+='<td>'+escH(String(col))+'</td>';
       h+='<td style="font-weight:700">'+lqty.toLocaleString()+'</td>';
@@ -794,10 +847,181 @@ function openModal(id){
   document.getElementById("modalOv").classList.add("active");
 }
 
+/* ═══════════════════════════════════════
+   MO 상세 모달 — All_MO Report에서 실시간 조회
+═══════════════════════════════════════ */
+var MO_REP="All_MO";
+var S_MAP={
+  Gender:{"W":"Women / 여성 / 女","M":"Men / 남성 / 男","U":"Unisex / 남녀공용 / 男女通용"},
+  Category:{"S":"Set / 세트 / 套装","I":"Individual / 단품 / 单品"},
+  Top_Type:{"B":"Bra-top","C":"Crop","T":"Tank"},
+  Sleeve:{"L":"Long / 긴팔","S":"Short / 반팔","N":"None / 민소매"},
+  Fit:{"O":"Oversize","R":"Regular","S":"Slim"},
+  Bottom_Type:{"L":"Leggings","W":"Wide","J":"Jogger","F":"Flare","P":"Pleats","A":"A-line","B":"Shorts"},
+  Material_Type:{"P":"Polyester / 폴리에스터","N":"Nylon / 나일론","D":"Polyamide","C":"Cotton / 코튼","H":"Mesh / 메쉬","M":"Modal","L":"Lycra"},
+  Lining_Type:{"B":"Brushed / 기모","F":"Fur / 퍼","N":"None / 없음"}
+};
+function mv(f,v){return(!v||v==="-")?"-":(S_MAP[f]&&S_MAP[f][v])?S_MAP[f][v]:v}
+function cleanFactory(v){if(!v||v==="-")return"-";return v.replace(/^[_\s]*\d+[_\s]*/,"")}
+function getMOSubLines(r,field){var v=r[field];if(!v)return[];if(Array.isArray(v))return v;if(typeof v==="object")return Object.values(v);return[];}
+
+function openMOModal(moNum){
+  if(!moNum||moNum==="-")return;
+  document.getElementById("moMTitle").textContent=moNum;
+  document.getElementById("moMSub").textContent="MO 정보를 불러오는 중...";
+  document.getElementById("moMBody").innerHTML='<div style="text-align:center;padding:40px"><div class="spinner" style="margin:0 auto"></div><div style="margin-top:12px;color:var(--tm);font-size:12px">MO 데이터 불러오는 중...</div></div>';
+  document.getElementById("moModalOv").classList.add("active");
+
+  /* All_MO Report에서 해당 MO 조회 */
+  ZOHO.CREATOR.API.getAllRecords({
+    appName:APP, reportName:MO_REP, page:1, pageSize:200
+  }).then(function(res){
+    if(!res||res.code!==3000||!res.data){
+      document.getElementById("moMBody").innerHTML='<div style="text-align:center;padding:30px;color:var(--tm)">MO 데이터를 불러올 수 없습니다</div>';
+      return;
+    }
+    var moRec=res.data.find(function(r){
+      return g(r,"MO_Number")===moNum;
+    });
+    if(!moRec){
+      document.getElementById("moMBody").innerHTML='<div style="text-align:center;padding:30px;color:var(--tm)"><div style="font-size:24px;margin-bottom:8px">🔍</div>MO번호 <b>'+escH(moNum)+'</b> 의 데이터를 찾을 수 없습니다</div>';
+      return;
+    }
+    renderMOModal(moRec);
+  }).catch(function(e){
+    console.warn("MO load error:", e);
+    document.getElementById("moMBody").innerHTML='<div style="text-align:center;padding:30px;color:#EF4444">MO 데이터 로드 오류</div>';
+  });
+}
+
+function renderMOModal(r){
+  document.getElementById("moMTitle").textContent=g(r,"MO_Number");
+  document.getElementById("moMSub").textContent=g(r,"Style_Name")+" — "+g(r,"Style_SKU");
+
+  var h="";
+  function dv(v){return v==="-"?'<span class="d-val empty">미입력</span>':escH(v)}
+  function it(l,v){return'<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'}
+  function catName(v){var m={"S":"Set / 세트 / 套装","I":"Individual / 단품 / 单品"};return(!v||v==="-")?"-":(m[v]||v)}
+  function moTc(s){var l=(s||"").toLowerCase();if(l.indexOf("confirmed")>=0||l.indexOf("delivered")>=0||l.indexOf("complete")>=0||l.indexOf("shipped")>=0||l.indexOf("done")>=0)return"t-ok";if(l.indexOf("progress")>=0||l.indexOf("cutting")>=0||l.indexOf("sewing")>=0||l.indexOf("fabric")>=0||l.indexOf("packing")>=0)return"t-wn";if(l.indexOf("delay")>=0||l.indexOf("cancel")>=0)return"t-dg";return"t-dr"}
+
+  /* ── 1. 기본 정보 ── */
+  h+='<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 订单信息</div><div class="d-grid">';
+  h+=it("MO Number / MO번호",dv(g(r,"MO_Number")));
+  h+=it("Style SKU / 스타일SKU",dv(g(r,"Style_SKU")));
+  h+=it("Style Name / 스타일명",dv(g(r,"Style_Name")));
+  h+=it("Season / 시즌",dv(g(r,"Season")));
+  h+=it("Category / 구분",dv(catName(g(r,"Category"))));
+  h+=it("Factory / 공장",dv(cleanFactory(g(r,"Factory"))));
+  h+=it("Order Date / 주문일",dv(g(r,"Order_Date")));
+  h+=it("Order Status / 주문상태",'<span class="tag '+moTc(g(r,"Order_Status"))+'">'+escH(g(r,"Order_Status"))+'</span>');
+  h+=it("Production Status / 생산상태",'<span class="tag '+moTc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span>');
+  h+=it("Expected Delivery / 예상납기",dv(g(r,"Expected_Delivery")));
+  h+=it("Gender / 성별",dv(mv("Gender",g(r,"Gender"))));
+  h+=it("Plan Year-Month / 진행년월",dv(g(r,"Plan_Year"))+"-"+dv(g(r,"Plan_Month")));
+  h+='</div></div>';
+
+  /* ── 2. 핵심: Plan vs Actual 수량 비교 ── */
+  var planQty=parseInt(g(r,"Plan_Total_Quantity"))||0;
+  var actQty=parseInt(g(r,"Acture_Total_Quantity"))||0;
+  var planGrand=g(r,"Plan_Grand_Total");
+  var actGrand=g(r,"Acture_Grand_Total");
+  var diff=actQty-planQty;
+
+  h+='<div class="m-sec"><div class="m-sec-t">📦 오더 내용 vs 실출고 / 订单内容 vs 实际出货</div>';
+  h+='<div class="pa-compare-sm">';
+  h+='<div class="pa-box-sm plan"><div class="pa-box-lbl">📋 PLAN 오더수량 / 订单数量</div><div class="pa-box-qty">'+planQty.toLocaleString()+' <span style="font-size:11px">pcs</span></div><div class="pa-box-amt">총금액: '+escH(planGrand)+'</div></div>';
+  h+='<div class="pa-box-sm actual"><div class="pa-box-lbl">✅ ACTUAL 출고수량 / 出货数量</div><div class="pa-box-qty">'+actQty.toLocaleString()+' <span style="font-size:11px">pcs</span></div><div class="pa-box-amt">총금액: '+escH(actGrand)+'</div></div>';
+  h+='</div>';
+  if(planQty>0){var pct=Math.round((actQty/planQty)*100);var dSign=diff>0?"+":"";h+='<div style="text-align:center;font-size:10px;color:var(--tm);padding:6px;background:#F8FAFC;border-radius:6px;border:1px solid #E2E8F0;margin-bottom:12px">출고율 / 出货率: <b style="color:'+(actQty>=planQty?"#047857":"#DC2626")+'">'+dSign+diff.toLocaleString()+' pcs ('+pct+'%)</b></div>';}
+
+  /* Plan Order Lines */
+  var planLines=getMOSubLines(r,"Plan_MO_Lines");
+  var actLines=getMOSubLines(r,"Acture_Order_Lines");
+  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">';
+
+  /* Plan 테이블 */
+  h+='<div><div style="font-size:11px;font-weight:800;color:#6D28D9;margin-bottom:6px;display:flex;align-items:center;gap:6px"><span style="background:#7C3AED;color:#fff;font-size:8px;font-weight:800;padding:2px 7px;border-radius:4px">PLAN</span>(Plan) Order Lines / 주문 내용</div>';
+  if(planLines.length===0){h+='<div style="text-align:center;padding:14px;color:#94A3B8;font-size:10px;border:1px dashed #E2E8F0;border-radius:6px">입력된 내역 없음</div>';}
+  else{
+    h+='<table class="mo-sub-tbl"><thead><tr><th>Color</th><th>Sizes</th><th>Qty</th><th>Unit Price</th></tr></thead><tbody>';
+    var ptot=0;
+    planLines.forEach(function(line){
+      var col=line["Plan_Color"]||line["Color"]||"-";
+      var sz=line["Plan_Sizes"]||line["Sizes"]||"-";
+      var pq=parseInt(line["Plan_Quantity"]||line["Quantity"])||0;
+      var pp=parseFloat(line["Plan_Unit_Price"]||line["Unit_Price"])||0;
+      ptot+=pq;
+      h+='<tr><td>'+escH(String(col))+'</td><td>'+escH(String(sz))+'</td><td style="font-weight:700">'+pq.toLocaleString()+'</td><td>'+pp.toLocaleString()+'</td></tr>';
+    });
+    h+='</tbody><tfoot><tr><td colspan="2" style="text-align:right">합계</td><td style="font-weight:900">'+ptot.toLocaleString()+'</td><td>-</td></tr></tfoot></table>';
+  }
+  h+='</div>';
+
+  /* Actual 테이블 */
+  h+='<div><div style="font-size:11px;font-weight:800;color:#047857;margin-bottom:6px;display:flex;align-items:center;gap:6px"><span style="background:#059669;color:#fff;font-size:8px;font-weight:800;padding:2px 7px;border-radius:4px">ACTUAL</span>(Acture) Order Lines / 실출고 내역</div>';
+  if(actLines.length===0){h+='<div style="text-align:center;padding:14px;color:#94A3B8;font-size:10px;border:1px dashed #E2E8F0;border-radius:6px">입력된 내역 없음</div>';}
+  else{
+    h+='<table class="mo-sub-tbl"><thead><tr><th>Color</th><th>Sizes</th><th>Qty</th><th>Unit Price</th></tr></thead><tbody>';
+    var atot=0;
+    actLines.forEach(function(line){
+      var col=line["Acture_Color"]||line["Color"]||"-";
+      var sz=line["Acture_Sizes"]||line["Sizes"]||"-";
+      var aq=parseInt(line["Acture_Quantity"]||line["Quantity"])||0;
+      var ap=parseFloat(line["Acture_Unit_Price"]||line["Unit_Price"])||0;
+      atot+=aq;
+      h+='<tr><td>'+escH(String(col))+'</td><td>'+escH(String(sz))+'</td><td style="font-weight:700">'+aq.toLocaleString()+'</td><td>'+ap.toLocaleString()+'</td></tr>';
+    });
+    h+='</tbody><tfoot><tr><td colspan="2" style="text-align:right">합계</td><td style="font-weight:900">'+atot.toLocaleString()+'</td><td>-</td></tr></tfoot></table>';
+  }
+  h+='</div></div></div>';
+
+  /* ── 3. 제품 정의 ── */
+  h+='<div class="m-sec"><div class="m-sec-t">👗 제품 정의 / 产品定义</div><div class="d-grid">';
+  h+=it("Top Type / 상의유형",dv(mv("Top_Type",g(r,"Top_Type"))));
+  h+=it("Sleeve / 소매",dv(mv("Sleeve",g(r,"Sleeve"))));
+  h+=it("Fit / 핏",dv(mv("Fit",g(r,"Fit"))));
+  h+=it("Bottom Type / 하의유형",dv(mv("Bottom_Type",g(r,"Bottom_Type"))));
+  h+=it("Material Type / 원단",dv(mv("Material_Type",g(r,"Material_Type"))));
+  h+=it("Lining Type / 안감",dv(mv("Lining_Type",g(r,"Lining_Type"))));
+  h+='</div></div>';
+
+  /* ── 4. 생산 일정 ── */
+  h+='<div class="m-sec"><div class="m-sec-t">📅 생산 일정 / 生产日期</div>';
+  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">';
+  /* Plan */
+  h+='<div><div class="dt-col-t plan" style="font-size:11px;font-weight:800;color:#7C3AED;margin-bottom:8px">📋 Plan 일정 / 计划日期</div>';
+  [{l:"Fabric In",k:"Plan_Fabric_Date"},{l:"Cutting Start",k:"Plan_Cutting_Start"},{l:"Cutting End",k:"Plan_Cutting_End"},{l:"Sewing Start",k:"Plan_Sewing_Start"},{l:"Sewing End",k:"Plan_Sewing_End"},{l:"Packing Start",k:"Plan_Packing_Start"},{l:"Packing End",k:"Plan_Packing_End"},{l:"Expected Delivery",k:"Expected_Delivery"}].forEach(function(t,i){
+    var v=g(r,t.k),p=pd(v),cls="dt-wait";
+    if(p)cls=p<=todayStr?"dt-done":"dt-curr";
+    h+='<div class="dt-item"><div class="dt-dot '+cls+'">'+(i+1)+'</div><div class="dt-info"><div class="dt-lbl" style="font-size:10px">'+t.l+'</div><div class="dt-val">'+escH(v)+'</div></div></div>';
+  });
+  h+='</div>';
+  /* Actual */
+  h+='<div><div style="font-size:11px;font-weight:800;color:#059669;margin-bottom:8px">✅ Actual 일정 / 实际日期</div>';
+  [{l:"Fabric In",k:"Fabric_In_house_Date"},{l:"Cutting Start",k:"Cutting_Start_Date"},{l:"Cutting End",k:"Cutting_End_Date"},{l:"Sewing Start",k:"Sewing_Start_Date"},{l:"Sewing End",k:"Sewing_Completion_Date"},{l:"Packing Start",k:"Packing_Start_Date"},{l:"Packing End",k:"Packing_End_Date"},{l:"Ship Date",k:"Ship_Date"}].forEach(function(t,i){
+    var v=g(r,t.k),p=pd(v),cls="dt-wait";
+    if(p)cls=p<=todayStr?"dt-done":"dt-curr";
+    h+='<div class="dt-item"><div class="dt-dot '+cls+'">'+(i+1)+'</div><div class="dt-info"><div class="dt-lbl" style="font-size:10px">'+t.l+'</div><div class="dt-val">'+escH(v)+'</div></div></div>';
+  });
+  h+='</div></div></div>';
+
+  document.getElementById("moMBody").innerHTML=h;
+}
+
 /* ── 모달 닫기 ── */
 document.getElementById("mClose").addEventListener("click",function(){document.getElementById("modalOv").classList.remove("active")});
 document.getElementById("modalOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
-document.addEventListener("keydown",function(e){if(e.key==="Escape")document.getElementById("modalOv").classList.remove("active")});
+document.getElementById("moMClose").addEventListener("click",function(){document.getElementById("moModalOv").classList.remove("active")});
+document.getElementById("moModalOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape"){
+    if(document.getElementById("moModalOv").classList.contains("active")){
+      document.getElementById("moModalOv").classList.remove("active");
+    } else {
+      document.getElementById("modalOv").classList.remove("active");
+    }
+  }
+});
 </script>
 </body>
 </html>
