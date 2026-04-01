@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shipment View v1</title>
+<title>Shipment View v2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -14,26 +14,69 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .spinner{width:40px;height:40px;border:4px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;gap:12px;color:var(--tm);font-size:13px;font-weight:600}
- 
+
 /* Header */
-.hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
-.hdr h1{font-size:17px;font-weight:900;color:var(--tx);display:flex;align-items:center;gap:8px}
-.hdr h1 .ic{width:28px;height:28px;background:var(--pr);border-radius:5px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:900}
- 
-/* KPI */
+.hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:8px}
+.hdr h1{font-size:19px;font-weight:900;color:var(--tx);display:flex;align-items:center;gap:8px}
+.hdr h1 .ic{width:30px;height:30px;background:var(--pr);border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:900}
+
+/* ── Top Dashboard ── */
+.dash-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px}
+.dash-card{background:var(--cw);border:1px solid var(--bd);border-radius:12px;padding:20px 16px;display:flex;flex-direction:column;box-shadow:0 4px 6px -1px rgba(0,0,0,.02);min-height:220px}
+.dash-title{font-size:13px;font-weight:800;color:var(--tx);margin-bottom:16px;display:block}
+
+/* Donut Chart */
+.ch-donut-wrap{display:flex;align-items:center;justify-content:center;flex:1;gap:20px}
+.donut-container{position:relative;width:150px;height:150px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.donut-svg{width:150px;height:150px;transform:rotate(-90deg);position:absolute;top:0;left:0}
+.ch-donut-leg{display:flex;flex-direction:column;gap:8px}
+.ch-d-leg-item{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--tm);cursor:pointer;transition:opacity .15s}
+.ch-d-leg-item:hover{opacity:.7}
+.ch-d-leg-item b{font-size:13px;color:var(--tx);min-width:24px;text-align:right}
+.ch-d-leg-item i{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+
+/* Bar Chart */
+.ch-bar-wrap{display:flex;align-items:flex-end;justify-content:space-around;flex:1;gap:8px;height:150px;padding:0 4px}
+.ch-bar-group{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;cursor:pointer;transition:opacity .15s}
+.ch-bar-group:hover{opacity:.8}
+.ch-bars{display:flex;align-items:flex-end;gap:4px;height:118px;width:100%;justify-content:center}
+.ch-b-t{width:20px;background:#CBD5E1;border-radius:3px 3px 0 0}
+.ch-b-s{width:20px;background:#86EFAC;border-radius:3px 3px 0 0}
+.ch-b-lbl{font-size:10px;font-weight:700;color:var(--tm)}
+.ch-legend{display:flex;justify-content:center;gap:12px;font-size:10px;color:var(--tm);margin-top:8px}
+.ch-legend span{display:flex;align-items:center;gap:4px}
+.ch-legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+
+/* Pipeline Card */
+.pipe-wrap{display:flex;flex-direction:column;gap:4px;flex:1;justify-content:center}
+.pipe-stage{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer;transition:background .1s}
+.pipe-stage:hover{background:#F1F5F9}
+.pipe-stage-ic{font-size:15px;width:22px;text-align:center;flex-shrink:0}
+.pipe-stage-info{flex:1;min-width:0}
+.pipe-stage-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.pipe-stage-lb{font-size:11px;font-weight:700;color:var(--tx)}
+.pipe-stage-n{font-size:16px;font-weight:900;line-height:1}
+.pipe-bar-bg{height:4px;background:#E2E8F0;border-radius:2px;overflow:hidden}
+.pipe-bar-fill{height:100%;border-radius:2px;transition:width .3s}
+
+/* KPI Row */
 .kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
-.kpi{background:var(--cw);border:1px solid var(--bd);border-radius:8px;padding:12px 14px;position:relative;overflow:hidden;text-align:center}
+.kpi{background:var(--cw);border:1px solid var(--bd);border-radius:8px;padding:12px 14px;position:relative;overflow:hidden;text-align:center;cursor:pointer;transition:box-shadow .15s,transform .1s}
+.kpi:hover{box-shadow:0 4px 16px rgba(0,0,0,.08);transform:translateY(-1px)}
+.kpi.active{box-shadow:0 0 0 2px var(--ac);background:#EFF6FF}
 .kpi::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px}
 .kpi-v{font-size:26px;font-weight:900;line-height:1}
 .kpi-l{font-size:10px;font-weight:700;color:var(--tm);margin-top:4px}
- 
-/* Filter */
+
+/* Filter Bar */
 .filter-bar{display:flex;justify-content:flex-end;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
 .search-box{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 10px;font-size:11px;width:200px;outline:none;font-family:inherit}
 .search-box:focus{border-color:var(--ac);box-shadow:0 0 0 2px rgba(59,130,246,.1)}
 .fsel{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 8px;font-size:11px;outline:none;font-family:inherit;cursor:pointer}
- 
-/* Monthly tables */
+.filter-reset{background:none;border:1px solid var(--bd);border-radius:6px;padding:5px 10px;font-size:11px;color:var(--tm);cursor:pointer;font-family:inherit;transition:background .1s}
+.filter-reset:hover{background:#F1F5F9}
+
+/* Monthly Tables */
 .mt-sec{margin-bottom:16px}
 .mt-card{background:var(--cw);border:1px solid var(--bd);border-radius:8px;overflow:hidden}
 .mt-hd{padding:8px 16px;background:#F8FAFC;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
@@ -54,15 +97,39 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left}
 .t-bl{background:#EFF6FF;color:#1E40AF;border:1px solid #BFDBFE}
 .dly-badge{display:inline-block;padding:1px 4px;border-radius:3px;font-size:7px;font-weight:700;background:#FEF2F2;color:#DC2626;margin-left:2px;animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
- 
-/* Progress bar */
+
+/* Production Pipeline mini bars in table */
+.pp-wrap{display:flex;flex-direction:column;gap:3px;min-width:110px}
+.pp-bars{display:flex;gap:2px;height:6px}
+.pp-seg{flex:1;border-radius:2px}
+.pp-lbls{display:flex;gap:2px}
+.pp-lbl{flex:1;font-size:7px;text-align:center;color:var(--tm);font-weight:600;overflow:hidden}
+
+/* Shipment progress bar */
 .prog-wrap{display:flex;align-items:center;gap:6px}
 .prog-bar{flex:1;height:6px;background:#E2E8F0;border-radius:3px;overflow:hidden;min-width:60px}
 .prog-fill{height:100%;border-radius:3px;transition:width .3s}
 .prog-txt{font-size:10px;font-weight:700;min-width:30px;text-align:right}
- 
-/* Modal */
-.modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:1000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
+
+/* List Modal */
+.list-modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:2000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
+.list-modal-ov.active{display:flex}
+.list-modal-box{background:#fff;border-radius:12px;width:92%;max-width:620px;max-height:82vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .2s ease-out}
+.list-m-hd{padding:16px 20px 12px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:#fff;z-index:10;border-radius:12px 12px 0 0}
+.list-m-title{font-size:15px;font-weight:800;color:var(--pr)}
+.list-m-sub{font-size:11px;color:var(--tm);margin-top:2px}
+.list-m-close{width:28px;height:28px;border-radius:6px;border:1px solid var(--bd);background:#F8FAFC;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--tm);flex-shrink:0}
+.list-m-close:hover{background:#FEF2F2;color:var(--dg)}
+.list-m-body{padding:16px 20px}
+.list-item{padding:10px 12px;border:1px solid var(--bd);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:background .1s;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.list-item:hover{background:#EFF6FF;border-color:#BFDBFE}
+.list-item-mo{font-size:12px;font-weight:800;color:var(--pr)}
+.list-item-name{font-size:10px;color:var(--tm);margin-top:2px}
+.list-item-meta{font-size:9px;color:#94A3B8;margin-top:2px}
+.list-empty{text-align:center;padding:30px;color:var(--tm);font-size:13px}
+
+/* Detail Modal */
+.modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:3000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
 .modal-ov.active{display:flex}
 .modal-box{background:#fff;border-radius:12px;width:92%;max-width:800px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .25s ease-out}
 @keyframes mIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
@@ -80,7 +147,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left}
 .d-label{font-size:9px;font-weight:700;color:var(--tm)}
 .d-val{font-size:13px;font-weight:600;color:var(--tx)}
 .d-val.empty{color:#CBD5E1;font-style:italic}
- 
+
 /* Timeline */
 .tl{margin-top:8px}
 .tl-item{display:flex;align-items:flex-start;gap:12px;padding:6px 0;position:relative}
@@ -90,39 +157,63 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left}
 .tl-info{flex:1}
 .tl-lb{font-size:12px;font-weight:700;color:var(--tx)}
 .tl-dt{font-size:10px;color:var(--tm);margin-top:1px}
- 
+
 .err-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C}
-@media(max-width:768px){.kpi-row{grid-template-columns:repeat(2,1fr)}.d-grid{grid-template-columns:1fr 1fr}}
+
+/* Responsive */
+@media(max-width:1300px){.dash-row{grid-template-columns:1fr 1fr}}
+@media(max-width:1100px){.kpi-row{grid-template-columns:repeat(3,1fr)}.d-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.dash-row{grid-template-columns:1fr}.kpi-row{grid-template-columns:repeat(2,1fr)}.d-grid{grid-template-columns:1fr 1fr}.filter-bar{justify-content:flex-start}}
 </style>
 </head>
 <body>
 <div id="loadingScreen" class="loading"><div class="spinner"></div>출고 데이터를 불러오는 중...</div>
 <div id="mainContent" style="display:none">
- 
+
 <div class="hdr">
-<h1><span class="ic">SH</span> Shipment View / 출고현황표 / 出货现况表</h1>
+<h1><span class="ic">SH</span> Shipment View v2 / 출고현황표 / 出货现况表</h1>
 <div style="display:flex;gap:8px">
 <button onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Report:All_MO','_blank')" style="background:var(--pr);color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">MO List</button>
 </div>
 </div>
- 
+
+<!-- Dashboard Charts -->
+<div class="dash-row" id="topDashboard"></div>
+
+<!-- KPI Row -->
 <div class="kpi-row" id="kpiRow"></div>
- 
+
+<!-- Filter Bar -->
 <div class="filter-bar">
 <input type="text" class="search-box" id="searchBox" placeholder="🔍 MO#, SKU, Factory 검색...">
+<select class="fsel" id="filterYear"><option value="">All Year</option></select>
 <select class="fsel" id="filterSeason"><option value="">All Season</option></select>
 <select class="fsel" id="filterFactory"><option value="">All Factory</option></select>
-<select class="fsel" id="filterStatus"><option value="">All Status</option></select>
+<select class="fsel" id="filterProdStatus"><option value="">All Prod.Status</option></select>
+<select class="fsel" id="filterStatus"><option value="">All Ship Status</option></select>
+<select class="fsel" id="filterDelayed"><option value="">전체</option><option value="delayed">지연만</option><option value="ok">정상만</option></select>
+<button class="filter-reset" id="resetBtn">↺ 초기화</button>
 </div>
- 
+
 <div id="monthlyTables"></div>
 </div>
- 
+
 <div id="errorScreen" style="display:none">
 <div class="err-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다</div><div id="errorMsg" style="font-size:12px"></div></div>
 </div>
- 
-<!-- Modal -->
+
+<!-- List Modal (chart / KPI click) -->
+<div class="list-modal-ov" id="listModalOv">
+<div class="list-modal-box">
+<div class="list-m-hd">
+<div><div class="list-m-title" id="listModalTitle">-</div><div class="list-m-sub" id="listModalSub">-</div></div>
+<div class="list-m-close" id="listModalClose">✕</div>
+</div>
+<div class="list-m-body" id="listModalBody"></div>
+</div>
+</div>
+
+<!-- Detail Modal -->
 <div class="modal-ov" id="modalOv"><div class="modal-box">
 <div class="m-hd">
 <div class="m-hd-left"><div><div class="m-title" id="mTitle">-</div><div class="m-sub" id="mSub">-</div></div></div>
@@ -133,207 +224,451 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left}
 </div>
 <div class="m-body" id="mBody"></div>
 </div></div>
- 
+
 <script>
-var APP="eom",REP="All_MO";
-var allRec=[],filtered=[];
+var APP="eom", REP="All_MO";
+var allRec=[], filtered=[];
 var today=new Date();
 var todayStr=today.toISOString().split("T")[0];
- 
+var activeKpiFilter=null;
+
 ZOHO.CREATOR.init().then(function(){loadData()});
- 
+
 function loadData(){
-ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:REP,page:1,pageSize:200}).then(function(r){
-if(r&&r.code===3000&&r.data){allRec=r.data;filtered=allRec.slice();renderAll();hide("loadingScreen");show("mainContent")}
-else showErr("로드 실패")}).catch(function(e){showErr(JSON.stringify(e))})}
- 
+  ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:REP,page:1,pageSize:200}).then(function(r){
+    if(r&&r.code===3000&&r.data){allRec=r.data;filtered=allRec.slice();renderAll();hide("loadingScreen");show("mainContent")}
+    else showErr("로드 실패")
+  }).catch(function(e){showErr(JSON.stringify(e))})}
+
 function show(i){document.getElementById(i).style.display="block"}
 function hide(i){document.getElementById(i).style.display="none"}
 function showErr(m){hide("loadingScreen");show("errorScreen");document.getElementById("errorMsg").textContent=m}
 function g(r,f){var v=r[f];if(v==null||v==="")return"-";if(typeof v==="object"&&v.display_value)return v.display_value;return String(v)}
 function escH(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
 function pSt(s){return(s||"").toLowerCase()}
- 
+
 function isDelayed(r){
-var ds=pSt(g(r,"Delivery_Status"));if(ds.indexOf("delay")>=0)return true;
-var ed=g(r,"Expected_Delivery");var ps=pSt(g(r,"Production_Status"));
-if(ed!=="-"&&ps.indexOf("shipped")<0&&ps.indexOf("complete")<0){if(ed<todayStr)return true}
-return false}
- 
+  var ds=pSt(g(r,"Delivery_Status"));if(ds.indexOf("delay")>=0)return true;
+  var ed=g(r,"Expected_Delivery"),ps=pSt(g(r,"Production_Status"));
+  if(ed!=="-"&&ps.indexOf("shipped")<0&&ps.indexOf("complete")<0){if(ed<todayStr)return true}
+  return false}
+
 function shipStatus(r){
-var ps=pSt(g(r,"Production_Status"));
-var rts=pSt(g(r,"Ready_to_Ship"));
-var qc=pSt(g(r,"Final_QC_Passed"));
-var sq=g(r,"Shipped_Quantity");
-if(ps.indexOf("shipped")>=0||(sq!=="-"&&sq!=="0"))return{cls:"t-ok",label:"Shipped / 출고완료 / 已出货"};
-if(rts.indexOf("yes")>=0||rts.indexOf("true")>=0||rts.indexOf("ready")>=0)return{cls:"t-bl",label:"Ready / 출고준비 / 待出货"};
-if(qc.indexOf("yes")>=0||qc.indexOf("pass")>=0||qc.indexOf("true")>=0)return{cls:"t-wn",label:"QC Passed / QC완료 / QC通过"};
-if(isDelayed(r))return{cls:"t-dg",label:"Delayed / 지연 / 延误"};
-return{cls:"t-dr",label:"Preparing / 준비중 / 准备中"}}
- 
-function renderAll(){renderKPI();buildFilters();renderTables()}
- 
+  var ps=pSt(g(r,"Production_Status"));
+  var rts=pSt(g(r,"Ready_to_Ship"));
+  var qc=pSt(g(r,"Final_QC_Passed"));
+  var sq=g(r,"Shipped_Quantity");
+  if(ps.indexOf("shipped")>=0||(sq!=="-"&&sq!=="0"))return{cls:"t-ok",label:"Shipped / 출고완료 / 已出货",key:"shipped"};
+  if(rts.indexOf("yes")>=0||rts.indexOf("true")>=0||rts.indexOf("ready")>=0)return{cls:"t-bl",label:"Ready / 출고준비 / 待出货",key:"ready"};
+  if(qc.indexOf("yes")>=0||qc.indexOf("pass")>=0||qc.indexOf("true")>=0)return{cls:"t-wn",label:"QC Passed / QC완료 / QC通过",key:"qc"};
+  if(isDelayed(r))return{cls:"t-dg",label:"Delayed / 지연 / 延误",key:"delayed"};
+  return{cls:"t-dr",label:"Preparing / 준비중 / 准备中",key:"preparing"}}
+
+function getPipelineStage(r){
+  var ps=pSt(g(r,"Production_Status"));
+  if(ps.indexOf("shipped")>=0)return 5;
+  if(ps.indexOf("packing")>=0)return 4;
+  if(ps.indexOf("sewing")>=0)return 3;
+  if(ps.indexOf("cutting")>=0)return 2;
+  if(ps.indexOf("fabric")>=0||ps.indexOf("trim")>=0)return 1;
+  return 0}
+
+function renderAll(){renderTopDashboard();renderKPI();buildFilters();renderTables()}
+
+/* ══════════════════════════════════════
+   TOP DASHBOARD — 3 Charts
+══════════════════════════════════════ */
+function renderTopDashboard(){
+  // Data aggregation
+  var byStatus={shipped:0,ready:0,qc:0,delayed:0,preparing:0};
+  var byMonth={};
+  allRec.forEach(function(r){
+    var stKey=shipStatus(r).key;
+    byStatus[stKey]=(byStatus[stKey]||0)+1;
+    var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");
+    var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):null;
+    if(key){
+      if(!byMonth[key])byMonth[key]={total:0,shipped:0,mos:[]};
+      byMonth[key].total+=parseInt(g(r,"Total_Quantity"))||0;
+      byMonth[key].shipped+=parseInt(g(r,"Shipped_Quantity"))||0;
+      byMonth[key].mos.push(r)}});
+
+  var mKeys=Object.keys(byMonth).sort().slice(0,4);
+  var maxQty=1;
+  mKeys.forEach(function(k){maxQty=Math.max(maxQty,byMonth[k].total)});
+  var total=allRec.length||1;
+
+  /* ── Chart 1: Donut (출고 건전성) ── */
+  var segs=[
+    {key:"shipped", label:"출고완료/已出货", color:"#86EFAC", count:byStatus.shipped},
+    {key:"ready",   label:"출고준비/待出货", color:"#93C5FD", count:byStatus.ready},
+    {key:"qc",      label:"QC완료/QC通过",  color:"#FDE047", count:byStatus.qc},
+    {key:"delayed", label:"지연/延误",       color:"#FCA5A5", count:byStatus.delayed},
+    {key:"preparing",label:"준비중/准备中",  color:"#CBD5E1", count:byStatus.preparing}];
+
+  var offset=25, donutSegs="";
+  segs.forEach(function(s){
+    var pct=Math.round(s.count/total*100);
+    if(pct>0){
+      donutSegs+='<circle cx="21" cy="21" r="15.915" fill="transparent" stroke="'+s.color
+        +'" stroke-width="7" stroke-dasharray="'+pct+' '+(100-pct)
+        +'" stroke-dashoffset="'+offset+'" style="cursor:pointer" onclick="openListModal(\'status\',\''+s.key+'\')" title="'+s.label+'"></circle>';
+      offset-=pct; if(offset<0)offset+=100}});
+
+  var legHtml="";
+  segs.forEach(function(s){
+    legHtml+='<div class="ch-d-leg-item" onclick="openListModal(\'status\',\''+s.key+'\')"><i style="background:'+s.color+'"></i>'+s.label+'<b>'+s.count+'</b></div>';});
+
+  var h1='<div class="dash-card"><span class="dash-title">출고 건전성 현황 / 出货健康度</span>'
+    +'<div class="ch-donut-wrap"><div class="donut-container">'
+    +'<svg viewBox="0 0 42 42" class="donut-svg"><circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#F1F5F9" stroke-width="7"></circle>'
+    +donutSegs+'</svg></div>'
+    +'<div class="ch-donut-leg">'+legHtml+'</div></div></div>';
+
+  /* ── Chart 2: Bar (월별 출고 실적) ── */
+  var barGrps="";
+  mKeys.forEach(function(k){
+    var mo=byMonth[k];
+    var tH=Math.max(4,Math.round(mo.total/maxQty*110));
+    var sH=mo.total>0?Math.max(4,Math.round(mo.shipped/maxQty*110)):4;
+    var pmatch=k.match(/(\d+)월/);var lbl=pmatch?pmatch[1]+"월":"?";
+    var kEnc=encodeURIComponent(k);
+    barGrps+='<div class="ch-bar-group" onclick="openListModal(\'month\',\''+kEnc+'\')" '
+      +'title="'+escH(k)+' — 총: '+mo.total.toLocaleString()+' / 출고: '+mo.shipped.toLocaleString()+'">'
+      +'<div class="ch-bars">'
+      +'<div class="ch-b-t" style="height:'+tH+'px" title="Total: '+mo.total.toLocaleString()+'"></div>'
+      +'<div class="ch-b-s" style="height:'+sH+'px" title="Shipped: '+mo.shipped.toLocaleString()+'"></div>'
+      +'</div><div class="ch-b-lbl">'+escH(lbl)+'</div></div>';});
+
+  var h2='<div class="dash-card"><span class="dash-title">월별 출고 계획 대비 실적 / 每月出货对比</span>'
+    +'<div class="ch-bar-wrap">'+barGrps+'</div>'
+    +'<div class="ch-legend"><span><i style="background:#CBD5E1"></i>주문수량</span><span><i style="background:#86EFAC"></i>출고수량</span></div></div>';
+
+  /* ── Chart 3: Production Pipeline ── */
+  var stages=[
+    {n:0,lb:"준비중 / 准备中",    ic:"📋",color:"#CBD5E1"},
+    {n:0,lb:"원단·부자재 / 面料", ic:"🧵",color:"#93C5FD"},
+    {n:0,lb:"재단 / 裁剪",        ic:"✂️",color:"#FDE68A"},
+    {n:0,lb:"봉제 / 车缝",        ic:"🪡",color:"#A7F3D0"},
+    {n:0,lb:"포장 / 包装",        ic:"📦",color:"#C4B5FD"},
+    {n:0,lb:"출고완료 / 已出货",  ic:"🚢",color:"#86EFAC"}];
+  allRec.forEach(function(r){var s=getPipelineStage(r);stages[s].n++});
+
+  var pipeHtml="";
+  stages.forEach(function(s,i){
+    var pct=Math.round(s.n/total*100);
+    pipeHtml+='<div class="pipe-stage" onclick="openListModal(\'stage\',\''+i+'\')">'
+      +'<span class="pipe-stage-ic">'+s.ic+'</span>'
+      +'<div class="pipe-stage-info">'
+      +'<div class="pipe-stage-row"><span class="pipe-stage-lb">'+s.lb+'</span>'
+      +'<span class="pipe-stage-n" style="color:'+s.color+'">'+s.n+'</span></div>'
+      +'<div class="pipe-bar-bg"><div class="pipe-bar-fill" style="width:'+pct+'%;background:'+s.color+'"></div></div>'
+      +'</div></div>';});
+
+  var h3='<div class="dash-card"><span class="dash-title">생산 파이프라인 현황 / 生产管道</span>'
+    +'<div class="pipe-wrap">'+pipeHtml+'</div></div>';
+
+  document.getElementById("topDashboard").innerHTML=h1+h2+h3;}
+
+/* ══════════════════════════════════════
+   KPI Row (clickable)
+══════════════════════════════════════ */
 function renderKPI(){
-var total=allRec.length,ready=0,qcPass=0,shipped=0,delayed=0,totalQty=0,shippedQty=0;
-allRec.forEach(function(r){
-var st=shipStatus(r).label;
-if(st.indexOf("Ready")>=0)ready++;
-if(st.indexOf("QC")>=0)qcPass++;
-if(st.indexOf("Shipped")>=0)shipped++;
-if(isDelayed(r))delayed++;
-totalQty+=parseInt(g(r,"Total_Quantity"))||0;
-shippedQty+=parseInt(g(r,"Shipped_Quantity"))||0});
-document.getElementById("kpiRow").innerHTML=
-'<div class="kpi" style="border-top:3px solid var(--pr)"><div class="kpi-v" style="color:var(--pr)">'+total+'</div><div class="kpi-l">Total MO ('+totalQty.toLocaleString()+' pcs)</div></div>'+
-'<div class="kpi" style="border-top:3px solid var(--ac)"><div class="kpi-v" style="color:var(--ac)">'+ready+'</div><div class="kpi-l">Ready to Ship / 출고준비</div></div>'+
-'<div class="kpi" style="border-top:3px solid var(--wn)"><div class="kpi-v" style="color:var(--wn)">'+qcPass+'</div><div class="kpi-l">QC Passed / QC완료</div></div>'+
-'<div class="kpi" style="border-top:3px solid var(--ok)"><div class="kpi-v" style="color:var(--ok)">'+shipped+'</div><div class="kpi-l">Shipped ('+shippedQty.toLocaleString()+' pcs)</div></div>'+
-'<div class="kpi" style="border-top:3px solid var(--dg)"><div class="kpi-v" style="color:var(--dg)">'+delayed+'</div><div class="kpi-l">Delayed / 지연</div></div>'}
- 
+  var total=allRec.length,ready=0,qcPass=0,shipped=0,delayed=0,totalQty=0,shippedQty=0;
+  allRec.forEach(function(r){
+    var st=shipStatus(r);
+    if(st.key==="ready")ready++;
+    if(st.key==="qc")qcPass++;
+    if(st.key==="shipped")shipped++;
+    if(isDelayed(r))delayed++;
+    totalQty+=parseInt(g(r,"Total_Quantity"))||0;
+    shippedQty+=parseInt(g(r,"Shipped_Quantity"))||0});
+
+  var cards=[
+    {color:"var(--pr)",val:total,    label:"Total MO ("+totalQty.toLocaleString()+" pcs)", filter:"all"},
+    {color:"var(--ac)",val:ready,    label:"Ready to Ship / 출고준비",                      filter:"ready"},
+    {color:"var(--wn)",val:qcPass,   label:"QC Passed / QC완료",                            filter:"qc"},
+    {color:"var(--ok)",val:shipped,  label:"Shipped ("+shippedQty.toLocaleString()+" pcs)", filter:"shipped"},
+    {color:"var(--dg)",val:delayed,  label:"Delayed / 지연",                                filter:"delayed"}];
+
+  var html="";
+  cards.forEach(function(c){
+    html+='<div class="kpi" style="border-top:3px solid '+c.color+'" onclick="kpiClick(\''+c.filter+'\')">'
+      +'<div class="kpi-v" style="color:'+c.color+'">'+c.val+'</div>'
+      +'<div class="kpi-l">'+c.label+'</div>'
+      +'</div>';});
+  document.getElementById("kpiRow").innerHTML=html;}
+
+function kpiClick(filter){
+  if(activeKpiFilter===filter||filter==="all"){activeKpiFilter=null}
+  else{activeKpiFilter=filter}
+  document.querySelectorAll(".kpi").forEach(function(el){el.classList.remove("active")});
+  if(activeKpiFilter){
+    var keys=["all","ready","qc","shipped","delayed"];
+    var idx=keys.indexOf(activeKpiFilter);
+    if(idx>=0)document.querySelectorAll(".kpi")[idx].classList.add("active")}
+  af()}
+
+/* ══════════════════════════════════════
+   Filters
+══════════════════════════════════════ */
 function buildFilters(){
-var se={},fa={},st={};
-allRec.forEach(function(r){
-var s=g(r,"Season");if(s!=="-")se[s]=1;
-var f=g(r,"Factory");if(f!=="-")fa[f]=1;
-st[shipStatus(r).label]=1});
-var el;
-el=document.getElementById("filterSeason");Object.keys(se).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});
-el=document.getElementById("filterFactory");Object.keys(fa).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});
-el=document.getElementById("filterStatus");Object.keys(st).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'})}
- 
+  var se={},fa={},yr={},ps={},st={};
+  allRec.forEach(function(r){
+    var s=g(r,"Season");if(s!=="-")se[s]=1;
+    var f=g(r,"Factory");if(f!=="-")fa[f]=1;
+    var y=g(r,"Plan_Year");if(y!=="-")yr[y]=1;
+    var p=g(r,"Production_Status");if(p!=="-")ps[p]=1;
+    st[shipStatus(r).label]=1});
+  var el;
+  el=document.getElementById("filterYear");
+    Object.keys(yr).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'년</option>'});
+  el=document.getElementById("filterSeason");
+    Object.keys(se).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});
+  el=document.getElementById("filterFactory");
+    Object.keys(fa).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});
+  el=document.getElementById("filterProdStatus");
+    Object.keys(ps).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});
+  el=document.getElementById("filterStatus");
+    Object.keys(st).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});}
+
 document.getElementById("searchBox").addEventListener("input",af);
-["filterSeason","filterFactory","filterStatus"].forEach(function(id){document.getElementById(id).addEventListener("change",af)});
- 
+["filterYear","filterSeason","filterFactory","filterProdStatus","filterStatus","filterDelayed"].forEach(function(id){
+  document.getElementById(id).addEventListener("change",function(){
+    activeKpiFilter=null;
+    document.querySelectorAll(".kpi").forEach(function(el){el.classList.remove("active")});
+    af()})});
+document.getElementById("resetBtn").addEventListener("click",function(){
+  document.getElementById("searchBox").value="";
+  ["filterYear","filterSeason","filterFactory","filterProdStatus","filterStatus","filterDelayed"]
+    .forEach(function(id){document.getElementById(id).value=""});
+  activeKpiFilter=null;
+  document.querySelectorAll(".kpi").forEach(function(el){el.classList.remove("active")});
+  af()});
+
 function af(){
-var q=document.getElementById("searchBox").value.toLowerCase().trim();
-var fs=document.getElementById("filterSeason").value;
-var ff=document.getElementById("filterFactory").value;
-var fst=document.getElementById("filterStatus").value;
-filtered=allRec.filter(function(r){
-if(q){var h=(g(r,"MO_Number")+" "+g(r,"Style_SKU")+" "+g(r,"Style_Name")+" "+g(r,"Factory")).toLowerCase();if(h.indexOf(q)<0)return false}
-if(fs&&g(r,"Season")!==fs)return false;
-if(ff&&g(r,"Factory")!==ff)return false;
-if(fst&&shipStatus(r).label!==fst)return false;
-return true});
-renderTables()}
- 
+  var q=document.getElementById("searchBox").value.toLowerCase().trim();
+  var fy=document.getElementById("filterYear").value;
+  var fs=document.getElementById("filterSeason").value;
+  var ff=document.getElementById("filterFactory").value;
+  var fp=document.getElementById("filterProdStatus").value;
+  var fst=document.getElementById("filterStatus").value;
+  var fd=document.getElementById("filterDelayed").value;
+
+  filtered=allRec.filter(function(r){
+    if(q){var h=(g(r,"MO_Number")+" "+g(r,"Style_SKU")+" "+g(r,"Style_Name")+" "+g(r,"Factory")).toLowerCase();if(h.indexOf(q)<0)return false}
+    if(fy&&g(r,"Plan_Year")!==fy)return false;
+    if(fs&&g(r,"Season")!==fs)return false;
+    if(ff&&g(r,"Factory")!==ff)return false;
+    if(fp&&g(r,"Production_Status")!==fp)return false;
+    if(fst&&shipStatus(r).label!==fst)return false;
+    if(fd==="delayed"&&!isDelayed(r))return false;
+    if(fd==="ok"&&isDelayed(r))return false;
+    if(activeKpiFilter){
+      var stKey=shipStatus(r).key;
+      if(activeKpiFilter==="delayed"){if(!isDelayed(r))return false}
+      else if(stKey!==activeKpiFilter)return false}
+    return true});
+  renderTables()}
+
+/* ══════════════════════════════════════
+   Monthly Tables
+══════════════════════════════════════ */
 function renderTables(){
-var groups={};
-filtered.forEach(function(r){
-var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");
-var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";
-if(!groups[key])groups[key]=[];groups[key].push(r)});
-var html="";
-Object.keys(groups).sort().forEach(function(key){
-var items=groups[key];
-var totalQty=0,shippedQty=0;
-items.forEach(function(r){totalQty+=parseInt(g(r,"Total_Quantity"))||0;shippedQty+=parseInt(g(r,"Shipped_Quantity"))||0});
-var pct=totalQty>0?Math.round(shippedQty/totalQty*100):0;
-var pctColor=pct>=100?"var(--ok)":pct>=50?"var(--ac)":"var(--wn)";
-html+='<div class="mt-sec"><div class="mt-card">';
-html+='<div class="mt-hd">';
-html+='<div class="mt-title">📅 '+escH(key)+'</div>';
-html+='<div style="display:flex;align-items:center;gap:10px">';
-html+='<div class="prog-wrap" style="min-width:140px"><div class="prog-bar"><div class="prog-fill" style="width:'+pct+'%;background:'+pctColor+'"></div></div><span class="prog-txt" style="color:'+pctColor+'">출고 '+pct+'%</span></div>';
-html+='<span class="mt-cnt">'+items.length+' MOs · '+totalQty.toLocaleString()+' pcs</span>';
-html+='</div></div>';
-html+='<div class="tbl-scroll"><table class="zt"><thead><tr>';
-html+='<th>MO#</th><th>SKU</th><th>Style</th><th>Factory</th><th>Total Qty</th><th>Ship Date</th><th>Exp.Del</th><th>Ready</th><th>QC</th><th>Shipped Qty</th><th>Status</th>';
-html+='</tr></thead><tbody>';
-items.forEach(function(r){
-var delayed=isDelayed(r);
-var st=shipStatus(r);
-var isShipped=st.label.indexOf("Shipped")>=0;
-var trStyle=(delayed&&!isShipped)?'style="background:#FEF2F2"':'';
-html+='<tr data-id="'+r["ID"]+'" '+trStyle+'>';
-html+='<td class="mo-num">'+escH(g(r,"MO_Number"))+'</td>';
-html+='<td style="font-size:9px;font-weight:600">'+escH(g(r,"Style_SKU"))+'</td>';
-html+='<td>'+escH(g(r,"Style_Name"))+'</td>';
-html+='<td>'+escH(g(r,"Factory"))+'</td>';
-html+='<td style="text-align:right;font-weight:700">'+escH(g(r,"Total_Quantity"))+'</td>';
-var sd=g(r,"Ship_Date");
-var isLate=(sd!=="-"&&sd<todayStr&&!isShipped);
-html+='<td>'+escH(sd)+(isLate?' <span class="dly-badge">LATE</span>':'')+'</td>';
-html+='<td>'+escH(g(r,"Expected_Delivery"))+'</td>';
-var rts=pSt(g(r,"Ready_to_Ship"));
-html+='<td>'+(rts.indexOf("yes")>=0||rts.indexOf("ready")>=0||rts.indexOf("true")>=0?'<span class="tag t-ok">✓ Ready</span>':'<span class="tag t-dr">-</span>')+'</td>';
-var qc=pSt(g(r,"Final_QC_Passed"));
-html+='<td>'+(qc.indexOf("yes")>=0||qc.indexOf("pass")>=0||qc.indexOf("true")>=0?'<span class="tag t-ok">✓ Pass</span>':'<span class="tag t-dr">-</span>')+'</td>';
-var sq=g(r,"Shipped_Quantity");
-html+='<td style="text-align:right;font-weight:700">'+(sq!=="-"?sq:'-')+'</td>';
-html+='<td><span class="tag '+st.cls+'">'+escH(st.label)+'</span></td>';
-html+='</tr>'});
-html+='</tbody></table></div></div></div>'});
-if(!html)html='<div style="text-align:center;padding:40px;color:var(--tm);font-size:13px">조건에 맞는 출고 데이터가 없습니다</div>';
-document.getElementById("monthlyTables").innerHTML=html;
-document.querySelectorAll("#monthlyTables tr[data-id]").forEach(function(row){
-row.addEventListener("click",function(){var id=this.getAttribute("data-id");var r=allRec.find(function(x){return x["ID"]===id});if(r)openModal(r)})})}
- 
+  var groups={};
+  filtered.forEach(function(r){
+    var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");
+    var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";
+    if(!groups[key])groups[key]=[];groups[key].push(r)});
+
+  var html="";
+  Object.keys(groups).sort().forEach(function(key){
+    var items=groups[key];
+    var totalQty=0,shippedQty=0;
+    items.forEach(function(r){totalQty+=parseInt(g(r,"Total_Quantity"))||0;shippedQty+=parseInt(g(r,"Shipped_Quantity"))||0});
+    var pct=totalQty>0?Math.round(shippedQty/totalQty*100):0;
+    var pctColor=pct>=100?"var(--ok)":pct>=50?"var(--ac)":"var(--wn)";
+
+    html+='<div class="mt-sec"><div class="mt-card">';
+    html+='<div class="mt-hd">';
+    html+='<div class="mt-title">📅 '+escH(key)+'</div>';
+    html+='<div style="display:flex;align-items:center;gap:10px">';
+    html+='<div class="prog-wrap" style="min-width:150px"><div class="prog-bar"><div class="prog-fill" style="width:'+pct+'%;background:'+pctColor+'"></div></div><span class="prog-txt" style="color:'+pctColor+'">출고 '+pct+'%</span></div>';
+    html+='<span class="mt-cnt">'+items.length+' MOs · '+totalQty.toLocaleString()+' pcs</span>';
+    html+='</div></div>';
+    html+='<div class="tbl-scroll"><table class="zt"><thead><tr>';
+    html+='<th>MO#</th><th>SKU</th><th>Style</th><th>Factory</th><th>Total Qty</th><th>Production Pipeline</th><th>Ship Date</th><th>Exp.Del</th><th>Shipped Qty</th><th>Status</th>';
+    html+='</tr></thead><tbody>';
+
+    items.forEach(function(r){
+      var delayed=isDelayed(r);
+      var st=shipStatus(r);
+      var isShipped=st.key==="shipped";
+      var trStyle=(delayed&&!isShipped)?'style="background:#FEF2F2"':'';
+
+      // Production pipeline mini bars (5 stages)
+      var ppStages=[
+        {lb:"원단",key:"Fabric_In_house_Date"},
+        {lb:"재단",key:"Cutting_End_Date"},
+        {lb:"봉제",key:"Sewing_Completion_Date"},
+        {lb:"포장",key:"Packing_End_Date"},
+        {lb:"출고",key:"Ship_Date"}];
+      var ppBars="",ppLbls="";
+      ppStages.forEach(function(sk){
+        var v=g(r,sk.key);
+        var c=isShipped?"#86EFAC":(v!=="-"&&v<=todayStr?"#86EFAC":(v!=="-"?"#93C5FD":"#E2E8F0"));
+        ppBars+='<div class="pp-seg" style="background:'+c+'"></div>';
+        ppLbls+='<div class="pp-lbl">'+sk.lb+'</div>';});
+      var ppHtml='<div class="pp-wrap"><div class="pp-bars">'+ppBars+'</div><div class="pp-lbls">'+ppLbls+'</div></div>';
+
+      var sd=g(r,"Ship_Date");
+      var isLate=(sd!=="-"&&sd<todayStr&&!isShipped);
+
+      html+='<tr data-id="'+r["ID"]+'" '+trStyle+'>';
+      html+='<td class="mo-num">'+escH(g(r,"MO_Number"))+'</td>';
+      html+='<td style="font-size:9px;font-weight:600">'+escH(g(r,"Style_SKU"))+'</td>';
+      html+='<td>'+escH(g(r,"Style_Name"))+'</td>';
+      html+='<td>'+escH(g(r,"Factory"))+'</td>';
+      html+='<td style="text-align:right;font-weight:700">'+escH(g(r,"Total_Quantity"))+'</td>';
+      html+='<td>'+ppHtml+'</td>';
+      html+='<td>'+escH(sd)+(isLate?' <span class="dly-badge">LATE</span>':'')+'</td>';
+      html+='<td>'+escH(g(r,"Expected_Delivery"))+'</td>';
+      var sq=g(r,"Shipped_Quantity");
+      html+='<td style="text-align:right;font-weight:700">'+(sq!=="-"?sq:'-')+'</td>';
+      html+='<td><span class="tag '+st.cls+'">'+escH(st.label)+'</span></td>';
+      html+='</tr>'});
+
+    html+='</tbody></table></div></div></div>'});
+
+  if(!html)html='<div style="text-align:center;padding:40px;color:var(--tm);font-size:13px">조건에 맞는 출고 데이터가 없습니다</div>';
+  document.getElementById("monthlyTables").innerHTML=html;
+  document.querySelectorAll("#monthlyTables tr[data-id]").forEach(function(row){
+    row.addEventListener("click",function(){
+      var id=this.getAttribute("data-id");
+      var r=allRec.find(function(x){return x["ID"]===id});
+      if(r)openModal(r)})})}
+
+/* ══════════════════════════════════════
+   List Modal (chart / KPI drilldown)
+══════════════════════════════════════ */
+function openListModal(type,key){
+  var title="",sub="",items=[];
+  var stLabels={shipped:"Shipped / 출고완료",ready:"Ready / 출고준비",qc:"QC Passed / QC완료",delayed:"Delayed / 지연",preparing:"Preparing / 준비중"};
+  var stageLabels=["📋 준비중","🧵 원단·부자재","✂️ 재단","🪡 봉제","📦 포장","🚢 출고완료"];
+
+  if(type==="status"){
+    title=stLabels[key]||key;
+    items=allRec.filter(function(r){
+      if(key==="delayed")return isDelayed(r);
+      return shipStatus(r).key===key});}
+  else if(type==="month"){
+    var dKey=decodeURIComponent(key);
+    title="📅 "+dKey;
+    items=allRec.filter(function(r){
+      var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");
+      return py!=="-"&&pm!=="-"&&(py+"년 "+pm+"월")===dKey});}
+  else if(type==="stage"){
+    title=stageLabels[parseInt(key)]||("Stage "+key);
+    items=allRec.filter(function(r){return getPipelineStage(r)===parseInt(key)});}
+
+  sub=items.length+"건";
+  var html="";
+  items.forEach(function(r){
+    var st=shipStatus(r);
+    var delayed=isDelayed(r)&&st.key!=="shipped";
+    html+='<div class="list-item" data-id="'+r["ID"]+'">'
+      +'<div><div class="list-item-mo">'+escH(g(r,"MO_Number"))+'</div>'
+      +'<div class="list-item-name">'+escH(g(r,"Style_Name"))+'  <span style="color:var(--tm)">'+escH(g(r,"Style_SKU"))+'</span></div>'
+      +'<div class="list-item-meta">'+escH(g(r,"Factory"))+' · 예상납기: '+escH(g(r,"Expected_Delivery"))+'</div></div>'
+      +'<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">'
+      +'<span class="tag '+st.cls+'">'+st.label+'</span>'
+      +(delayed?'<span class="dly-badge">LATE</span>':'')
+      +'</div></div>';});
+  if(!html)html='<div class="list-empty">해당하는 MO가 없습니다</div>';
+
+  document.getElementById("listModalTitle").textContent=title;
+  document.getElementById("listModalSub").textContent=sub;
+  document.getElementById("listModalBody").innerHTML=html;
+  document.getElementById("listModalOv").classList.add("active");
+
+  document.querySelectorAll("#listModalBody .list-item").forEach(function(el){
+    el.addEventListener("click",function(){
+      var id=this.getAttribute("data-id");
+      var r=allRec.find(function(x){return x["ID"]===id});
+      if(r){closeListModal();openModal(r)}})});}
+
+function closeListModal(){document.getElementById("listModalOv").classList.remove("active")}
+document.getElementById("listModalClose").addEventListener("click",closeListModal);
+document.getElementById("listModalOv").addEventListener("click",function(e){if(e.target===this)closeListModal()});
+
+/* ══════════════════════════════════════
+   Detail Modal
+══════════════════════════════════════ */
 function openModal(r){
-document.getElementById("mTitle").textContent=g(r,"MO_Number");
-document.getElementById("mSub").textContent=g(r,"Style_Name")+" — "+g(r,"Style_SKU");
-var h="";
-function dv(v){return v==="-"?'<span class="d-val empty">미입력</span>':escH(v)}
-function it(l,v){return'<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'}
- 
-h+='<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / Order Info / 订单信息</div><div class="d-grid">';
-h+=it("MO Number / MO번호 / 订单编号",dv(g(r,"MO_Number")));
-h+=it("Style SKU / 스타일SKU / 款式SKU",dv(g(r,"Style_SKU")));
-h+=it("Style Name / 스타일명 / 款式名",dv(g(r,"Style_Name")));
-h+=it("Season / 시즌 / 季节",dv(g(r,"Season")));
-h+=it("Factory / 공장 / 工厂",dv(g(r,"Factory")));
-h+=it("Order Date / 주문일 / 订单日期",dv(g(r,"Order_Date")));
-h+='</div></div>';
- 
-h+='<div class="m-sec"><div class="m-sec-t">📦 수량 정보 / Quantity / 数量信息</div><div class="d-grid">';
-h+=it("Total Qty / 총수량 / 总数量",dv(g(r,"Total_Quantity")));
-h+=it("Cut Qty / 재단수량 / 裁剪数量",dv(g(r,"Cut_Quantity")));
-h+=it("Finished Qty / 완제품 / 成衣数量",dv(g(r,"Finished_Quantity")));
-h+=it("Shipped Qty / 출고수량 / 出货数量",dv(g(r,"Shipped_Quantity")));
-h+=it("Loss Rate / 로스율 / 损耗率",dv(g(r,"Loss_Rate")));
-var tq=parseInt(g(r,"Total_Quantity"))||0;
-var sq=parseInt(g(r,"Shipped_Quantity"))||0;
-var pct=tq>0?Math.round(sq/tq*100):0;
-var pc=pct>=100?"var(--ok)":"var(--ac)";
-h+=it("Ship Progress / 출고율 / 出货率",'<div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:'+pct+'%;background:'+pc+'"></div></div><span class="prog-txt" style="color:'+pc+'">'+pct+'%</span></div>');
-h+='</div></div>';
- 
-h+='<div class="m-sec"><div class="m-sec-t">🚢 출고 체크리스트 / Shipment Checklist / 出货清单</div><div class="d-grid">';
-h+=it("Ready to Ship / 출고준비 / 待出货",dv(g(r,"Ready_to_Ship")));
-h+=it("Final QC / 최종QC / 最终QC",dv(g(r,"Final_QC_Passed")));
-h+=it("Production Status / 생산상태 / 生产状态",dv(g(r,"Production_Status")));
-h+=it("Delivery Status / 납기상태 / 交期情况",dv(g(r,"Delivery_Status")));
-h+=it("Ship Date / 선적일 / 出货日期",dv(g(r,"Ship_Date")));
-h+=it("Expected Delivery / 예상납기 / 预计交货",dv(g(r,"Expected_Delivery")));
-h+='</div></div>';
- 
-h+='<div class="m-sec"><div class="m-sec-t">📅 생산 일정 타임라인 / Production Timeline / 生产时间线</div><div class="tl">';
-var timeline=[
-{label:"Fabric In / 원단입고 / 面料入库",key:"Fabric_In_house_Date"},
-{label:"Trim In / 부자재입고 / 辅料入库",key:"Trim_In_house_Date"},
-{label:"Cutting Start / 재단시작 / 开始裁剪",key:"Cutting_Start_Date"},
-{label:"Cutting End / 재단완성 / 裁剪完成",key:"Cutting_End_Date"},
-{label:"Sewing Start / 봉제시작 / 车缝开始",key:"Sewing_Start_Date"},
-{label:"Sewing End / 봉제완성 / 车缝完成",key:"Sewing_Completion_Date"},
-{label:"Packing Start / 포장시작 / 包装开始",key:"Packing_Start_Date"},
-{label:"Packing End / 포장완성 / 包装完成",key:"Packing_End_Date"},
-{label:"Ship Date / 선적일 / 出货日期",key:"Ship_Date"}];
-timeline.forEach(function(t,i){
-var v=g(r,t.key);var cls="wait";
-if(v!=="-"){if(v<=todayStr)cls="done";else cls="curr"}
-h+='<div class="tl-item"><div class="tl-dot '+cls+'">'+(i+1)+'</div><div class="tl-info"><div class="tl-lb">'+t.label+'</div><div class="tl-dt">'+escH(v)+'</div></div></div>'});
-h+='</div></div>';
- 
-var notes=g(r,"Notes");
-if(notes!=="-"){h+='<div class="m-sec"><div class="m-sec-t">📝 메모 / Notes / 备注</div><div style="font-size:12px;line-height:1.6;background:#F8FAFC;padding:12px;border-radius:6px;border:1px solid var(--bd)">'+escH(notes)+'</div></div>'}
- 
-document.getElementById("mBody").innerHTML=h;
-document.getElementById("modalOv").classList.add("active")}
- 
+  document.getElementById("mTitle").textContent=g(r,"MO_Number");
+  document.getElementById("mSub").textContent=g(r,"Style_Name")+" — "+g(r,"Style_SKU");
+  var h="";
+  function dv(v){return v==="-"?'<span class="d-val empty">미입력</span>':escH(v)}
+  function it(l,v){return'<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'}
+
+  h+='<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / Order Info / 订单信息</div><div class="d-grid">';
+  h+=it("MO Number / MO번호 / 订单编号",dv(g(r,"MO_Number")));
+  h+=it("Style SKU / 스타일SKU / 款式SKU",dv(g(r,"Style_SKU")));
+  h+=it("Style Name / 스타일명 / 款式名",dv(g(r,"Style_Name")));
+  h+=it("Season / 시즌 / 季节",dv(g(r,"Season")));
+  h+=it("Factory / 공장 / 工厂",dv(g(r,"Factory")));
+  h+=it("Order Date / 주문일 / 订单日期",dv(g(r,"Order_Date")));
+  h+='</div></div>';
+
+  h+='<div class="m-sec"><div class="m-sec-t">📦 수량 정보 / Quantity / 数量信息</div><div class="d-grid">';
+  h+=it("Total Qty / 총수량 / 总数量",dv(g(r,"Total_Quantity")));
+  h+=it("Cut Qty / 재단수량 / 裁剪数量",dv(g(r,"Cut_Quantity")));
+  h+=it("Finished Qty / 완제품 / 成衣数量",dv(g(r,"Finished_Quantity")));
+  h+=it("Shipped Qty / 출고수량 / 出货数量",dv(g(r,"Shipped_Quantity")));
+  h+=it("Loss Rate / 로스율 / 损耗率",dv(g(r,"Loss_Rate")));
+  var tq=parseInt(g(r,"Total_Quantity"))||0;
+  var sq=parseInt(g(r,"Shipped_Quantity"))||0;
+  var pct=tq>0?Math.round(sq/tq*100):0;
+  var pc=pct>=100?"var(--ok)":"var(--ac)";
+  h+=it("Ship Progress / 출고율 / 出货率",'<div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:'+pct+'%;background:'+pc+'"></div></div><span class="prog-txt" style="color:'+pc+'">'+pct+'%</span></div>');
+  h+='</div></div>';
+
+  h+='<div class="m-sec"><div class="m-sec-t">🚢 출고 체크리스트 / Shipment Checklist / 出货清单</div><div class="d-grid">';
+  h+=it("Ready to Ship / 출고준비 / 待出货",dv(g(r,"Ready_to_Ship")));
+  h+=it("Final QC / 최종QC / 最终QC",dv(g(r,"Final_QC_Passed")));
+  h+=it("Production Status / 생산상태 / 生产状态",dv(g(r,"Production_Status")));
+  h+=it("Delivery Status / 납기상태 / 交期情况",dv(g(r,"Delivery_Status")));
+  h+=it("Ship Date / 선적일 / 出货日期",dv(g(r,"Ship_Date")));
+  h+=it("Expected Delivery / 예상납기 / 预计交货",dv(g(r,"Expected_Delivery")));
+  h+='</div></div>';
+
+  h+='<div class="m-sec"><div class="m-sec-t">📅 생산 일정 타임라인 / Production Timeline / 生产时间线</div><div class="tl">';
+  var timeline=[
+    {label:"Fabric In / 원단입고 / 面料入库",      key:"Fabric_In_house_Date"},
+    {label:"Trim In / 부자재입고 / 辅料入库",      key:"Trim_In_house_Date"},
+    {label:"Cutting Start / 재단시작 / 开始裁剪",  key:"Cutting_Start_Date"},
+    {label:"Cutting End / 재단완성 / 裁剪完成",    key:"Cutting_End_Date"},
+    {label:"Sewing Start / 봉제시작 / 车缝开始",   key:"Sewing_Start_Date"},
+    {label:"Sewing End / 봉제완성 / 车缝完成",     key:"Sewing_Completion_Date"},
+    {label:"Packing Start / 포장시작 / 包装开始",  key:"Packing_Start_Date"},
+    {label:"Packing End / 포장완성 / 包装完成",    key:"Packing_End_Date"},
+    {label:"Ship Date / 선적일 / 出货日期",        key:"Ship_Date"}];
+  timeline.forEach(function(t,i){
+    var v=g(r,t.key),cls="wait";
+    if(v!=="-"){cls=v<=todayStr?"done":"curr"}
+    h+='<div class="tl-item"><div class="tl-dot '+cls+'">'+(i+1)+'</div><div class="tl-info"><div class="tl-lb">'+t.label+'</div><div class="tl-dt">'+escH(v)+'</div></div></div>'});
+  h+='</div></div>';
+
+  var notes=g(r,"Notes");
+  if(notes!=="-"){h+='<div class="m-sec"><div class="m-sec-t">📝 메모 / Notes / 备注</div><div style="font-size:12px;line-height:1.6;background:#F8FAFC;padding:12px;border-radius:6px;border:1px solid var(--bd)">'+escH(notes)+'</div></div>'}
+
+  document.getElementById("mBody").innerHTML=h;
+  document.getElementById("modalOv").classList.add("active")}
+
 function closeModal(){document.getElementById("modalOv").classList.remove("active")}
 document.getElementById("mClose").addEventListener("click",closeModal);
 document.getElementById("modalOv").addEventListener("click",function(e){if(e.target===this)closeModal()});
-document.addEventListener("keydown",function(e){if(e.key==="Escape")closeModal()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeModal();closeListModal()}});
 </script>
 </body>
 </html>
