@@ -302,16 +302,22 @@ var today = new Date();
 var todayStr = today.toISOString().split("T")[0];
 
 /* 6단계 프로세스 */
-var STEPS    = ["Loaded","Booking","Boarded","In Transit","Customs","Delivered"];
-var STEP_KO  = ["적재","부킹","선적","운송","통관","완료"];
-var STEP_ZH  = ["装载","预订","装船","运输","清关","完成"];
+var STEPS    = ["Booking","Loaded","Boarded","In Transit","Customs","Delivered"];
+var STEP_KO  = ["부킹","적재","선적","운송","통관","완료"];
+var STEP_ZH  = ["预订","装载","装船","运输","清关","完成"];
 var STEP_MAP = {
-  "Loaded":0,"Loading":0,
-  "Booking Pending":1,"Booked":1,"Booking Confirmed":1,
-  "On Board":2,"Boarded":2,
-  "In Transit":3,"Transit":3,
-  "Customs":4,"Customs Hold":4,"Customs Cleared":4,
-  "Delivered":5,"Completed":5,"Done":5
+  /* 부킹 단계 */
+  "Booking Pending":0,"Booked":0,"Booking Confirmed":0,"Booking":0,
+  /* 적재 단계 */
+  "Loaded":1,"Loading":1,"Loaded/적재":1,
+  /* 선적(탑승) 단계 */
+  "On Board":2,"Boarded":2,"Board":2,
+  /* 운송 단계 */
+  "In Transit":3,"Transit":3,"In transit":3,
+  /* 통관 단계 */
+  "Customs":4,"Customs Hold":4,"Customs Cleared":4,"Customs Hold/통관보류":4,
+  /* 완료 단계 */
+  "Delivered":5,"Completed":5,"Done":5,"delivered":5
 };
 
 /* 통화 심볼 */
@@ -349,7 +355,21 @@ function getYM(r) {
 }
 function getStep(r) {
   var s = (gv(r, "Container_Status") || "").trim();
-  return STEP_MAP[s] !== undefined ? STEP_MAP[s] : -1;
+  /* 정확한 매칭 */
+  if (STEP_MAP[s] !== undefined) return STEP_MAP[s];
+  /* 대소문자 무시 매칭 */
+  var sl = s.toLowerCase();
+  for (var k in STEP_MAP) {
+    if (k.toLowerCase() === sl) return STEP_MAP[k];
+  }
+  /* 부분 매칭 fallback */
+  if (sl.indexOf("booking") >= 0 || sl.indexOf("booked") >= 0) return 0;
+  if (sl.indexOf("loaded") >= 0 || sl.indexOf("loading") >= 0) return 1;
+  if (sl.indexOf("board") >= 0) return 2;
+  if (sl.indexOf("transit") >= 0) return 3;
+  if (sl.indexOf("customs") >= 0) return 4;
+  if (sl.indexOf("deliver") >= 0 || sl.indexOf("done") >= 0 || sl.indexOf("complet") >= 0) return 5;
+  return -1;
 }
 function isHold(r) { return (gv(r, "Container_Status") || "").toLowerCase().indexOf("hold") >= 0; }
 function isDelayed(r) {
@@ -388,6 +408,28 @@ function lineVal(line, key) {
   if (typeof v === "object" && v.display_value) return v.display_value;
   return String(v);
 }
+/* Zoho Image 필드 URL 추출 */
+function getImgUrl(line, field) {
+  var v = line[field];
+  if (!v) return null;
+  /* 문자열 URL */
+  if (typeof v === "string" && v.length > 5) return v;
+  /* 배열 형태 [{url:...}] */
+  if (Array.isArray(v) && v.length > 0) {
+    var first = v[0];
+    if (typeof first === "string") return first;
+    if (first && first.url) return first.url;
+    if (first && first.download_url) return first.download_url;
+  }
+  /* 객체 형태 */
+  if (typeof v === "object") {
+    if (v.url) return v.url;
+    if (v.download_url) return v.download_url;
+    if (v.display_value) return v.display_value;
+  }
+  return null;
+}
+
 function groupByMonth() {
   var g = {};
   allShip.forEach(function(r) {
@@ -402,13 +444,19 @@ function freightStr(items) {
   var byCur = {};
   items.forEach(function(r) {
     var fc = parseFloat(gv(r, "Freight_Cost")) || 0;
-    var cur = (gv(r, "Currency") || "USD").trim().toUpperCase();
+    /* Currency 필드에서 통화코드만 추출 (USD / 미국달러 / 美元 → USD) */
+    var rawCur = gv(r, "Currency") || "USD";
+    var cur = rawCur.split("/")[0].trim().toUpperCase();
+    /* 알려진 통화만 허용 */
+    if (cur !== "USD" && cur !== "CNY" && cur !== "MXN") cur = "USD";
     if (fc > 0) { if (!byCur[cur]) byCur[cur] = 0; byCur[cur] += fc; }
   });
+  var ORDER = ["USD","CNY","MXN"];
   var parts = [];
-  Object.keys(byCur).sort().forEach(function(cur) {
+  ORDER.forEach(function(cur) {
+    if (!byCur[cur]) return;
     var amt = byCur[cur];
-    var sym = CUR_SYM[cur] || cur;
+    var sym = CUR_SYM[cur];
     parts.push(sym + (amt >= 1000 ? (amt / 1000).toFixed(1) + "k" : amt.toFixed(0)));
   });
   return { str: parts.length ? parts.join(" + ") : "—", multi: parts.length > 1 };
@@ -808,6 +856,7 @@ function buildShipDetail(r) {
     h += '<div style="text-align:center;padding:20px;color:#94A3B8;font-size:12px">입력된 라인이 없습니다</div>';
   } else {
     h += '<div class="cl-wrap"><table class="cl-tbl"><thead><tr>';
+    h += '<th>이미지 / 图片</th>';
     h += '<th>MO / 제조오더 / 生产订单</th>';
     h += '<th>Style / 스타일 / 款式</th>';
     h += '<th>Factory / 공장 / 工厂</th>';
@@ -826,6 +875,7 @@ function buildShipDetail(r) {
       var sty = lineVal(line, "Style");
       var fac = lineVal(line, "Factory");
       var col = lineVal(line, "Color");
+      var img = getImgUrl(line, "Image");
       var lqty = parseInt(lineVal(line, "Quantity")) || 0;
       var uprice = parseFloat(lineVal(line, "Unit_Price")) || 0;
       var ltotal = parseFloat(lineVal(line, "Line_Total")) || 0;
@@ -835,6 +885,12 @@ function buildShipDetail(r) {
       var lnote = lineVal(line, "Notes");
       totQty += lqty; totCtn += lctn; totCBM += lcbm; totKG += lkg; totAmt += ltotal;
       h += '<tr>';
+      /* 이미지 셀 */
+      if (img) {
+        h += '<td><img src="' + img + '" style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #E2E8F0;cursor:pointer" onclick="window.open('' + img + '','_blank')" title="클릭하여 원본 보기"></td>';
+      } else {
+        h += '<td><div style="width:48px;height:48px;background:#F1F5F9;border-radius:6px;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;font-size:18px;color:#CBD5E1;margin:0 auto">📦</div></td>';
+      }
       if (mo !== "-") {
         h += '<td><button class="cl-mo-btn" data-monum="' + esc(mo) + '">' + esc(mo) + '</button></td>';
       } else {
@@ -853,7 +909,7 @@ function buildShipDetail(r) {
       h += '</tr>';
     });
     h += '</tbody><tfoot><tr class="cl-tfoot">';
-    h += '<td colspan="4" style="text-align:right;padding:7px 8px;color:var(--tm)">합계 / 合计</td>';
+    h += '<td colspan="5" style="text-align:right;padding:7px 8px;color:var(--tm)">합계 / 合计</td>';
     h += '<td style="color:#6D28D9">' + totQty.toLocaleString() + '</td>';
     h += '<td>-</td>';
     h += '<td>' + totAmt.toLocaleString() + '</td>';
