@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MO View v27</title>
+<title>MO View v25</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -70,10 +70,9 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .pipe-bar{height:5px;border-radius:2px;margin-top:8px}
 .pipe-arr{color:#CBD5E1;font-size:12px;flex-shrink:0}
 
-/* 필터 너비 여유롭게 확장 */
-.search-box{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 10px;font-size:11px;outline:none;font-family:inherit;width:180px}
+.search-box{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 10px;font-size:11px;outline:none;font-family:inherit}
 .search-box:focus{border-color:var(--ac);box-shadow:0 0 0 2px rgba(59,130,246,.1)}
-.fsel{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 8px;font-size:11px;outline:none;font-family:inherit;cursor:pointer;max-width:200px}
+.fsel{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 8px;font-size:11px;outline:none;font-family:inherit;cursor:pointer}
 .mt-sec{margin-bottom:83px}
 .mt-card{background:var(--cw);border:1px solid var(--bd);border-radius:8px;overflow:hidden}
 .mt-hd{padding:10px 16px;background:#F8FAFC;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
@@ -156,7 +155,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 /* ★ 상세 모달 */
 .modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:3000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
 .modal-ov.active{display:flex}
-.modal-box{background:#fff;border-radius:12px;width:94%;max-width:950px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .25s ease-out}
+.modal-box{background:#fff;border-radius:12px;width:94%;max-width:1000px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .25s ease-out}
 @keyframes mIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .m-hd{padding:20px 24px 16px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:#fff;z-index:10;border-radius:12px 12px 0 0}
 .m-title{font-size:18px;font-weight:900;color:var(--pr)}.m-sub{font-size:12px;color:var(--tm);margin-top:2px}
@@ -169,13 +168,35 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .d-grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
 .d-item{display:flex;flex-direction:column;gap:3px;padding:8px 10px;background:#FAFBFC;border-radius:6px;border:1px solid #F1F5F9}
 .d-label{font-size:9px;font-weight:700;color:var(--tm)}.d-val{font-size:13px;font-weight:600;color:var(--tx)}.d-val.empty{color:#CBD5E1;font-style:italic}
+
+/* ★ 모달 이미지 갤러리 */
 .m-img-gallery{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
 .m-img-box{width:100px;height:100px;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s,box-shadow .15s}
 .m-img-box:hover{transform:scale(1.05);box-shadow:0 4px 12px rgba(0,0,0,.1)}
 .m-img-box img{width:100%;height:100%;object-fit:cover}
 .m-img-box .spinner-sm{margin:auto}
 
-/* Plan vs Actual 일정 비교 */
+/* ★ Plan vs Actual 비교 레이아웃 */
+.compare-section{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+.compare-col{background:#FAFBFC;border-radius:10px;padding:16px;border:1px solid #E2E8F0}
+.compare-col.plan{border-left:4px solid #7C3AED}
+.compare-col.actual{border-left:4px solid #059669}
+.compare-col-title{font-size:13px;font-weight:800;margin-bottom:14px;padding-bottom:10px;border-bottom:2px dashed #E2E8F0;display:flex;align-items:center;gap:8px}
+.compare-col-title.plan{color:#7C3AED}
+.compare-col-title.actual{color:#059669}
+.compare-col-title .badge{font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700}
+.compare-col-title.plan .badge{background:#F5F3FF;color:#7C3AED;border:1px dashed #C4B5FD}
+.compare-col-title.actual .badge{background:#ECFDF5;color:#059669;border:1px solid #A7F3D0}
+
+/* ★ Order Lines 테이블 */
+.order-lines-tbl{width:100%;border-collapse:collapse;font-size:11px;margin-top:10px}
+.order-lines-tbl th{background:#F1F5F9;padding:8px 6px;text-align:left;font-weight:700;color:var(--tm);border:1px solid #E2E8F0;font-size:10px}
+.order-lines-tbl td{padding:8px 6px;border:1px solid #E2E8F0;color:var(--tx)}
+.order-lines-tbl tr:nth-child(even){background:#FAFBFC}
+.order-lines-summary{background:#F8FAFC;padding:10px;border-radius:6px;margin-top:10px;font-size:11px;color:var(--tm);border:1px solid #E2E8F0}
+.order-lines-summary pre{white-space:pre-wrap;word-break:break-word;font-family:inherit;margin:0}
+
+/* ★ Plan vs Actual 일정 비교 */
 .schedule-compare{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .schedule-col{background:#FAFBFC;border-radius:8px;padding:14px;border:1px solid #E2E8F0}
 .schedule-col-title{font-size:12px;font-weight:800;margin-bottom:12px;padding-bottom:8px;border-bottom:2px dashed #E2E8F0;display:flex;align-items:center;gap:6px}
@@ -203,7 +224,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .style-modal-box{background:#fff;border-radius:12px;width:92%;max-width:800px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .25s ease-out}
 
 .err-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C}
-@media(max-width:1100px){.mkpi-row{grid-template-columns:1fr 1fr}.d-grid{grid-template-columns:1fr 1fr}.schedule-compare{grid-template-columns:1fr}}
+@media(max-width:1100px){.mkpi-row{grid-template-columns:1fr 1fr}.d-grid{grid-template-columns:1fr 1fr}.schedule-compare{grid-template-columns:1fr}.compare-section{grid-template-columns:1fr}}
 @media(max-width:600px){.mkpi-row{grid-template-columns:1fr}.d-grid{grid-template-columns:1fr}.d-grid-4{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -218,7 +239,10 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
   </div>
 </div>
 <div class="mkpi-row" id="mkpiRow"></div>
-
+<div class="pipe-card">
+  <div class="pipe-title">PRODUCTION PIPELINE / 생산 파이프라인 / 生产流水表</div>
+  <div class="pipe-row" id="pipeRow"></div>
+</div>
 <div id="monthlyContent"></div>
 </div>
 <div id="errorScreen" style="display:none"><div class="err-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다</div><div id="errorMsg" style="font-size:12px"></div></div></div>
@@ -230,23 +254,22 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
   <div class="pop-box"><div class="pop-hd"><div><div class="pop-title" id="pipePopTitle">-</div><div class="pop-sub" id="pipePopSub">-</div></div><div class="pop-close" id="pipePopClose">✕</div></div><div class="pop-body" id="pipePopBody"></div></div>
 </div>
 
+<!-- ★ MO 상세 모달 -->
 <div class="modal-ov" id="modalOv">
   <div class="modal-box">
     <div class="m-hd">
       <div><div class="m-title" id="mTitle">-</div><div class="m-sub" id="mSub">-</div></div>
-      <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <button id="btnStyleInfo" style="background:#F0FDF4;color:#065F46;border:1px solid #A7F3D0;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">👕 Style Info</button>
-          <button onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Report:All_MO','_blank')" style="background:#EFF6FF;color:var(--pr);border:1px solid #BFDBFE;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit</button>
-          <div class="m-close" id="mClose">✕</div>
-        </div>
-        <div id="mModDate" style="font-size:10px; color:var(--tm); margin-right:40px; font-weight:600; letter-spacing:-0.3px;">최종수정일 / 最后修改日 : -</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button id="btnStyleInfo" style="background:#F0FDF4;color:#065F46;border:1px solid #A7F3D0;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">👕 Style Info</button>
+        <button onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Report:All_MO','_blank')" style="background:#EFF6FF;color:var(--pr);border:1px solid #BFDBFE;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit</button>
+        <div class="m-close" id="mClose">✕</div>
       </div>
     </div>
     <div class="m-body" id="mBody"></div>
   </div>
 </div>
 
+<!-- ★ Style Info 모달 -->
 <div class="style-modal-ov" id="styleModalOv">
   <div class="style-modal-box">
     <div class="m-hd">
@@ -260,6 +283,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
   </div>
 </div>
 
+<!-- Lightbox -->
 <div id="lightboxOv" onclick="closeLightbox()">
   <img id="lightboxImg">
   <div class="lb-close" onclick="closeLightbox()">✕</div>
@@ -288,33 +312,8 @@ function catName(v){return(!v||v==="-")?"-":(CAT_MAP[v]||v)}
 function mv(f,v){return(!v||v==="-")?"-":(S_MAP[f]&&S_MAP[f][v])?S_MAP[f][v]:v}
 function cleanFactory(v){if(!v||v==="-")return"-";return v.replace(/^[_\s]*\d+[_\s]*/,"")}
 function pd(v){if(!v||v==="-")return null;if(/^\d{4}-\d{2}-\d{2}/.test(v))return v.substring(0,10);var m=v.match(/^(\d{1,2})-([A-Za-z]+)-(\d{4})/);if(m){var mo={Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};return m[3]+"-"+(mo[m[2]]||"01")+"-"+(m[1].length===1?"0"+m[1]:m[1])}return null}
-
-function getModDate(r){
-  var v = r["Modified_Time"] || r["Modified_Time_field"] || "";
-  if(!v || v==="-") return "알 수 없음";
-  var m = v.match(/^(\d{1,2})-([A-Za-z]+)-(\d{4})/);
-  if(m){
-    var mo={Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};
-    var day = m[1].length===1?"0"+m[1]:m[1];
-    return m[3]+"-"+(mo[m[2]]||"01")+"-"+day;
-  }
-  return v.split(" ")[0]; 
-}
-
-function g(r,f){var v=r[f];if(v==null||v==="")return"-";if(typeof v==="object"&&v.display_value)return v.display_value;return String(v)}
-function escH(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
-function tc(s){var l=(s||"").toLowerCase();if(l.indexOf("confirmed")>=0||l.indexOf("delivered")>=0||l.indexOf("complete")>=0||l.indexOf("shipped")>=0||l.indexOf("done")>=0)return"t-ok";if(l.indexOf("progress")>=0||l.indexOf("cutting")>=0||l.indexOf("sewing")>=0||l.indexOf("fabric")>=0||l.indexOf("packing")>=0)return"t-wn";if(l.indexOf("delay")>=0||l.indexOf("cancel")>=0)return"t-dg";if(l.indexOf("pending")>=0)return"t-bl";return"t-dr"}
-function isDelayed(r){var os=(g(r,"Order_Status")||"").toLowerCase();if(os.indexOf("delivered")>=0||os.indexOf("shipped")>=0||os.indexOf("done")>=0)return false;var ds=g(r,"Delivery_Status");return ds.indexOf("Delay")>=0||ds.indexOf("지연")>=0}
-function getProdStage(r){var s=g(r,"Production_Status").toLowerCase();if(s.indexOf("shipped")>=0)return"Shipped";if(s.indexOf("complete")>=0||s.indexOf("done")>=0)return"Done";if(s.indexOf("packing")>=0)return"Packing";if(s.indexOf("sewing")>=0)return"Sewing";if(s.indexOf("cutting")>=0)return"Cutting";if(s.indexOf("fabric")>=0)return"Fabric";return"Not Started"}
-function getAllImgs(r,field){var i=r[field];if(!i)return[];if(Array.isArray(i))return i.filter(function(x){return x&&typeof x==="string"&&x.length>5});if(typeof i==="object"&&!Array.isArray(i)){var u=[];Object.keys(i).forEach(function(k){var v=i[k];if(v&&typeof v==="string"&&v.length>5)u.push(v)});return u}if(typeof i==="string"&&i.length>5)return[i];return[]}
-function getImg1(r){var imgs=getAllImgs(r,"Style_Image");return imgs.length>0?imgs[0]:null}
-
-var _safeQ=[],_safeBusy=false;
-function _runSafeQ(){if(_safeQ.length===0){_safeBusy=false;return}_safeBusy=true;var task=_safeQ.shift();var el=task.id?document.getElementById(task.id):task.el;if(!el){setTimeout(_runSafeQ,50);return}var img=document.createElement("img");img.style.cssText=task.css||"width:100%;height:100%;object-fit:cover";if(task.clk)img.onclick=function(){openLightbox(this.src)};var done=false;function next(){if(done)return;done=true;setTimeout(_runSafeQ,100)}try{ZOHO.CREATOR.UTIL.setImageData(img,task.url,function(){el.innerHTML="";el.appendChild(img);next()});setTimeout(next,4000)}catch(e){next()}}
-function qImg(elOrId,url,css,clk){_safeQ.push({id:typeof elOrId==="string"?elOrId:null,el:typeof elOrId==="object"?elOrId:null,url:url,css:css,clk:clk||false});if(!_safeBusy)_runSafeQ()}
-
-function openLightbox(src){if(!src)return;document.getElementById("lightboxImg").src=src;document.getElementById("lightboxOv").classList.add("active")}
-function closeLightbox(){document.getElementById("lightboxOv").classList.remove("active");document.getElementById("lightboxImg").src=""}
+function fmtNum(v){var n=parseFloat(v);return isNaN(n)?"-":n.toLocaleString()}
+function fmtMoney(v){var n=parseFloat(v);return isNaN(n)?"-":"$"+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
 
 ZOHO.CREATOR.init().then(function(){
   Promise.all([
@@ -329,22 +328,52 @@ ZOHO.CREATOR.init().then(function(){
 function show(i){document.getElementById(i).style.display="block"}
 function hide(i){document.getElementById(i).style.display="none"}
 function showErr(m){hide("loadingScreen");show("errorScreen");document.getElementById("errorMsg").textContent=m}
+function g(r,f){var v=r[f];if(v==null||v==="")return"-";if(typeof v==="object"&&v.display_value)return v.display_value;return String(v)}
+function escH(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
+function tc(s){var l=(s||"").toLowerCase();if(l.indexOf("confirmed")>=0||l.indexOf("delivered")>=0||l.indexOf("complete")>=0||l.indexOf("shipped")>=0||l.indexOf("done")>=0)return"t-ok";if(l.indexOf("progress")>=0||l.indexOf("cutting")>=0||l.indexOf("sewing")>=0||l.indexOf("fabric")>=0||l.indexOf("packing")>=0)return"t-wn";if(l.indexOf("delay")>=0||l.indexOf("cancel")>=0)return"t-dg";if(l.indexOf("pending")>=0)return"t-bl";return"t-dr"}
+function isDelayed(r){var os=(g(r,"Order_Status")||"").toLowerCase();if(os.indexOf("delivered")>=0||os.indexOf("shipped")>=0||os.indexOf("done")>=0)return false;var ds=g(r,"Delivery_Status");return ds.indexOf("Delay")>=0||ds.indexOf("지연")>=0}
+function getProdStage(r){var s=g(r,"Production_Status").toLowerCase();if(s.indexOf("shipped")>=0)return"Shipped";if(s.indexOf("complete")>=0||s.indexOf("done")>=0)return"Done";if(s.indexOf("packing")>=0)return"Packing";if(s.indexOf("sewing")>=0)return"Sewing";if(s.indexOf("cutting")>=0)return"Cutting";if(s.indexOf("fabric")>=0)return"Fabric";return"Not Started"}
+function getAllImgs(r,field){var i=r[field];if(!i)return[];if(Array.isArray(i))return i.filter(function(x){return x&&typeof x==="string"&&x.length>5});if(typeof i==="object"&&!Array.isArray(i)){var u=[];Object.keys(i).forEach(function(k){var v=i[k];if(v&&typeof v==="string"&&v.length>5)u.push(v)});return u}if(typeof i==="string"&&i.length>5)return[i];return[]}
+function getImg1(r){var imgs=getAllImgs(r,"Style_Image");return imgs.length>0?imgs[0]:null}
 
-function renderAll(){
-  renderMKPI();
-  renderMonthly(); 
+// ★ 서브폼 데이터 파싱
+function getSubformData(r,field){
+  var sf=r[field];
+  if(!sf)return[];
+  if(Array.isArray(sf))return sf;
+  if(typeof sf==="object")return Object.values(sf);
+  return[];
 }
+
+var _safeQ=[],_safeBusy=false;
+function _runSafeQ(){if(_safeQ.length===0){_safeBusy=false;return}_safeBusy=true;var task=_safeQ.shift();var el=task.id?document.getElementById(task.id):task.el;if(!el){setTimeout(_runSafeQ,50);return}var img=document.createElement("img");img.style.cssText=task.css||"width:100%;height:100%;object-fit:cover";if(task.clk)img.onclick=function(){openLightbox(this.src)};var done=false;function next(){if(done)return;done=true;setTimeout(_runSafeQ,100)}try{ZOHO.CREATOR.UTIL.setImageData(img,task.url,function(){el.innerHTML="";el.appendChild(img);next()});setTimeout(next,4000)}catch(e){next()}}
+function qImg(elOrId,url,css,clk){_safeQ.push({id:typeof elOrId==="string"?elOrId:null,el:typeof elOrId==="object"?elOrId:null,url:url,css:css,clk:clk||false});if(!_safeBusy)_runSafeQ()}
+
+function openLightbox(src){if(!src)return;document.getElementById("lightboxImg").src=src;document.getElementById("lightboxOv").classList.add("active")}
+function closeLightbox(){document.getElementById("lightboxOv").classList.remove("active");document.getElementById("lightboxImg").src=""}
+
+function renderAll(){renderMKPI();renderPipeline();renderMonthly()}
 
 function renderMKPI(){
   var groups={};allRec.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[key])groups[key]=[];groups[key].push(r)});
   var colors=["#818CF8","#F59E0B","#34D399"];var h="";var ci=0;
   Object.keys(groups).sort().forEach(function(key){
     var items=groups[key];var c=colors[ci%colors.length];ci++;
-    var tot=items.length,ip=0,dl=0,dv=0,tq=0,sq=0;
-    items.forEach(function(r){var os=(g(r,"Order_Status")||"").toLowerCase();if(os.indexOf("progress")>=0)ip++;if(isDelayed(r))dl++;if(os.indexOf("delivered")>=0||os.indexOf("shipped")>=0)dv++;tq+=parseInt(g(r,"Total_Quantity"))||0;sq+=parseInt(g(r,"Shipped_Quantity"))||0});
-    var pct=tq>0?Math.round((sq/tq)*100):0;var r36=36,circ=2*Math.PI*r36,offset=circ-(pct/100)*circ;
+    var tot=items.length,ip=0,dl=0,dv=0,planQty=0,actQty=0;
+    items.forEach(function(r){
+      var os=(g(r,"Order_Status")||"").toLowerCase();
+      if(os.indexOf("progress")>=0)ip++;
+      if(isDelayed(r))dl++;
+      if(os.indexOf("delivered")>=0||os.indexOf("shipped")>=0)dv++;
+      // ★ Plan/Actual 수량 분리
+      planQty+=parseInt(g(r,"Plan_Total_Quantity"))||0;
+      actQty+=parseInt(g(r,"Acture_Total_Quantity"))||0;
+    });
+    var pct=planQty>0?Math.round((actQty/planQty)*100):0;
+    if(pct>100)pct=100;
+    var r36=36,circ=2*Math.PI*r36,offset=circ-(pct/100)*circ;
     var ym=parseYM(key);var yy=ym?ym.y.toString().slice(-2):"";var mm=ym?(ym.m<10?"0"+ym.m:ym.m):"";
-    var titleText=ym?(yy+"."+mm+" 생산 KPI / "+yy+"年 "+ym.m+"月 生产 KPI"):"생산 KPI / 生产 KPI";
+    var titleText=ym?(yy+"."+mm+" Production KPI / "+yy+"年 "+ym.m+"月 生产 KPI"):"Production KPI";
     var keyEnc=encodeURIComponent(key);
     h+='<div class="mkpi-card"><div class="mkpi-header"><div class="mkpi-title">📅 '+titleText+'</div></div>';
     h+='<div class="mkpi-body"><div class="mkpi-ring"><svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="#E5E7EB" stroke-width="6"/><circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="'+c+'" stroke-width="6" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'" stroke-linecap="round"/></svg><div class="mkpi-ring-pct" style="color:'+c+'">'+pct+'%</div></div>';
@@ -352,7 +381,8 @@ function renderMKPI(){
     h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'ip\')"><div class="mkpi-stat-n" style="color:#F59E0B">'+ip+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FDE68A"></span>진행중 / 进行中</div></div>';
     h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'dv\')"><div class="mkpi-stat-n" style="color:#34D399">'+dv+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A7F3D0"></span>출고완료 / 已出货</div></div>';
     h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'dl\')"><div class="mkpi-stat-n" style="color:#EF4444">'+dl+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FCA5A5"></span>지연 / 延误</div></div></div></div>';
-    h+='<div class="mkpi-footer"><span>진행수량 进行数量 <b>'+tq.toLocaleString()+' pcs</b></span><span>출고수량 出货数量 <b>'+sq.toLocaleString()+' pcs</b></span></div></div>'});
+    // ★ Footer: Plan vs Actual 수량 표시
+    h+='<div class="mkpi-footer"><span>오더수량 订单数量 <b>'+planQty.toLocaleString()+' pcs</b></span><span>출고수량 出货数量 <b>'+actQty.toLocaleString()+' pcs</b></span></div></div>'});
   var delayedAll=allRec.filter(function(r){return isDelayed(r)});
   h+='<div class="delay-card"><div class="delay-card-title">⚠️ 생산 지연 현황<br><span style="font-size:10px;color:#EF4444;font-weight:600">生产延误现况</span></div><div class="delay-total">'+delayedAll.length+'<span>건 지연 / 件延误</span></div><div class="delay-list">';
   if(delayedAll.length===0)h+='<div style="text-align:center;padding:16px;color:#94A3B8;font-size:11px">지연 없음 / 无延误 ✓</div>';
@@ -361,189 +391,111 @@ function renderMKPI(){
   document.getElementById("mkpiRow").innerHTML=h}
 
 function openKpiPop(keyEnc,type){
-  var key=decodeURIComponent(keyEnc);var groups={};allRec.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var k=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[key])groups[key]=[];groups[key].push(r)});
+  var key=decodeURIComponent(keyEnc);var groups={};allRec.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var k=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[k])groups[k]=[];groups[k].push(r)});
   var items=groups[key]||[];var typeNames={all:"총 오더",ip:"진행중",dl:"지연",dv:"출고완료"};
   var filtered=items.filter(function(r){var os=(g(r,"Order_Status")||"").toLowerCase();if(type==="all")return true;if(type==="ip")return os.indexOf("progress")>=0;if(type==="dl")return isDelayed(r);if(type==="dv")return os.indexOf("delivered")>=0||os.indexOf("shipped")>=0;return true});
   document.getElementById("kpiPopTitle").textContent=key+" — "+typeNames[type];document.getElementById("kpiPopSub").textContent="총 "+filtered.length+"건";
   var h="";if(filtered.length===0)h='<div class="pop-empty">해당 오더가 없습니다</div>';
-  else filtered.forEach(function(r){var dl=isDelayed(r);h+='<div class="pop-item" onclick="openModalFromPop(\''+r["ID"]+'\')"><div class="pop-item-left"><div class="pi-mo">'+escH(g(r,"MO_Number"))+(dl?'<span class="dly-badge">DELAYED</span>':'')+'</div><div class="pi-name">'+escH(g(r,"Style_Name"))+'</div><div class="pi-meta">공장: '+escH(cleanFactory(g(r,"Factory")))+' · Qty: '+escH(g(r,"Total_Quantity"))+' pcs</div></div><span class="tag '+tc(g(r,"Order_Status"))+'">'+escH(g(r,"Order_Status"))+'</span></div>'});
+  else filtered.forEach(function(r){var dl=isDelayed(r);h+='<div class="pop-item" onclick="openModalFromPop(\''+r["ID"]+'\')"><div class="pop-item-left"><div class="pi-mo">'+escH(g(r,"MO_Number"))+(dl?'<span class="dly-badge">DELAYED</span>':'')+'</div><div class="pi-name">'+escH(g(r,"Style_Name"))+'</div><div class="pi-meta">공장: '+escH(cleanFactory(g(r,"Factory")))+' · Plan: '+escH(g(r,"Plan_Total_Quantity"))+' pcs</div></div><span class="tag '+tc(g(r,"Order_Status"))+'">'+escH(g(r,"Order_Status"))+'</span></div>'});
   document.getElementById("kpiPopBody").innerHTML=h;document.getElementById("kpiPopOv").classList.add("active")}
 
 function openModalFromPop(id){var r=allRec.find(function(x){return x["ID"]===id});if(r){document.getElementById("kpiPopOv").classList.remove("active");openModal(r)}}
+
+function renderPipeline(){
+  var st=["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
+  var emojis=["⏳","🧵","✂️","🧷","📦","✅","🚚"];
+  var co=["#94A3B8","#A78BFA","#FDBA74","#7DD3FC","#34D399","#10B981","#3B82F6"];
+  var lb2=["미시작 / 未开始","원단 / 面料","재단 / 裁剪","봉제 / 车缝","포장 / 包装","완료 / 完成","출고 / 出货"];
+  var cn=[0,0,0,0,0,0,0];allRec.forEach(function(r){var i=st.indexOf(getProdStage(r));if(i>=0)cn[i]++});
+  var h="";st.forEach(function(s,i){if(i>0)h+='<div class="pipe-arr">▶</div>';h+='<div class="pipe-step" onclick="openPipePop(\''+s+'\')"><div class="pipe-n" style="color:'+co[i]+'">'+cn[i]+'</div><div class="pipe-lb" style="color:'+co[i]+'"><span class="pipe-emoji">'+emojis[i]+'</span>'+lb2[i]+'</div><div class="pipe-bar" style="background:'+co[i]+'"></div></div>'});
+  document.getElementById("pipeRow").innerHTML=h}
+
+function openPipePop(stage){
+  var items=allRec.filter(function(r){return getProdStage(r)===stage});
+  var stageNames={"Not Started":"미시작","Fabric":"원단","Cutting":"재단","Sewing":"봉제","Packing":"포장","Done":"완료","Shipped":"출고"};
+  document.getElementById("pipePopTitle").textContent="🏭 "+stageNames[stage];document.getElementById("pipePopSub").textContent="총 "+items.length+"건";
+  var h="";if(items.length===0)h='<div class="pop-empty">해당 단계의 오더가 없습니다</div>';
+  else items.forEach(function(r){var dl=isDelayed(r);h+='<div class="pop-item" onclick="openModalFromPipe(\''+r["ID"]+'\')"><div class="pop-item-left"><div class="pi-mo">'+escH(g(r,"MO_Number"))+(dl?'<span class="dly-badge">DELAYED</span>':'')+'</div><div class="pi-name">'+escH(g(r,"Style_Name"))+'</div><div class="pi-meta">공장: '+escH(cleanFactory(g(r,"Factory")))+' · '+escH(g(r,"Plan_Total_Quantity"))+' pcs</div></div><span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span></div>'});
+  document.getElementById("pipePopBody").innerHTML=h;document.getElementById("pipePopOv").classList.add("active")}
+
+function openModalFromPipe(id){var r=allRec.find(function(x){return x["ID"]===id});if(r){document.getElementById("pipePopOv").classList.remove("active");openModal(r)}}
 
 document.getElementById("kpiPopClose").addEventListener("click",function(){document.getElementById("kpiPopOv").classList.remove("active")});
 document.getElementById("kpiPopOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
 document.getElementById("pipePopClose").addEventListener("click",function(){document.getElementById("pipePopOv").classList.remove("active")});
 document.getElementById("pipePopOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
 
-function renderLocalPipeline(idx, items){
-  var st=["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
-  var emojis=["⏳","🧵","✂️","🧷","📦","✅","🚚"];
-  var co=["#94A3B8","#A78BFA","#FDBA74","#7DD3FC","#34D399","#10B981","#3B82F6"];
-  var lb2=["미시작 / 未开始","원단 / 面料","재단 / 裁剪","봉제 / 车缝","포장 / 包装","완료 / 完成","출고 / 出货"];
-  var cn=[0,0,0,0,0,0,0];
-  items.forEach(function(r){var i=st.indexOf(getProdStage(r));if(i>=0)cn[i]++});
-  var h="";
-  st.forEach(function(s,i){
-    if(i>0)h+='<div class="pipe-arr">▶</div>';
-    h+='<div class="pipe-step" onclick="openPipePop(\''+s+'\','+idx+')"><div class="pipe-n" style="color:'+co[i]+'">'+cn[i]+'</div><div class="pipe-lb" style="color:'+co[i]+'"><span class="pipe-emoji">'+emojis[i]+'</span>'+lb2[i]+'</div><div class="pipe-bar" style="background:'+co[i]+'"></div></div>';
-  });
-  var el = document.getElementById("pipeRow_"+idx);
-  if(el) el.innerHTML=h;
-}
-
-function openPipePop(stage, idx){
-  var baseItems = window['visible_mo_'+idx] || [];
-  var items = baseItems.filter(function(r){return getProdStage(r)===stage});
-  var stageNames={"Not Started":"미시작 / 未开始","Fabric":"원단 / 面料","Cutting":"재단 / 裁剪","Sewing":"봉제 / 车缝","Packing":"포장 / 包装","Done":"완료 / 完成","Shipped":"출고 / 出货"};
-  document.getElementById("pipePopTitle").textContent="🏭 "+stageNames[stage];document.getElementById("pipePopSub").textContent="총 "+items.length+"건의 오더가 이 단계에 있습니다";
-  var h="";if(items.length===0)h='<div class="pop-empty">해당 단계의 오더가 없습니다</div>';
-  else items.forEach(function(r){var dl=isDelayed(r);h+='<div class="pop-item" onclick="openModalFromPipe(\''+r["ID"]+'\')"><div class="pop-item-left"><div class="pi-mo">'+escH(g(r,"MO_Number"))+(dl?'<span class="dly-badge">DELAYED</span>':'')+'</div><div class="pi-name">'+escH(g(r,"Style_Name"))+'</div><div class="pi-meta">공장: '+escH(cleanFactory(g(r,"Factory")))+' · '+escH(g(r,"Total_Quantity"))+' pcs</div></div><span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span></div>'});
-  document.getElementById("pipePopBody").innerHTML=h;document.getElementById("pipePopOv").classList.add("active");
-}
-
-function openModalFromPipe(id){var r=allRec.find(function(x){return x["ID"]===id});if(r){document.getElementById("pipePopOv").classList.remove("active");openModal(r)}}
-
 function renderMonthly(){
   var groups={};allRec.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[key])groups[key]=[];groups[key].push(r)});
   var html="";var mi=0;
-  
   Object.keys(groups).sort().forEach(function(key){
     var items=groups[key];var ym=parseYM(key);var idx=mi++;
-    var mFac={},mProd={},mCat={};
-    items.forEach(function(r){var f=g(r,"Factory");if(f!=="-")mFac[f]=1;var p=g(r,"Production_Status");if(p!=="-")mProd[p]=1;var c=g(r,"Category");if(c!=="-")mCat[c]=catName(c)});
+    var mFac={},mProd={},mCat={};items.forEach(function(r){var f=g(r,"Factory");if(f!=="-")mFac[f]=1;var p=g(r,"Production_Status");if(p!=="-")mProd[p]=1;var c=g(r,"Category");if(c!=="-")mCat[c]=catName(c)});
     var yy=ym?ym.y.toString().slice(-2):"";var mm=ym?(ym.m<10?"0"+ym.m:ym.m):"";
-    
-    var titleText=ym?(yy+"."+mm+" 생산 스케줄 / "+yy+"年 "+ym.m+"月 生产安排"):"생산 스케줄 / 生产安排";
+    var titleText=ym?(yy+"."+mm+" Production Schedule / "+yy+"年 "+ym.m+"月 生产安排"):"Production Schedule";
     html+='<div class="mt-sec" id="ms'+idx+'"><div class="mt-card"><div class="mt-hd"><div class="mt-title">📅 '+titleText+'</div><span class="mt-cnt" id="mc'+idx+'">'+items.length+' MOs</span></div>';
-    
-    html+='<div class="mf-bar"><input type="text" class="search-box mf" data-m="'+idx+'" data-t="q" placeholder="🔍 검색 / 搜索...">';
-    html+='<select class="fsel mf" data-m="'+idx+'" data-t="ca"><option value="">All Category / 分类筛选</option>';Object.keys(mCat).sort().forEach(function(k){html+='<option value="'+escH(k)+'">'+escH(mCat[k])+'</option>'});html+='</select>';
-    html+='<select class="fsel mf" data-m="'+idx+'" data-t="fa"><option value="">All Factory / 工厂筛选</option>';Object.keys(mFac).sort().forEach(function(k){html+='<option value="'+escH(k)+'">'+escH(cleanFactory(k))+'</option>'});html+='</select>';
-    html+='<select class="fsel mf" data-m="'+idx+'" data-t="ps"><option value="">All Prod Status / 状态筛选</option>';Object.keys(mProd).sort().forEach(function(k){html+='<option value="'+escH(k)+'">'+escH(k)+'</option>'});html+='</select></div>';
-    
-    html+='<div class="tbl-scroll"><table class="zt"><thead><tr><th style="width:5%">MO#</th><th style="width:8%">SKU</th><th style="width:9%">Style</th><th style="width:11%">Category</th><th style="width:10%">Factory</th><th style="width:7%">Qty</th><th style="width:16%">Production</th><th style="width:13%">Order</th><th style="width:11%">Exp.Del</th><th style="width:10%">Ship</th></tr></thead><tbody>';
-    items.forEach(function(r){
-      var dl=isDelayed(r);
-      html+='<tr class="zt-row" data-id="'+r["ID"]+'" data-m="'+idx+'" data-ca="'+escH(g(r,"Category"))+'" data-fa="'+escH(g(r,"Factory"))+'" data-ps="'+escH(g(r,"Production_Status"))+'" data-st="'+(g(r,"MO_Number")+" "+g(r,"Style_SKU")+" "+g(r,"Style_Name")+" "+g(r,"Factory")).toLowerCase()+'"'+(dl?' style="background:#FEF2F2"':'')+'>';
-      html+='<td class="mo-num">'+escH(g(r,"MO_Number"))+'</td><td style="font-size:9px;font-weight:600">'+escH(g(r,"Style_SKU"))+'</td><td>'+escH(g(r,"Style_Name"))+'</td><td style="font-size:9px">'+escH(catName(g(r,"Category")))+'</td><td>'+escH(cleanFactory(g(r,"Factory")))+'</td><td style="font-weight:700">'+escH(g(r,"Total_Quantity"))+'</td><td><span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span></td><td><span class="tag '+tc(g(r,"Order_Status"))+'">'+escH(g(r,"Order_Status"))+'</span></td><td>'+escH(g(r,"Expected_Delivery"))+(dl?' <span class="dly-badge">DELAYED</span>':'')+'</td><td>'+escH(g(r,"Ship_Date"))+'</td></tr>'});
-    html+='</tbody></table></div></div>';
-    
-    // ★ 각 월별 테이블과 타임라인 사이에 파이프라인 배치
-    html+='<div class="pipe-card" style="margin-top:16px; margin-bottom:0; box-shadow:none; border-color:#EEF2F6; padding:16px"><div class="pipe-title" style="font-size:12px; margin-bottom:10px">생산 파이프라인 / 生产流水表</div><div class="pipe-row" id="pipeRow_'+idx+'"></div></div>';
-    
-    // 타임라인 배치
-    if(ym)html+=buildTimeline(items,ym.y,ym.m,key,idx);
-    html+='</div>'; // close mt-sec
-  });
-  
+    html+='<div class="mf-bar"><input type="text" class="search-box mf" data-m="'+idx+'" data-t="q" placeholder="🔍 검색..." style="width:150px">';
+    html+='<select class="fsel mf" data-m="'+idx+'" data-t="ca"><option value="">All Category</option>';Object.keys(mCat).sort().forEach(function(k){html+='<option value="'+escH(k)+'">'+escH(mCat[k])+'</option>'});html+='</select>';
+    html+='<select class="fsel mf" data-m="'+idx+'" data-t="fa"><option value="">All Factory</option>';Object.keys(mFac).sort().forEach(function(k){html+='<option value="'+escH(k)+'">'+escH(cleanFactory(k))+'</option>'});html+='</select>';
+    html+='<select class="fsel mf" data-m="'+idx+'" data-t="ps"><option value="">All Prod Status</option>';Object.keys(mProd).sort().forEach(function(k){html+='<option value="'+escH(k)+'">'+escH(k)+'</option>'});html+='</select></div>';
+    // ★ 테이블: Plan Qty / Actual Qty 분리
+    html+='<div class="tbl-scroll"><table class="zt"><thead><tr><th style="width:5%">MO#</th><th style="width:8%">SKU</th><th style="width:9%">Style</th><th style="width:9%">Category</th><th style="width:9%">Factory</th><th style="width:7%">Plan Qty</th><th style="width:7%">Act Qty</th><th style="width:14%">Production</th><th style="width:12%">Order</th><th style="width:10%">Exp.Del</th><th style="width:10%">Ship</th></tr></thead><tbody>';
+    items.forEach(function(r){var dl=isDelayed(r);html+='<tr data-id="'+r["ID"]+'" data-m="'+idx+'" data-ca="'+escH(g(r,"Category"))+'" data-fa="'+escH(g(r,"Factory"))+'" data-ps="'+escH(g(r,"Production_Status"))+'" data-st="'+(g(r,"MO_Number")+" "+g(r,"Style_SKU")+" "+g(r,"Style_Name")+" "+g(r,"Factory")).toLowerCase()+'"'+(dl?' style="background:#FEF2F2"':'')+'><td class="mo-num">'+escH(g(r,"MO_Number"))+'</td><td style="font-size:9px;font-weight:600">'+escH(g(r,"Style_SKU"))+'</td><td>'+escH(g(r,"Style_Name"))+'</td><td style="font-size:9px">'+escH(catName(g(r,"Category")))+'</td><td>'+escH(cleanFactory(g(r,"Factory")))+'</td><td style="font-weight:700;color:#7C3AED">'+escH(g(r,"Plan_Total_Quantity"))+'</td><td style="font-weight:700;color:#059669">'+escH(g(r,"Acture_Total_Quantity"))+'</td><td><span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span></td><td><span class="tag '+tc(g(r,"Order_Status"))+'">'+escH(g(r,"Order_Status"))+'</span></td><td>'+escH(g(r,"Expected_Delivery"))+(dl?' <span class="dly-badge">DELAYED</span>':'')+'</td><td>'+escH(g(r,"Ship_Date"))+'</td></tr>'});
+    html+='</tbody></table></div>';
+    if(ym)html+=buildTimeline(items,ym.y,ym.m,key);
+    html+='</div></div>'});
   document.getElementById("monthlyContent").innerHTML=html;
-  
-  // ★ 파이프라인 초기 렌더링
-  var mi2=0;
-  Object.keys(groups).sort().forEach(function(key){
-    var idx = mi2++;
-    window['visible_mo_'+idx] = groups[key];
-    renderLocalPipeline(idx, groups[key]);
-  });
-
   document.querySelectorAll("#monthlyContent tr[data-id]").forEach(function(row){row.addEventListener("click",function(){var id=this.getAttribute("data-id");var r=allRec.find(function(x){return x["ID"]===id});if(r)openModal(r)})});
   document.querySelectorAll(".tl-mo-info").forEach(function(el){el.addEventListener("click",function(){var id=this.getAttribute("data-id");var r=allRec.find(function(x){return x["ID"]===id});if(r)openModal(r)})});
   document.querySelectorAll(".mf").forEach(function(el){el.addEventListener(el.tagName==="INPUT"?"input":"change",function(){mFilter(this.getAttribute("data-m"))})});
-  setTimeout(loadTlImgs,500)
-}
+  setTimeout(loadTlImgs,500)}
 
 function loadTlImgs(){var els=document.querySelectorAll("[data-tlimg]");if(els.length===0)return;if("IntersectionObserver" in window){var obs=new IntersectionObserver(function(entries,observer){entries.forEach(function(ent){if(ent.isIntersecting){var el=ent.target;var url=el.getAttribute("data-tlimg");if(url)qImg(el,url,"width:100%;height:100%;object-fit:cover",false);observer.unobserve(el)}})},{rootMargin:"300px"});els.forEach(function(el){obs.observe(el)})}else{els.forEach(function(el){var url=el.getAttribute("data-tlimg");if(url)qImg(el,url,"width:100%;height:100%;object-fit:cover",false)})}}
 
-/* ★ 타임라인 동기화 & 파이프라인 필터 연동 */
-function mFilter(mi){
-  var sec=document.getElementById("ms"+mi);if(!sec)return;
-  var q="",ca="",fa="",ps="";
-  sec.querySelectorAll(".mf").forEach(function(el){var t=el.getAttribute("data-t"),v=el.value;if(t==="q")q=v.toLowerCase().trim();else if(t==="ca")ca=v;else if(t==="fa")fa=v;else if(t==="ps")ps=v});
-  
-  var rows=sec.querySelectorAll('tr[data-m="'+mi+'"]');
-  var cnt=0;
-  var visibleIds = [];
-  
-  rows.forEach(function(row){
-    var ok=true;
-    if(q&&row.getAttribute("data-st").indexOf(q)<0)ok=false;
-    if(ca&&row.getAttribute("data-ca")!==ca)ok=false;
-    if(fa&&row.getAttribute("data-fa")!==fa)ok=false;
-    if(ps&&row.getAttribute("data-ps")!==ps)ok=false;
-    
-    row.style.display=ok?"":"none";
-    if(ok && row.classList.contains('zt-row')) {
-        cnt++;
-        visibleIds.push(row.getAttribute("data-id"));
-    }
-  });
-  
-  var c=document.getElementById("mc"+mi);if(c)c.textContent=cnt+" MOs";
-  
-  // 파이프라인 동적 렌더링 업데이트
-  var filteredItems = allRec.filter(function(r) { return visibleIds.indexOf(r["ID"]) >= 0; });
-  window['visible_mo_'+mi] = filteredItems;
-  renderLocalPipeline(mi, filteredItems);
-}
+function mFilter(mi){var sec=document.getElementById("ms"+mi);if(!sec)return;var q="",ca="",fa="",ps="";sec.querySelectorAll(".mf").forEach(function(el){var t=el.getAttribute("data-t"),v=el.value;if(t==="q")q=v.toLowerCase().trim();else if(t==="ca")ca=v;else if(t==="fa")fa=v;else if(t==="ps")ps=v});var rows=sec.querySelectorAll('tr[data-m="'+mi+'"]');var cnt=0;rows.forEach(function(row){var ok=true;if(q&&row.getAttribute("data-st").indexOf(q)<0)ok=false;if(ca&&row.getAttribute("data-ca")!==ca)ok=false;if(fa&&row.getAttribute("data-fa")!==fa)ok=false;if(ps&&row.getAttribute("data-ps")!==ps)ok=false;row.style.display=ok?"":"none";if(ok)cnt++});var c=document.getElementById("mc"+mi);if(c)c.textContent=cnt+" MOs"}
 
 function parseYM(key){var m=key.match(/(\d+)년\s*(\d+)월/);if(!m)return null;var y=parseInt(m[1]);if(y<100)y+=2000;return{y:y,m:parseInt(m[2])}}
 
-function buildTimeline(items,yr,mo,label,idx){
+function buildTimeline(items,yr,mo,label){
   var daysInMonth=new Date(yr,mo,0).getDate(),curMM=yr+"-"+(mo<10?"0":"")+mo,todayD=(today.getFullYear()===yr&&today.getMonth()+1===mo)?today.getDate():0;
-  var yy=yr.toString().slice(-2);var mm=mo<10?"0"+mo:mo;
-  var titleText=yy+"."+mm+" 생산 타임라인 / "+yy+"年 "+mo+"月 生产排期";
-  var h='<div class="tl-card"><div class="tl-hd"><div class="tl-title">📊 '+titleText+'</div><div class="tl-legend"><span class="tl-type-badge" style="background:#F5F3FF;color:#7C3AED;border:1px dashed #C4B5FD">P = Plan</span><span class="tl-type-badge" style="background:#FEF3C7;color:#B45309">A = Actual</span><span><span class="tl-dot" style="background:#DDD6FE"></span>Fab</span><span><span class="tl-dot" style="background:#FEF3C7;border:1px solid #FDE68A"></span>Cut</span><span><span class="tl-dot" style="background:#E0F2FE;border:1px solid #BAE6FD"></span>Sew</span><span><span class="tl-dot" style="background:#86EFAC;border:1px solid #C4B5FD"></span>Pack</span><span><span class="tl-dot" style="background:#BFDBFE"></span>Ship</span></div></div>';
+  var yy=yr.toString().slice(-2);var mm=mo<10?"0"+mo:mo;var titleText=yy+"."+mm+" Production Timeline / "+yy+"年 "+mo+"月 生产排期";
+  var h='<div class="tl-card"><div class="tl-hd"><div class="tl-title">📊 '+titleText+'</div><div class="tl-legend"><span class="tl-type-badge" style="background:#F5F3FF;color:#7C3AED;border:1px dashed #C4B5FD">P = Plan</span><span class="tl-type-badge" style="background:#ECFDF5;color:#059669">A = Actual</span><span><span class="tl-dot" style="background:#DDD6FE"></span>Fab</span><span><span class="tl-dot" style="background:#FEF3C7;border:1px solid #FDE68A"></span>Cut</span><span><span class="tl-dot" style="background:#E0F2FE;border:1px solid #BAE6FD"></span>Sew</span><span><span class="tl-dot" style="background:#86EFAC;border:1px solid #C4B5FD"></span>Pack</span><span><span class="tl-dot" style="background:#BFDBFE"></span>Ship</span></div></div>';
   h+='<div class="tl-scroll"><table class="tl-tbl"><thead><tr><th class="info-cell">MO / Style</th>';
   for(var d=1;d<=daysInMonth;d++){var dt=new Date(yr,mo-1,d),dow=dt.getDay(),cls=(dow===0||dow===6)?"wk":"";if(d===todayD)cls="today";h+='<th class="'+cls+'">'+d+'</th>'}
   h+='</tr></thead><tbody>';
   var hasAny=false,first=true;
-  
-  items.forEach(function(r){
-    var fields=["Plan_Fabric_Date","Plan_Cutting_Start","Plan_Cutting_End","Plan_Sewing_Start","Plan_Sewing_End","Plan_Packing_Start","Plan_Packing_End","Fabric_In_house_Date","Cutting_Start_Date","Cutting_End_Date","Sewing_Start_Date","Sewing_Completion_Date","Packing_Start_Date","Packing_End_Date","Ship_Date"];
-    var inMonth=false;
-    fields.forEach(function(f){var p=pd(g(r,f));if(p&&p.substring(0,7)===curMM)inMonth=true});
-    var edp=pd(g(r,"Expected_Delivery"));if(edp&&edp.substring(0,7)===curMM)inMonth=true;
-    if(!inMonth)return;
-    hasAny=true;
-    
-    var attr = ' data-m="'+idx+'" data-id="'+r["ID"]+'" data-ca="'+escH(g(r,"Category"))+'" data-fa="'+escH(g(r,"Factory"))+'" data-ps="'+escH(g(r,"Production_Status"))+'" data-st="'+(g(r,"MO_Number")+" "+g(r,"Style_SKU")+" "+g(r,"Style_Name")+" "+g(r,"Factory")).toLowerCase()+'"';
-
-    if(!first){h+='<tr class="mo-gap tl-row"'+attr+'><td class="info-cell"></td>';for(var gd=1;gd<=daysInMonth;gd++){h+='<td'+((gd===todayD)?' class="today-col"':'')+'></td>'}h+='</tr>'}
-    first=false;
+  items.forEach(function(r){var fields=["Plan_Fabric_Date","Plan_Cutting_Start","Plan_Cutting_End","Plan_Sewing_Start","Plan_Sewing_End","Plan_Packing_Start","Plan_Packing_End","Fabric_In_house_Date","Cutting_Start_Date","Cutting_End_Date","Sewing_Start_Date","Sewing_Completion_Date","Packing_Start_Date","Packing_End_Date","Ship_Date"];var inMonth=false;fields.forEach(function(f){var p=pd(g(r,f));if(p&&p.substring(0,7)===curMM)inMonth=true});var edp=pd(g(r,"Expected_Delivery"));if(edp&&edp.substring(0,7)===curMM)inMonth=true;if(!inMonth)return;hasAny=true;
+    if(!first){h+='<tr class="mo-gap"><td class="info-cell"></td>';for(var gd=1;gd<=daysInMonth;gd++){h+='<td'+((gd===todayD)?' class="today-col"':'')+'></td>'}h+='</tr>'}first=false;
     var iu=getImg1(r),ia=iu?' data-tlimg="'+iu+'"':'';
-    h+='<tr class="tl-row"'+attr+'><td class="info-cell tl-mo-info" rowspan="2" data-id="'+r["ID"]+'"><div class="tl-mo-wrap"><div class="tl-mo-thumb"'+ia+'>👕</div><div><div class="tl-mo-num">'+escH(g(r,"MO_Number"))+'</div><div class="tl-mo-name">'+escH(g(r,"Style_Name"))+'</div><div class="tl-mo-meta">'+escH(cleanFactory(g(r,"Factory")))+' · '+(parseInt(g(r,"Total_Quantity"))||0).toLocaleString()+'pcs</div></div></div></td>';
+    // ★ Plan Qty 표시
+    h+='<tr><td class="info-cell tl-mo-info" rowspan="2" data-id="'+r["ID"]+'"><div class="tl-mo-wrap"><div class="tl-mo-thumb"'+ia+'>👕</div><div><div class="tl-mo-num">'+escH(g(r,"MO_Number"))+'</div><div class="tl-mo-name">'+escH(g(r,"Style_Name"))+'</div><div class="tl-mo-meta">'+escH(cleanFactory(g(r,"Factory")))+' · '+(parseInt(g(r,"Plan_Total_Quantity"))||0).toLocaleString()+'pcs</div></div></div></td>';
     var pF=dayInMo(g(r,"Plan_Fabric_Date"),curMM),pCS=dayInMo(g(r,"Plan_Cutting_Start"),curMM),pCE=dayInMo(g(r,"Plan_Cutting_End"),curMM),pSS=dayInMo(g(r,"Plan_Sewing_Start"),curMM),pSE=dayInMo(g(r,"Plan_Sewing_End"),curMM),pPS=dayInMo(g(r,"Plan_Packing_Start"),curMM),pPE=dayInMo(g(r,"Plan_Packing_End"),curMM),pSh=dayInMo(g(r,"Expected_Delivery"),curMM);
     h+=buildBarRow(daysInMonth,todayD,pF,pCS,pCE,pSS,pSE,pPS,pPE,pSh,true)+'</tr>';
     var aF=dayInMo(g(r,"Fabric_In_house_Date"),curMM),aCS=dayInMo(g(r,"Cutting_Start_Date"),curMM),aCE=dayInMo(g(r,"Cutting_End_Date"),curMM),aSS=dayInMo(g(r,"Sewing_Start_Date"),curMM),aSE=dayInMo(g(r,"Sewing_Completion_Date"),curMM),aPS=dayInMo(g(r,"Packing_Start_Date"),curMM),aPE=dayInMo(g(r,"Packing_End_Date"),curMM),aSh=dayInMo(g(r,"Ship_Date"),curMM);
-    h+='<tr class="tl-row"'+attr+'>'+buildBarRow(daysInMonth,todayD,aF,aCS,aCE,aSS,aSE,aPS,aPE,aSh,false)+'</tr>'});
+    h+='<tr>'+buildBarRow(daysInMonth,todayD,aF,aCS,aCE,aSS,aSE,aPS,aPE,aSh,false)+'</tr>'});
   if(!hasAny)h+='<tr><td class="info-cell" colspan="'+(daysInMonth+1)+'" style="text-align:center;padding:16px;color:#94A3B8;font-size:10px">이 달에 해당하는 일정이 없습니다</td></tr>';
   h+='</tbody></table></div></div>';return h}
 
 function dayInMo(v,curMM){var p=pd(v);if(!p||p.substring(0,7)!==curMM)return 0;return parseInt(p.substring(8,10))||0}
 function buildBarRow(days,todayD,fab,cs,ce,ss,se,ps,pe,ship,isPlan){var pf=isPlan?"pb":"ab",map=new Array(days+2);for(var i=0;i<=days+1;i++)map[i]=null;if(fab>0&&fab<=days)map[fab]="fab";if(cs>0){for(var i=cs;i<=(ce||cs)&&i<=days;i++)map[i]="cut"}if(ss>0){for(var i=ss;i<=(se||ss)&&i<=days;i++)map[i]="sew"}if(ps>0){for(var i=ps;i<=(pe||ps)&&i<=days;i++)map[i]="pack"}if(ship>0&&ship<=days)map[ship]="ship";var lb={fab:"FAB",cut:"CUT",sew:"SEW",pack:"PACK",ship:"SHIP"},h="",d=1;while(d<=days){var t=map[d],tc2=(d===todayD)?' class="today-col"':'';if(!t){h+='<td'+tc2+'></td>';d++}else{var sp=1;while(d+sp<=days&&map[d+sp]===t)sp++;h+='<td'+(sp>1?' colspan="'+sp+'"':'')+tc2+'><div class="tl-bar '+pf+'-'+t+'">'+lb[t]+'</div></td>';d+=sp}}return h}
 
-/* ★ MO 상세 모달 (섹션 순서 변경 및 수량/금액 디자인 변경 - v27) */
+/* ★ MO 상세 모달 (Plan/Actual 분리) */
 function openModal(r){
   currentMO=r;
-  var modDt=getModDate(r);
-  
   document.getElementById("mTitle").textContent=g(r,"MO_Number");
   document.getElementById("mSub").textContent=g(r,"Style_Name")+" — "+g(r,"Style_SKU");
-  document.getElementById("mModDate").textContent="최종수정일 / 最后修改日 : "+modDt;
-  
   var h='';
   function dv(v){return v==="-"?'<span class="d-val empty">미입력</span>':escH(v)}
   function it(l,v){return'<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'}
   
-  // 이미지 갤러리 (최대 5개)
+  // ★ 이미지 갤러리 (최대 5개)
   var imgs=getAllImgs(r,"Style_Image").slice(0,5);
   if(imgs.length>0){
     h+='<div class="m-img-gallery">';
     imgs.forEach(function(u,i){h+='<div class="m-img-box" id="moImg'+i+'"><div class="spinner-sm"></div></div>'});
     h+='</div>';}
   
-  // 1. 기본 정보
+  // 기본 정보
   h+='<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 订单信息</div><div class="d-grid">';
   h+=it("MO Number / MO번호",dv(g(r,"MO_Number")));
   h+=it("Style SKU / 스타일SKU / 款式SKU",dv(g(r,"Style_SKU")));
@@ -558,53 +510,82 @@ function openModal(r){
   h+=it("Gender / 성별 / 性别",dv(mv("Gender",g(r,"Gender"))));
   h+=it("Plan Year-Month / 진행년월 / 进行年月",dv(g(r,"Plan_Year"))+"-"+dv(g(r,"Plan_Month")));
   h+='</div></div>';
-
-  // 2. 제품 정의
-  h+='<div class="m-sec"><div class="m-sec-t">👗 제품 정의 / 产品定义</div><div class="d-grid">';
-  h+=it("Top Type / 상의 유형 / 上衣类型",dv(mv("Top_Type",g(r,"Top_Type"))));
-  h+=it("Sleeve / 소매 유형 / 衣袖类型",dv(mv("Sleeve",g(r,"Sleeve"))));
-  h+=it("Fit / 핏 / 版型",dv(mv("Fit",g(r,"Fit"))));
-  h+=it("Details / 디테일 / 类型详情",dv(mv("Details",g(r,"Details"))));
-  h+=it("Bottom Type / 하의 유형 / 下装类型",dv(mv("Bottom_Type",g(r,"Bottom_Type"))));
-  h+=it("Bottom Length / 하의 기장 / 下装长短",dv(mv("Bottom_Length",g(r,"Bottom_Length"))));
-  h+='</div></div>';
   
-  // 3. 원단 정보
-  h+='<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料信息</div><div class="d-grid">';
-  h+=it("Material Type / 원단 종류 / 面料种类",dv(mv("Material_Type",g(r,"Material_Type"))));
-  h+=it("blended % / 혼방 % / 混纺 %",dv(g(r,"blended_percentage")));
-  h+=it("Lining Type / 안감유형 / 里料类型",dv(mv("Lining_Type",g(r,"Lining_Type"))));
-  h+='</div></div>';
+  // ★★★ Plan vs Actual 주문내역 비교 (좌우 배치) ★★★
+  h+='<div class="compare-section">';
   
-  // 4. 수량 & 금액
-  h+='<div class="m-sec"><div class="m-sec-t">📦 수량 & 금액 / 数量 & 金额</div>';
-  // Row 1: 총수량 / 단가 / 총금액
-  h+='<div class="d-grid">';
-  h+=it("Total Qty / 총수량 / 总数量",dv(g(r,"Total_Quantity")));
-  h+=it("Unit Price / 단가 / 单价",dv(g(r,"Unit_Price")));
-  h+=it("Grand Total / 총금액 / 总金额",dv(g(r,"Grand_Total")));
+  // ===== Plan (오더 시) =====
+  h+='<div class="compare-col plan"><div class="compare-col-title plan"><span class="badge">PLAN</span> 📋 주문 내용 / 订单明细</div>';
+  // Plan 요약
+  h+='<div class="d-grid-2" style="margin-bottom:12px">';
+  h+=it("Total Qty / 총수량 / 总数量",'<span style="color:#7C3AED;font-weight:800">'+fmtNum(g(r,"Plan_Total_Quantity"))+' pcs</span>');
+  h+=it("Grand Total / 총금액 / 总金额",'<span style="color:#7C3AED;font-weight:800">'+fmtMoney(g(r,"Plan_Grand_Total"))+'</span>');
   h+='</div>';
-  // Row 2: 재단수량 / 완제품 수량 / 로스율
-  h+='<div class="d-grid" style="margin-top:12px">';
-  h+=it("Cut Quantity / 재단수량 / 裁剪数量",dv(g(r,"Cut_Quantity")));
-  h+=it("Finished Quantity / 완제품 수량 / 成衣数量",dv(g(r,"Finished_Quantity")));
-  h+=it("Loss Rate (%) / 로스율 / 损耗率",dv(g(r,"Loss_Rate")));
+  // Plan Order Lines 테이블
+  var planLines=getSubformData(r,"Plan_MO_Lines");
+  if(planLines.length>0){
+    h+='<table class="order-lines-tbl"><thead><tr><th>Color / 색상</th><th>Size / 사이즈</th><th>Qty / 수량</th><th>Unit Price / 단가</th><th>Line Total / 합계</th></tr></thead><tbody>';
+    planLines.forEach(function(ln){
+      h+='<tr><td>'+escH(g(ln,"Plan_Color"))+'</td><td>'+escH(g(ln,"Plan_Sizes"))+'</td><td>'+fmtNum(g(ln,"Plan_Quantity"))+'</td><td>'+fmtMoney(g(ln,"Plan_Unit_Price"))+'</td><td>'+fmtMoney(g(ln,"Plan_Line_Total"))+'</td></tr>';
+    });
+    h+='</tbody></table>';
+  }else{
+    h+='<div style="text-align:center;padding:20px;color:#94A3B8;font-size:11px">주문 내역이 없습니다</div>';
+  }
+  // Plan Summary
+  var planSummary=g(r,"Plan_Order_Lines_Summary");
+  if(planSummary&&planSummary!=="-"){
+    h+='<div class="order-lines-summary"><strong>📝 Summary:</strong><pre>'+escH(planSummary)+'</pre></div>';
+  }
+  // Plan Notes
+  var planNotes=g(r,"Plan_Notes");
+  if(planNotes&&planNotes!=="-"){
+    h+='<div style="margin-top:10px;padding:8px;background:#F5F3FF;border-radius:6px;font-size:11px;color:#5B21B6"><strong>📌 Notes:</strong> '+escH(planNotes)+'</div>';
+  }
   h+='</div>';
-  // Row 3: 메모 (전체 너비 1열)
-  h+='<div style="margin-top:12px">';
-  h+=it("Notes / 메모 / 备注",dv(g(r,"Notes")));
-  h+='</div></div>';
   
-  // 5. 생산 추적
+  // ===== Actual (실출고) =====
+  h+='<div class="compare-col actual"><div class="compare-col-title actual"><span class="badge">ACTUAL</span> ✅ 실출고내역 / 实际出货内容</div>';
+  // Actual 요약
+  h+='<div class="d-grid-2" style="margin-bottom:12px">';
+  h+=it("Total Qty / 총수량 / 总数量",'<span style="color:#059669;font-weight:800">'+fmtNum(g(r,"Acture_Total_Quantity"))+' pcs</span>');
+  h+=it("Grand Total / 총금액 / 总金额",'<span style="color:#059669;font-weight:800">'+fmtMoney(g(r,"Acture_Grand_Total"))+'</span>');
+  h+='</div>';
+  // Actual Order Lines 테이블
+  var actLines=getSubformData(r,"Acture_Order_Lines");
+  if(actLines.length>0){
+    h+='<table class="order-lines-tbl"><thead><tr><th>Color / 색상</th><th>Size / 사이즈</th><th>Qty / 수량</th><th>Unit Price / 단가</th><th>Line Total / 합계</th></tr></thead><tbody>';
+    actLines.forEach(function(ln){
+      h+='<tr><td>'+escH(g(ln,"Acture_Color"))+'</td><td>'+escH(g(ln,"Acture_Sizes"))+'</td><td>'+fmtNum(g(ln,"Acture_Quantity"))+'</td><td>'+fmtMoney(g(ln,"Acture_Unit_Price"))+'</td><td>'+fmtMoney(g(ln,"Acture_Line_Total"))+'</td></tr>';
+    });
+    h+='</tbody></table>';
+  }else{
+    h+='<div style="text-align:center;padding:20px;color:#94A3B8;font-size:11px">실출고 내역이 없습니다</div>';
+  }
+  // Actual Summary
+  var actSummary=g(r,"Acture_Order_Lines_Summary");
+  if(actSummary&&actSummary!=="-"){
+    h+='<div class="order-lines-summary"><strong>📝 Summary:</strong><pre>'+escH(actSummary)+'</pre></div>';
+  }
+  // Actual Notes
+  var actNotes=g(r,"Acture_Notes");
+  if(actNotes&&actNotes!=="-"){
+    h+='<div style="margin-top:10px;padding:8px;background:#ECFDF5;border-radius:6px;font-size:11px;color:#047857"><strong>📌 Notes:</strong> '+escH(actNotes)+'</div>';
+  }
+  h+='</div>';
+  h+='</div>'; // compare-section 끝
+  
+  // 생산 추적
   h+='<div class="m-sec"><div class="m-sec-t">🏭 생산 추적 / 生产跟踪</div><div class="d-grid">';
   h+=it("Production Status / 생산상태 / 生产状态",'<span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span>');
   h+=it("Fabric Status / 원단상태 / 面料进度",dv(g(r,"Fabric_Status")));
   h+=it("Progress / 진척률 / 进度",dv(g(r,"Progress")));
   h+='</div></div>';
   
-  // 6. 생산 일정 (Plan vs Actual)
+  // ★ Plan vs Actual 일정 비교 (좌우 나란히)
   h+='<div class="m-sec"><div class="m-sec-t">📅 생산 일정 / 生产日期</div><div class="schedule-compare">';
-  // Plan 일정
+  
+  // Plan 일정 (좌측)
   h+='<div class="schedule-col"><div class="schedule-col-title plan">📋 Plan 일정 / 计划日期</div>';
   var planItems=[
     {l:"Fabric In / 원단입고 / 面料入库",k:"Plan_Fabric_Date"},
@@ -623,7 +604,7 @@ function openModal(r){
   });
   h+='</div>';
   
-  // Actual 일정
+  // Actual 일정 (우측)
   h+='<div class="schedule-col"><div class="schedule-col-title actual">✅ Actual 일정 / 实际日期</div>';
   var actualItems=[
     {l:"Fabric In / 원단입고 / 面料入库",k:"Fabric_In_house_Date"},
@@ -642,7 +623,7 @@ function openModal(r){
   });
   h+='</div></div></div>';
   
-  // 7. 출고
+  // 출고 정보
   h+='<div class="m-sec"><div class="m-sec-t">🚢 출고 / 出货信息</div><div class="d-grid">';
   h+=it("Ready to Ship / 출고준비 / 待出货",dv(g(r,"Ready_to_Ship")));
   h+=it("Final QC / 최종QC / 最终QC",dv(g(r,"Final_QC_Passed")));
@@ -652,7 +633,7 @@ function openModal(r){
   h+=it("Carrier / 운송사 / 承运商",dv(g(r,"Carrier")));
   h+='</div></div>';
   
-  // 8. QC 정보
+  // QC 정보 섹션
   h+='<div class="m-sec"><div class="m-sec-t">🔍 QC 정보 / 质检信息</div><div class="d-grid">';
   h+=it("QC Status / QC상태 / 质检状态",dv(g(r,"QC_Status")));
   h+=it("QC Date / QC일자 / 质检日期",dv(g(r,"QC_Date")));
@@ -662,9 +643,27 @@ function openModal(r){
   h+=it("Rework Qty / 재작업수량 / 返工数量",dv(g(r,"Rework_Quantity")));
   h+='</div></div>';
   
+  // 제품 정의 정보
+  h+='<div class="m-sec"><div class="m-sec-t">👗 제품 정의 / 产品定义</div><div class="d-grid">';
+  h+=it("Top Type / 상의 유형 / 上衣类型",dv(mv("Top_Type",g(r,"Top_Type"))));
+  h+=it("Sleeve / 소매 유형 / 衣袖类型",dv(mv("Sleeve",g(r,"Sleeve"))));
+  h+=it("Fit / 핏 / 版型",dv(mv("Fit",g(r,"Fit"))));
+  h+=it("Details / 디테일 / 类型详情",dv(mv("Details",g(r,"Details"))));
+  h+=it("Bottom Type / 하의 유형 / 下装类型",dv(mv("Bottom_Type",g(r,"Bottom_Type"))));
+  h+=it("Bottom Length / 하의 기장 / 下装长短",dv(mv("Bottom_Length",g(r,"Bottom_Length"))));
+  h+='</div></div>';
+  
+  // 원단 정보
+  h+='<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料信息</div><div class="d-grid">';
+  h+=it("Material Type / 원단 종류 / 面料种类",dv(mv("Material_Type",g(r,"Material_Type"))));
+  h+=it("blended % / 혼방 % / 混纺 %",dv(g(r,"blended_percentage")));
+  h+=it("Lining Type / 안감유형 / 里料类型",dv(mv("Lining_Type",g(r,"Lining_Type"))));
+  h+='</div></div>';
+  
   document.getElementById("mBody").innerHTML=h;
   document.getElementById("modalOv").classList.add("active");
   
+  // 이미지 로딩
   setTimeout(function(){
     imgs.forEach(function(u,i){qImg("moImg"+i,u,"width:100%;height:100%;object-fit:cover;cursor:pointer",true)});
   },100);
@@ -690,6 +689,7 @@ function openStyleModal(s){
   function dv(v){return v==="-"?'<span class="d-val empty">미입력</span>':escH(v)}
   function it(l,v){return'<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'}
   
+  // 이미지 갤러리
   var imgs=getAllImgs(s,"Style_Image").slice(0,5);
   if(imgs.length>0){
     h+='<div class="m-img-gallery">';
