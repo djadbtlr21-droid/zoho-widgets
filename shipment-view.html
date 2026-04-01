@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shipment View v5</title>
+<title>Shipment View v6</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -66,12 +66,13 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .kpb-lbl2{font-size:6px;color:var(--tm)}
 .kpb-line{flex:0;height:2px;width:4px}
 
-/* 요약 바 (6단계 파이프라인) */
+/* 요약 바 (6단계 파이프라인 - 수평 배치 및 아이콘 축소) */
 .sum-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px}
-.sum-card{background:var(--cw);border:1px solid var(--bd);border-radius:10px;padding:16px 10px;text-align:center;box-shadow:0 2px 4px rgba(0,0,0,0.02)}
-.sum-ic{font-size:26px;margin-bottom:6px;line-height:1}
+.sum-card{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--cw);border:1px solid var(--bd);border-radius:10px;padding:12px 10px;box-shadow:0 2px 4px rgba(0,0,0,0.02)}
+.sum-ic{font-size:18px;line-height:1}
+.sum-txt{text-align:left;display:flex;flex-direction:column;justify-content:center}
 .sum-val{font-size:20px;font-weight:900;line-height:1}
-.sum-lbl{font-size:9px;font-weight:700;color:var(--tm);margin-top:4px;line-height:1.4}
+.sum-lbl{font-size:9px;font-weight:700;color:var(--tm);margin-top:2px;line-height:1.2}
 
 /* 월별 섹션 */
 .month-sec{margin-bottom:24px}
@@ -79,10 +80,11 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .month-title{font-size:15px;font-weight:900;color:var(--tx);display:flex;align-items:center;gap:8px}
 .month-cnt{font-size:11px;color:var(--tm);font-weight:600;background:#F1F5F9;padding:2px 10px;border-radius:10px;border:1px solid #CBD5E1}
 
-/* 필터 바 (균일한 4칸 구조) */
-.filter-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
-.sf{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:6px 10px;font-size:11px;outline:none;font-family:inherit;width:100%;color:var(--tx)}
-.f-sel{cursor:pointer}
+/* 필터 바 (우측 정렬 컴팩트) */
+.filter-bar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.sf{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 8px;font-size:11px;outline:none;font-family:inherit;color:var(--tx)}
+.f-search{width:160px;padding:5px 10px}
+.f-sel{cursor:pointer;max-width:140px}
 
 /* 컨테이너 카드 */
 .ship-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px}
@@ -226,7 +228,6 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 @media(max-width:900px){
   .kpi-row{grid-template-columns:1fr 1fr}
   .sum-row{grid-template-columns:repeat(3,1fr)}
-  .filter-bar{grid-template-columns:repeat(2,1fr)}
   .ship-grid{grid-template-columns:1fr}
   .d-grid{grid-template-columns:1fr 1fr}
   .dt-cols{grid-template-columns:1fr}
@@ -234,7 +235,7 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 }
 @media(max-width:600px){
   .kpi-row{grid-template-columns:1fr}
-  .filter-bar{grid-template-columns:1fr}
+  .filter-bar{justify-content:flex-start}
 }
 </style>
 </head>
@@ -302,7 +303,7 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 
 <script>
 /* ════════════════════════════════════════
-   Shipment View v5
+   Shipment View v6
    Report : All_Shipment
    Form   : Add_Shipment
 ════════════════════════════════════════ */
@@ -532,7 +533,7 @@ function renderAlerts() {
 
 /* ── KPI 카드 ── */
 function renderKPI(groups, keys) {
-  /* 최근 3개월치만 노출 (현재/미래 KPI에 집중하기 위함) */
+  /* 최근 3개월치만 노출 */
   var recent = keys.slice(-3);
   var colors = ["kc0", "kc1", "kc2"];
   var MO_EN = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -582,7 +583,6 @@ function renderKPI(groups, keys) {
     h += '<div class="kpi-metrics">';
     h += '<div class="kpi-m"><div class="kpi-m-val" style="color:#3B82F6">' + items.length + '</div><div class="kpi-m-lbl">컨테이너/CNTR</div></div>';
     h += '<div class="kpi-m"><div class="kpi-m-val" style="color:' + fColor + ';font-size:13px">' + fInfo.str + '</div><div class="kpi-m-lbl">운임/运费</div></div>';
-    /* 텍스트 변경: 납기준수율/交货期准确率 */
     h += '<div class="kpi-m"><div class="kpi-m-val" style="color:' + otifColor + '">' + otif + '%</div><div class="kpi-m-lbl" style="font-size:8.5px;letter-spacing:-0.5px">납기준수율<br>交货期准确率</div></div>';
     h += '</div>';
     h += '<div class="kpi-modes">';
@@ -612,7 +612,7 @@ function renderKPI(groups, keys) {
   document.getElementById("kpiRow").innerHTML = h || '<div class="empty-st" style="grid-column:1/-1">데이터 없음</div>';
 }
 
-/* ── 요약 바 (6단계 파이프라인) ── */
+/* ── 요약 바 (6단계 파이프라인 - 수평 배치 & 축소) ── */
 function renderSum() {
   var counts = [0, 0, 0, 0, 0, 0];
   allShip.forEach(function(r) {
@@ -633,9 +633,10 @@ function renderSum() {
   for(var i=0; i<6; i++) {
     h += '<div class="sum-card">';
     h += '<div class="sum-ic">' + labels[i].icon + '</div>';
+    h += '<div class="sum-txt">';
     h += '<div class="sum-val" style="color:' + labels[i].color + '">' + counts[i] + '</div>';
     h += '<div class="sum-lbl">' + labels[i].ko + '<br>' + labels[i].zh + '</div>';
-    h += '</div>';
+    h += '</div></div>';
   }
   document.getElementById("sumRow").innerHTML = h;
 }
@@ -662,7 +663,7 @@ function renderMonthly(groups, keys) {
     html += '<div class="month-sec" id="ms' + mi + '">';
     html += '<div class="month-hd"><div class="month-title">🚢 ' + title + '</div><span class="month-cnt" id="mc' + mi + '">' + items.length + ' Containers</span></div>';
     
-    /* 다국어 패치 적용된 4칸 균일 필터 바 */
+    /* 우측 정렬 컴팩트 필터 바 */
     html += '<div class="filter-bar">';
     html += '<input type="text" class="f-search sf" data-m="' + mi + '" data-t="q" placeholder="🔍 검색 / 搜索...">';
     
