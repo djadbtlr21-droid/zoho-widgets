@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shipment View v2</title>
+<title>Shipment View v3</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -311,6 +311,20 @@ body{background:var(--bg);padding:16px;min-height:100vh}
   </div>
 </div>
 
+<!-- 파이프라인 리스트 팝업 -->
+<div class="modal-ov" id="pipeListOv" style="z-index:2500">
+  <div class="modal-box" style="max-width:600px;max-height:70vh">
+    <div class="m-hd">
+      <div>
+        <div class="m-title" id="pipeListTitle">-</div>
+        <div class="m-sub" id="pipeListSub">-</div>
+      </div>
+      <div class="m-close" id="pipeListClose">✕</div>
+    </div>
+    <div class="m-body" id="pipeListBody"></div>
+  </div>
+</div>
+
 <!-- MO 상세 모달 (Container 모달 위 레이어) -->
 <div class="modal-ov" id="moModalOv" style="z-index:4000">
   <div class="modal-box" style="max-width:1000px">
@@ -341,14 +355,16 @@ var allShip=[];
 var today=new Date(), todayStr=today.toISOString().split("T")[0];
 
 /* ── 프로세스 단계 ── */
-var STEPS=["Booking","Boarded","In Transit","Customs","Delivered"];
-var STEP_KO=["부킹/Book","선적/Board","운송/Transit","통관/Clear","완료/Done"];
+var STEPS=["Loaded","Booking","Boarded","In Transit","Customs","Delivered"];
+var STEP_KO=["적재/装载","부킹/预订","선적/装船","운송/运输","통관/清关","완료/完成"];
+var STEP_ZH=["装载","预订","装船","运输","清关","完成"]; /* 중국어 */
 var STEP_MAP={
-  "Booking Pending":0,"Booked":0,"Booking Confirmed":0,
-  "On Board":1,"Boarded":1,
-  "In Transit":2,"Transit":2,
-  "Customs":3,"Customs Hold":3,"Customs Cleared":3,
-  "Delivered":4,"Completed":4,"Done":4
+  "Loaded":0,"Loading":0,"적재":0,
+  "Booking Pending":1,"Booked":1,"Booking Confirmed":1,
+  "On Board":2,"Boarded":2,
+  "In Transit":3,"Transit":3,
+  "Customs":4,"Customs Hold":4,"Customs Cleared":4,
+  "Delivered":5,"Completed":5,"Done":5
 };
 
 /* ── 유틸 ── */
@@ -530,23 +546,21 @@ function renderKPI(groups, keys){
     h+='<div class="kpi-hd"><div><span class="kpi-month">'+(ym?ym.m+"월":"?")+'</span><span class="kpi-month-en">'+mEN+'</span></div><span class="kpi-badge '+statusCls+'">'+statusTxt+'</span></div>';
 
     /* ★ 통화별 운임 표시 텍스트 생성 */
-    var CUR_SYMBOL={"USD":"$","CNY":"¥","KRW":"₩","EUR":"€"};
+    var CUR_SYMBOL={"USD":"$","CNY":"¥","MXN":"MX$","KRW":"₩","EUR":"€"};
     var freightParts=[];
     Object.keys(freightByCur).sort().forEach(function(cur){
       var amt=freightByCur[cur];
-      var sym=CUR_SYMBOL[cur]||cur+" ";
-      var disp=amt>=1000?(sym+(amt/1000).toFixed(1)+"k"):(sym+amt.toFixed(0));
+      var sym=CUR_SYMBOL[cur]||cur;
+      var disp=sym+(amt>=1000?(amt/1000).toFixed(1)+"k":amt.toFixed(0));
       freightParts.push(disp);
     });
-    var freightDisp=freightParts.length>0?freightParts.join(" + "):"$0";
-    var freightColor=freightParts.length>1?"#7C3AED":"#10B981"; /* 혼재시 보라 */
+    var freightDisp=freightParts.length>0?freightParts.join(" + "):"—";
+    var multiF=freightParts.length>1;
 
     h+='<div class="kpi-metrics">';
     h+='<div class="kpi-m"><div class="kpi-m-val" style="color:#3B82F6">'+items.length+'</div><div class="kpi-m-lbl">컨테이너/CNTR</div></div>';
-    h+='<div class="kpi-m" style="'+(freightParts.length>1?"grid-column:span 1":"")+'">';
-    h+='<div class="kpi-m-val" style="color:'+freightColor+';font-size:'+(freightParts.length>1?"11px":"17px")+'">'+freightDisp+'</div>';
-    h+='<div class="kpi-m-lbl">운임/Freight'+(freightParts.length>1?" (혼재)":"")+' </div></div>';
-    h+='<div class="kpi-m"><div class="kpi-m-val" style="color:'+(otif>=95?"#10B981":otif>=85?"#F59E0B":"#EF4444")+'">'+otif+'%</div><div class="kpi-m-lbl">납기준수/OTIF</div></div>';
+    h+='<div class="kpi-m"><div class="kpi-m-val" style="color:'+(multiF?"#7C3AED":"#10B981")+';font-size:15px;font-weight:900;line-height:1.2">'+freightDisp+'</div><div class="kpi-m-lbl">운임/运费</div></div>';
+    h+='<div class="kpi-m"><div class="kpi-m-val" style="color:'+(otif>=95?"#10B981":otif>=85?"#F59E0B":"#EF4444")+'">'+otif+'%</div><div class="kpi-m-lbl">OTIF</div></div>';
     h+='</div>';
 
     h+='<div class="kpi-modes">';
@@ -556,18 +570,28 @@ function renderKPI(groups, keys){
     if(cntOther>0)h+='<span class="mode-tag mt-other">🚛 기타 '+cntOther+'건</span>';
     h+='</div>';
 
-    /* 미니 트래커 */
-    h+='<div class="kpi-tracker">';
+    /* ★ 파이프라인 트래커 (클릭 가능) */
+    var keyEncPipe=encodeURIComponent(key);
+    h+='<div style="margin-top:10px;padding-top:10px;border-top:1px solid #F1F5F9">';
+    h+='<div style="font-size:9px;font-weight:700;color:var(--tm);margin-bottom:6px">선적 파이프라인 / 出货流水</div>';
+    h+='<div style="display:flex;align-items:center;gap:0">';
     STEPS.forEach(function(s,i){
-      var isDone=(allDone&&i<=maxStep)||(i<maxStep);
-      var isCurr=(!allDone&&i===maxStep);
-      var bg=isDone?"#34D399":isCurr?"#3B82F6":"#E2E8F0";
-      var tc=isDone||isCurr?"#fff":"#94A3B8";
-      var lc=isDone?"#059669":isCurr?"#2563EB":"#94A3B8";
-      if(i>0)h+='<div class="kt-line" style="background:'+(isDone?"#34D399":"#E2E8F0")+'"></div>';
-      h+='<div class="kt-wrap"><div class="kt-dot '+(isDone?"kt-done":isCurr?"kt-curr":"kt-wait")+'" style="background:'+bg+';color:'+tc+'">'+stepCounts[i]+'</div><div class="kt-lbl" style="color:'+lc+'">'+STEP_KO[i].split("/")[0]+'</div></div>';
+      var cnt=stepCounts[i];
+      var isDone=(allDone&&i<=maxStep)||(i<maxStep&&cnt===0&&i<maxStep);
+      var isCurr=(!allDone&&i===maxStep)||cnt>0;
+      var hasCnt=cnt>0;
+      var bg=hasCnt?(isDone&&cnt===0?"#E2E8F0":isCurr?"#3B82F6":"#34D399"):"#E2E8F0";
+      if(hasCnt)bg=i<maxStep?"#34D399":i===maxStep?"#3B82F6":"#E2E8F0";
+      var tc=(bg==="#E2E8F0")?"#94A3B8":"#fff";
+      var lc=(bg==="#34D399")?"#059669":(bg==="#3B82F6")?"#2563EB":"#94A3B8";
+      if(i>0)h+='<div style="flex:0;height:2px;width:4px;background:'+(i<=maxStep&&stepCounts[i-1]>0?"#34D399":"#E2E8F0")+'"></div>';
+      h+='<div style="flex:1;text-align:center;cursor:'+(cnt>0?"pointer":"default")+'" onclick="'+(cnt>0?"openPipeList('"+keyEncPipe+"',"+i+")":"")+'">'+
+        '<div style="width:22px;height:22px;border-radius:50%;background:'+bg+';color:'+tc+';font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 2px;transition:transform .1s"'+(cnt>0?' onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'"':'')+'>'+cnt+'</div>'+
+        '<div style="font-size:7px;font-weight:700;color:'+lc+'">'+STEP_KO[i].split("/")[0]+'</div>'+
+        '<div style="font-size:6px;color:'+lc+'">'+STEP_ZH[i]+'</div>'+
+      '</div>';
     });
-    h+='</div></div>';
+    h+='</div></div></div>';
   });
 
   if(!h)h='<div class="empty-state" style="grid-column:1/-1">데이터가 없습니다</div>';
@@ -587,17 +611,17 @@ function renderSummary(){
     var cur=(g(r,"Currency")||"USD").trim().toUpperCase();
     if(fc>0){if(!freightAll[cur])freightAll[cur]=0;freightAll[cur]+=fc;}
   });
-  var CUR_SYMBOL={"USD":"$","CNY":"¥","KRW":"₩","EUR":"€"};
+  var CUR_SYMBOL={"USD":"$","CNY":"¥","MXN":"MX$","KRW":"₩","EUR":"€"};
   var freightStr=Object.keys(freightAll).sort().map(function(cur){
     var amt=freightAll[cur];
-    var sym=CUR_SYMBOL[cur]||cur+" ";
+    var sym=CUR_SYMBOL[cur]||cur;
     return sym+(amt>=1000?(amt/1000).toFixed(1)+"k":amt.toFixed(0));
-  }).join(" + ")||"$0";
+  }).join(" + ")||"—";
   var multiCur=Object.keys(freightAll).length>1;
 
   var h="";
   h+='<div class="sum-card"><div class="sum-val" style="color:#3B82F6">'+tot+'</div><div class="sum-lbl">총 컨테이너<br>Total Containers</div></div>';
-  h+='<div class="sum-card"><div class="sum-val" style="color:'+(multiCur?"#7C3AED":"#6366F1")+';font-size:'+(multiCur?"13px":"20px")+'">'+freightStr+'</div><div class="sum-lbl">총 운임'+(multiCur?" (혼재)":"")+'<br>Total Freight</div></div>';
+  h+='<div class="sum-card"><div class="sum-val" style="color:'+(multiCur?"#7C3AED":"#6366F1")+';font-size:18px;font-weight:900">'+freightStr+'</div><div class="sum-lbl">총 운임<br>Total Freight</div></div>';
   h+='<div class="sum-card"><div class="sum-val" style="color:#10B981">'+cntDone+'</div><div class="sum-lbl">도착완료<br>Delivered</div></div>';
   h+='<div class="sum-card"><div class="sum-val" style="color:#F59E0B">'+cntTransit+'</div><div class="sum-lbl">운송중<br>In Transit</div></div>';
   h+='<div class="sum-card"><div class="sum-val" style="color:#EF4444">'+cntHold+'</div><div class="sum-lbl">통관보류<br>Customs Hold</div></div>';
@@ -710,13 +734,17 @@ function buildCard(r,idx){
   /* 프로세스 트래커 */
   h+='<div class="sc-tracker">';
   STEPS.forEach(function(s,i){
-    var isDone=(si>i)||(si===4);
-    var isCurr=(si===i&&i<4);
+    var isDone=(si>i)||(si===STEPS.length-1&&si===i);
+    var isCurr=(si===i&&i<STEPS.length-1);
     var isHoldStep=(hold&&isCurr);
     var dotCls=isHoldStep?"sct-hold":isDone?"sct-done":isCurr?"sct-curr":"sct-wait";
     var lc=isHoldStep?"#DC2626":isDone?"#059669":isCurr?"#2563EB":"#94A3B8";
     if(i>0)h+='<div class="sct-line" style="background:'+(isDone?"#34D399":"#E2E8F0")+'"></div>';
-    h+='<div class="sct-wrap"><div class="sct-dot '+dotCls+'">'+(isDone?"✓":isHoldStep?"!":i+1)+'</div><div class="sct-lbl" style="color:'+lc+'">'+STEP_KO[i].split("/")[0]+'</div></div>';
+    h+='<div class="sct-wrap">';
+    h+='<div class="sct-dot '+dotCls+'">'+(isDone?"✓":isHoldStep?"!":i+1)+'</div>';
+    h+='<div class="sct-lbl" style="color:'+lc+'">'+STEP_KO[i].split("/")[0]+'</div>';
+    h+='<div class="sct-lbl" style="color:'+lc+';font-size:6px">'+STEP_ZH[i]+'</div>';
+    h+='</div>';
   });
   h+='</div>';
 
@@ -785,14 +813,14 @@ function openModal(id){
   h+='<div class="m-sec"><div class="m-sec-t">🔄 선적 진행 단계 / 出货进度追踪</div>';
   h+='<div class="big-tracker">';
   STEPS.forEach(function(s,i){
-    var isDone=(si>i)||(si===4);
-    var isCurr=(si===i&&i<4);
+    var isDone=(si>i)||(si===STEPS.length-1&&si===i);
+    var isCurr=(si===i&&i<STEPS.length-1);
     var isHoldStep=(holdFlg&&isCurr);
     var dotCls=isHoldStep?"bt-hold":isDone?"bt-done":isCurr?"bt-curr":"bt-wait";
     var lblCls=isHoldStep?"hold-lbl":isDone?"done-lbl":isCurr?"curr-lbl":"";
-    if(i>0)h+='<div style="flex:0;height:3px;width:16px;background:'+(isDone?"#34D399":"#E2E8F0")+'"></div>';
+    if(i>0)h+='<div style="flex:0;height:3px;width:14px;background:'+(isDone?"#34D399":"#E2E8F0")+'"></div>';
     h+='<div class="bt-wrap"><div class="bt-dot '+dotCls+'">'+(isDone?"✓":isHoldStep?"!":i+1)+'</div>';
-    h+='<div class="bt-lbl '+lblCls+'">'+STEP_KO[i].split("/")[0]+'<br><span style="font-size:8px;color:#94A3B8">'+STEP_KO[i].split("/")[1]+'</span></div></div>';
+    h+='<div class="bt-lbl '+lblCls+'">'+STEP_KO[i].split("/")[0]+'<br><span style="font-size:8px;color:'+(isDone?"#059669":isCurr?"#3B82F6":"#94A3B8")+'">'+STEP_ZH[i]+'</span></div></div>';
   });
   h+='</div>';
   if(g(r,"Delay_Reason")!=="-")h+='<div style="margin-top:8px;padding:8px 12px;background:#FEF9C3;border-radius:6px;font-size:11px;color:#A16207"><b>지연사유:</b> '+escH(g(r,"Delay_Reason"))+'</div>';
@@ -880,6 +908,68 @@ function openModal(id){
 
   document.getElementById("mBody").innerHTML=h;
   document.getElementById("modalOv").classList.add("active");
+}
+
+/* ═══════════════════════════════════════
+   파이프라인 단계별 컨테이너 리스트 팝업
+═══════════════════════════════════════ */
+function openPipeList(keyEnc, stepIdx){
+  var key=decodeURIComponent(keyEnc);
+  /* 해당 월 + 해당 단계 컨테이너 필터링 */
+  var items=allShip.filter(function(r){
+    var ym=getYM(r);
+    if(!ym||ym.key!==key)return false;
+    return getStepIdx(r)===stepIdx;
+  });
+  var stepName=STEP_KO[stepIdx]?STEP_KO[stepIdx].split("/")[0]:"?";
+  var stepZH=STEP_ZH[stepIdx]||"";
+  document.getElementById("pipeListTitle").textContent="🚢 "+stepName+" / "+stepZH;
+  document.getElementById("pipeListSub").textContent=key+" · "+items.length+"개 컨테이너";
+
+  var h="";
+  if(items.length===0){
+    h='<div style="text-align:center;padding:30px;color:#94A3B8;font-size:12px">해당 단계의 컨테이너가 없습니다</div>';
+  } else {
+    items.forEach(function(r){
+      var cid=g(r,"Container_ID");
+      var ctype=g(r,"Container_Type");
+      var from=g(r,"Origin_Port");
+      var to=g(r,"Destination_Port");
+      var mode=g(r,"Shipment_Mode");
+      var status=g(r,"Container_Status");
+      var eta=g(r,"ETA");
+      var dd=g(r,"Delay_Days");
+      var qty=parseInt(g(r,"Total_Quantity"))||0;
+      var mt=getModeTag(mode);
+      var hold=isHold(r);
+      var delayed=isDelayed(r);
+
+      h+='<div style="padding:12px 14px;border:1px solid '+(hold?"#FECACA":"var(--bd)")+';border-radius:8px;margin-bottom:8px;cursor:pointer;background:'+(hold?"#FFF8F8":"#fff")+';transition:background .1s" onclick="document.getElementById('pipeListOv').classList.remove('active');openModal(''+r["ID"]+'');" onmouseover="this.style.background='#EFF6FF'" onmouseout="this.style.background=''+(hold?"#FFF8F8":"#fff")+''">';
+      h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">';
+      h+='<div>';
+      h+='<div style="font-size:13px;font-weight:900;color:var(--pr)">'+escH(cid!=="-"?cid:"ID 미입력")+'</div>';
+      h+='<div style="font-size:10px;color:var(--tm);margin-top:2px">'+escH(ctype!=="-"?ctype:"")+'</div>';
+      h+='</div>';
+      h+=statusTag(status);
+      h+='</div>';
+      /* 루트 */
+      h+='<div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;margin-bottom:8px">';
+      h+='<span style="padding:2px 7px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:4px;font-size:10px">'+escH(from!=="-"?from:"?")+'</span>';
+      h+='<span style="color:#94A3B8">→</span>';
+      h+='<span style="padding:2px 7px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:4px;font-size:10px">'+escH(to!=="-"?to:"?")+'</span>';
+      h+='<span class="mode-tag '+mt.cls+'" style="font-size:9px;padding:2px 6px">'+mt.icon+' '+escH(mt.label!=="-"?mt.label:"Sea")+'</span>';
+      h+='</div>';
+      /* 수치 + 날짜 */
+      h+='<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--tm)">';
+      h+='<span>수량 <b style="color:var(--tx)">'+qty.toLocaleString()+' pcs</b></span>';
+      h+='<span>ETA <b style="color:'+(delayed?"#EF4444":"var(--tx)")+'">'+escH(fmtD(eta))+'</b></span>';
+      if(dd!=="-"&&dd!=="0")h+='<span style="color:#EF4444;font-weight:700">지연 '+escH(dd)+'일</span>';
+      h+='</div>';
+      h+='</div>';
+    });
+  }
+  document.getElementById("pipeListBody").innerHTML=h;
+  document.getElementById("pipeListOv").classList.add("active");
 }
 
 /* ═══════════════════════════════════════
@@ -1044,6 +1134,8 @@ function renderMOModal(r){
 }
 
 /* ── 모달 닫기 ── */
+document.getElementById("pipeListClose").addEventListener("click",function(){document.getElementById("pipeListOv").classList.remove("active")});
+document.getElementById("pipeListOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
 document.getElementById("mClose").addEventListener("click",function(){document.getElementById("modalOv").classList.remove("active")});
 document.getElementById("modalOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
 document.getElementById("moMClose").addEventListener("click",function(){document.getElementById("moModalOv").classList.remove("active")});
@@ -1052,6 +1144,8 @@ document.addEventListener("keydown",function(e){
   if(e.key==="Escape"){
     if(document.getElementById("moModalOv").classList.contains("active")){
       document.getElementById("moModalOv").classList.remove("active");
+    } else if(document.getElementById("pipeListOv").classList.contains("active")){
+      document.getElementById("pipeListOv").classList.remove("active");
     } else {
       document.getElementById("modalOv").classList.remove("active");
     }
