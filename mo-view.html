@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MO View v30</title>
+<title>MO View v31</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -25,7 +25,6 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .btn-cctv:hover{background:#A78BFA}
 .btn-primary:hover{background:#818CF8}
 
-/* KPI 카드 - Plan vs Actual 분리 */
 .mkpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 420px;gap:12px;margin-bottom:21px}
 .mkpi-card{background:var(--cw);border:1px solid var(--bd);border-radius:10px;padding:14px;position:relative;overflow:hidden}
 .mkpi-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px}
@@ -44,7 +43,6 @@ body{background:var(--bg);padding:16px;min-height:100vh}
 .mkpi-stat-n{font-size:20px;font-weight:900;line-height:1}
 .mkpi-stat-l{font-size:10px;font-weight:700;color:var(--tm);margin-top:4px;line-height:1.3}
 .mkpi-stat .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;vertical-align:middle}
-/* KPI Footer - Plan/Actual 분리 */
 .mkpi-footer{margin-top:12px;padding-top:10px;border-top:1px solid #F1F5F9;font-size:11px;color:var(--tm);display:flex;justify-content:center;gap:16px}
 .mkpi-footer .qty-plan{display:flex;align-items:center;gap:5px}
 .mkpi-footer .qty-act{display:flex;align-items:center;gap:5px}
@@ -105,7 +103,6 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .dly-badge{display:inline-block;padding:1px 4px;border-radius:3px;font-size:7px;font-weight:700;background:#FEF2F2;color:#DC2626;margin-left:2px;animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* Timeline */
 .tl-card{background:var(--cw);border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin-top:16px}
 .tl-hd{padding:10px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;background:#FAFBFC;border-bottom:1px solid var(--bd)}
 .tl-title{font-size:14px;font-weight:800;color:var(--tx)}
@@ -182,7 +179,6 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .m-img-box img{width:100%;height:100%;object-fit:cover}
 .m-img-box .spinner-sm{margin:auto}
 
-/* Plan vs Actual 비교 레이아웃 */
 .pa-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .pa-col{border-radius:10px;padding:14px;border:2px solid}
 .pa-col.plan{border-color:#C4B5FD;background:#FDFCFF}
@@ -200,7 +196,6 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .pa-col.plan .pa-summary{background:#EDE9FE}
 .pa-col.actual .pa-summary{background:#D1FAE5}
 
-/* 서브폼 테이블 */
 .subform-tbl{width:100%;border-collapse:collapse;font-size:10px;margin-top:8px}
 .subform-tbl th{padding:6px 8px;font-weight:800;font-size:9px;border-bottom:1px solid;text-align:center}
 .pa-col.plan .subform-tbl th{background:#EDE9FE;color:#6D28D9;border-color:#C4B5FD}
@@ -213,7 +208,6 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .pa-col.actual .subform-tbl .tfoot-row td{border-color:#6EE7B7;color:#047857;background:#F0FDF9}
 .subform-empty{text-align:center;padding:16px;color:#94A3B8;font-size:10px}
 
-/* 총계 비교 박스 */
 .pa-totals{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 .pa-total-box{padding:10px;border-radius:8px;text-align:center}
 .pa-total-box.plan{background:#F5F3FF;border:1px solid #C4B5FD}
@@ -229,7 +223,6 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .pa-total-box.actual .pa-total-amt{color:#059669}
 .pa-diff{text-align:center;margin-top:8px;font-size:10px;color:var(--tm);padding:6px;background:#F8FAFC;border-radius:6px;border:1px solid #E2E8F0}
 
-/* Plan vs Actual 일정 비교 */
 .schedule-compare{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .schedule-col{background:#FAFBFC;border-radius:8px;padding:14px;border:1px solid #E2E8F0}
 .schedule-col-title{font-size:12px;font-weight:800;margin-bottom:12px;padding-bottom:8px;border-bottom:2px dashed #E2E8F0;display:flex;align-items:center;gap:6px}
@@ -289,7 +282,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
       <div><div class="m-title" id="mTitle">-</div><div class="m-sub" id="mSub">-</div></div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
         <div style="display:flex;align-items:center;gap:8px;">
-          <button id="btnTechPack" style="background:#FFFBEB;color:#B45309;border:1px solid #FDE68A;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">📋 Tech Pack</button>
+          <button id="btnTechPack" style="background:#0F172A;color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;box-shadow:0 4px 6px rgba(0,0,0,.1)">📋 TECH PACK</button>
           <button id="btnStyleInfo" style="background:#F0FDF4;color:#065F46;border:1px solid #A7F3D0;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">👕 Style Info</button>
           <button onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Report:All_MO','_blank')" style="background:#EFF6FF;color:var(--pr);border:1px solid #BFDBFE;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit</button>
           <div class="m-close" id="mClose">✕</div>
@@ -675,7 +668,6 @@ function openModal(r){
   document.getElementById("mSub").textContent=g(r,"Style_Name")+" — "+g(r,"Style_SKU");
   document.getElementById("mModDate").textContent="최종수정일 / 最后修改日 : "+modDt;
   
-  // ★ Tech Pack 버튼에 ID 속성 심어두기
   document.getElementById("btnTechPack").setAttribute("data-moid", r["ID"]);
 
   var h='';
@@ -816,7 +808,7 @@ document.getElementById("btnStyleInfo").addEventListener("click",function(){
   else{alert("해당 SKU의 스타일 정보를 찾을 수 없습니다: "+sku)}
 });
 
-/* ★ 작업지시서 (Tech Pack) 오픈 함수 */
+/* ★ 작업지시서 (Tech Pack) 프로페셔널 버전 */
 document.getElementById("btnTechPack").addEventListener("click",function(){
   var id = this.getAttribute("data-moid");
   if(!id) return;
@@ -827,22 +819,25 @@ function openTechPack(id) {
   var r = allRec.find(function(x) { return x["ID"] === id; });
   if (!r) return;
 
-  // 1. 사이즈 데이터 가로 정렬 (S, M, L, XL 병합) 로직
-  function groupSpecs(lines, prefixStr) {
+  // 마스터 스타일 레코드 찾기 (도안 이미지는 여기서 가져옵니다!)
+  var sku = g(r, "Style_SKU");
+  var s = allStyles.find(function(st){return g(st,"Style_SKU")===sku || g(st,"SKU")===sku;}) || {};
+
+  // 1. 사이즈 데이터 변환 로직 (오타 없이 철저하게 체크)
+  function groupSpecs(lines, prefix) {
     var specObj = {};
     lines.forEach(function(row) {
-      var pom = row[prefixStr+"_POM"] || "-";
+      // 폼 필드 이름이 약간 다를 수 있는 경우 대비 완벽 매칭
+      var pom = row[prefix+"_POM"] || row["POM"] || row[prefix+"POM"] || "-";
       if(pom === "-" || !pom) return;
-      var size = (row[prefixStr+"_Select_Size"] || "").toUpperCase();
-      var spec = row[prefixStr+"_Spec"] || "-";
-      var tol = row[prefixStr+"_Tol"] || "-";
+      var size = (row[prefix+"_Select_Size"] || row["Select_Size"] || row[prefix+"Select_Size"] || "").toUpperCase();
+      var spec = row[prefix+"_Spec"] || row["Spec"] || row[prefix+"Spec"] || "-";
+      var tol = row[prefix+"_Tol"] || row["Tol"] || row[prefix+"Tol"] || "-";
       
-      if (!specObj[pom]) {
-        specObj[pom] = { tol: tol, S: "-", M: "-", L: "-", XL: "-", XXL: "-" };
-      }
+      if (!specObj[pom]) specObj[pom] = { tol: tol, S: "-", M: "-", L: "-", XL: "-", XXL: "-" };
       if(specObj[pom][size] !== undefined) {
         specObj[pom][size] = spec;
-        if(tol !== "-" && tol !== "") specObj[pom].tol = tol; // 마지막으로 확인된 유효 오차범위 덮어쓰기
+        if(tol !== "-" && tol !== "") specObj[pom].tol = tol;
       }
     });
     return specObj;
@@ -853,132 +848,131 @@ function openTechPack(id) {
   var btmLines = getSubformLines(r, "Bottom_Size_Specs");
   var btmSpecs = groupSpecs(btmLines, "Bottom");
 
-  // 2. 이미지 추출 (Top Flat Sketch 와 Top Sketch 둘 다 대응)
-  var imgStyle = getImgUrl(r, "Style_Image");
-  var imgTop = getImgUrl(r, "Top_Flat_Sketch") || getImgUrl(r, "Top_Sketch");
-  var imgBtm = getImgUrl(r, "Bottom_Flat_Sketch") || getImgUrl(r, "Bottom_Sketch");
+  // 2. 완벽한 이미지 추적 로직 (Style 마스터 폼 우선, 없으면 MO에서)
+  var imgStyle = getImgUrl(s, "Style_Image") || getImgUrl(r, "Style_Image");
+  var imgTop = getImgUrl(s, "Top_Flat_Sketch") || getImgUrl(s, "Top_Sketch") || getImgUrl(r, "Top_Flat_Sketch") || getImgUrl(r, "Top_Sketch");
+  var imgBtm = getImgUrl(s, "Bottom_Flat_Sketch") || getImgUrl(s, "Bottom_Sketch") || getImgUrl(r, "Bottom_Flat_Sketch") || getImgUrl(r, "Bottom_Sketch");
 
-  var noImgDiv = '<div style="width:100%;height:100%;background:#F8FAFC;display:flex;align-items:center;justify-content:center;color:#CBD5E1;font-size:30px;border:1px dashed #CBD5E1">📷</div>';
+  var noImgDiv = '<div style="width:100%;height:100%;background:#F8FAFC;display:flex;align-items:center;justify-content:center;color:#CBD5E1;font-size:24px;border:1px dashed #CBD5E1">📷</div>';
 
+  // 색상
   var topColor = g(r, "Top_Color");
   var btmColor = g(r, "Bottom_Color");
   var colorwaysStr = [topColor !== "-" ? topColor : "", btmColor !== "-" ? btmColor : ""].filter(Boolean).join(" / ");
   if(!colorwaysStr) colorwaysStr = "-";
 
-  // 3. 작업지시서 HTML(A4 규격) 조립
-  var parts = [];
-  parts.push("<!DOCTYPE html><html lang='ko'><head><meta charset='UTF-8'>");
-  parts.push("<title>Tech Pack - " + escH(g(r, "Style_SKU")) + "</title>");
-  parts.push("<link rel='preconnect' href='https://fonts.googleapis.com'>");
-  parts.push("<link href='https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap' rel='stylesheet'>");
-  parts.push("<style>");
-  parts.push("body{font-family:'Noto Sans KR',sans-serif;font-size:11px;color:#111;margin:0;padding:0;background:#F1F5F9}");
-  parts.push(".print-bar{position:fixed;top:0;left:0;right:0;background:#1E3A8A;color:#fff;padding:12px 20px;display:flex;gap:10px;align-items:center;z-index:9999}");
-  parts.push(".print-bar span{font-weight:900;font-size:14px;flex:1}");
-  parts.push(".btn{border:none;padding:7px 18px;border-radius:5px;font-size:12px;font-weight:700;cursor:pointer}");
-  parts.push(".btn-print{background:#A5B4FC;color:#1E1B4B} .btn-print:hover{background:#818CF8}");
-  parts.push(".btn-close{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3)}");
+  // 3. 진짜 A4 테크팩 디자인 HTML 
+  var p = [];
+  p.push("<!DOCTYPE html><html lang='ko'><head><meta charset='UTF-8'>");
+  p.push("<title>Tech Pack - " + escH(sku) + "</title>");
+  p.push("<style>");
+  p.push("@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');");
+  p.push("body{font-family:'Roboto',sans-serif;font-size:11px;color:#111;margin:0;padding:0;background:#E2E8F0}");
+  p.push(".print-bar{position:fixed;top:0;left:0;right:0;background:#0F172A;color:#fff;padding:12px 24px;display:flex;gap:10px;align-items:center;z-index:9999;box-shadow:0 4px 6px rgba(0,0,0,.1)}");
+  p.push(".print-bar span{font-weight:900;font-size:16px;flex:1;letter-spacing:1px}");
+  p.push(".btn{border:none;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;text-transform:uppercase}");
+  p.push(".btn-print{background:#3B82F6;color:#fff} .btn-print:hover{background:#2563EB}");
+  p.push(".btn-close{background:rgba(255,255,255,.2);color:#fff} .btn-close:hover{background:rgba(255,255,255,.3)}");
   
-  parts.push(".page{width:210mm;min-height:297mm;margin:70px auto 20px;padding:12mm 15mm;box-sizing:border-box;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.15)}");
-  parts.push(".tp-header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #0F172A;padding-bottom:10px;margin-bottom:12px}");
-  parts.push(".logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:900;color:#0F172A}");
-  parts.push(".logo .icon{width:28px;height:28px;background:#0F172A;clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);}");
-  parts.push(".sub-title{color:#64748B;font-size:10px;font-weight:700;letter-spacing:1px;margin-top:2px}");
-  parts.push(".tp-title{text-align:right}");
-  parts.push(".tp-title h1{font-size:24px;font-weight:900;margin:0 0 4px 0;letter-spacing:2px}");
-  parts.push(".tp-title p{font-size:10px;color:#475569;margin:0}");
+  /* A4 용지 규격 캔버스 */
+  p.push(".a4-sheet{width:210mm;min-height:297mm;margin:70px auto 30px;padding:15mm;box-sizing:border-box;background:#fff;box-shadow:0 10px 40px rgba(0,0,0,.2);position:relative}");
+  p.push(".tp-head{display:flex;justify-content:space-between;border-bottom:4px solid #000;padding-bottom:12px;margin-bottom:15px}");
+  p.push(".brand{font-size:26px;font-weight:900;letter-spacing:1.5px;color:#000}");
+  p.push(".brand span{color:#3B82F6}");
+  p.push(".doc-title{text-align:right}");
+  p.push(".doc-title h1{font-size:22px;font-weight:900;margin:0 0 4px 0;letter-spacing:2px}");
+  p.push(".doc-title p{margin:0;font-size:10px;color:#64748B;font-weight:700}");
   
-  parts.push("table{width:100%;border-collapse:collapse;margin-bottom:14px}");
-  parts.push("th, td{border:1px solid #CBD5E1;padding:6px 8px;vertical-align:middle}");
-  parts.push(".info-table th{background:#F8FAFC;font-size:9px;color:#475569;text-align:left;font-weight:700;width:25%}");
-  parts.push(".info-table td{font-size:12px;font-weight:900;color:#0F172A;width:25%}");
+  /* 3열 탑 레이아웃 */
+  p.push(".tp-top{display:grid;grid-template-columns:1fr 180px;gap:20px;margin-bottom:20px}");
+  p.push(".info-tbl{width:100%;border-collapse:collapse;font-size:11px}");
+  p.push(".info-tbl th,.info-tbl td{border:1px solid #000;padding:6px 10px}");
+  p.push(".info-tbl th{background:#F8FAFC;text-align:left;font-weight:700;color:#475569;width:25%}");
+  p.push(".info-tbl td{font-weight:900;color:#0F172A}");
+  p.push(".hero-img{border:2px solid #000;height:140px;display:flex;align-items:center;justify-content:center;background:#F8FAFC;padding:5px}");
+  p.push(".hero-img img{max-width:100%;max-height:100%;object-fit:contain}");
+
+  /* 도안 (스케치) 영역 */
+  p.push(".sketches{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:20px}");
+  p.push(".sketch-box{border:2px solid #000}");
+  p.push(".sec-tt{background:#000;color:#fff;padding:6px 10px;font-size:12px;font-weight:900;display:flex;justify-content:space-between}");
+  p.push(".sec-tt span{font-size:9px;font-weight:400;color:#CBD5E1}");
+  p.push(".img-area{height:260px;padding:10px;display:flex;align-items:center;justify-content:center;background:#fff}");
+  p.push(".img-area img{max-width:100%;max-height:100%;object-fit:contain}");
+
+  /* 사이즈 스펙표 */
+  p.push(".spec-tbl{width:100%;border-collapse:collapse;margin-bottom:15px;text-align:center}");
+  p.push(".spec-tbl th,.spec-tbl td{border:1px solid #000;padding:6px 4px}");
+  p.push(".spec-tbl th{background:#F1F5F9;font-weight:900;font-size:10px}");
+  p.push(".spec-tbl td{font-weight:700}");
+  p.push(".spec-tbl .pom{text-align:left;padding-left:10px}");
   
-  parts.push(".grid-wrap{display:grid;grid-template-columns:300px 1fr;gap:15px}");
-  
-  parts.push(".sec-box{border:1px solid #0F172A;margin-bottom:15px}");
-  parts.push(".sec-hd{background:#0F172A;color:#fff;padding:6px 12px;font-size:12px;font-weight:700;display:flex;justify-content:space-between;align-items:center}");
-  parts.push(".sec-hd span{font-size:9px;font-weight:400;opacity:0.8}");
-  parts.push(".sketch-area{padding:10px;height:320px;display:flex;flex-direction:column}");
-  parts.push(".sketch-img{flex:1;border:1px dashed #CBD5E1;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}");
-  parts.push(".sketch-img img{width:100%;height:100%;object-fit:contain}");
-  parts.push(".sketch-lbl{text-align:center;font-size:10px;font-weight:700;margin-top:8px;color:#475569}");
-  
-  parts.push(".spec-table th{background:#F8FAFC;font-size:10px;font-weight:900;text-align:center;color:#0F172A}");
-  parts.push(".spec-table td{text-align:center;font-size:11px;font-weight:700}");
-  parts.push(".spec-table .pom-col{text-align:left;font-weight:700}");
-  
-  parts.push(".mat-table{margin-top:20px}");
-  parts.push(".mat-table th{background:#F8FAFC;font-size:10px;text-align:left}");
-  parts.push(".mat-table td{font-size:11px;padding:10px 8px}");
-  
-  parts.push("@media print{");
-  parts.push(".print-bar{display:none!important}");
-  parts.push("body{background:#fff}");
-  parts.push(".page{box-shadow:none;margin:0;padding:10mm;width:100%}");
-  parts.push("@page{size:A4;margin:0}}");
-  parts.push("</style></head><body>");
+  /* 하단 자재 정보 */
+  p.push(".mat-tbl{width:100%;border-collapse:collapse;margin-bottom:15px}");
+  p.push(".mat-tbl th,.mat-tbl td{border:1px solid #000;padding:8px}");
+  p.push(".mat-tbl th{background:#F8FAFC;font-weight:900;font-size:10px;text-align:left}");
+  p.push(".mat-tbl td{font-size:11px}");
+
+  /* 프린트 설정 */
+  p.push("@media print{");
+  p.push(".print-bar{display:none!important}");
+  p.push("body{background:#fff;padding:0;margin:0}");
+  p.push(".a4-sheet{box-shadow:none;margin:0;padding:10mm;width:100%}");
+  p.push("@page{size:A4;margin:0}}");
+  p.push("</style></head><body>");
 
   // 프린트 바
-  parts.push("<div class='print-bar'>");
-  parts.push("<span>작업지시서 (Tech Pack) — " + escH(g(r, "Style_SKU")) + "</span>");
-  parts.push("<button id='btn-print' class='btn btn-print'>Print / PDF</button>");
-  parts.push("<button id='btn-close' class='btn btn-close'>Close</button>");
-  parts.push("</div>");
+  p.push("<div class='print-bar'>");
+  p.push("<span>📋 TECH PACK — " + escH(sku) + "</span>");
+  p.push("<button id='btn-print' class='btn btn-print'>Print / PDF</button>");
+  p.push("<button id='btn-close' class='btn btn-close'>Close</button>");
+  p.push("</div>");
 
   // 페이지 시작
-  parts.push("<div class='page'>");
+  p.push("<div class='a4-sheet'>");
   
   // 헤더
-  parts.push("<div class='tp-header'>");
-  parts.push("<div><div class='logo'><div class='icon'></div>ZOHO APPAREL</div><div class='sub-title'>PRODUCT DEVELOPMENT & SCM</div></div>");
-  parts.push("<div class='tp-title'><h1>작업지시서 / TECH PACK</h1><p>Date: " + todayStr + " &nbsp;|&nbsp; Rev: 1.0</p></div>");
-  parts.push("</div>");
+  p.push("<div class='tp-head'>");
+  p.push("<div class='brand'>ZOHO <span>APPAREL</span></div>");
+  p.push("<div class='doc-title'><h1>TECH PACK</h1><p>DATE: " + todayStr + " &nbsp;|&nbsp; REV: 1.0</p></div>");
+  p.push("</div>");
 
-  // Info 테이블
-  parts.push("<table class='info-table'><tbody>");
-  parts.push("<tr><th>STYLE NO. (스타일 번호)</th><th colspan='2'>STYLE NAME (스타일 명)</th><th>SEASON (시즌)</th></tr>");
-  parts.push("<tr><td style='color:#2563EB'>" + escH(g(r, "Style_SKU")) + "</td><td colspan='2'>" + escH(g(r, "Style_Name")) + "</td><td>" + escH(g(r, "Season")) + "</td></tr>");
-  parts.push("<tr><th>CATEGORY (복종)</th><th>SIZE RANGE (사이즈)</th><th>COLORWAYS (컬러)</th><th>PLAN (진행년월)</th></tr>");
-  parts.push("<tr><td>" + escH(catName(g(r, "Category"))) + "</td><td>S, M, L, XL</td><td>" + escH(colorwaysStr) + "</td><td>" + escH(g(r, "Plan_Year")) + "-" + escH(g(r, "Plan_Month")) + "</td></tr>");
-  parts.push("</tbody></table>");
-
-  // 2단 그리드
-  parts.push("<div class='grid-wrap'>");
+  // 상단 정보 & Style Image
+  p.push("<div class='tp-top'>");
+  p.push("<div><table class='info-tbl'><tbody>");
+  p.push("<tr><th>STYLE NO.</th><td style='color:#3B82F6'>" + escH(sku) + "</td><th>SEASON</th><td>" + escH(g(r, "Season")) + "</td></tr>");
+  p.push("<tr><th>STYLE NAME</th><td colspan='3'>" + escH(g(r, "Style_Name")) + "</td></tr>");
+  p.push("<tr><th>CATEGORY</th><td>" + escH(catName(g(r, "Category"))) + "</td><th>TARGET</th><td>" + escH(mv("Gender",g(r, "Gender"))) + "</td></tr>");
+  p.push("<tr><th>COLORS (TOP / BTM)</th><td colspan='3'>" + escH(colorwaysStr) + "</td></tr>");
+  p.push("<tr><th>SIZE RANGE</th><td colspan='3'>S, M, L, XL</td></tr>");
+  p.push("</tbody></table></div>");
   
-  // 왼쪽 열 (도안)
-  parts.push("<div>");
-  // 상의 도안
-  parts.push("<div class='sec-box'><div class='sec-hd'>👕 상의 도안 (Top Sketch) <span>Front & Back</span></div>");
-  parts.push("<div class='sketch-area'><div class='sketch-img'>" + (imgTop ? "<img src='"+imgTop+"'>" : noImgDiv) + "</div><div class='sketch-lbl'>TOP SKETCH</div></div></div>");
-  // 하의 도안
-  parts.push("<div class='sec-box'><div class='sec-hd'>👖 하의 도안 (Bottom Sketch) <span>Front & Back</span></div>");
-  parts.push("<div class='sketch-area'><div class='sketch-img'>" + (imgBtm ? "<img src='"+imgBtm+"'>" : noImgDiv) + "</div><div class='sketch-lbl'>BOTTOM SKETCH</div></div></div>");
-  parts.push("</div>"); // 왼쪽 끝
+  p.push("<div class='hero-img'>" + (imgStyle ? "<img src='"+imgStyle+"'>" : noImgDiv) + "</div>");
+  p.push("</div>");
 
-  // 오른쪽 열 (사이즈 스펙)
-  parts.push("<div>");
-  
-  // 테이블 생성 도우미
-  function buildSpecHtml(title, specsObj) {
-    var h = "<div class='sec-box'><div class='sec-hd'>📏 " + title + " <span>단위: cm</span></div>";
-    h += "<table class='spec-table'><thead><tr>";
-    h += "<th style='width:40%'>Point of Measure (측정부위)</th><th style='width:12%'>Tol(±)</th>";
+  // 도안 이미지 (좌우 배치)
+  p.push("<div class='sketches'>");
+  p.push("<div class='sketch-box'><div class='sec-tt'>TOP SKETCH <span>Front & Back</span></div><div class='img-area'>" + (imgTop ? "<img src='"+imgTop+"'>" : noImgDiv) + "</div></div>");
+  p.push("<div class='sketch-box'><div class='sec-tt'>BOTTOM SKETCH <span>Front & Back</span></div><div class='img-area'>" + (imgBtm ? "<img src='"+imgBtm+"'>" : noImgDiv) + "</div></div>");
+  p.push("</div>");
+
+  // 사이즈 스펙표 생성기
+  function drawSpec(title, spObj) {
+    var h = "<div style='border:2px solid #000;margin-bottom:15px;'><div class='sec-tt'>" + title + " <span>Unit: cm</span></div>";
+    h += "<table class='spec-tbl'><thead><tr>";
+    h += "<th style='width:40%'>Point of Measure (측정부위)</th><th style='width:12%'>TOL(±)</th>";
     h += "<th>S</th><th>M</th><th>L</th><th>XL</th>";
     h += "</tr></thead><tbody>";
     
-    var keys = Object.keys(specsObj);
+    var keys = Object.keys(spObj);
     if(keys.length === 0) {
-      h += "<tr><td colspan='6' style='color:#94A3B8;padding:15px;font-weight:400'>입력된 사이즈 데이터가 없습니다.</td></tr>";
+      h += "<tr><td colspan='6' style='color:#94A3B8;padding:12px;font-weight:400'>테스트를 위해 새로 만든 MO 레코드를 선택해 주세요! (과거 데이터는 사이즈가 없습니다)</td></tr>";
     } else {
       keys.forEach(function(pom) {
-        var sp = specsObj[pom];
+        var o = spObj[pom];
         h += "<tr>";
-        h += "<td class='pom-col'>" + escH(pom) + "</td>";
-        h += "<td>" + escH(sp.tol) + "</td>";
-        h += "<td>" + escH(sp.S) + "</td>";
-        h += "<td>" + escH(sp.M) + "</td>";
-        h += "<td>" + escH(sp.L) + "</td>";
-        h += "<td>" + escH(sp.XL) + "</td>";
+        h += "<td class='pom'>" + escH(pom) + "</td><td>" + escH(o.tol) + "</td>";
+        h += "<td>" + escH(o.S) + "</td><td>" + escH(o.M) + "</td><td>" + escH(o.L) + "</td><td>" + escH(o.XL) + "</td>";
         h += "</tr>";
       });
     }
@@ -986,44 +980,35 @@ function openTechPack(id) {
     return h;
   }
 
-  // 상의 / 하의 스펙 테이블 출력
-  parts.push(buildSpecHtml("상의 사이즈 스펙 (Top Measurements)", topSpecs));
-  parts.push(buildSpecHtml("하의 사이즈 스펙 (Bottom Measurements)", btmSpecs));
+  p.push(drawSpec("📏 TOP MEASUREMENTS", topSpecs));
+  p.push(drawSpec("📏 BOTTOM MEASUREMENTS", btmSpecs));
 
-  // 디테일 / 봉제 주의사항
-  parts.push("<div class='sec-box' style='border-color:#CBD5E1'><div class='sec-hd' style='background:#F1F5F9;color:#0F172A;border-bottom:1px solid #CBD5E1'>📋 봉제 및 작업 주의사항 (Details & Notes)</div>");
-  parts.push("<div style='padding:12px;font-size:11px;line-height:1.6'>");
-  parts.push("<b>Top:</b> " + escH(mv("Top_Type",g(r,"Top_Type"))) + " / " + escH(mv("Sleeve",g(r,"Sleeve"))) + "<br>");
-  parts.push("<b>Bottom:</b> " + escH(mv("Bottom_Type",g(r,"Bottom_Type"))) + " / " + escH(mv("Bottom_Length",g(r,"Bottom_Length"))) + "<br>");
-  parts.push("<b>Fit & Detail:</b> " + escH(mv("Fit",g(r,"Fit"))) + " / " + escH(mv("Details",g(r,"Details"))) + "<br>");
+  // 원단/안감 및 지시사항
+  p.push("<div style='border:2px solid #000'><div class='sec-tt'>FABRIC & NOTES <span>작업 주의사항</span></div>");
+  p.push("<table class='mat-tbl'><tbody>");
+  p.push("<tr><th style='width:25%'>MAIN FABRIC</th><td>" + escH(mv("Material_Type",g(r,"Material_Type"))) + "</td><th style='width:25%'>LINING / BLEND</th><td>" + escH(mv("Lining_Type",g(r,"Lining_Type"))) + " (" + escH(g(r,"blended_percentage")) + ")</td></tr>");
+  p.push("<tr><th>DETAILS</th><td colspan='3'>");
+  p.push("<b>Top:</b> " + escH(mv("Top_Type",g(r,"Top_Type"))) + " / " + escH(mv("Sleeve",g(r,"Sleeve"))) + " <br>");
+  p.push("<b>Bottom:</b> " + escH(mv("Bottom_Type",g(r,"Bottom_Type"))) + " / " + escH(mv("Bottom_Length",g(r,"Bottom_Length"))) + " <br>");
+  p.push("<b>Fit:</b> " + escH(mv("Fit",g(r,"Fit"))) + " | <b>Detail:</b> " + escH(mv("Details",g(r,"Details"))));
   var pNote = g(r, "Plan_Notes");
-  if(pNote && pNote !== "-") parts.push("<div style='margin-top:8px;padding-top:8px;border-top:1px dashed #CBD5E1'>" + escH(pNote) + "</div>");
-  parts.push("</div></div>");
+  if(pNote && pNote !== "-") p.push("<div style='margin-top:6px;padding-top:6px;border-top:1px dashed #000'><b>NOTE:</b> " + escH(pNote) + "</div>");
+  p.push("</td></tr>");
+  p.push("</tbody></table></div>");
 
-  parts.push("</div>"); // 오른쪽 끝
-  parts.push("</div>"); // 그리드 랩 끝
+  p.push("</div>"); // a4-sheet 끝
 
-  // 원단 및 부자재 정보 (하단)
-  parts.push("<table class='mat-table'><thead><tr><th style='width:33%'>MAIN FABRIC (메인 원단)</th><th style='width:33%'>LINING / BLEND (안감/혼방률)</th><th style='width:34%'>TRIMS & OTHERS (부자재/기타)</th></tr></thead><tbody><tr>");
-  parts.push("<td>" + escH(mv("Material_Type",g(r,"Material_Type"))) + "</td>");
-  parts.push("<td>" + escH(mv("Lining_Type",g(r,"Lining_Type"))) + "<br>Blend: " + escH(g(r,"blended_percentage")) + "</td>");
-  parts.push("<td>(디자인 부자재 내역 참조)</td>");
-  parts.push("</tr></tbody></table>");
+  // 스크립트
+  p.push("<" + "script>");
+  p.push("document.getElementById('btn-print').addEventListener('click',function(){window.print();});");
+  p.push("document.getElementById('btn-close').addEventListener('click',function(){window.close();});");
+  p.push("<" + "/script></body></html>");
 
-  parts.push("</div>"); // 페이지 끝
-
-  // 스크립트 (인쇄, 닫기)
-  parts.push("<" + "script>");
-  parts.push("document.getElementById('btn-print').addEventListener('click',function(){window.print();});");
-  parts.push("document.getElementById('btn-close').addEventListener('click',function(){window.close();});");
-  parts.push("document.addEventListener('keydown',function(e){if(e.ctrlKey&&e.key==='p'){e.preventDefault();window.print();}});");
-  parts.push("<" + "/script></body></html>");
-
-  // 팝업 열기
+  // 새 창 열기
   var w = window.open("", "_blank", "width=950,height=1000,scrollbars=yes,resizable=yes");
   if (!w) { alert("팝업이 차단되었습니다. 브라우저 설정에서 팝업을 허용해주세요."); return; }
   w.document.open();
-  w.document.write(parts.join(""));
+  w.document.write(p.join(""));
   w.document.close();
   w.focus();
 }
