@@ -247,7 +247,6 @@ body{background:var(--bg);padding:16px;min-height:100vh}
   <div id="monthlyContent"></div>
 </div>
 
-<!-- 컨테이너 상세 모달 -->
 <div class="modal-ov" id="shipModalOv">
   <div class="modal-box">
     <div class="m-hd">
@@ -262,7 +261,6 @@ body{background:var(--bg);padding:16px;min-height:100vh}
   </div>
 </div>
 
-<!-- 파이프라인 리스트 팝업 -->
 <div class="modal-ov" id="pipePopOv" style="z-index:3500">
   <div class="modal-box modal-box-sm">
     <div class="m-hd">
@@ -273,7 +271,6 @@ body{background:var(--bg);padding:16px;min-height:100vh}
   </div>
 </div>
 
-<!-- MO 상세 모달 -->
 <div class="modal-ov" id="moModalOv" style="z-index:4000">
   <div class="modal-box modal-box-mo">
     <div class="m-hd">
@@ -570,7 +567,7 @@ function renderKPI(groups, keys) {
     h += '<div class="kpi-metrics">';
     h += '<div class="kpi-m"><div class="kpi-m-val" style="color:#3B82F6">' + items.length + '</div><div class="kpi-m-lbl">컨테이너/CNTR</div></div>';
     h += '<div class="kpi-m"><div class="kpi-m-val" style="color:' + fColor + ';font-size:13px">' + fInfo.str + '</div><div class="kpi-m-lbl">운임/运费</div></div>';
-    h += '<div class="kpi-m"><div class="kpi-m-val" style="color:' + otifColor + '">' + otif + '%</div><div class="kpi-m-lbl">OTIF</div></div>';
+    h += '<div class="kpi-m"><div class="kpi-m-val" style="color:' + otifColor + '">' + otif + '%</div><div class="kpi-m-lbl" style="font-size:8.5px;letter-spacing:-0.5px">납기준수율<br>交货期准确率</div></div>';
     h += '</div>';
     h += '<div class="kpi-modes">';
     if (cntO > 0) h += '<span class="mt mt-ocean">🚢 Ocean ' + cntO + '</span>';
@@ -896,9 +893,9 @@ function buildShipDetail(r) {
       var lnote = lineVal(line, "Notes");
       totQty += lqty; totCtn += lctn; totCBM += lcbm; totKG += lkg; totAmt += ltotal;
       h += '<tr>';
-      /* 이미지 셀 */
+      /* ✅ 이 부분이 수정되었습니다! 백슬래시(\) 추가 완료 */
       if (img) {
-        h += '<td><img src="' + img + '" style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #E2E8F0;cursor:pointer" onclick="window.open('' + img + '','_blank')" title="클릭하여 원본 보기"></td>';
+        h += '<td><img src="' + img + '" style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #E2E8F0;cursor:pointer" onclick="window.open(\'' + img + '\', \'_blank\')" title="클릭하여 원본 보기"></td>';
       } else {
         h += '<td><div style="width:48px;height:48px;background:#F1F5F9;border-radius:6px;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;font-size:18px;color:#CBD5E1;margin:0 auto">📦</div></td>';
       }
