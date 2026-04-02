@@ -720,28 +720,35 @@ function dumpSubform(r, fieldName) {
 function normalizeSubformRows(raw) {
   if(!raw) return [];
 
-  /* 케이스 1: 이미 배열 */
+  var rows = [];
+
+  /* 배열인 경우 */
   if(Array.isArray(raw)) {
-    /* 배열 원소가 {display_value, value} 형태인지 확인 */
-    if(raw.length > 0 && typeof raw[0] === "object" && raw[0] !== null) {
-      var firstKeys = Object.keys(raw[0]);
-      /* 원소에 display_value/value만 있으면 → Lookup 배열 (서브폼 행 아님) */
-      if(firstKeys.length <= 3 && firstKeys.indexOf("display_value") >= 0) {
-        console.warn("[TechPack] 서브폼이 Lookup 배열로 반환됨 — 행 데이터 아님");
-        return [];
-      }
-      /* 정상 서브폼 행 배열 */
-      return raw;
+    rows = raw;
+  }
+  /* 객체인 경우 {key: row_obj} */
+  else if(typeof raw === "object") {
+    rows = Object.values(raw);
+  }
+
+  /* 각 row가 실제 서브폼 행인지 확인
+     getAllRecords: { display_value, ID } 형태 → 파싱 불가
+     getRecordById: { Top_POM: {...}, Top_Select_Size: {...}, ... } 형태 → 파싱 가능 */
+  if(rows.length > 0) {
+    var firstKeys = Object.keys(rows[0]);
+    var hasDV = firstKeys.indexOf("display_value") >= 0;
+    var hasFieldData = firstKeys.some(function(k) {
+      return k.indexOf("POM") >= 0 || k.indexOf("Select") >= 0 || k.indexOf("Spec") >= 0 || k.indexOf("Tol") >= 0;
+    });
+
+    if(hasDV && !hasFieldData) {
+      /* getAllRecords의 불완전한 응답 — 행 데이터 없음 */
+      console.warn("[TechPack] getAllRecords 서브폼 한계: display_value만 있음. getRecordById로 재시도 필요.");
+      return [];
     }
-    return raw;
   }
 
-  /* 케이스 2: 객체 {key: row_obj} */
-  if(typeof raw === "object") {
-    return Object.values(raw);
-  }
-
-  return [];
+  return rows;
 }
 
 /* ★★★ 필드명 직접 지정 파서 (Top/Bottom 구분) */
@@ -904,25 +911,27 @@ function openTechPack(id) {
   var r = allRec.find(function(x) { return x["ID"] === id; });
   if(!r) return;
 
-  /* ★★★ 임시 진단: 실제 서브폼 구조를 alert으로 즉시 표시 */
-  var _tss = r["Top_Size_Specs"];
-  var _diagMsg = "=== Top_Size_Specs 구조 진단 ===\n";
-  _diagMsg += "타입: " + typeof _tss + "\n";
-  _diagMsg += "Array?: " + Array.isArray(_tss) + "\n";
-  if(_tss) {
-    var _tssArr = Array.isArray(_tss) ? _tss : Object.values(_tss);
-    _diagMsg += "행 수: " + _tssArr.length + "\n";
-    if(_tssArr.length > 0) {
-      var _r0 = _tssArr[0];
-      _diagMsg += "첫 행 키: " + Object.keys(_r0).join(", ") + "\n";
-      _diagMsg += "첫 행 값:\n" + JSON.stringify(_r0).substring(0, 500);
-    }
-  } else {
-    _diagMsg += "값: null/undefined";
-  }
-  alert(_diagMsg);
-  /* ★★★ 진단 끝 — 결과 확인 후 이 alert 블록 제거 예정 */
+  /* Tech Pack 로딩 화면 먼저 표시 */
+  document.getElementById("tpBarTitle").textContent = "📋 TECH PACK — 데이터 로딩 중...";
+  document.getElementById("tpContent").innerHTML = "<div style='text-align:center;padding:60px;color:#64748B'><div class='spinner' style='margin:0 auto 16px'></div><div style='font-size:14px;font-weight:700'>서브폼 데이터 조회 중...</div><div style='font-size:11px;margin-top:6px'>getRecordById로 전체 데이터를 가져오는 중입니다</div></div>";
+  document.getElementById("tpOv").classList.add("active");
 
+  /* ★ getRecordById로 서브폼 전체 데이터 가져오기 */
+  ZOHO.CREATOR.API.getRecordById({
+    appName: APP,
+    reportName: REP,
+    id: id
+  }).then(function(res) {
+    /* getRecordById 응답에서 서브폼이 포함된 전체 레코드 */
+    var fullR = (res && res.code === 3000 && res.data) ? res.data : r;
+    openTechPackRender(id, fullR);
+  }).catch(function(e) {
+    console.warn("[TechPack] getRecordById 실패, 기존 데이터 사용:", e);
+    openTechPackRender(id, r);
+  });
+}
+
+function openTechPackRender(id, r) {
   var sku = g(r, "Style_SKU");
   var s = allStyles.find(function(st){ return g(st,"Style_SKU")===sku || g(st,"SKU")===sku; }) || {};
 
