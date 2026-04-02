@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Style View v33 (Ultimate Fix & Speed)</title>
+<title>Style View v34 (Tech Pack Integration)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 :root{--z-primary:#1E3A8A;--z-accent:#3B82F6;--z-bg:#F1F5F9;--z-border:#E2E8F0;--z-text-main:#0F172A;--z-text-muted:#64748B;--z-card-bg:#FFF;--st-appr:#10B981;--st-prog:#F59E0B;--st-danger:#EF4444;--st-draft:#94A3B8}
@@ -134,35 +135,105 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .bar-count{font-size:11px;font-weight:800;color:var(--z-text-main);min-width:24px}
 .error-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C}
 
+/* =========================================================
+   ★ TECH PACK (작업지시서) 모달 전용 스타일 (A4 가로형)
+   ========================================================= */
+.tp-modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#CBD5E1;z-index:6000;overflow-y:auto}
+.tp-modal-ov.active{display:block}
+.tp-print-bar{position:sticky;top:0;background:#0F172A;color:#fff;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;z-index:6010;box-shadow:0 4px 10px rgba(0,0,0,.15)}
+.tp-print-bar span{font-family:'Roboto',sans-serif;font-weight:900;font-size:16px;letter-spacing:1px}
+.tp-btn-grp{display:flex;gap:10px}
+.tp-btn{border:none;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:900;cursor:pointer;text-transform:uppercase;font-family:'Roboto',sans-serif;transition:all 0.2s}
+.tp-btn-print{background:#3B82F6;color:#fff;box-shadow:0 2px 4px rgba(59,130,246,0.3)} 
+.tp-btn-print:hover{background:#2563EB;transform:translateY(-1px)}
+.tp-btn-close{background:rgba(255,255,255,.2);color:#fff} 
+.tp-btn-close:hover{background:rgba(255,255,255,.3)}
+
+/* A4 가로(Landscape) 캔버스 */
+.a4-landscape{font-family:'Roboto','Noto Sans KR',sans-serif;width:297mm;min-height:210mm;margin:40px auto;padding:12mm;box-sizing:border-box;background:#fff;box-shadow:0 15px 50px rgba(0,0,0,.2);position:relative}
+.a4-landscape *{box-sizing:border-box}
+
+.tp-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:5px solid #000;padding-bottom:12px;margin-bottom:15px}
+.tp-brand{font-size:32px;font-weight:900;letter-spacing:1.5px;color:#000;display:flex;align-items:center;gap:10px}
+.tp-brand .logo-ic{width:36px;height:36px;background:#000;clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)}
+.tp-brand span{color:#3B82F6}
+.doc-title{text-align:right}
+.doc-title h1{font-size:28px;font-weight:900;margin:0 0 4px 0;letter-spacing:3px;color:#000}
+.doc-title p{margin:0;font-size:11px;color:#475569;font-weight:700}
+
+/* 3단 그리드 재조정 (우측 도안을 더 넓고 높게) */
+.tp-grid{display:grid;grid-template-columns:280px 1fr 340px;gap:20px}
+.tp-box{border:2px solid #000;margin-bottom:15px;background:#fff;display:flex;flex-direction:column}
+.tp-box-title{background:#000;color:#fff;padding:6px 10px;font-size:13px;font-weight:900;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.5px}
+.tp-box-title span{font-size:10px;font-weight:400;color:#CBD5E1;letter-spacing:0}
+
+/* 왼쪽 열 */
+.col-left { display: flex; flex-direction: column; }
+.info-tbl{width:100%;border-collapse:collapse;font-size:11px;text-align:left;margin-bottom:15px}
+.info-tbl th,.info-tbl td{border-bottom:1px solid #CBD5E1;padding:7px 10px}
+.info-tbl th{font-weight:800;color:#475569;width:35%;background:#F8FAFC}
+.info-tbl td{font-weight:900;color:#0F172A}
+.info-tbl tr:last-child th,.info-tbl tr:last-child td{border-bottom:none}
+
+/* 중앙 열 */
+.col-mid { display: flex; flex-direction: column; }
+.spec-tbl{width:100%;border-collapse:collapse;text-align:center}
+.spec-tbl th,.spec-tbl td{border:1px solid #CBD5E1;padding:7px 4px}
+.spec-tbl th{background:#F1F5F9;font-weight:900;font-size:11px;color:#000}
+.spec-tbl td{font-weight:700;font-size:12px;color:#000}
+.spec-tbl .pom{text-align:left;padding-left:10px;font-size:11px}
+.memo-box { flex: 1; display: flex; flex-direction: column; }
+.memo-content { flex: 1; min-height: 120px; padding: 10px; font-size: 11px; color: #475569; line-height:1.6; }
+
+/* 오른쪽 열 (이미지) */
+.img-wrap{padding:10px;display:flex;align-items:center;justify-content:center;position:relative}
+.style-img{height:180px;background:#F8FAFC}
+.sketch-img{height:340px;background:#fff;flex:1}
+.img-wrap img{max-width:100%;max-height:100%;object-fit:contain}
+.no-img{color:#CBD5E1;font-size:30px;font-weight:900}
+
+/* 프린트 시 깔끔하게 A4 한장으로 나오도록 설정 */
+@media print{
+  #mainApp, .pop-ov, .modal-overlay, #lightboxOverlay { display: none !important; }
+  .tp-modal-ov { position: static !important; display: block !important; background: #fff !important; overflow: visible !important; height: auto !important; }
+  .tp-print-bar { display: none !important; }
+  .a4-landscape { margin: 0 !important; padding: 10mm !important; box-shadow: none !important; border: none !important; width: 100% !important; max-width: 100% !important; }
+  @page { size: A4 landscape; margin: 0; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}
+
 @media(max-width:1100px){.mkpi-row{grid-template-columns:1fr 1fr}.detail-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:768px){.mkpi-row{grid-template-columns:1fr}.detail-grid{grid-template-columns:1fr 1fr}.bar-label{min-width:200px;max-width:200px}}
 </style>
 </head>
 <body>
-<div id="loadingScreen" class="loading-screen"><div class="spinner"></div><div class="loading-text">데이터를 불러오는 중...</div></div>
-<div id="mainContent" style="display:none">
-<div class="page-header"><h1><span class="icon-s">S</span> Style View / 스타일 현황표 / 款式现况表</h1>
-<button onclick="goTo('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_Styles')" style="background:var(--z-primary);color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px">+ New Style</button>
-</div>
 
-<div class="mkpi-row" id="kpiRow"></div>
+<div id="mainApp">
+  <div id="loadingScreen" class="loading-screen"><div class="spinner"></div><div class="loading-text">데이터를 불러오는 중...</div></div>
+  <div id="mainContent" style="display:none">
+    <div class="page-header"><h1><span class="icon-s">S</span> Style View / 스타일 현황표 / 款式现况表</h1>
+      <button onclick="goTo('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_Styles')" style="background:var(--z-primary);color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px">+ New Style</button>
+    </div>
 
-<div class="filter-bar">
-<input type="text" class="search-box" id="searchBox" placeholder="🔍 SKU, 스타일명, Brand 검색...">
-<select class="filter-select" id="filterCategory"><option value="">All Category</option></select>
-<select class="filter-select" id="filterGender"><option value="">All Gender</option></select>
-<select class="filter-select" id="filterSeason"><option value="">All Season</option></select>
-<select class="filter-select" id="filterStatus"><option value="">All Status</option></select>
-</div>
-<div id="monthlyTables"></div>
+    <div class="mkpi-row" id="kpiRow"></div>
 
-<div id="chartSection" class="chart-card" style="display:none">
-<div class="chart-title">📊 Style Type Distribution / 스타일 유형 분포 / 款式类型分布</div>
-<div id="barChart"></div>
-</div>
-</div>
+    <div class="filter-bar">
+      <input type="text" class="search-box" id="searchBox" placeholder="🔍 SKU, 스타일명, Brand 검색...">
+      <select class="filter-select" id="filterCategory"><option value="">All Category</option></select>
+      <select class="filter-select" id="filterGender"><option value="">All Gender</option></select>
+      <select class="filter-select" id="filterSeason"><option value="">All Season</option></select>
+      <select class="filter-select" id="filterStatus"><option value="">All Status</option></select>
+    </div>
+    <div id="monthlyTables"></div>
 
-<div id="errorScreen" style="display:none"><div class="error-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다</div><div id="errorMsg" style="font-size:12px"></div></div></div>
+    <div id="chartSection" class="chart-card" style="display:none">
+      <div class="chart-title">📊 Style Type Distribution / 스타일 유형 분포 / 款式类型分布</div>
+      <div id="barChart"></div>
+    </div>
+  </div>
+
+  <div id="errorScreen" style="display:none"><div class="error-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다</div><div id="errorMsg" style="font-size:12px"></div></div></div>
+</div>
 
 <div class="pop-ov" id="kpiPopOv">
   <div class="pop-box">
@@ -175,24 +246,43 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 </div>
 
 <div id="lightboxOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:4000;justify-content:center;align-items:center;cursor:pointer;backdrop-filter:blur(4px)" onclick="closeLightbox()">
-<img id="lightboxImg" style="max-width:90%;max-height:90%;object-fit:contain;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.5)" onclick="event.stopPropagation()">
-<div style="position:absolute;top:20px;right:24px;color:#fff;font-size:28px;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.15);border-radius:50%" onclick="closeLightbox()">✕</div>
+  <img id="lightboxImg" style="max-width:90%;max-height:90%;object-fit:contain;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.5)" onclick="event.stopPropagation()">
+  <div style="position:absolute;top:20px;right:24px;color:#fff;font-size:28px;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.15);border-radius:50%" onclick="closeLightbox()">✕</div>
 </div>
 
-<div class="modal-overlay" id="modalOverlay"><div class="modal-box-lg">
-<div class="modal-header"><div class="modal-header-left"><div class="modal-thumb-lg" id="modalThumb">👕</div><div><div class="modal-title" id="modalTitle">-</div><div class="modal-subtitle" id="modalSubtitle">-</div></div></div>
-<div style="display:flex;align-items:center;gap:8px">
-<button id="btnEdit" onclick="editStyle()" style="background:#EFF6FF;color:var(--z-primary);border:1px solid #BFDBFE;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit</button>
-<button id="btnNewMO" onclick="newMO()" style="background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">+ New MO</button>
-<div class="modal-close-lg" id="modalClose">✕</div>
-</div></div>
-<div class="modal-body" id="modalBody"></div>
-</div></div>
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box-lg">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-thumb-lg" id="modalThumb">👕</div>
+        <div><div class="modal-title" id="modalTitle">-</div><div class="modal-subtitle" id="modalSubtitle">-</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button id="btnTechPack" onclick="openTechPack()" style="background:#000;color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:900;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.2);letter-spacing:0.5px">📋 TECH PACK</button>
+        <button id="btnEdit" onclick="editStyle()" style="background:#EFF6FF;color:var(--z-primary);border:1px solid #BFDBFE;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit</button>
+        <button id="btnNewMO" onclick="newMO()" style="background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">+ New MO</button>
+        <div class="modal-close-lg" id="modalClose">✕</div>
+      </div>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<div id="tpOv" class="tp-modal-ov">
+  <div class="tp-print-bar">
+    <span id="tpBarTitle">📋 TECH PACK</span>
+    <div class="tp-btn-grp">
+      <button id="btn-tp-print" class="tp-btn tp-btn-print">Print / PDF</button>
+      <button id="btn-tp-close" class="tp-btn tp-btn-close">Close</button>
+    </div>
+  </div>
+  <div class="a4-landscape" id="tpContent"></div>
+</div>
 
 <script>
 var APP="eom",REP="All_Styles",MO_REP="All_MO";
-var allRec=[],filtered=[],moSkus=new Set();
-var today=new Date();
+var allRec=[],filtered=[],moSkus=new Set(), allMOs=[]; // ★ MO 레코드도 저장해둠
+var today=new Date(), todayStr=today.toISOString().split("T")[0];
 
 var MAP={
 Gender:{"W":"Women / 여성 / 女","M":"Men / 남성 / 男","U":"Unisex / 남녀공용 / 男女通用"},
@@ -219,33 +309,42 @@ Gender:{"W":"Women","M":"Men","U":"Unisex"}
 function mv(f,v){return(!v||v==="-")?"-":(MAP[f]&&MAP[f][v])?MAP[f][v]:v}
 function sv(f,v){return(!v||v==="-")?null:(SHORT[f]&&SHORT[f][v])?SHORT[f][v]:v}
 
-/* ★ 안전 클릭 이벤트 중앙 컨트롤러 ★ */
 function openModalById(id) {
   var r = allRec.find(function(x){ return String(x.ID) === String(id); });
   if(r) openModal(r);
 }
 
 ZOHO.CREATOR.init().then(function(){
-ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:MO_REP,page:1,pageSize:200}).then(function(r){
-if(r&&r.code===3000&&r.data)r.data.forEach(function(m){var s=g(m,"Style_SKU");if(s==="-")s=g(m,"SKU");if(s!=="-")moSkus.add(s)});
-loadStyles()}).catch(function(){loadStyles()})});
+  // MO 데이터 로드 시 전체 배열을 allMOs에 보관해둡니다. (Tech Pack 정보용)
+  ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:MO_REP,page:1,pageSize:200}).then(function(r){
+    if(r&&r.code===3000&&r.data){
+      allMOs = r.data;
+      r.data.forEach(function(m){var s=g(m,"Style_SKU");if(s==="-")s=g(m,"SKU");if(s!=="-")moSkus.add(s)});
+    }
+    loadStyles();
+  }).catch(function(){loadStyles()})
+});
 
 function loadStyles(){
-ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:REP,page:1,pageSize:200}).then(function(r){
-if(r&&r.code===3000&&r.data){allRec=r.data;filtered=allRec.slice();renderMKPI();buildFilters();renderTables();renderChart();hide("loadingScreen");show("mainContent");setTimeout(loadTableImgs,500)}
-else showErr("로드 실패")}).catch(function(e){showErr(JSON.stringify(e))})}
+  ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:REP,page:1,pageSize:200}).then(function(r){
+    if(r&&r.code===3000&&r.data){
+      allRec=r.data;filtered=allRec.slice();renderMKPI();buildFilters();renderTables();renderChart();hide("loadingScreen");show("mainContent");setTimeout(loadTableImgs,500)
+    } else showErr("로드 실패")
+  }).catch(function(e){showErr(JSON.stringify(e))})
+}
 
 function show(i){document.getElementById(i).style.display="block"}
 function hide(i){document.getElementById(i).style.display="none"}
 function showErr(m){hide("loadingScreen");show("errorScreen");document.getElementById("errorMsg").textContent=m}
 function g(r,f){var v=r[f];if(v==null||v==="")return"-";if(typeof v==="object"&&v.display_value)return v.display_value;return String(v)}
+function cleanFactory(v){if(!v||v==="-")return"-";return v.replace(/^[_\s]*\d+[_\s]*/,"")}
 function escH(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
 function tc(s){s=(s||"").toLowerCase();if(s.indexOf("active")>=0||s.indexOf("approved")>=0||s.indexOf("완성")>=0||s.indexOf("승인")>=0)return"tag-appr";if(s.indexOf("progress")>=0||s.indexOf("sampling")>=0||s.indexOf("샘플")>=0||s.indexOf("진행")>=0)return"tag-prog";if(s.indexOf("rejected")>=0||s.indexOf("cancel")>=0)return"tag-fail";return"tag-draft"}
 
 function getImg1(r){var i=r["Style_Image"];if(!i)return null;if(Array.isArray(i)&&i.length>0)return i[0];if(typeof i==="string"&&i.length>5)return i;if(typeof i==="object"&&i.display_value)return i.display_value;return null}
 function getAllImgs(r,field){var i=r[field];if(!i)return[];if(Array.isArray(i))return i.filter(function(x){return x&&typeof x==="string"&&x.length>5});if(typeof i==="object"&&!Array.isArray(i)){var u=[];Object.keys(i).forEach(function(k){var v=i[k];if(v&&typeof v==="string"&&v.length>5)u.push(v)});return u}if(typeof i==="string"&&i.length>5)return[i];return[]}
+function getImgUrl(r,field){var imgs=getAllImgs(r,field);return imgs.length>0?imgs[0]:null}
 
-/* ★ 하이브리드 지연 로딩 큐 (브라우저 렉 원천 차단) ★ */
 var _safeQ = [];
 var _safeBusy = false;
 
@@ -264,7 +363,7 @@ function _runSafeQ() {
   function next() {
     if(done) return;
     done = true;
-    setTimeout(_runSafeQ, 80); // 0.08초 간격으로 매우 안정적인 릴레이 호출
+    setTimeout(_runSafeQ, 80);
   }
 
   try {
@@ -273,7 +372,7 @@ function _runSafeQ() {
       el.appendChild(img);
       next();
     });
-    setTimeout(next, 3000); // 3초 뒤 강제 스킵 (멈춤 방지)
+    setTimeout(next, 3000);
   } catch(e) { next(); }
 }
 
@@ -297,7 +396,7 @@ function loadTableImgs() {
           var url = el.getAttribute("data-img");
           if(url) {
             qImg(el, url, "width:100%;height:100%;object-fit:cover", false);
-            el.removeAttribute("data-img"); // 중복 로딩 완벽 방지
+            el.removeAttribute("data-img");
           }
           observer.unobserve(el);
         }
@@ -390,7 +489,6 @@ function renderMKPI(){
   } else {
     delayedAll.forEach(function(r){
       var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");
-      /* ★ 팝업 호출 안전 스크립트 (onclick="openModalById...") 로 통일 */
       h+='<div class="delay-item" onclick="openModalById(\''+r.ID+'\')">';
       h+='<div><div class="delay-mo">'+escH(sku)+'</div>';
       h+='<div class="delay-style">'+escH(g(r,"Style_Name"))+'</div></div>';
@@ -499,7 +597,6 @@ function renderTables(){
       var trStyle = (!ordered) ? ' style="background:#FEF2F2;cursor:pointer"' : ' style="cursor:pointer"';
       var trClass = (!ordered) ? 'not-ordered' : '';
       
-      /* ★ 팝업창을 띄우는 100% 보장 인라인 클릭 이벤트 삽입 */
       html+='<tr class="'+trClass+'"'+trStyle+' onclick="openModalById(\''+r.ID+'\')"><td><div class="style-info"><div class="style-thumb"'+ia+'>👕</div><div><span class="style-code">'+escH(sku)+'</span><span class="style-name">'+escH(name)+'</span></div></div></td><td>'+escH(g(r,"Business_Entity"))+'</td><td>'+escH(g(r,"Season"))+'</td><td>'+escH(mv("Gender",g(r,"Gender")))+'</td><td>'+escH(mv("Category",g(r,"Category")))+'</td><td>'+escH(mv("Material_Type",g(r,"Material_Type")))+'</td><td>'+escH(g(r,"Target_Cost"))+'</td><td><span class="tag '+tc(g(r,"Style_Status"))+'">'+escH(g(r,"Style_Status"))+'</span></td><td><span class="tag '+tc(g(r,"Sample_Status"))+'">'+escH(g(r,"Sample_Status"))+'</span></td><td>'+(ordered?'<span class="tag tag-appr">Ordered</span>':'<span class="tag tag-fail">Not Ordered</span>')+'</td></tr>'});
       html+='</tbody></table></div></div></div>'});
   
@@ -513,9 +610,7 @@ function af(){var q=document.getElementById("searchBox").value.toLowerCase().tri
 
 /* 팝업 모달창 열기 */
 function openModal(rec){
-  // 팝업이 열리면 백그라운드에서 진행 중이던 표 썸네일 대기열을 싹 다 비웁니다 (새치기 세팅)
   _safeQ = [];
-  
   _currentRecId=rec["ID"];
   document.getElementById("modalTitle").textContent=g(rec,"Style_SKU");
   document.getElementById("modalSubtitle").textContent=g(rec,"Style_Name");
@@ -602,12 +697,224 @@ if(smi.length){h+='<div style="font-size:10px;font-weight:700;color:var(--z-text
 h+='</div>'}
 return h}
 
-function openLightbox(src){if(!src)return;document.getElementById("lightboxImg").src=src;document.getElementById("lightboxOverlay").style.display="flex"}
 function closeLightbox(){document.getElementById("lightboxOverlay").style.display="none";document.getElementById("lightboxImg").src=""}
 function closeModal(){document.getElementById("modalOverlay").classList.remove("active");_currentRecId=null}
 document.getElementById("modalClose").addEventListener("click",closeModal);
 document.getElementById("modalOverlay").addEventListener("click",function(e){if(e.target===this)closeModal()});
-document.addEventListener("keydown",function(e){if(e.key==="Escape"){if(document.getElementById("lightboxOverlay").style.display==="flex")closeLightbox();else closeModal()}});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){if(document.getElementById("lightboxOverlay").style.display==="flex")closeLightbox();else { closeModal(); document.getElementById("tpOv").classList.remove("active"); }}});
+
+/* =========================================================
+   ★ Tech Pack 모달 (Style View 버전) - 완벽 가로형(Landscape) 3단 레이아웃
+   ========================================================= */
+// 팝업 이벤트 바인딩
+function openTechPack() {
+  if(!_currentRecId) return;
+  
+  var btn = document.getElementById("btnTechPack");
+  var originalText = btn.innerHTML;
+  btn.innerHTML = "⏳ LOADING SPECS...";
+  btn.disabled = true;
+
+  // 1. 현재 Style 마스터 레코드 가져오기
+  var s = allRec.find(function(x) { return String(x.ID) === String(_currentRecId); });
+  if (!s) { btn.disabled = false; btn.innerHTML = originalText; return; }
+
+  // 2. 조회가 필요한 서브폼 ID 추출
+  var topIds = (s.Top_Size_Specs || []).map(function(x){return x.ID;}).filter(Boolean);
+  var btmIds = (s.Bottom_Size_Specs || []).map(function(x){return x.ID;}).filter(Boolean);
+
+  // 3. 서브폼 전용 리포트로 다이렉트 1:1 릴레이 호출 (에러 없는 가장 안전한 방식)
+  function fetchSafely(reportName, ids) {
+    return new Promise(function(resolve) {
+      if (!ids || ids.length === 0) return resolve([]);
+      var results = [];
+      var i = 0;
+      function next() {
+        if (i >= ids.length) return resolve(results);
+        ZOHO.CREATOR.API.getRecordById({appName: APP, reportName: reportName, id: ids[i]})
+        .then(function(res) { if(res && res.data) results.push(res.data); i++; setTimeout(next, 20); })
+        .catch(function(err) { i++; setTimeout(next, 20); });
+      }
+      next();
+    });
+  }
+
+  Promise.all([
+    fetchSafely("All_Top_Specs", topIds),
+    fetchSafely("All_Bottom_Specs", btmIds)
+  ]).then(function(results) {
+    var topLines = results[0].filter(Boolean);
+    var btmLines = results[1].filter(Boolean);
+
+    // 만능 파서 (숨겨진 필드명, 오타 전부 찾아냄)
+    function parseUniversalSpecs(lines) {
+      var spObj = {};
+      lines.forEach(function(row) {
+        var pom="-", size="-", spec="-", tol="-";
+        Object.keys(row).forEach(function(k){
+          var kl = k.toUpperCase();
+          var val = typeof row[k] === "object" && row[k] !== null ? (row[k].display_value || "") : String(row[k] || "");
+          if(val==="null" || val==="undefined") val="-";
+
+          if(kl.indexOf("POM") >= 0 || kl === "MEASUREMENT_POINT") pom = val;
+          else if(kl.indexOf("SELECT_SIZE") >= 0 || kl.indexOf("SELECT") >= 0 || k === "Size") size = val.toUpperCase();
+          else if((kl.indexOf("SPEC") >= 0 || kl.indexOf("VALUE") >= 0 || kl === "CM") && kl.indexOf("SPECS") === -1 && kl.indexOf("SIZE") === -1) spec = val;
+          else if(kl.indexOf("TOL") >= 0) tol = val;
+        });
+
+        if(pom === "-" || pom === "") return;
+        if(!spObj[pom]) spObj[pom] = {tol:tol, S:"-", M:"-", L:"-", XL:"-", XXL:"-"};
+        if(size && size !== "-" && spObj[pom][size] !== undefined) spObj[pom][size] = spec;
+        if(tol !== "-" && tol !== "") spObj[pom].tol = tol;
+      });
+      return spObj;
+    }
+
+    var topSpecs = parseUniversalSpecs(topLines);
+    if(Object.keys(topSpecs).length === 0) topSpecs = parseUniversalSpecs(s.Top_Size_Specs || []);
+
+    var btmSpecs = parseUniversalSpecs(btmLines);
+    if(Object.keys(btmSpecs).length === 0) btmSpecs = parseUniversalSpecs(s.Bottom_Size_Specs || []);
+
+    // MO 정보 연동: 이 Style에 연동된 MO 레코드가 있는지 확인 (없으면 빈값)
+    var sku = g(s, "Style_SKU");
+    var mo = allMOs.find(function(m){ return g(m,"Style_SKU")===sku || g(m,"SKU")===sku; });
+
+    renderTechPackHTML(s, mo, topSpecs, btmSpecs, topIds.length, btmIds.length);
+
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  });
+}
+
+function renderTechPackHTML(s, mo, topSpecs, btmSpecs, topIdCount, btmIdCount) {
+  var sku = g(s, "Style_SKU");
+  
+  // 이미지 추출
+  var imgStyle = getImgUrl(s, "Style_Image") || (mo ? getImgUrl(mo, "Style_Image") : null);
+  var imgTop = getImgUrl(s, "Top_Flat_Sketch") || getImgUrl(s, "Top_Sketch") || getImgUrl(s, "Flat_Sketch") || (mo ? getImgUrl(mo, "Top_Sketch") : null);
+  var imgBtm = getImgUrl(s, "Bottom_Flat_Sketch") || getImgUrl(s, "Bottom_Sketch") || (mo ? getImgUrl(mo, "Bottom_Sketch") : null);
+
+  // 정보 추출 (우선순위: MO -> Style)
+  var moNum = mo ? g(mo, "MO_Number") : "-";
+  var factory = mo ? cleanFactory(g(mo, "Factory")) : cleanFactory(g(s, "Business_Entity"));
+  
+  var colors = mo ? (g(mo, "Top_Color") !== "-" ? g(mo, "Top_Color") + (g(mo, "Bottom_Color") !== "-" ? " / " + g(mo, "Bottom_Color") : "") : g(s, "Available_Colors")) : g(s, "Available_Colors");
+  if(!colors || colors === "-") colors = "-";
+
+  var p = [];
+  p.push("<div class='tp-head'>");
+  p.push("<div class='tp-brand'><div class='logo-ic'></div> ZOHO <span>APPAREL</span></div>");
+  p.push("<div class='doc-title'><h1>TECH PACK</h1><p>DATE: " + todayStr + " &nbsp;|&nbsp; REV: 1.0</p></div>");
+  p.push("</div>");
+
+  p.push("<div class='tp-grid'>"); 
+
+  // ================= 1열: 기본 정보, Style Image, 원단 =================
+  p.push("<div class='col-left'>");
+  p.push("<table class='info-tbl'><tbody>");
+  p.push("<tr><th>MO NO.</th><td style='color:#3B82F6;font-size:13px'>" + escH(moNum) + "</td></tr>");
+  p.push("<tr><th>STYLE NO.</th><td>" + escH(sku) + "</td></tr>");
+  p.push("<tr><th>STYLE NAME</th><td>" + escH(g(s, "Style_Name")) + "</td></tr>");
+  p.push("<tr><th>FACTORY</th><td>" + escH(factory) + "</td></tr>");
+  p.push("<tr><th>SEASON</th><td>" + escH(g(s, "Season")) + "</td></tr>");
+  p.push("<tr><th>CATEGORY</th><td>" + escH(catName(g(s, "Category"))) + "</td></tr>");
+  p.push("<tr><th>TARGET</th><td>" + escH(mv("Gender",g(s, "Gender"))) + "</td></tr>");
+  p.push("<tr><th>COLORS (T/B)</th><td style='color:#059669'>" + escH(colors) + "</td></tr>");
+  p.push("<tr><th>SIZE RANGE</th><td>S, M, L, XL</td></tr>");
+  p.push("</tbody></table>");
+  
+  p.push("<div class='tp-box'><div class='tp-box-title'>STYLE IMAGE</div><div class='img-wrap style-img' id='tpImgStyle'><div class='spinner-sm'></div></div></div>");
+  
+  p.push("<div class='tp-box'><div class='tp-box-title'>FABRIC & FIT DETAILS</div>");
+  p.push("<div style='padding:10px;font-size:11px;line-height:1.6'>");
+  p.push("<b>MAIN:</b> " + escH(mv("Material_Type",g(s, "Material_Type"))) + "<br>");
+  p.push("<b>LINING:</b> " + escH(mv("Lining_Type",g(s, "Lining_Type"))) + " (" + escH(g(s, "blended_percentage")) + ")<br><br>");
+  p.push("<b>Top:</b> " + escH(mv("Top_Type",g(s,"Top_Type"))) + " / " + escH(mv("Sleeve",g(s,"Sleeve"))) + "<br>");
+  p.push("<b>Btm:</b> " + escH(mv("Bottom_Type",g(s,"Bottom_Type"))) + " / " + escH(mv("Bottom_Length",g(s,"Bottom_Length"))) + "<br>");
+  p.push("<b>Fit:</b> " + escH(mv("Fit",g(s,"Fit"))) + " | <b>Detail:</b> " + escH(mv("Details",g(s,"Details"))));
+  p.push("</div></div>");
+  p.push("</div>");
+
+  // ================= 2열: 사이즈 스펙 및 비고란 =================
+  p.push("<div class='col-mid'>");
+  
+  function drawSpec(title, spObj, idCount) {
+    var h = "<div class='tp-box'><div class='tp-box-title'>" + title + " <span>Unit: cm</span></div>";
+    h += "<table class='spec-tbl'><thead><tr>";
+    h += "<th style='width:45%'>Point of Measure (측정부위)</th><th style='width:15%'>TOL(±)</th>";
+    h += "<th style='width:10%'>S</th><th style='width:10%'>M</th><th style='width:10%'>L</th><th style='width:10%'>XL</th>";
+    h += "</tr></thead><tbody>";
+    
+    var keys = Object.keys(spObj);
+    if(keys.length === 0) {
+      var dbg = "<b>[데이터 없음]</b> 사이즈 정보를 불러오지 못했습니다.<br><br>";
+      dbg += "- 폼에 입력된 서브폼 행 개수: " + idCount + "개<br>";
+      dbg += "- 서브폼 전용 리포트 연결 권한을 확인해주세요.";
+      h += "<tr><td colspan='6' style='color:#EF4444;padding:20px;font-size:10px;text-align:left;word-break:break-all'>" + dbg + "</td></tr>";
+    } else {
+      keys.forEach(function(pom) {
+        var o = spObj[pom];
+        h += "<tr>";
+        h += "<td class='pom'>" + escH(pom) + "</td><td>" + escH(o.tol) + "</td>";
+        h += "<td>" + escH(o.S) + "</td><td>" + escH(o.M) + "</td><td>" + escH(o.L) + "</td><td>" + escH(o.XL) + "</td>";
+        h += "</tr>";
+      });
+    }
+    h += "</tbody></table></div>";
+    return h;
+  }
+  
+  p.push(drawSpec("📏 TOP MEASUREMENTS", topSpecs, topIdCount));
+  p.push(drawSpec("📏 BOTTOM MEASUREMENTS", btmSpecs, btmIdCount));
+  
+  p.push("<div class='tp-box memo-box'><div class='tp-box-title'>REMARKS / 비고란 (작업 지시사항)</div>");
+  p.push("<div class='memo-content'>");
+  var pNote = mo ? g(mo, "Plan_Notes") : null;
+  if(pNote && pNote !== "-") p.push("<div style='color:#DC2626;font-weight:700;white-space:pre-wrap'>" + escH(pNote) + "</div>");
+  p.push("</div></div>");
+  p.push("</div>"); 
+
+  // ================= 3열: 도안 이미지 =================
+  p.push("<div class='col-right'>");
+  p.push("<div class='tp-box'><div class='tp-box-title'>TOP SKETCH</div><div class='img-wrap sketch-img' id='tpImgTop'><div class='spinner-sm'></div></div></div>");
+  p.push("<div class='tp-box'><div class='tp-box-title'>BOTTOM SKETCH</div><div class='img-wrap sketch-img' id='tpImgBtm'><div class='spinner-sm'></div></div></div>");
+  p.push("</div>");
+
+  p.push("</div>"); 
+
+  document.getElementById("tpBarTitle").textContent = "📋 TECH PACK — " + escH(sku);
+  document.getElementById("tpContent").innerHTML = p.join("");
+  document.getElementById("tpOv").classList.add("active");
+
+  // ★ 네이티브 이미지 로딩 함수 (0.1초 렌더링)
+  function fastImgZoho(elId, url) {
+    var el = document.getElementById(elId);
+    if(!el) return;
+    if(!url || url === "-") { el.innerHTML = '<div class="no-img">📷</div>'; return; }
+    var u = Array.isArray(url) ? url[0] : url;
+    if(typeof u === "object" && u !== null) u = u.url || u.display_value || "";
+    if(!u || u === "-") { el.innerHTML = '<div class="no-img">📷</div>'; return; }
+    
+    var img = document.createElement("img");
+    img.style.cssText = "width:100%;height:100%;object-fit:contain";
+    ZOHO.CREATOR.UTIL.setImageData(img, u, function() {
+      el.innerHTML = ""; el.appendChild(img);
+    });
+  }
+
+  fastImgZoho("tpImgStyle", imgStyle);
+  fastImgZoho("tpImgTop", imgTop);
+  fastImgZoho("tpImgBtm", imgBtm);
+}
+
+document.getElementById('btn-tp-close').addEventListener('click',function(){
+  document.getElementById("tpOv").classList.remove("active");
+});
+document.getElementById('btn-tp-print').addEventListener('click',function(){
+  window.print();
+});
+
 </script>
 </body>
 </html>
