@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MO View v29</title>
+<title>MO View v30</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
@@ -1013,11 +1013,11 @@ function openTechPack(id) {
   parts.push("</div>"); // 페이지 끝
 
   // 스크립트 (인쇄, 닫기)
-  parts.push("<script>");
+  parts.push("<" + "script>");
   parts.push("document.getElementById('btn-print').addEventListener('click',function(){window.print();});");
   parts.push("document.getElementById('btn-close').addEventListener('click',function(){window.close();});");
   parts.push("document.addEventListener('keydown',function(e){if(e.ctrlKey&&e.key==='p'){e.preventDefault();window.print();}});");
-  parts.push("</script></body></html>");
+  parts.push("<" + "/script></body></html>");
 
   // 팝업 열기
   var w = window.open("", "_blank", "width=950,height=1000,scrollbars=yes,resizable=yes");
