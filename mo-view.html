@@ -757,8 +757,13 @@ function parseSpecsByFieldName(lines, prefix) {
 
   console.log("[TechPack] parseSpecsByFieldName prefix=" + prefix + " rows=" + lines.length);
   if(lines.length > 0) {
-    console.log("[TechPack] 첫 row 키:", Object.keys(lines[0]));
-    console.log("[TechPack] 첫 row:", JSON.stringify(lines[0]).substring(0, 300));
+    var _keys = Object.keys(lines[0]);
+    var _raw  = JSON.stringify(lines[0]).substring(0, 400);
+    console.log("[TechPack] " + prefix + " 첫 row 키:", _keys);
+    console.log("[TechPack] " + prefix + " 첫 row:", _raw);
+    /* 전역 저장 → 배너에서 사용 */
+    window["_tp_" + prefix + "_keys"] = _keys;
+    window["_tp_" + prefix + "_raw"]  = _raw;
   }
 
   lines.forEach(function(row) {
@@ -899,6 +904,25 @@ function openTechPack(id) {
   var r = allRec.find(function(x) { return x["ID"] === id; });
   if(!r) return;
 
+  /* ★★★ 임시 진단: 실제 서브폼 구조를 alert으로 즉시 표시 */
+  var _tss = r["Top_Size_Specs"];
+  var _diagMsg = "=== Top_Size_Specs 구조 진단 ===\n";
+  _diagMsg += "타입: " + typeof _tss + "\n";
+  _diagMsg += "Array?: " + Array.isArray(_tss) + "\n";
+  if(_tss) {
+    var _tssArr = Array.isArray(_tss) ? _tss : Object.values(_tss);
+    _diagMsg += "행 수: " + _tssArr.length + "\n";
+    if(_tssArr.length > 0) {
+      var _r0 = _tssArr[0];
+      _diagMsg += "첫 행 키: " + Object.keys(_r0).join(", ") + "\n";
+      _diagMsg += "첫 행 값:\n" + JSON.stringify(_r0).substring(0, 500);
+    }
+  } else {
+    _diagMsg += "값: null/undefined";
+  }
+  alert(_diagMsg);
+  /* ★★★ 진단 끝 — 결과 확인 후 이 alert 블록 제거 예정 */
+
   var sku = g(r, "Style_SKU");
   var s = allStyles.find(function(st){ return g(st,"Style_SKU")===sku || g(st,"SKU")===sku; }) || {};
 
@@ -943,9 +967,11 @@ function openTechPack(id) {
   var btmFirstKeys = btmLines.length > 0 ? Object.keys(btmLines[0]) : [];
   var topFirstRaw  = topLines.length > 0 ? JSON.stringify(topLines[0]).substring(0, 300) : "없음";
 
-  var debugInfo = "Top: 원본" + rawTopLen + "행 → 파싱된 POM " + parsedTopN + "개 / Bottom: 원본" + rawBtmLen + "행 → 파싱된 POM " + parsedBtmN + "개";
-  debugInfo += " | Top 첫row 키: [" + topFirstKeys.join(", ") + "]";
-  debugInfo += " | Top 첫row 값: " + topFirstRaw;
+  var _topKeys = (window["_tp_Top_keys"] || topFirstKeys).join(", ") || "아직없음";
+  var _topRaw  = window["_tp_Top_raw"]  || topFirstRaw || "아직없음";
+  var debugInfo = "Top: 원본" + rawTopLen + "행, 파싱POM=" + parsedTopN + " / Bottom: 원본" + rawBtmLen + "행, 파싱POM=" + parsedBtmN;
+  debugInfo += " || Top row키: [" + _topKeys + "]";
+  debugInfo += " || Top row값(앞200): " + _topRaw.substring(0, 200);
 
   var p = [];
   p.push("<div class='tp-head'>");
