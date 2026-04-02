@@ -932,15 +932,20 @@ function openTechPack(id) {
   var blend   = g(s,"blended_percentage"); if(blend==="-") blend = g(r,"blended_percentage");
   var lining  = g(s,"Lining_Type"); if(lining==="-") lining = g(r,"Lining_Type");
 
-  /* ★ 디버그 배너 */
+  /* ★ 디버그 배너 — 실제 키 목록 화면에 표시 */
   var rawTopLen = topRaw ? (Array.isArray(topRaw) ? topRaw.length : Object.keys(topRaw).length) : 0;
   var rawBtmLen = btmRaw ? (Array.isArray(btmRaw) ? btmRaw.length : Object.keys(btmRaw).length) : 0;
   var parsedTopN = Object.keys(topSpecs).length;
   var parsedBtmN = Object.keys(btmSpecs).length;
+
+  /* 첫 번째 row의 실제 키 목록 추출 */
+  var topFirstKeys = topLines.length > 0 ? Object.keys(topLines[0]) : [];
+  var btmFirstKeys = btmLines.length > 0 ? Object.keys(btmLines[0]) : [];
+  var topFirstRaw  = topLines.length > 0 ? JSON.stringify(topLines[0]).substring(0, 300) : "없음";
+
   var debugInfo = "Top: 원본" + rawTopLen + "행 → 파싱된 POM " + parsedTopN + "개 / Bottom: 원본" + rawBtmLen + "행 → 파싱된 POM " + parsedBtmN + "개";
-  if(topLines.length === 0 && btmLines.length === 0) {
-    debugInfo += " ⚠️ 서브폼 행 데이터 없음 — F12 콘솔의 [TechPack] 로그를 확인하세요";
-  }
+  debugInfo += " | Top 첫row 키: [" + topFirstKeys.join(", ") + "]";
+  debugInfo += " | Top 첫row 값: " + topFirstRaw;
 
   var p = [];
   p.push("<div class='tp-head'>");
