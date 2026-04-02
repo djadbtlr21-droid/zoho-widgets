@@ -893,12 +893,14 @@ function buildShipDetail(r) {
       var lnote = lineVal(line, "Notes");
       totQty += lqty; totCtn += lctn; totCBM += lcbm; totKG += lkg; totAmt += ltotal;
       h += '<tr>';
-      /* ✅ 이 부분이 수정되었습니다! 백슬래시(\) 추가 완료 */
+      
+      /* ✅ 완벽하게 백슬래시(\) 처리가 완료된 이미지 렌더링 코드 */
       if (img) {
         h += '<td><img src="' + img + '" style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #E2E8F0;cursor:pointer" onclick="window.open(\'' + img + '\', \'_blank\')" title="클릭하여 원본 보기"></td>';
       } else {
         h += '<td><div style="width:48px;height:48px;background:#F1F5F9;border-radius:6px;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;font-size:18px;color:#CBD5E1;margin:0 auto">📦</div></td>';
       }
+
       if (mo !== "-") {
         h += '<td><button class="cl-mo-btn" data-monum="' + esc(mo) + '">' + esc(mo) + '</button></td>';
       } else {
