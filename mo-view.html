@@ -932,6 +932,21 @@ function openTechPack(id) {
 }
 
 function openTechPackRender(id, r) {
+  /* ★ 임시 진단: 서브폼 실제 구조 확인 */
+  var _tss = r["Top_Size_Specs"];
+  var _bss = r["Bottom_Size_Specs"];
+  var _msg = "=== Top_Size_Specs ===\n";
+  _msg += "타입: " + typeof _tss + " / Array: " + Array.isArray(_tss) + "\n";
+  if(_tss) {
+    var _arr = Array.isArray(_tss) ? _tss : Object.values(_tss);
+    _msg += "행 수: " + _arr.length + "\n";
+    if(_arr.length > 0) {
+      _msg += "첫 행 키: " + Object.keys(_arr[0]).join(", ") + "\n";
+      _msg += "첫 행 값: " + JSON.stringify(_arr[0]).substring(0, 300);
+    }
+  } else { _msg += "없음(null)"; }
+  alert(_msg);
+
   var sku = g(r, "Style_SKU");
   var s = allStyles.find(function(st){ return g(st,"Style_SKU")===sku || g(st,"SKU")===sku; }) || {};
 
