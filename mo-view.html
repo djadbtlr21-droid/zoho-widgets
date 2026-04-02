@@ -3,14 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MO View v31</title>
+<title>MO View v32</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 :root{--pr:#1E3A8A;--ac:#3B82F6;--bg:#F1F5F9;--bd:#E2E8F0;--tx:#0F172A;--tm:#64748B;--cw:#FFF;--ok:#10B981;--wn:#F59E0B;--dg:#EF4444;--dr:#94A3B8}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Noto Sans KR',-apple-system,sans-serif}
-body{background:var(--bg);padding:16px;min-height:100vh}
+body{background:var(--bg);min-height:100vh}
+.main-app{padding:16px}
 .spinner{width:40px;height:40px;border:4px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
 .spinner-sm{width:20px;height:20px;border:3px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin .6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -249,25 +251,76 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .style-modal-ov.active{display:flex}
 .style-modal-box{background:#fff;border-radius:12px;width:92%;max-width:800px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .25s ease-out}
 
+/* ★ Tech Pack 오버레이 스타일 (현재 창 위에 띄움) */
+.tp-modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#CBD5E1;z-index:6000;overflow-y:auto}
+.tp-modal-ov.active{display:block}
+.tp-print-bar{position:sticky;top:0;background:#0F172A;color:#fff;padding:12px 24px;display:flex;gap:10px;align-items:center;z-index:6010;box-shadow:0 4px 6px rgba(0,0,0,.1)}
+.tp-print-bar span{font-family:'Roboto',sans-serif;font-weight:900;font-size:16px;flex:1;letter-spacing:1px}
+.tp-btn{border:none;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;text-transform:uppercase;font-family:'Roboto',sans-serif}
+.tp-btn-print{background:#3B82F6;color:#fff} .tp-btn-print:hover{background:#2563EB}
+.tp-btn-close{background:rgba(255,255,255,.2);color:#fff} .tp-btn-close:hover{background:rgba(255,255,255,.3)}
+
+/* Tech Pack 내부 A4 캔버스 */
+.a4-sheet{font-family:'Roboto',sans-serif;width:210mm;min-height:297mm;margin:40px auto 40px;padding:15mm;box-sizing:border-box;background:#fff;box-shadow:0 10px 40px rgba(0,0,0,.2);position:relative}
+.a4-sheet *{box-sizing:border-box}
+.tp-head{display:flex;justify-content:space-between;border-bottom:4px solid #000;padding-bottom:12px;margin-bottom:15px}
+.tp-brand{font-size:26px;font-weight:900;letter-spacing:1.5px;color:#000}
+.tp-brand span{color:#3B82F6}
+.doc-title{text-align:right}
+.doc-title h1{font-size:22px;font-weight:900;margin:0 0 4px 0;letter-spacing:2px;color:#000}
+.doc-title p{margin:0;font-size:10px;color:#64748B;font-weight:700}
+.tp-top{display:grid;grid-template-columns:1fr 180px;gap:20px;margin-bottom:20px}
+.info-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.info-tbl th,.info-tbl td{border:1px solid #000;padding:6px 10px}
+.info-tbl th{background:#F8FAFC;text-align:left;font-weight:700;color:#475569;width:25%}
+.info-tbl td{font-weight:900;color:#0F172A}
+.hero-img{border:2px solid #000;height:140px;display:flex;align-items:center;justify-content:center;background:#F8FAFC;padding:5px}
+.sketches{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:20px}
+.sketch-box{border:2px solid #000}
+.sec-tt{background:#000;color:#fff;padding:6px 10px;font-size:12px;font-weight:900;display:flex;justify-content:space-between}
+.sec-tt span{font-size:9px;font-weight:400;color:#CBD5E1}
+.img-area{height:260px;padding:10px;display:flex;align-items:center;justify-content:center;background:#fff;position:relative}
+.spec-tbl{width:100%;border-collapse:collapse;margin-bottom:15px;text-align:center}
+.spec-tbl th,.spec-tbl td{border:1px solid #000;padding:6px 4px}
+.spec-tbl th{background:#F1F5F9;font-weight:900;font-size:10px;color:#000}
+.spec-tbl td{font-weight:700;font-size:11px;color:#000}
+.spec-tbl .pom{text-align:left;padding-left:10px}
+.mat-tbl{width:100%;border-collapse:collapse;margin-bottom:15px}
+.mat-tbl th,.mat-tbl td{border:1px solid #000;padding:8px}
+.mat-tbl th{background:#F8FAFC;font-weight:900;font-size:10px;text-align:left;color:#000}
+.mat-tbl td{font-size:11px;color:#000}
+
+/* ★ 프린트 인쇄 설정 (Tech Pack만 인쇄되도록 완벽 분리) */
+@media print{
+  #mainApp, .pop-ov, .modal-ov, .style-modal-ov, #lightboxOv { display: none !important; }
+  .tp-modal-ov { position: static !important; display: block !important; background: #fff !important; overflow: visible !important; height: auto !important; }
+  .tp-print-bar { display: none !important; }
+  .a4-sheet { margin: 0 !important; padding: 10mm !important; box-shadow: none !important; border: none !important; width: 100% !important; max-width: 100% !important; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}
+
 .err-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C}
 @media(max-width:1100px){.mkpi-row{grid-template-columns:1fr 1fr}.d-grid{grid-template-columns:1fr 1fr}.schedule-compare{grid-template-columns:1fr}.pa-compare{grid-template-columns:1fr}}
 @media(max-width:600px){.mkpi-row{grid-template-columns:1fr}.d-grid{grid-template-columns:1fr}.d-grid-4{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<div id="loadingScreen" class="loading"><div class="spinner"></div>MO 데이터를 불러오는 중...</div>
-<div id="mainContent" style="display:none">
-<div class="hdr">
-  <h1><span class="ic">MO</span> MO View / 생산현황표 / 生产现况表</h1>
-  <div class="hdr-btns">
-    <button class="btn-cctv" onclick="window.open('https://www.google.com','_blank')">📹 CCTV</button>
-    <button class="btn-primary" onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_MO','_blank')">+ New MO</button>
+
+<div id="mainApp" class="main-app">
+  <div id="loadingScreen" class="loading"><div class="spinner"></div>MO 데이터를 불러오는 중...</div>
+  <div id="mainContent" style="display:none">
+    <div class="hdr">
+      <h1><span class="ic">MO</span> MO View / 생산현황표 / 生产现况表</h1>
+      <div class="hdr-btns">
+        <button class="btn-cctv" onclick="window.open('https://www.google.com','_blank')">📹 CCTV</button>
+        <button class="btn-primary" onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_MO','_blank')">+ New MO</button>
+      </div>
+    </div>
+    <div class="mkpi-row" id="mkpiRow"></div>
+    <div id="monthlyContent"></div>
   </div>
+  <div id="errorScreen" style="display:none"><div class="err-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다</div><div id="errorMsg" style="font-size:12px"></div></div></div>
 </div>
-<div class="mkpi-row" id="mkpiRow"></div>
-<div id="monthlyContent"></div>
-</div>
-<div id="errorScreen" style="display:none"><div class="err-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다</div><div id="errorMsg" style="font-size:12px"></div></div></div>
 
 <div class="pop-ov" id="kpiPopOv">
   <div class="pop-box"><div class="pop-hd"><div><div class="pop-title" id="kpiPopTitle">-</div><div class="pop-sub" id="kpiPopSub">-</div></div><div class="pop-close" id="kpiPopClose">✕</div></div><div class="pop-body" id="kpiPopBody"></div></div>
@@ -310,6 +363,15 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 <div id="lightboxOv" onclick="closeLightbox()">
   <img id="lightboxImg">
   <div class="lb-close" onclick="closeLightbox()">✕</div>
+</div>
+
+<div id="tpOv" class="tp-modal-ov">
+  <div class="tp-print-bar">
+    <span id="tpBarTitle">📋 TECH PACK</span>
+    <button id="btn-tp-print" class="tp-btn tp-btn-print">Print / PDF</button>
+    <button id="btn-tp-close" class="tp-btn tp-btn-close">Close</button>
+  </div>
+  <div class="a4-sheet" id="tpContent"></div>
 </div>
 
 <script>
@@ -808,33 +870,40 @@ document.getElementById("btnStyleInfo").addEventListener("click",function(){
   else{alert("해당 SKU의 스타일 정보를 찾을 수 없습니다: "+sku)}
 });
 
-/* ★ 작업지시서 (Tech Pack) 프로페셔널 버전 */
+/* ★ 작업지시서 (Tech Pack) 버튼 이벤트 */
 document.getElementById("btnTechPack").addEventListener("click",function(){
   var id = this.getAttribute("data-moid");
   if(!id) return;
   openTechPack(id);
 });
 
+/* ★ 인쇄창 닫기/프린트 이벤트 */
+document.getElementById('btn-tp-close').addEventListener('click',function(){
+  document.getElementById("tpOv").classList.remove("active");
+});
+document.getElementById('btn-tp-print').addEventListener('click',function(){
+  window.print();
+});
+
 function openTechPack(id) {
   var r = allRec.find(function(x) { return x["ID"] === id; });
   if (!r) return;
 
-  // 마스터 스타일 레코드 찾기 (도안 이미지는 여기서 가져옵니다!)
+  // 1. 마스터 스타일 레코드 긁어오기 (Fallback 용)
   var sku = g(r, "Style_SKU");
   var s = allStyles.find(function(st){return g(st,"Style_SKU")===sku || g(st,"SKU")===sku;}) || {};
 
-  // 1. 사이즈 데이터 변환 로직 (오타 없이 철저하게 체크)
+  // 2. 완벽한 사이즈 그룹화 (오타까지 모두 포용)
   function groupSpecs(lines, prefix) {
     var specObj = {};
     lines.forEach(function(row) {
-      // 폼 필드 이름이 약간 다를 수 있는 경우 대비 완벽 매칭
       var pom = row[prefix+"_POM"] || row["POM"] || row[prefix+"POM"] || "-";
       if(pom === "-" || !pom) return;
-      var size = (row[prefix+"_Select_Size"] || row["Select_Size"] || row[prefix+"Select_Size"] || "").toUpperCase();
+      var size = String(row[prefix+"_Select_Size"] || row["Select_Size"] || row[prefix+"Select_Size"] || "").toUpperCase();
       var spec = row[prefix+"_Spec"] || row["Spec"] || row[prefix+"Spec"] || "-";
       var tol = row[prefix+"_Tol"] || row["Tol"] || row[prefix+"Tol"] || "-";
       
-      if (!specObj[pom]) specObj[pom] = { tol: tol, S: "-", M: "-", L: "-", XL: "-", XXL: "-" };
+      if (!specObj[pom]) specObj[pom] = { tol: tol, S: "-", M: "-", L: "-", XL: "-" };
       if(specObj[pom][size] !== undefined) {
         specObj[pom][size] = spec;
         if(tol !== "-" && tol !== "") specObj[pom].tol = tol;
@@ -843,101 +912,37 @@ function openTechPack(id) {
     return specObj;
   }
 
+  // 발주서(MO) 서브폼이 비어있다면, 마스터(Style) 서브폼에서 쫙 긁어오기!
   var topLines = getSubformLines(r, "Top_Size_Specs");
+  if(topLines.length === 0) topLines = getSubformLines(s, "Top_Size_Specs");
   var topSpecs = groupSpecs(topLines, "Top");
+
   var btmLines = getSubformLines(r, "Bottom_Size_Specs");
+  if(btmLines.length === 0) btmLines = getSubformLines(s, "Bottom_Size_Specs");
   var btmSpecs = groupSpecs(btmLines, "Bottom");
 
-  // 2. 완벽한 이미지 추적 로직 (Style 마스터 폼 우선, 없으면 MO에서)
+  // 3. 완벽한 이미지 추적 로직 (Style 폼 우선 검색)
   var imgStyle = getImgUrl(s, "Style_Image") || getImgUrl(r, "Style_Image");
   var imgTop = getImgUrl(s, "Top_Flat_Sketch") || getImgUrl(s, "Top_Sketch") || getImgUrl(r, "Top_Flat_Sketch") || getImgUrl(r, "Top_Sketch");
   var imgBtm = getImgUrl(s, "Bottom_Flat_Sketch") || getImgUrl(s, "Bottom_Sketch") || getImgUrl(r, "Bottom_Flat_Sketch") || getImgUrl(r, "Bottom_Sketch");
 
-  var noImgDiv = '<div style="width:100%;height:100%;background:#F8FAFC;display:flex;align-items:center;justify-content:center;color:#CBD5E1;font-size:24px;border:1px dashed #CBD5E1">📷</div>';
-
-  // 색상
-  var topColor = g(r, "Top_Color");
-  var btmColor = g(r, "Bottom_Color");
-  var colorwaysStr = [topColor !== "-" ? topColor : "", btmColor !== "-" ? btmColor : ""].filter(Boolean).join(" / ");
+  // 4. 색상 및 원단 정보 (MO 우선, 없으면 Style 에서)
+  var tColor = g(r, "Top_Color"); if(tColor==="-") tColor = g(s, "Top_Color");
+  var bColor = g(r, "Bottom_Color"); if(bColor==="-") bColor = g(s, "Bottom_Color");
+  var colorwaysStr = [tColor !== "-" ? tColor : "", bColor !== "-" ? bColor : ""].filter(Boolean).join(" / ");
   if(!colorwaysStr) colorwaysStr = "-";
 
-  // 3. 진짜 A4 테크팩 디자인 HTML 
+  var matType = g(s, "Material_Type"); if(matType==="-") matType = g(r, "Material_Type");
+  var blend = g(s, "blended_percentage"); if(blend==="-") blend = g(r, "blended_percentage");
+  var lining = g(s, "Lining_Type"); if(lining==="-") lining = g(r, "Lining_Type");
+
+  // 5. Tech Pack HTML 그리기
   var p = [];
-  p.push("<!DOCTYPE html><html lang='ko'><head><meta charset='UTF-8'>");
-  p.push("<title>Tech Pack - " + escH(sku) + "</title>");
-  p.push("<style>");
-  p.push("@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');");
-  p.push("body{font-family:'Roboto',sans-serif;font-size:11px;color:#111;margin:0;padding:0;background:#E2E8F0}");
-  p.push(".print-bar{position:fixed;top:0;left:0;right:0;background:#0F172A;color:#fff;padding:12px 24px;display:flex;gap:10px;align-items:center;z-index:9999;box-shadow:0 4px 6px rgba(0,0,0,.1)}");
-  p.push(".print-bar span{font-weight:900;font-size:16px;flex:1;letter-spacing:1px}");
-  p.push(".btn{border:none;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;text-transform:uppercase}");
-  p.push(".btn-print{background:#3B82F6;color:#fff} .btn-print:hover{background:#2563EB}");
-  p.push(".btn-close{background:rgba(255,255,255,.2);color:#fff} .btn-close:hover{background:rgba(255,255,255,.3)}");
-  
-  /* A4 용지 규격 캔버스 */
-  p.push(".a4-sheet{width:210mm;min-height:297mm;margin:70px auto 30px;padding:15mm;box-sizing:border-box;background:#fff;box-shadow:0 10px 40px rgba(0,0,0,.2);position:relative}");
-  p.push(".tp-head{display:flex;justify-content:space-between;border-bottom:4px solid #000;padding-bottom:12px;margin-bottom:15px}");
-  p.push(".brand{font-size:26px;font-weight:900;letter-spacing:1.5px;color:#000}");
-  p.push(".brand span{color:#3B82F6}");
-  p.push(".doc-title{text-align:right}");
-  p.push(".doc-title h1{font-size:22px;font-weight:900;margin:0 0 4px 0;letter-spacing:2px}");
-  p.push(".doc-title p{margin:0;font-size:10px;color:#64748B;font-weight:700}");
-  
-  /* 3열 탑 레이아웃 */
-  p.push(".tp-top{display:grid;grid-template-columns:1fr 180px;gap:20px;margin-bottom:20px}");
-  p.push(".info-tbl{width:100%;border-collapse:collapse;font-size:11px}");
-  p.push(".info-tbl th,.info-tbl td{border:1px solid #000;padding:6px 10px}");
-  p.push(".info-tbl th{background:#F8FAFC;text-align:left;font-weight:700;color:#475569;width:25%}");
-  p.push(".info-tbl td{font-weight:900;color:#0F172A}");
-  p.push(".hero-img{border:2px solid #000;height:140px;display:flex;align-items:center;justify-content:center;background:#F8FAFC;padding:5px}");
-  p.push(".hero-img img{max-width:100%;max-height:100%;object-fit:contain}");
-
-  /* 도안 (스케치) 영역 */
-  p.push(".sketches{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:20px}");
-  p.push(".sketch-box{border:2px solid #000}");
-  p.push(".sec-tt{background:#000;color:#fff;padding:6px 10px;font-size:12px;font-weight:900;display:flex;justify-content:space-between}");
-  p.push(".sec-tt span{font-size:9px;font-weight:400;color:#CBD5E1}");
-  p.push(".img-area{height:260px;padding:10px;display:flex;align-items:center;justify-content:center;background:#fff}");
-  p.push(".img-area img{max-width:100%;max-height:100%;object-fit:contain}");
-
-  /* 사이즈 스펙표 */
-  p.push(".spec-tbl{width:100%;border-collapse:collapse;margin-bottom:15px;text-align:center}");
-  p.push(".spec-tbl th,.spec-tbl td{border:1px solid #000;padding:6px 4px}");
-  p.push(".spec-tbl th{background:#F1F5F9;font-weight:900;font-size:10px}");
-  p.push(".spec-tbl td{font-weight:700}");
-  p.push(".spec-tbl .pom{text-align:left;padding-left:10px}");
-  
-  /* 하단 자재 정보 */
-  p.push(".mat-tbl{width:100%;border-collapse:collapse;margin-bottom:15px}");
-  p.push(".mat-tbl th,.mat-tbl td{border:1px solid #000;padding:8px}");
-  p.push(".mat-tbl th{background:#F8FAFC;font-weight:900;font-size:10px;text-align:left}");
-  p.push(".mat-tbl td{font-size:11px}");
-
-  /* 프린트 설정 */
-  p.push("@media print{");
-  p.push(".print-bar{display:none!important}");
-  p.push("body{background:#fff;padding:0;margin:0}");
-  p.push(".a4-sheet{box-shadow:none;margin:0;padding:10mm;width:100%}");
-  p.push("@page{size:A4;margin:0}}");
-  p.push("</style></head><body>");
-
-  // 프린트 바
-  p.push("<div class='print-bar'>");
-  p.push("<span>📋 TECH PACK — " + escH(sku) + "</span>");
-  p.push("<button id='btn-print' class='btn btn-print'>Print / PDF</button>");
-  p.push("<button id='btn-close' class='btn btn-close'>Close</button>");
-  p.push("</div>");
-
-  // 페이지 시작
-  p.push("<div class='a4-sheet'>");
-  
-  // 헤더
   p.push("<div class='tp-head'>");
-  p.push("<div class='brand'>ZOHO <span>APPAREL</span></div>");
+  p.push("<div class='tp-brand'>ZOHO <span>APPAREL</span></div>");
   p.push("<div class='doc-title'><h1>TECH PACK</h1><p>DATE: " + todayStr + " &nbsp;|&nbsp; REV: 1.0</p></div>");
   p.push("</div>");
 
-  // 상단 정보 & Style Image
   p.push("<div class='tp-top'>");
   p.push("<div><table class='info-tbl'><tbody>");
   p.push("<tr><th>STYLE NO.</th><td style='color:#3B82F6'>" + escH(sku) + "</td><th>SEASON</th><td>" + escH(g(r, "Season")) + "</td></tr>");
@@ -947,26 +952,23 @@ function openTechPack(id) {
   p.push("<tr><th>SIZE RANGE</th><td colspan='3'>S, M, L, XL</td></tr>");
   p.push("</tbody></table></div>");
   
-  p.push("<div class='hero-img'>" + (imgStyle ? "<img src='"+imgStyle+"'>" : noImgDiv) + "</div>");
+  p.push("<div class='hero-img' id='tpImgStyle'></div>");
   p.push("</div>");
 
-  // 도안 이미지 (좌우 배치)
   p.push("<div class='sketches'>");
-  p.push("<div class='sketch-box'><div class='sec-tt'>TOP SKETCH <span>Front & Back</span></div><div class='img-area'>" + (imgTop ? "<img src='"+imgTop+"'>" : noImgDiv) + "</div></div>");
-  p.push("<div class='sketch-box'><div class='sec-tt'>BOTTOM SKETCH <span>Front & Back</span></div><div class='img-area'>" + (imgBtm ? "<img src='"+imgBtm+"'>" : noImgDiv) + "</div></div>");
+  p.push("<div class='sketch-box'><div class='sec-tt'>TOP SKETCH <span>Front & Back</span></div><div class='img-area' id='tpImgTop'></div></div>");
+  p.push("<div class='sketch-box'><div class='sec-tt'>BOTTOM SKETCH <span>Front & Back</span></div><div class='img-area' id='tpImgBtm'></div></div>");
   p.push("</div>");
 
-  // 사이즈 스펙표 생성기
   function drawSpec(title, spObj) {
     var h = "<div style='border:2px solid #000;margin-bottom:15px;'><div class='sec-tt'>" + title + " <span>Unit: cm</span></div>";
     h += "<table class='spec-tbl'><thead><tr>";
     h += "<th style='width:40%'>Point of Measure (측정부위)</th><th style='width:12%'>TOL(±)</th>";
     h += "<th>S</th><th>M</th><th>L</th><th>XL</th>";
     h += "</tr></thead><tbody>";
-    
     var keys = Object.keys(spObj);
     if(keys.length === 0) {
-      h += "<tr><td colspan='6' style='color:#94A3B8;padding:12px;font-weight:400'>테스트를 위해 새로 만든 MO 레코드를 선택해 주세요! (과거 데이터는 사이즈가 없습니다)</td></tr>";
+      h += "<tr><td colspan='6' style='color:#94A3B8;padding:15px;font-weight:400'>입력된 사이즈 데이터가 없습니다.</td></tr>";
     } else {
       keys.forEach(function(pom) {
         var o = spObj[pom];
@@ -983,10 +985,9 @@ function openTechPack(id) {
   p.push(drawSpec("📏 TOP MEASUREMENTS", topSpecs));
   p.push(drawSpec("📏 BOTTOM MEASUREMENTS", btmSpecs));
 
-  // 원단/안감 및 지시사항
   p.push("<div style='border:2px solid #000'><div class='sec-tt'>FABRIC & NOTES <span>작업 주의사항</span></div>");
   p.push("<table class='mat-tbl'><tbody>");
-  p.push("<tr><th style='width:25%'>MAIN FABRIC</th><td>" + escH(mv("Material_Type",g(r,"Material_Type"))) + "</td><th style='width:25%'>LINING / BLEND</th><td>" + escH(mv("Lining_Type",g(r,"Lining_Type"))) + " (" + escH(g(r,"blended_percentage")) + ")</td></tr>");
+  p.push("<tr><th style='width:25%'>MAIN FABRIC</th><td>" + escH(mv("Material_Type",matType)) + "</td><th style='width:25%'>LINING / BLEND</th><td>" + escH(mv("Lining_Type",lining)) + " (" + escH(blend) + ")</td></tr>");
   p.push("<tr><th>DETAILS</th><td colspan='3'>");
   p.push("<b>Top:</b> " + escH(mv("Top_Type",g(r,"Top_Type"))) + " / " + escH(mv("Sleeve",g(r,"Sleeve"))) + " <br>");
   p.push("<b>Bottom:</b> " + escH(mv("Bottom_Type",g(r,"Bottom_Type"))) + " / " + escH(mv("Bottom_Length",g(r,"Bottom_Length"))) + " <br>");
@@ -996,81 +997,30 @@ function openTechPack(id) {
   p.push("</td></tr>");
   p.push("</tbody></table></div>");
 
-  p.push("</div>"); // a4-sheet 끝
+  // 모달에 주입하고 띄우기
+  document.getElementById("tpBarTitle").textContent = "📋 TECH PACK — " + escH(sku);
+  document.getElementById("tpContent").innerHTML = p.join("");
+  document.getElementById("tpOv").classList.add("active");
 
-  // 스크립트
-  p.push("<" + "script>");
-  p.push("document.getElementById('btn-print').addEventListener('click',function(){window.print();});");
-  p.push("document.getElementById('btn-close').addEventListener('click',function(){window.close();});");
-  p.push("<" + "/script></body></html>");
+  // 6. 이미지 로드 (조호 인증 시스템 사용)
+  var noImgDiv = '<div style="color:#CBD5E1;font-size:30px">📷</div>';
+  
+  var elStyle = document.getElementById("tpImgStyle");
+  if(imgStyle) qImg(elStyle, imgStyle, "width:100%;height:100%;object-fit:contain", true);
+  else elStyle.innerHTML = noImgDiv;
 
-  // 새 창 열기
-  var w = window.open("", "_blank", "width=950,height=1000,scrollbars=yes,resizable=yes");
-  if (!w) { alert("팝업이 차단되었습니다. 브라우저 설정에서 팝업을 허용해주세요."); return; }
-  w.document.open();
-  w.document.write(p.join(""));
-  w.document.close();
-  w.focus();
-}
+  var elTop = document.getElementById("tpImgTop");
+  if(imgTop) qImg(elTop, imgTop, "width:100%;height:100%;object-fit:contain", true);
+  else elTop.innerHTML = noImgDiv;
 
-function openStyleModal(s){
-  document.getElementById("smTitle").textContent=g(s,"Style_SKU");
-  document.getElementById("smSub").textContent=g(s,"Style_Name");
-  var h='';
-  function dv(v){return v==="-"?'<span class="d-val empty">미입력</span>':escH(v)}
-  function it(l,v){return'<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'}
-
-  var imgs=getAllImgs(s,"Style_Image").slice(0,5);
-  if(imgs.length>0){
-    h+='<div class="m-img-gallery">';
-    imgs.forEach(function(u,i){h+='<div class="m-img-box" id="styleImg'+i+'"><div class="spinner-sm"></div></div>'});
-    h+='</div>';
-  }
-
-  h+='<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 基本信息</div><div class="d-grid">';
-  h+=it("Style SKU / 스타일SKU / 款式SKU",dv(g(s,"Style_SKU")));
-  h+=it("Style Name / 스타일명 / 款式名称",dv(g(s,"Style_Name")));
-  h+=it("QR SKU",dv(g(s,"QR_SKU")));
-  h+=it("Plan Year / 진행 년도 / 进行年度",dv(g(s,"Plan_Year")));
-  h+=it("Plan Month / 진행 월 / 进行月度",dv(g(s,"Plan_Month")));
-  h+=it("Season / 시즌 / 季节",dv(g(s,"Season")));
-  h+=it("Gender / 성별 / 性별",dv(mv("Gender",g(s,"Gender"))));
-  h+=it("Category / 구분 / 大类",dv(mv("Category",g(s,"Category"))));
-  h+=it("Style Status / 상태 / 款式状态",dv(g(s,"Style_Status")));
-  h+='</div></div>';
-
-  h+='<div class="m-sec"><div class="m-sec-t">👗 제품 정의 / 产品定义</div><div class="d-grid">';
-  h+=it("Top Type / 상의 유형 / 上衣类型",dv(mv("Top_Type",g(s,"Top_Type"))));
-  h+=it("Sleeve / 소매 유형 / 衣袖类型",dv(mv("Sleeve",g(s,"Sleeve"))));
-  h+=it("Fit / 핏 / 版型",dv(mv("Fit",g(s,"Fit"))));
-  h+=it("Details / 디테일 / 类型详情",dv(mv("Details",g(s,"Details"))));
-  h+=it("Bottom Type / 하의 유형 / 下装类型",dv(mv("Bottom_Type",g(s,"Bottom_Type"))));
-  h+=it("Bottom Length / 하의 기장 / 下装长短",dv(mv("Bottom_Length",g(s,"Bottom_Length"))));
-  h+='</div></div>';
-
-  h+='<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料</div><div class="d-grid">';
-  h+=it("Material Type / 원단 종류 / 面料种类",dv(mv("Material_Type",g(s,"Material_Type"))));
-  h+=it("blended % / 혼방 % / 混纺 %",dv(g(s,"blended_percentage")));
-  h+=it("Lining Type / 안감유형 / 里料类型",dv(mv("Lining_Type",g(s,"Lining_Type"))));
-  h+='</div></div>';
-
-  h+='<div class="m-sec"><div class="m-sec-t">💰 원가 정보 / 成本信息</div><div class="d-grid">';
-  h+=it("Target Cost / 목표원가 / 目标成本",dv(g(s,"Target_Cost")));
-  h+=it("Final Cost / 최종원가 / 最终成本",dv(g(s,"Final_Cost")));
-  h+=it("Total BOM Cost / 총BOM원가 / BOM总成本",dv(g(s,"Total_BOM_Cost")));
-  h+='</div></div>';
-
-  document.getElementById("smBody").innerHTML=h;
-  document.getElementById("styleModalOv").classList.add("active");
-
-  setTimeout(function(){
-    imgs.forEach(function(u,i){qImg("styleImg"+i,u,"width:100%;height:100%;object-fit:cover;cursor:pointer",true)});
-  },100);
+  var elBtm = document.getElementById("tpImgBtm");
+  if(imgBtm) qImg(elBtm, imgBtm, "width:100%;height:100%;object-fit:contain", true);
+  else elBtm.innerHTML = noImgDiv;
 }
 
 document.getElementById("smClose").addEventListener("click",function(){document.getElementById("styleModalOv").classList.remove("active")});
 document.getElementById("styleModalOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
-document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeLightbox();closeModal();document.getElementById("styleModalOv").classList.remove("active");document.getElementById("kpiPopOv").classList.remove("active");document.getElementById("pipePopOv").classList.remove("active")}});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeLightbox();closeModal();document.getElementById("styleModalOv").classList.remove("active");document.getElementById("kpiPopOv").classList.remove("active");document.getElementById("pipePopOv").classList.remove("active");document.getElementById("tpOv").classList.remove("active");}});
 </script>
 </body>
 </html>
