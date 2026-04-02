@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MO View v38 (Final Subform & Fast Img)</title>
+<title>MO View v39 (Ultimate Tech Pack)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
@@ -298,7 +298,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .style-img{height:180px;background:#F8FAFC}
 .sketch-img{height:340px;background:#fff;flex:1}
 .img-wrap img{max-width:100%;max-height:100%;object-fit:contain}
-.no-img{color:#CBD5E1;font-size:30px;font-weight:900}
+.no-img{color:#CBD5E1;font-size:30px;font-weight:900;display:flex;align-items:center;justify-content:center;width:100%;height:100%;}
 
 @media print{
   #mainApp, .pop-ov, .modal-ov, .style-modal-ov, #lightboxOv { display: none !important; }
@@ -407,6 +407,7 @@ var S_MAP={
   Lining_Type:{"B":"Brushed / 기모 / 磨毛","F":"Fur / 퍼 / 毛皮","N":"None / 없음 / 无"}
 };
 
+// [복구 완료] 꼭 필요한 유틸리티 함수들
 function catName(v){return(!v||v==="-")?"-":(CAT_MAP[v]||v)}
 function mv(f,v){return(!v||v==="-")?"-":(S_MAP[f]&&S_MAP[f][v])?S_MAP[f][v]:v}
 function cleanFactory(v){if(!v||v==="-")return"-";return v.replace(/^[_\s]*\d+[_\s]*/,"")}
@@ -429,6 +430,9 @@ function qImg(elOrId,url,css,clk){_safeQ.push({id:typeof elOrId==="string"?elOrI
 function openLightbox(src){if(!src)return;document.getElementById("lightboxImg").src=src;document.getElementById("lightboxOv").classList.add("active")}
 function closeLightbox(){document.getElementById("lightboxOv").classList.remove("active");document.getElementById("lightboxImg").src=""}
 
+// ==========================================
+// ★ 2. 초기 로딩 및 뷰 렌더링
+// ==========================================
 ZOHO.CREATOR.init().then(function(){
   Promise.all([
     ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:REP,page:1,pageSize:200}),
@@ -446,7 +450,7 @@ function showErr(m){hide("loadingScreen");show("errorScreen");document.getElemen
 
 function renderAll(){ renderMKPI(); renderMonthly(); }
 
-// (중략) KPI 및 월별 렌더링
+// (중략) KPI 및 월별 리스트 렌더링 함수들
 function renderMKPI(){
   var groups={};allRec.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[key])groups[key]=[];groups[key].push(r)});
   var colors=["#818CF8","#F59E0B","#34D399"];var h="";var ci=0;
@@ -606,6 +610,7 @@ function renderMonthly(){
   document.querySelectorAll("#monthlyContent tr[data-id]").forEach(function(row){row.addEventListener("click",function(){var id=this.getAttribute("data-id");var r=allRec.find(function(x){return x["ID"]===id});if(r)openModal(r)})});
   document.querySelectorAll(".tl-mo-info").forEach(function(el){el.addEventListener("click",function(){var id=this.getAttribute("data-id");var r=allRec.find(function(x){return x["ID"]===id});if(r)openModal(r)})});
   document.querySelectorAll(".mf").forEach(function(el){el.addEventListener(el.tagName==="INPUT"?"input":"change",function(){mFilter(this.getAttribute("data-m"))})});
+  
   setTimeout(loadTlImgs,500);
 }
 
@@ -703,7 +708,6 @@ function buildSubformTable(lines, prefix){
     h+='<td style="font-weight:700">'+lineTotal.toLocaleString()+'</td>';
     h+='</tr>';
   });
-
   h+='</tbody><tfoot><tr class="tfoot-row">';
   h+='<td colspan="2" style="text-align:right;font-weight:800">합계 / 合计</td>';
   h+='<td style="font-weight:900">'+totalQty.toLocaleString()+'</td>';
@@ -822,7 +826,7 @@ function openModal(r){
   });
   h+='</div></div></div>';
 
-  h+='<div class="m-sec"><div class="m-sec-t">🚢 출고 / 出货信息</div><div class="d-grid">';
+  h+='<div class="m-sec"><div class="m-sec-t">🚢 출고 / 출货信息</div><div class="d-grid">';
   h+=it("Ready to Ship / 출고준비 / 待出货",dv(g(r,"Ready_to_Ship")));
   h+=it("Final QC / 최종QC / 最终QC",dv(g(r,"Final_QC_Passed")));
   h+=it("Ship Date / 선적일 / 出货日期",dv(g(r,"Ship_Date")));
@@ -834,7 +838,7 @@ function openModal(r){
   h+=it("QC Status / QC상태 / 质检状态",dv(g(r,"QC_Status")));
   h+=it("QC Date / QC일자 / 质检日期",dv(g(r,"QC_Date")));
   h+=it("QC Inspector / QC담당자 / 质检员",dv(g(r,"QC_Inspector")));
-  h+=it("Defect Rate (%) / 불량률 / 불량률",dv(g(r,"Defect_Rate")));
+  h+=it("Defect Rate (%) / 불량률 / 不良率",dv(g(r,"Defect_Rate")));
   h+=it("QC Notes / QC메모 / 质检备注",dv(g(r,"QC_Notes")));
   h+=it("Rework Qty / 재작업수량 / 返工数量",dv(g(r,"Rework_Quantity")));
   h+='</div></div>';
@@ -860,7 +864,7 @@ document.getElementById("btnStyleInfo").addEventListener("click",function(){
 });
 
 /* =========================================================
-   ★ TECH PACK: 동시성 제한 해제(순차 릴레이 호출) & 디버그 모드
+   ★ TECH PACK: (v39 최종) 초고속 이미지 타임아웃 방어 & 서브폼 벌크 호출
    ========================================================= */
 
 document.getElementById('btn-tp-close').addEventListener('click',function(){
@@ -870,22 +874,43 @@ document.getElementById('btn-tp-print').addEventListener('click',function(){
   window.print();
 });
 
-// 이미지 병목 없는 렌더러
-function fastImgZoho(elId, url) {
+// ★ 타임아웃 방어막이 추가된 초고속 네이티브 렌더러
+function loadTpImgFast(elId, urlObj) {
   var el = document.getElementById(elId);
   if(!el) return;
-  if(!url || url === "-") { el.innerHTML = '<div class="no-img">📷</div>'; return; }
-  var u = Array.isArray(url) ? url[0] : url;
-  if(typeof u === "object" && u !== null) u = u.url || u.display_value || "";
-  if(!u || u === "-") { el.innerHTML = '<div class="no-img">📷</div>'; return; }
-  
+  var u = "";
+  if(Array.isArray(urlObj)) u = urlObj[0];
+  else if(typeof urlObj === "object" && urlObj !== null) u = urlObj.url || urlObj.display_value;
+  else u = urlObj;
+
+  if(!u || u === "-" || u.indexOf("default") > -1) {
+      el.innerHTML = '<div class="no-img">📷</div>';
+      return;
+  }
+
   var img = document.createElement("img");
   img.style.cssText = "width:100%;height:100%;object-fit:contain";
-  ZOHO.CREATOR.UTIL.setImageData(img, u, function() {
-    el.innerHTML = ""; el.appendChild(img);
-  });
+
+  // 조호 서버가 6초 이상 응답이 없으면 즉시 에러 텍스트 표출 (무한 대기 방지)
+  var timeout = setTimeout(function() {
+      if(!img.complete) {
+         el.innerHTML = '<div class="no-img" style="color:#EF4444;font-size:12px;text-align:center;line-height:1.4">이미지 로드 지연<br>(조호 서버 응답 없음)</div>';
+      }
+  }, 6000);
+
+  try {
+      ZOHO.CREATOR.UTIL.setImageData(img, u, function() {
+          clearTimeout(timeout);
+          el.innerHTML = "";
+          el.appendChild(img);
+      });
+  } catch(e) {
+      clearTimeout(timeout);
+      el.innerHTML = '<div class="no-img" style="color:#EF4444;font-size:12px;">SDK 오류</div>';
+  }
 }
 
+// 오타까지 잡아내는 만능 사이즈 파서
 function parseUniversalSpecs(lines) {
   var spObj = {};
   if(!Array.isArray(lines)) return spObj;
@@ -913,31 +938,7 @@ function parseUniversalSpecs(lines) {
   return spObj;
 }
 
-// ★ (핵심) 서버 공격(DDoS) 차단을 피하는 순차 릴레이 호출 함수
-function fetchSubformRowsSafely(reportName, ids) {
-  return new Promise(function(resolve) {
-    if (!ids || ids.length === 0) return resolve([]);
-    var results = [];
-    var i = 0;
-    function next() {
-      if (i >= ids.length) return resolve(results);
-      ZOHO.CREATOR.API.getRecordById({appName: APP, reportName: reportName, id: ids[i]})
-      .then(function(res) {
-        if(res && res.data) results.push(res.data);
-        i++;
-        setTimeout(next, 20); // 0.02초 간격으로 한 줄씩 얌전하게 빼옵니다. (에러 방지)
-      })
-      .catch(function(err) {
-        window["_err_" + reportName] = err; // 에러 기록
-        i++;
-        setTimeout(next, 20);
-      });
-    }
-    next();
-  });
-}
-
-// TECH PACK 팝업 띄우기
+// TECH PACK 팝업 띄우기 (벌크업 호출 방식)
 document.getElementById("btnTechPack").addEventListener("click",function(){
   var id = this.getAttribute("data-moid");
   if(!id) return;
@@ -955,28 +956,41 @@ document.getElementById("btnTechPack").addEventListener("click",function(){
 
   var topIds = (r.Top_Size_Specs || []).map(function(x){return x.ID;}).filter(Boolean);
   var btmIds = (r.Bottom_Size_Specs || []).map(function(x){return x.ID;}).filter(Boolean);
-
-  if (topIds.length === 0 && s.Top_Size_Specs) topIds = s.Top_Size_Specs.map(function(x){return x.ID;}).filter(Boolean);
-  if (btmIds.length === 0 && s.Bottom_Size_Specs) btmIds = s.Bottom_Size_Specs.map(function(x){return x.ID;}).filter(Boolean);
+  
+  var sTopIds = s.Top_Size_Specs ? s.Top_Size_Specs.map(function(x){return x.ID;}).filter(Boolean) : [];
+  var sBtmIds = s.Bottom_Size_Specs ? s.Bottom_Size_Specs.map(function(x){return x.ID;}).filter(Boolean) : [];
 
   window._err_All_Top_Specs = null;
   window._err_All_Bottom_Specs = null;
 
-  // 1단계: 릴레이 호출 시작 (가장 안전하고 확실한 방법)
-  fetchSubformRowsSafely("All_Top_Specs", topIds).then(function(topLines) {
-    fetchSubformRowsSafely("All_Bottom_Specs", btmIds).then(function(btmLines) {
+  // ★ 1단계: 차단을 피하기 위해, 리포트 전체를 한 번에 뭉텅이(Bulk)로 가져옵니다!
+  var pTop = ZOHO.CREATOR.API.getAllRecords({appName: APP, reportName: "All_Top_Specs", page:1, pageSize:1000})
+      .then(function(res){return res.data || [];}).catch(function(e){ window._err_All_Top_Specs = e; return [];});
       
-      var topSpecs = parseUniversalSpecs(topLines);
-      if (Object.keys(topSpecs).length === 0) topSpecs = parseUniversalSpecs(r.Top_Size_Specs || s.Top_Size_Specs || []);
-      
-      var btmSpecs = parseUniversalSpecs(btmLines);
-      if (Object.keys(btmSpecs).length === 0) btmSpecs = parseUniversalSpecs(r.Bottom_Size_Specs || s.Bottom_Size_Specs || []);
+  var pBtm = ZOHO.CREATOR.API.getAllRecords({appName: APP, reportName: "All_Bottom_Specs", page:1, pageSize:1000})
+      .then(function(res){return res.data || [];}).catch(function(e){ window._err_All_Bottom_Specs = e; return [];});
 
-      renderTechPackHTML(r, s, topSpecs, btmSpecs, topIds.length, btmIds.length);
+  // 2단계: 뭉텅이로 가져온 데이터에서 내 ID랑 맞는 것만 쏙쏙 뽑아냅니다.
+  Promise.all([pTop, pBtm]).then(function(results) {
+    var allTop = results[0];
+    var allBtm = results[1];
 
-      btn.innerHTML = originalText;
-      btn.disabled = false;
-    });
+    var combinedTopIds = topIds.concat(sTopIds);
+    var topMatched = allTop.filter(function(x) { return combinedTopIds.indexOf(x.ID) >= 0; });
+
+    var combinedBtmIds = btmIds.concat(sBtmIds);
+    var btmMatched = allBtm.filter(function(x) { return combinedBtmIds.indexOf(x.ID) >= 0; });
+
+    var topSpecs = parseUniversalSpecs(topMatched);
+    if (Object.keys(topSpecs).length === 0) topSpecs = parseUniversalSpecs(r.Top_Size_Specs || s.Top_Size_Specs || []);
+    
+    var btmSpecs = parseUniversalSpecs(btmMatched);
+    if (Object.keys(btmSpecs).length === 0) btmSpecs = parseUniversalSpecs(r.Bottom_Size_Specs || s.Bottom_Size_Specs || []);
+
+    renderTechPackHTML(r, s, topSpecs, btmSpecs, topIds.length, btmIds.length);
+
+    btn.innerHTML = originalText;
+    btn.disabled = false;
   });
 });
 
@@ -1043,14 +1057,13 @@ function renderTechPackHTML(r, s, topSpecs, btmSpecs, topIdCount, btmIdCount) {
     
     var keys = Object.keys(spObj);
     if(keys.length === 0) {
-      // 에러 발생 시 정밀 추적 텍스트 출력
       var errInfo = window["_err_" + errReportName];
       var dbg = "<b>[데이터 없음]</b> 사이즈 정보를 불러오지 못했습니다.<br><br>";
       dbg += "- 감지된 ID 개수: " + idCount + "개<br>";
       if(errInfo) dbg += "⛔ <b>API 에러:</b> " + JSON.stringify(errInfo) + "<br>";
       dbg += "- 서브폼 이름 설정 권한을 다시 한 번 확인해주세요.<br>";
       dbg += "- Raw Data: " + escH(JSON.stringify(rawData).substring(0, 150)) + "...";
-      h += "<tr><td colspan='6' style='color:#EF4444;padding:20px;font-size:10px;text-align:left;word-break:break-all'>" + dbg + "</td></tr>";
+      h += "<tr><td colspan='6' style='color:#EF4444;padding:20px;font-size:10px;text-align:left;word-break:break-all;line-height:1.4'>" + dbg + "</td></tr>";
     } else {
       keys.forEach(function(pom) {
         var o = spObj[pom];
@@ -1086,9 +1099,10 @@ function renderTechPackHTML(r, s, topSpecs, btmSpecs, topIdCount, btmIdCount) {
   document.getElementById("tpContent").innerHTML = p.join("");
   document.getElementById("tpOv").classList.add("active");
 
-  fastImgZoho("tpImgStyle", imgStyle);
-  fastImgZoho("tpImgTop", imgTop);
-  fastImgZoho("tpImgBtm", imgBtm);
+  // 타임아웃 방어가 추가된 이미지 렌더링 호출
+  loadTpImgFast("tpImgStyle", imgStyle);
+  loadTpImgFast("tpImgTop", imgTop);
+  loadTpImgFast("tpImgBtm", imgBtm);
 }
 </script>
 </body>
