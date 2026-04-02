@@ -3,16 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MO View v38 (Final Subform & Fast Img)</title>
+<title>MO View v40</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 :root{--pr:#1E3A8A;--ac:#3B82F6;--bg:#F1F5F9;--bd:#E2E8F0;--tx:#0F172A;--tm:#64748B;--cw:#FFF;--ok:#10B981;--wn:#F59E0B;--dg:#EF4444;--dr:#94A3B8}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Noto Sans KR',-apple-system,sans-serif}
-body{background:var(--bg);min-height:100vh}
-.main-app{padding:16px}
+body{background:var(--bg);padding:16px;min-height:100vh}
 .spinner{width:40px;height:40px;border:4px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
 .spinner-sm{width:20px;height:20px;border:3px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin .6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -27,6 +25,7 @@ body{background:var(--bg);min-height:100vh}
 .btn-cctv:hover{background:#A78BFA}
 .btn-primary:hover{background:#818CF8}
 
+/* KPI 카드 - Plan vs Actual 분리 */
 .mkpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 420px;gap:12px;margin-bottom:21px}
 .mkpi-card{background:var(--cw);border:1px solid var(--bd);border-radius:10px;padding:14px;position:relative;overflow:hidden}
 .mkpi-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px}
@@ -45,6 +44,7 @@ body{background:var(--bg);min-height:100vh}
 .mkpi-stat-n{font-size:20px;font-weight:900;line-height:1}
 .mkpi-stat-l{font-size:10px;font-weight:700;color:var(--tm);margin-top:4px;line-height:1.3}
 .mkpi-stat .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;vertical-align:middle}
+/* KPI Footer - Plan/Actual 분리 */
 .mkpi-footer{margin-top:12px;padding-top:10px;border-top:1px solid #F1F5F9;font-size:11px;color:var(--tm);display:flex;justify-content:center;gap:16px}
 .mkpi-footer .qty-plan{display:flex;align-items:center;gap:5px}
 .mkpi-footer .qty-act{display:flex;align-items:center;gap:5px}
@@ -105,6 +105,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .dly-badge{display:inline-block;padding:1px 4px;border-radius:3px;font-size:7px;font-weight:700;background:#FEF2F2;color:#DC2626;margin-left:2px;animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
 
+/* Timeline */
 .tl-card{background:var(--cw);border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin-top:16px}
 .tl-hd{padding:10px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;background:#FAFBFC;border-bottom:1px solid var(--bd)}
 .tl-title{font-size:14px;font-weight:800;color:var(--tx)}
@@ -142,6 +143,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .tl-mo-thumb img{width:100%;height:100%;object-fit:cover}
 .tl-mo-num{font-size:11px;font-weight:800;color:var(--pr)}.tl-mo-name{font-size:9px;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}.tl-mo-meta{font-size:8px;color:#94A3B8;margin-top:1px}
 
+/* 팝업 모달 */
 .pop-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:2000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
 .pop-ov.active{display:flex}
 .pop-box{background:#fff;border-radius:12px;width:92%;max-width:700px;max-height:82vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .2s ease-out}
@@ -158,6 +160,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .pop-item-left .pi-meta{font-size:9px;color:#94A3B8;margin-top:2px}
 .pop-empty{text-align:center;padding:30px;color:var(--tm);font-size:13px}
 
+/* 상세 모달 */
 .modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:3000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
 .modal-ov.active{display:flex}
 .modal-box{background:#fff;border-radius:12px;width:94%;max-width:1050px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .25s ease-out}
@@ -179,6 +182,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .m-img-box img{width:100%;height:100%;object-fit:cover}
 .m-img-box .spinner-sm{margin:auto}
 
+/* Plan vs Actual 비교 레이아웃 */
 .pa-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .pa-col{border-radius:10px;padding:14px;border:2px solid}
 .pa-col.plan{border-color:#C4B5FD;background:#FDFCFF}
@@ -196,6 +200,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .pa-col.plan .pa-summary{background:#EDE9FE}
 .pa-col.actual .pa-summary{background:#D1FAE5}
 
+/* 서브폼 테이블 */
 .subform-tbl{width:100%;border-collapse:collapse;font-size:10px;margin-top:8px}
 .subform-tbl th{padding:6px 8px;font-weight:800;font-size:9px;border-bottom:1px solid;text-align:center}
 .pa-col.plan .subform-tbl th{background:#EDE9FE;color:#6D28D9;border-color:#C4B5FD}
@@ -208,6 +213,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .pa-col.actual .subform-tbl .tfoot-row td{border-color:#6EE7B7;color:#047857;background:#F0FDF9}
 .subform-empty{text-align:center;padding:16px;color:#94A3B8;font-size:10px}
 
+/* 총계 비교 박스 */
 .pa-totals{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 .pa-total-box{padding:10px;border-radius:8px;text-align:center}
 .pa-total-box.plan{background:#F5F3FF;border:1px solid #C4B5FD}
@@ -223,6 +229,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .pa-total-box.actual .pa-total-amt{color:#059669}
 .pa-diff{text-align:center;margin-top:8px;font-size:10px;color:var(--tm);padding:6px;background:#F8FAFC;border-radius:6px;border:1px solid #E2E8F0}
 
+/* Plan vs Actual 일정 비교 */
 .schedule-compare{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .schedule-col{background:#FAFBFC;border-radius:8px;padding:14px;border:1px solid #E2E8F0}
 .schedule-col-title{font-size:12px;font-weight:800;margin-bottom:12px;padding-bottom:8px;border-bottom:2px dashed #E2E8F0;display:flex;align-items:center;gap:6px}
@@ -238,98 +245,36 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
 .sch-label{font-size:11px;font-weight:700;color:var(--tx)}
 .sch-date{font-size:10px;color:var(--tm);margin-top:1px}
 
+/* Lightbox */
 #lightboxOv{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);z-index:5000;justify-content:center;align-items:center;cursor:pointer}
 #lightboxOv.active{display:flex}
 #lightboxOv img{max-width:90%;max-height:90%;object-fit:contain;border-radius:8px}
 #lightboxOv .lb-close{position:absolute;top:20px;right:24px;color:#fff;font-size:28px;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.15);border-radius:50%}
 
+/* Style Info 모달 */
 .style-modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:4000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
 .style-modal-ov.active{display:flex}
 .style-modal-box{background:#fff;border-radius:12px;width:92%;max-width:800px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .25s ease-out}
 
-/* =========================================================
-   ★ Tech Pack 모달 (A4 가로형 / 실무 레이아웃)
-   ========================================================= */
-.tp-modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#CBD5E1;z-index:6000;overflow-y:auto}
-.tp-modal-ov.active{display:block}
-.tp-print-bar{position:sticky;top:0;background:#0F172A;color:#fff;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;z-index:6010;box-shadow:0 4px 10px rgba(0,0,0,.15)}
-.tp-print-bar span{font-family:'Roboto',sans-serif;font-weight:900;font-size:16px;letter-spacing:1px}
-.tp-btn-grp{display:flex;gap:10px}
-.tp-btn{border:none;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:900;cursor:pointer;text-transform:uppercase;font-family:'Roboto',sans-serif;transition:all 0.2s}
-.tp-btn-print{background:#3B82F6;color:#fff;box-shadow:0 2px 4px rgba(59,130,246,0.3)} 
-.tp-btn-print:hover{background:#2563EB;transform:translateY(-1px)}
-.tp-btn-close{background:rgba(255,255,255,.2);color:#fff} 
-.tp-btn-close:hover{background:rgba(255,255,255,.3)}
-
-.a4-landscape{font-family:'Roboto','Noto Sans KR',sans-serif;width:297mm;min-height:210mm;margin:40px auto;padding:12mm;box-sizing:border-box;background:#fff;box-shadow:0 15px 50px rgba(0,0,0,.2);position:relative}
-.a4-landscape *{box-sizing:border-box}
-
-.tp-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:5px solid #000;padding-bottom:12px;margin-bottom:15px}
-.tp-brand{font-size:32px;font-weight:900;letter-spacing:1.5px;color:#000;display:flex;align-items:center;gap:10px}
-.tp-brand .logo-ic{width:36px;height:36px;background:#000;clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)}
-.tp-brand span{color:#3B82F6}
-.doc-title{text-align:right}
-.doc-title h1{font-size:28px;font-weight:900;margin:0 0 4px 0;letter-spacing:3px;color:#000}
-.doc-title p{margin:0;font-size:11px;color:#475569;font-weight:700}
-
-/* 좌측, 중앙, 우측 3단 그리드 */
-.tp-grid{display:grid;grid-template-columns:280px 1fr 340px;gap:20px}
-.tp-box{border:2px solid #000;margin-bottom:15px;background:#fff;display:flex;flex-direction:column}
-.tp-box-title{background:#000;color:#fff;padding:6px 10px;font-size:13px;font-weight:900;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.5px}
-.tp-box-title span{font-size:10px;font-weight:400;color:#CBD5E1;letter-spacing:0}
-
-.col-left { display: flex; flex-direction: column; }
-.info-tbl{width:100%;border-collapse:collapse;font-size:11px;text-align:left;margin-bottom:15px}
-.info-tbl th,.info-tbl td{border-bottom:1px solid #CBD5E1;padding:7px 10px}
-.info-tbl th{font-weight:800;color:#475569;width:35%;background:#F8FAFC}
-.info-tbl td{font-weight:900;color:#0F172A}
-.info-tbl tr:last-child th,.info-tbl tr:last-child td{border-bottom:none}
-
-.col-mid { display: flex; flex-direction: column; }
-.spec-tbl{width:100%;border-collapse:collapse;text-align:center}
-.spec-tbl th,.spec-tbl td{border:1px solid #CBD5E1;padding:7px 4px}
-.spec-tbl th{background:#F1F5F9;font-weight:900;font-size:11px;color:#000}
-.spec-tbl td{font-weight:700;font-size:12px;color:#000}
-.spec-tbl .pom{text-align:left;padding-left:10px;font-size:11px}
-.memo-box { flex: 1; display: flex; flex-direction: column; }
-.memo-content { flex: 1; min-height: 120px; padding: 10px; font-size: 11px; color: #475569; line-height:1.6; }
-
-.img-wrap{padding:10px;display:flex;align-items:center;justify-content:center;position:relative}
-.style-img{height:180px;background:#F8FAFC}
-.sketch-img{height:340px;background:#fff;flex:1}
-.img-wrap img{max-width:100%;max-height:100%;object-fit:contain}
-.no-img{color:#CBD5E1;font-size:30px;font-weight:900}
-
-@media print{
-  #mainApp, .pop-ov, .modal-ov, .style-modal-ov, #lightboxOv { display: none !important; }
-  .tp-modal-ov { position: static !important; display: block !important; background: #fff !important; overflow: visible !important; height: auto !important; }
-  .tp-print-bar { display: none !important; }
-  .a4-landscape { margin: 0 !important; padding: 10mm !important; box-shadow: none !important; border: none !important; width: 100% !important; max-width: 100% !important; }
-  @page { size: A4 landscape; margin: 0; }
-  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-}
-.err-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C;white-space:pre-wrap;}
+.err-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C}
 @media(max-width:1100px){.mkpi-row{grid-template-columns:1fr 1fr}.d-grid{grid-template-columns:1fr 1fr}.schedule-compare{grid-template-columns:1fr}.pa-compare{grid-template-columns:1fr}}
 @media(max-width:600px){.mkpi-row{grid-template-columns:1fr}.d-grid{grid-template-columns:1fr}.d-grid-4{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-
-<div id="mainApp" class="main-app">
-  <div id="loadingScreen" class="loading"><div class="spinner"></div>MO 데이터를 불러오는 중...</div>
-  <div id="mainContent" style="display:none">
-    <div class="hdr">
-      <h1><span class="ic">MO</span> MO View / 생산현황표 / 生产现况表</h1>
-      <div class="hdr-btns">
-        <button class="btn-cctv" onclick="window.open('https://www.google.com','_blank')">📹 CCTV</button>
-        <button class="btn-primary" onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_MO','_blank')">+ New MO</button>
-      </div>
-    </div>
-    <div class="mkpi-row" id="mkpiRow"></div>
-    <div id="monthlyContent"></div>
+<div id="loadingScreen" class="loading"><div class="spinner"></div>MO 데이터를 불러오는 중...</div>
+<div id="mainContent" style="display:none">
+<div class="hdr">
+  <h1><span class="ic">MO</span> MO View / 생산현황표 / 生产现况表</h1>
+  <div class="hdr-btns">
+    <button class="btn-cctv" onclick="window.open('https://www.google.com','_blank')">📹 CCTV</button>
+    <button class="btn-primary" onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_MO','_blank')">+ New MO</button>
   </div>
-  <div id="errorScreen" style="display:none"><div class="err-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다</div><div id="errorMsg" style="font-size:12px;overflow-x:auto;"></div></div></div>
 </div>
+<div class="mkpi-row" id="mkpiRow"></div>
+<div id="monthlyContent"></div>
+</div>
+<div id="errorScreen" style="display:none"><div class="err-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다</div><div id="errorMsg" style="font-size:12px"></div></div></div>
 
 <div class="pop-ov" id="kpiPopOv">
   <div class="pop-box"><div class="pop-hd"><div><div class="pop-title" id="kpiPopTitle">-</div><div class="pop-sub" id="kpiPopSub">-</div></div><div class="pop-close" id="kpiPopClose">✕</div></div><div class="pop-body" id="kpiPopBody"></div></div>
@@ -344,9 +289,8 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
       <div><div class="m-title" id="mTitle">-</div><div class="m-sub" id="mSub">-</div></div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
         <div style="display:flex;align-items:center;gap:8px;">
-          <button id="btnTechPack" style="background:#000;color:#fff;border:none;padding:7px 16px;border-radius:6px;font-size:12px;font-weight:900;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.2);letter-spacing:0.5px">📋 TECH PACK</button>
-          <button id="btnStyleInfo" style="background:#F0FDF4;color:#065F46;border:1px solid #A7F3D0;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">👕 Style Info</button>
-          <button onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Report:All_MO','_blank')" style="background:#EFF6FF;color:var(--pr);border:1px solid #BFDBFE;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit</button>
+          <button id="btnStyleInfo" style="background:#F0FDF4;color:#065F46;border:1px solid #A7F3D0;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">👕 Style Info</button>
+          <button onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Report:All_MO','_blank')" style="background:#EFF6FF;color:var(--pr);border:1px solid #BFDBFE;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit</button>
           <div class="m-close" id="mClose">✕</div>
         </div>
         <div id="mModDate" style="font-size:10px;color:var(--tm);margin-right:40px;font-weight:600;letter-spacing:-0.3px;">최종수정일 / 最后修改日 : -</div>
@@ -374,21 +318,7 @@ table.zt{width:100%;border-collapse:collapse;font-size:11px;text-align:left;tabl
   <div class="lb-close" onclick="closeLightbox()">✕</div>
 </div>
 
-<div id="tpOv" class="tp-modal-ov">
-  <div class="tp-print-bar">
-    <span id="tpBarTitle">📋 TECH PACK</span>
-    <div class="tp-btn-grp">
-      <button id="btn-tp-print" class="tp-btn tp-btn-print">Print / PDF</button>
-      <button id="btn-tp-close" class="tp-btn tp-btn-close">Close</button>
-    </div>
-  </div>
-  <div class="a4-landscape" id="tpContent"></div>
-</div>
-
 <script>
-// ==========================================
-// ★ 1. 기본 유틸리티 함수 및 초기 설정
-// ==========================================
 var APP="eom", REP="All_MO", STYLE_REP="All_Styles";
 var allRec=[], allStyles=[], today=new Date(), todayStr=today.toISOString().split("T")[0];
 var currentMO=null;
@@ -398,7 +328,7 @@ var S_MAP={
   Gender:{"W":"Women / 여성 / 女","M":"Men / 남성 / 男","U":"Unisex / 남녀공용 / 男女通用"},
   Category:{"S":"Set / 세트 / 套装","I":"Individual / 단품 / 单品"},
   Top_Type:{"B":"Bra-top / 브라탑 / 运动内衣","C":"Crop / 크롭 / 露脐装","T":"Tank / 탱크 / 背心"},
-  Sleeve:{"L":"Long / 긴팔 / 长袖","S":"Short / 반팔 / 짧은소매","N":"None / 민소매 / 무袖"},
+  Sleeve:{"L":"Long / 긴팔 / 长袖","S":"Short / 반팔 / 短袖","N":"None / 민소매 / 无袖"},
   Fit:{"O":"Oversize / 루즈핏 / 宽松版","R":"Regular / 레귤러핏 / 标准版","S":"Slim / 슬림핏 / 修身版"},
   Details:{"Z":"Zip-up(Full) / 짚업 / 全开拉链","H":"Half-zip / 반짚업 / 半拉链","N":"Round-neck / 라운드넥 / 圆领","C":"Cami-strap / 끈나시 / 吊带","W":"Wide-strap / 와이드 / 宽肩带","D":"Hood / 후드 / 连帽"},
   Bottom_Type:{"L":"Leggings / 레깅스 / 紧身裤","W":"Wide / 와이드 / 宽腿裤","J":"Jogger / 조거 / 束脚裤","F":"Flare / 나팔 / 喇叭裤","P":"Pleats / 플리츠 / 褶皱","A":"A-line / A라인 / A字版","B":"Shorts / 반바지 / 短裤"},
@@ -411,7 +341,15 @@ function catName(v){return(!v||v==="-")?"-":(CAT_MAP[v]||v)}
 function mv(f,v){return(!v||v==="-")?"-":(S_MAP[f]&&S_MAP[f][v])?S_MAP[f][v]:v}
 function cleanFactory(v){if(!v||v==="-")return"-";return v.replace(/^[_\s]*\d+[_\s]*/,"")}
 function pd(v){if(!v||v==="-")return null;if(/^\d{4}-\d{2}-\d{2}/.test(v))return v.substring(0,10);var m=v.match(/^(\d{1,2})-([A-Za-z]+)-(\d{4})/);if(m){var mo={Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};return m[3]+"-"+(mo[m[2]]||"01")+"-"+(m[1].length===1?"0"+m[1]:m[1])}return null}
-function getModDate(r){var v=r["Modified_Time"]||r["Modified_Time_field"]||"";if(!v||v==="-")return "알 수 없음";var m=v.match(/^(\d{1,2})-([A-Za-z]+)-(\d{4})/);if(m){var mo={Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};var day=m[1].length===1?"0"+m[1]:m[1];return m[3]+"-"+(mo[m[2]]||"01")+"-"+day}return v.split(" ")[0];}
+
+function getModDate(r){
+  var v=r["Modified_Time"]||r["Modified_Time_field"]||"";
+  if(!v||v==="-")return "알 수 없음";
+  var m=v.match(/^(\d{1,2})-([A-Za-z]+)-(\d{4})/);
+  if(m){var mo={Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};var day=m[1].length===1?"0"+m[1]:m[1];return m[3]+"-"+(mo[m[2]]||"01")+"-"+day}
+  return v.split(" ")[0];
+}
+
 function g(r,f){var v=r[f];if(v==null||v==="")return"-";if(typeof v==="object"&&v.display_value)return v.display_value;return String(v)}
 function escH(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
 function tc(s){var l=(s||"").toLowerCase();if(l.indexOf("confirmed")>=0||l.indexOf("delivered")>=0||l.indexOf("complete")>=0||l.indexOf("shipped")>=0||l.indexOf("done")>=0)return"t-ok";if(l.indexOf("progress")>=0||l.indexOf("cutting")>=0||l.indexOf("sewing")>=0||l.indexOf("fabric")>=0||l.indexOf("packing")>=0)return"t-wn";if(l.indexOf("delay")>=0||l.indexOf("cancel")>=0)return"t-dg";if(l.indexOf("pending")>=0)return"t-bl";return"t-dr"}
@@ -419,11 +357,9 @@ function isDelayed(r){var os=(g(r,"Order_Status")||"").toLowerCase();if(os.index
 function getProdStage(r){var s=g(r,"Production_Status").toLowerCase();if(s.indexOf("shipped")>=0)return"Shipped";if(s.indexOf("complete")>=0||s.indexOf("done")>=0)return"Done";if(s.indexOf("packing")>=0)return"Packing";if(s.indexOf("sewing")>=0)return"Sewing";if(s.indexOf("cutting")>=0)return"Cutting";if(s.indexOf("fabric")>=0)return"Fabric";return"Not Started"}
 function getAllImgs(r,field){var i=r[field];if(!i)return[];if(Array.isArray(i))return i.filter(function(x){return x&&typeof x==="string"&&x.length>5});if(typeof i==="object"&&!Array.isArray(i)){var u=[];Object.keys(i).forEach(function(k){var v=i[k];if(v&&typeof v==="string"&&v.length>5)u.push(v)});return u}if(typeof i==="string"&&i.length>5)return[i];return[]}
 function getImg1(r){var imgs=getAllImgs(r,"Style_Image");return imgs.length>0?imgs[0]:null}
-function getImgUrl(r,field){var imgs=getAllImgs(r,field);return imgs.length>0?imgs[0]:null}
-function getSubformLines(r, fieldName){var v=r[fieldName];if(!v)return[];if(Array.isArray(v))return v;if(typeof v==="object")return Object.values(v);return[];}
 
 var _safeQ=[],_safeBusy=false;
-function _runSafeQ(){if(_safeQ.length===0){_safeBusy=false;return}_safeBusy=true;var task=_safeQ.shift();var el=task.id?document.getElementById(task.id):task.el;if(!el){setTimeout(_runSafeQ,10);return}var img=document.createElement("img");img.style.cssText=task.css||"width:100%;height:100%;object-fit:cover";if(task.clk)img.onclick=function(){openLightbox(this.src)};var done=false;function next(){if(done)return;done=true;setTimeout(_runSafeQ,10)}try{ZOHO.CREATOR.UTIL.setImageData(img,task.url,function(){el.innerHTML="";el.appendChild(img);next()});setTimeout(next,500)}catch(e){next()}}
+function _runSafeQ(){if(_safeQ.length===0){_safeBusy=false;return}_safeBusy=true;var task=_safeQ.shift();var el=task.id?document.getElementById(task.id):task.el;if(!el){setTimeout(_runSafeQ,50);return}var img=document.createElement("img");img.style.cssText=task.css||"width:100%;height:100%;object-fit:cover";if(task.clk)img.onclick=function(){openLightbox(this.src)};var done=false;function next(){if(done)return;done=true;setTimeout(_runSafeQ,100)}try{ZOHO.CREATOR.UTIL.setImageData(img,task.url,function(){el.innerHTML="";el.appendChild(img);next()});setTimeout(next,4000)}catch(e){next()}}
 function qImg(elOrId,url,css,clk){_safeQ.push({id:typeof elOrId==="string"?elOrId:null,el:typeof elOrId==="object"?elOrId:null,url:url,css:css,clk:clk||false});if(!_safeBusy)_runSafeQ()}
 
 function openLightbox(src){if(!src)return;document.getElementById("lightboxImg").src=src;document.getElementById("lightboxOv").classList.add("active")}
@@ -437,16 +373,18 @@ ZOHO.CREATOR.init().then(function(){
     if(results[0]&&results[0].code===3000&&results[0].data)allRec=results[0].data;
     if(results[1]&&results[1].code===3000&&results[1].data)allStyles=results[1].data;
     renderAll();hide("loadingScreen");show("mainContent");
-  }).catch(function(e){showErr(e.stack || e.message || JSON.stringify(e))}) 
+  }).catch(function(e){showErr(JSON.stringify(e))})
 });
 
 function show(i){document.getElementById(i).style.display="block"}
 function hide(i){document.getElementById(i).style.display="none"}
 function showErr(m){hide("loadingScreen");show("errorScreen");document.getElementById("errorMsg").textContent=m}
 
-function renderAll(){ renderMKPI(); renderMonthly(); }
+function renderAll(){
+  renderMKPI();
+  renderMonthly();
+}
 
-// (중략) KPI 및 월별 렌더링
 function renderMKPI(){
   var groups={};allRec.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[key])groups[key]=[];groups[key].push(r)});
   var colors=["#818CF8","#F59E0B","#34D399"];var h="";var ci=0;
@@ -479,6 +417,7 @@ function renderMKPI(){
     h+='<div class="qty-act"><span class="qty-badge act">ACT</span> 출고수량 <b>'+actQty.toLocaleString()+' pcs</b></div>';
     h+='</div></div>';
   });
+
   var delayedAll=allRec.filter(function(r){return isDelayed(r)});
   h+='<div class="delay-card"><div class="delay-card-title">⚠️ 생산 지연 현황<br><span style="font-size:10px;color:#EF4444;font-weight:600">生产延误现况</span></div><div class="delay-total">'+delayedAll.length+'<span>건 지연 / 件延误</span></div><div class="delay-list">';
   if(delayedAll.length===0)h+='<div style="text-align:center;padding:16px;color:#94A3B8;font-size:11px">지연 없음 / 无延误 ✓</div>';
@@ -504,7 +443,9 @@ function openKpiPop(keyEnc,type){
   document.getElementById("kpiPopBody").innerHTML=h;
   document.getElementById("kpiPopOv").classList.add("active");
 }
+
 function openModalFromPop(id){var r=allRec.find(function(x){return x["ID"]===id});if(r){document.getElementById("kpiPopOv").classList.remove("active");openModal(r)}}
+
 document.getElementById("kpiPopClose").addEventListener("click",function(){document.getElementById("kpiPopOv").classList.remove("active")});
 document.getElementById("kpiPopOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
 document.getElementById("pipePopClose").addEventListener("click",function(){document.getElementById("pipePopOv").classList.remove("active")});
@@ -542,6 +483,7 @@ function openPipePop(stage, idx){
   document.getElementById("pipePopBody").innerHTML=h;
   document.getElementById("pipePopOv").classList.add("active");
 }
+
 function openModalFromPipe(id){var r=allRec.find(function(x){return x["ID"]===id});if(r){document.getElementById("pipePopOv").classList.remove("active");openModal(r)}}
 
 function renderMonthly(){
@@ -589,7 +531,9 @@ function renderMonthly(){
       html+='</tr>';
     });
     html+='</tbody></table></div></div>';
+
     html+='<div class="pipe-card" style="margin-top:16px;margin-bottom:0;box-shadow:none;border-color:#EEF2F6;padding:16px"><div class="pipe-title" style="font-size:12px;margin-bottom:10px">생산 파이프라인 / 生产流水表</div><div class="pipe-row" id="pipeRow_'+idx+'"></div></div>';
+
     if(ym)html+=buildTimeline(items,ym.y,ym.m,key,idx);
     html+='</div>';
   });
@@ -716,10 +660,10 @@ function buildSubformTable(lines, prefix){
 function openModal(r){
   currentMO=r;
   var modDt=getModDate(r);
+
   document.getElementById("mTitle").textContent=g(r,"MO_Number");
   document.getElementById("mSub").textContent=g(r,"Style_Name")+" — "+g(r,"Style_SKU");
   document.getElementById("mModDate").textContent="최종수정일 / 最后修改日 : "+modDt;
-  document.getElementById("btnTechPack").setAttribute("data-moid", r["ID"]);
 
   var h='';
   function dv(v){return v==="-"?'<span class="d-val empty">미입력</span>':escH(v)}
@@ -744,7 +688,7 @@ function openModal(r){
   h+=it("Expected Delivery / 예상납기 / 预计交货",dv(g(r,"Expected_Delivery")));
   h+=it("Delivery Status / 납기상태 / 交期状态",isDelayed(r)?'<span class="tag t-dg">DELAYED / 지연 / 延误</span>':dv(g(r,"Delivery_Status")));
   h+=it("Gender / 성별 / 性별",dv(mv("Gender",g(r,"Gender"))));
-  h+=it("Plan Year-Month / 진행년월 / 进行年月",dv(g(r,"Plan_Year"))+"-"+dv(g(r,"Plan_Month")));
+  h+=it("Plan Year-Month / 진행년월 / 진행年月",dv(g(r,"Plan_Year"))+"-"+dv(g(r,"Plan_Month")));
   h+='</div></div>';
 
   h+='<div class="m-sec"><div class="m-sec-t">👗 제품 정의 / 产品定义</div><div class="d-grid">';
@@ -776,7 +720,7 @@ function openModal(r){
   h+='</div>';
   if(planQty>0){
     var pct2=Math.round((actQty/planQty)*100);
-    h+='<div class="pa-diff">출고율 / 出货率: <b style="color:'+(actQty>=planQty?"#047857":"#DC2626")+'">'+diffSign+diffQty.toLocaleString()+' pcs ('+pct2+'%)</b></div>';
+    h+='<div class="pa-diff">출고율 / 출货率: <b style="color:'+(actQty>=planQty?"#047857":"#DC2626")+'">'+diffSign+diffQty.toLocaleString()+' pcs ('+pct2+'%)</b></div>';
   }
 
   var planLines=getSubformLines(r,"Plan_MO_Lines");
@@ -859,237 +803,64 @@ document.getElementById("btnStyleInfo").addEventListener("click",function(){
   else{alert("해당 SKU의 스타일 정보를 찾을 수 없습니다: "+sku)}
 });
 
-/* =========================================================
-   ★ TECH PACK: 동시성 제한 해제(순차 릴레이 호출) & 디버그 모드
-   ========================================================= */
+function openStyleModal(s){
+  document.getElementById("smTitle").textContent=g(s,"Style_SKU");
+  document.getElementById("smSub").textContent=g(s,"Style_Name");
+  var h='';
+  function dv(v){return v==="-"?'<span class="d-val empty">미입력</span>':escH(v)}
+  function it(l,v){return'<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'}
 
-document.getElementById('btn-tp-close').addEventListener('click',function(){
-  document.getElementById("tpOv").classList.remove("active");
-});
-document.getElementById('btn-tp-print').addEventListener('click',function(){
-  window.print();
-});
-
-// 이미지 병목 없는 렌더러
-function fastImgZoho(elId, url) {
-  var el = document.getElementById(elId);
-  if(!el) return;
-  if(!url || url === "-") { el.innerHTML = '<div class="no-img">📷</div>'; return; }
-  var u = Array.isArray(url) ? url[0] : url;
-  if(typeof u === "object" && u !== null) u = u.url || u.display_value || "";
-  if(!u || u === "-") { el.innerHTML = '<div class="no-img">📷</div>'; return; }
-  
-  var img = document.createElement("img");
-  img.style.cssText = "width:100%;height:100%;object-fit:contain";
-  ZOHO.CREATOR.UTIL.setImageData(img, u, function() {
-    el.innerHTML = ""; el.appendChild(img);
-  });
-}
-
-function parseUniversalSpecs(lines) {
-  var spObj = {};
-  if(!Array.isArray(lines)) return spObj;
-  
-  lines.forEach(function(row) {
-    var pom="-", size="-", spec="-", tol="-";
-    Object.keys(row).forEach(function(k){
-      var kl = k.toUpperCase();
-      var val = typeof row[k] === "object" && row[k] !== null ? (row[k].display_value || "") : String(row[k] || "");
-      if(val==="null" || val==="undefined") val="-";
-
-      if(kl.indexOf("POM") >= 0 || kl === "MEASUREMENT_POINT") pom = val;
-      else if(kl.indexOf("SELECT_SIZE") >= 0 || kl.indexOf("SELECT") >= 0 || k === "Size") size = val.toUpperCase();
-      else if((kl.indexOf("SPEC") >= 0 || kl.indexOf("VALUE") >= 0 || kl === "CM") && kl.indexOf("SPECS") === -1 && kl.indexOf("SIZE") === -1) spec = val;
-      else if(kl.indexOf("TOL") >= 0) tol = val;
-    });
-
-    if(pom === "-" || pom === "") return;
-    if(!spObj[pom]) spObj[pom] = {tol:tol, S:"-", M:"-", L:"-", XL:"-", XXL:"-"};
-    if(size && size !== "-" && spObj[pom][size] !== undefined) {
-      spObj[pom][size] = spec;
-    }
-    if(tol !== "-" && tol !== "") spObj[pom].tol = tol;
-  });
-  return spObj;
-}
-
-// ★ (핵심) 서버 공격(DDoS) 차단을 피하는 순차 릴레이 호출 함수
-function fetchSubformRowsSafely(reportName, ids) {
-  return new Promise(function(resolve) {
-    if (!ids || ids.length === 0) return resolve([]);
-    var results = [];
-    var i = 0;
-    function next() {
-      if (i >= ids.length) return resolve(results);
-      ZOHO.CREATOR.API.getRecordById({appName: APP, reportName: reportName, id: ids[i]})
-      .then(function(res) {
-        if(res && res.data) results.push(res.data);
-        i++;
-        setTimeout(next, 20); // 0.02초 간격으로 한 줄씩 얌전하게 빼옵니다. (에러 방지)
-      })
-      .catch(function(err) {
-        window["_err_" + reportName] = err; // 에러 기록
-        i++;
-        setTimeout(next, 20);
-      });
-    }
-    next();
-  });
-}
-
-// TECH PACK 팝업 띄우기
-document.getElementById("btnTechPack").addEventListener("click",function(){
-  var id = this.getAttribute("data-moid");
-  if(!id) return;
-
-  var btn = this;
-  var originalText = btn.innerHTML;
-  btn.innerHTML = "⏳ DATA LOADING...";
-  btn.disabled = true;
-
-  var r = allRec.find(function(x) { return x["ID"] === id; });
-  if (!r) { btn.disabled = false; btn.innerHTML = originalText; return; }
-
-  var sku = g(r, "Style_SKU");
-  var s = allStyles.find(function(st){return g(st,"Style_SKU")===sku || g(st,"SKU")===sku;}) || {};
-
-  var topIds = (r.Top_Size_Specs || []).map(function(x){return x.ID;}).filter(Boolean);
-  var btmIds = (r.Bottom_Size_Specs || []).map(function(x){return x.ID;}).filter(Boolean);
-
-  if (topIds.length === 0 && s.Top_Size_Specs) topIds = s.Top_Size_Specs.map(function(x){return x.ID;}).filter(Boolean);
-  if (btmIds.length === 0 && s.Bottom_Size_Specs) btmIds = s.Bottom_Size_Specs.map(function(x){return x.ID;}).filter(Boolean);
-
-  window._err_All_Top_Specs = null;
-  window._err_All_Bottom_Specs = null;
-
-  // 1단계: 릴레이 호출 시작 (가장 안전하고 확실한 방법)
-  fetchSubformRowsSafely("All_Top_Specs", topIds).then(function(topLines) {
-    fetchSubformRowsSafely("All_Bottom_Specs", btmIds).then(function(btmLines) {
-      
-      var topSpecs = parseUniversalSpecs(topLines);
-      if (Object.keys(topSpecs).length === 0) topSpecs = parseUniversalSpecs(r.Top_Size_Specs || s.Top_Size_Specs || []);
-      
-      var btmSpecs = parseUniversalSpecs(btmLines);
-      if (Object.keys(btmSpecs).length === 0) btmSpecs = parseUniversalSpecs(r.Bottom_Size_Specs || s.Bottom_Size_Specs || []);
-
-      renderTechPackHTML(r, s, topSpecs, btmSpecs, topIds.length, btmIds.length);
-
-      btn.innerHTML = originalText;
-      btn.disabled = false;
-    });
-  });
-});
-
-function renderTechPackHTML(r, s, topSpecs, btmSpecs, topIdCount, btmIdCount) {
-  var sku = g(r, "Style_SKU");
-  var imgStyle = getImgUrl(s, "Style_Image") || getImgUrl(r, "Style_Image");
-  var imgTop = getImgUrl(s, "Top_Flat_Sketch") || getImgUrl(s, "Top_Sketch") || getImgUrl(r, "Top_Flat_Sketch") || getImgUrl(r, "Top_Sketch");
-  var imgBtm = getImgUrl(s, "Bottom_Flat_Sketch") || getImgUrl(s, "Bottom_Sketch") || getImgUrl(r, "Bottom_Flat_Sketch") || getImgUrl(r, "Bottom_Sketch");
-
-  var moNum = g(r, "MO_Number");
-  var factory = cleanFactory(g(r, "Factory"));
-  var tColor = g(r, "Top_Color"); if(tColor==="-") tColor = g(s, "Top_Color");
-  var bColor = g(r, "Bottom_Color"); if(bColor==="-") bColor = g(s, "Bottom_Color");
-  var colorwaysStr = [tColor !== "-" ? tColor : "", bColor !== "-" ? bColor : ""].filter(Boolean).join(" / ");
-  if(!colorwaysStr) colorwaysStr = "-";
-
-  var matType = g(s, "Material_Type"); if(matType==="-") matType = g(r, "Material_Type");
-  var blend = g(s, "blended_percentage"); if(blend==="-") blend = g(r, "blended_percentage");
-  var lining = g(s, "Lining_Type"); if(lining==="-") lining = g(r, "Lining_Type");
-
-  var p = [];
-  p.push("<div class='tp-head'>");
-  p.push("<div class='tp-brand'><div class='logo-ic'></div> ZOHO <span>APPAREL</span></div>");
-  p.push("<div class='doc-title'><h1>TECH PACK</h1><p>DATE: " + todayStr + " &nbsp;|&nbsp; REV: 1.0</p></div>");
-  p.push("</div>");
-
-  p.push("<div class='tp-grid'>"); 
-
-  // ================= [좌측 열]: 정보, 사진, 원단 =================
-  p.push("<div class='col-left'>");
-  p.push("<table class='info-tbl'><tbody>");
-  p.push("<tr><th>MO NO.</th><td style='color:#3B82F6;font-size:13px'>" + escH(moNum) + "</td></tr>");
-  p.push("<tr><th>STYLE NO.</th><td>" + escH(sku) + "</td></tr>");
-  p.push("<tr><th>STYLE NAME</th><td>" + escH(g(r, "Style_Name")) + "</td></tr>");
-  p.push("<tr><th>FACTORY</th><td>" + escH(factory) + "</td></tr>");
-  p.push("<tr><th>SEASON</th><td>" + escH(g(r, "Season")) + "</td></tr>");
-  p.push("<tr><th>CATEGORY</th><td>" + escH(catName(g(r, "Category"))) + "</td></tr>");
-  p.push("<tr><th>TARGET</th><td>" + escH(mv("Gender",g(r, "Gender"))) + "</td></tr>");
-  p.push("<tr><th>COLORS (T/B)</th><td style='color:#059669'>" + escH(colorwaysStr) + "</td></tr>");
-  p.push("<tr><th>SIZE RANGE</th><td>S, M, L, XL</td></tr>");
-  p.push("</tbody></table>");
-  
-  p.push("<div class='tp-box'><div class='tp-box-title'>STYLE IMAGE</div><div class='img-wrap style-img' id='tpImgStyle'><div class='spinner-sm'></div></div></div>");
-  
-  p.push("<div class='tp-box'><div class='tp-box-title'>FABRIC & FIT DETAILS</div>");
-  p.push("<div style='padding:10px;font-size:11px;line-height:1.6'>");
-  p.push("<b>MAIN:</b> " + escH(mv("Material_Type",matType)) + "<br>");
-  p.push("<b>LINING:</b> " + escH(mv("Lining_Type",lining)) + " (" + escH(blend) + ")<br><br>");
-  p.push("<b>Top:</b> " + escH(mv("Top_Type",g(r,"Top_Type"))) + " / " + escH(mv("Sleeve",g(r,"Sleeve"))) + "<br>");
-  p.push("<b>Btm:</b> " + escH(mv("Bottom_Type",g(r,"Bottom_Type"))) + " / " + escH(mv("Bottom_Length",g(r,"Bottom_Length"))) + "<br>");
-  p.push("<b>Fit:</b> " + escH(mv("Fit",g(r,"Fit"))) + " | <b>Detail:</b> " + escH(mv("Details",g(r,"Details"))));
-  p.push("</div></div>");
-  p.push("</div>");
-
-  // ================= [중앙 열]: 스펙표, 메모 =================
-  p.push("<div class='col-mid'>");
-  
-  function drawSpec(title, spObj, rawData, idCount, errReportName) {
-    var h = "<div class='tp-box'><div class='tp-box-title'>" + title + " <span>Unit: cm</span></div>";
-    h += "<table class='spec-tbl'><thead><tr>";
-    h += "<th style='width:45%'>Point of Measure (측정부위)</th><th style='width:15%'>TOL(±)</th>";
-    h += "<th style='width:10%'>S</th><th style='width:10%'>M</th><th style='width:10%'>L</th><th style='width:10%'>XL</th>";
-    h += "</tr></thead><tbody>";
-    
-    var keys = Object.keys(spObj);
-    if(keys.length === 0) {
-      // 에러 발생 시 정밀 추적 텍스트 출력
-      var errInfo = window["_err_" + errReportName];
-      var dbg = "<b>[데이터 없음]</b> 사이즈 정보를 불러오지 못했습니다.<br><br>";
-      dbg += "- 감지된 ID 개수: " + idCount + "개<br>";
-      if(errInfo) dbg += "⛔ <b>API 에러:</b> " + JSON.stringify(errInfo) + "<br>";
-      dbg += "- 서브폼 이름 설정 권한을 다시 한 번 확인해주세요.<br>";
-      dbg += "- Raw Data: " + escH(JSON.stringify(rawData).substring(0, 150)) + "...";
-      h += "<tr><td colspan='6' style='color:#EF4444;padding:20px;font-size:10px;text-align:left;word-break:break-all'>" + dbg + "</td></tr>";
-    } else {
-      keys.forEach(function(pom) {
-        var o = spObj[pom];
-        h += "<tr>";
-        h += "<td class='pom'>" + escH(pom) + "</td><td>" + escH(o.tol) + "</td>";
-        h += "<td>" + escH(o.S) + "</td><td>" + escH(o.M) + "</td><td>" + escH(o.L) + "</td><td>" + escH(o.XL) + "</td>";
-        h += "</tr>";
-      });
-    }
-    h += "</tbody></table></div>";
-    return h;
+  var imgs=getAllImgs(s,"Style_Image").slice(0,5);
+  if(imgs.length>0){
+    h+='<div class="m-img-gallery">';
+    imgs.forEach(function(u,i){h+='<div class="m-img-box" id="styleImg'+i+'"><div class="spinner-sm"></div></div>'});
+    h+='</div>';
   }
-  
-  p.push(drawSpec("📏 TOP MEASUREMENTS", topSpecs, r.Top_Size_Specs || s.Top_Size_Specs, topIdCount, "All_Top_Specs"));
-  p.push(drawSpec("📏 BOTTOM MEASUREMENTS", btmSpecs, r.Bottom_Size_Specs || s.Bottom_Size_Specs, btmIdCount, "All_Bottom_Specs"));
-  
-  p.push("<div class='tp-box memo-box'><div class='tp-box-title'>REMARKS / 비고란 (작업 지시사항)</div>");
-  p.push("<div class='memo-content'>");
-  var pNote = g(r, "Plan_Notes");
-  if(pNote && pNote !== "-") p.push("<div style='color:#DC2626;font-weight:700;white-space:pre-wrap'>" + escH(pNote) + "</div>");
-  p.push("</div></div>");
-  p.push("</div>"); 
 
-  // ================= [우측 열]: 도안 이미지 =================
-  p.push("<div class='col-right'>");
-  p.push("<div class='tp-box'><div class='tp-box-title'>TOP SKETCH</div><div class='img-wrap sketch-img' id='tpImgTop'><div class='spinner-sm'></div></div></div>");
-  p.push("<div class='tp-box'><div class='tp-box-title'>BOTTOM SKETCH</div><div class='img-wrap sketch-img' id='tpImgBtm'><div class='spinner-sm'></div></div></div>");
-  p.push("</div>");
+  h+='<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 基本信息</div><div class="d-grid">';
+  h+=it("Style SKU / 스타일SKU / 款式SKU",dv(g(s,"Style_SKU")));
+  h+=it("Style Name / 스타일명 / 款式名称",dv(g(s,"Style_Name")));
+  h+=it("QR SKU",dv(g(s,"QR_SKU")));
+  h+=it("Plan Year / 진행 년도 / 进行年度",dv(g(s,"Plan_Year")));
+  h+=it("Plan Month / 진행 월 / 进行月度",dv(g(s,"Plan_Month")));
+  h+=it("Season / 시즌 / 季节",dv(g(s,"Season")));
+  h+=it("Gender / 성별 / 性별",dv(mv("Gender",g(s,"Gender"))));
+  h+=it("Category / 구분 / 大类",dv(mv("Category",g(s,"Category"))));
+  h+=it("Style Status / 상태 / 款式状态",dv(g(s,"Style_Status")));
+  h+='</div></div>';
 
-  p.push("</div>"); // tp-grid 끝
+  h+='<div class="m-sec"><div class="m-sec-t">👗 제품 정의 / 产品定义</div><div class="d-grid">';
+  h+=it("Top Type / 상의 유형 / 上衣类型",dv(mv("Top_Type",g(s,"Top_Type"))));
+  h+=it("Sleeve / 소매 유형 / 衣袖类型",dv(mv("Sleeve",g(s,"Sleeve"))));
+  h+=it("Fit / 핏 / 版型",dv(mv("Fit",g(s,"Fit"))));
+  h+=it("Details / 디테일 / 类型详情",dv(mv("Details",g(s,"Details"))));
+  h+=it("Bottom Type / 하의 유형 / 下装类型",dv(mv("Bottom_Type",g(s,"Bottom_Type"))));
+  h+=it("Bottom Length / 하의 기장 / 下装长短",dv(mv("Bottom_Length",g(s,"Bottom_Length"))));
+  h+='</div></div>';
 
-  document.getElementById("tpBarTitle").textContent = "📋 TECH PACK — " + escH(sku);
-  document.getElementById("tpContent").innerHTML = p.join("");
-  document.getElementById("tpOv").classList.add("active");
+  h+='<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料</div><div class="d-grid">';
+  h+=it("Material Type / 원단 종류 / 面料种类",dv(mv("Material_Type",g(s,"Material_Type"))));
+  h+=it("blended % / 혼방 % / 混纺 %",dv(g(s,"blended_percentage")));
+  h+=it("Lining Type / 안감유형 / 里料类型",dv(mv("Lining_Type",g(s,"Lining_Type"))));
+  h+='</div></div>';
 
-  fastImgZoho("tpImgStyle", imgStyle);
-  fastImgZoho("tpImgTop", imgTop);
-  fastImgZoho("tpImgBtm", imgBtm);
+  h+='<div class="m-sec"><div class="m-sec-t">💰 원가 정보 / 成本信息</div><div class="d-grid">';
+  h+=it("Target Cost / 목표원가 / 目标成本",dv(g(s,"Target_Cost")));
+  h+=it("Final Cost / 최종원가 / 最终成本",dv(g(s,"Final_Cost")));
+  h+=it("Total BOM Cost / 총BOM원가 / BOM总成本",dv(g(s,"Total_BOM_Cost")));
+  h+='</div></div>';
+
+  document.getElementById("smBody").innerHTML=h;
+  document.getElementById("styleModalOv").classList.add("active");
+
+  setTimeout(function(){
+    imgs.forEach(function(u,i){qImg("styleImg"+i,u,"width:100%;height:100%;object-fit:cover;cursor:pointer",true)});
+  },100);
 }
+
+document.getElementById("smClose").addEventListener("click",function(){document.getElementById("styleModalOv").classList.remove("active")});
+document.getElementById("styleModalOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeLightbox();closeModal();document.getElementById("styleModalOv").classList.remove("active");document.getElementById("kpiPopOv").classList.remove("active");document.getElementById("pipePopOv").classList.remove("active")}});
 </script>
 </body>
 </html>
