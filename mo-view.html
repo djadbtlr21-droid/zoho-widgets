@@ -911,60 +911,59 @@ function openTechPack(id) {
   var r = allRec.find(function(x) { return x["ID"] === id; });
   if(!r) return;
 
-  /* Tech Pack 로딩 화면 먼저 표시 */
-  document.getElementById("tpBarTitle").textContent = "📋 TECH PACK — 데이터 로딩 중...";
-  document.getElementById("tpContent").innerHTML = "<div style='text-align:center;padding:60px;color:#64748B'><div class='spinner' style='margin:0 auto 16px'></div><div style='font-size:14px;font-weight:700'>서브폼 데이터 조회 중...</div><div style='font-size:11px;margin-top:6px'>getRecordById로 전체 데이터를 가져오는 중입니다</div></div>";
+  var moNum = g(r, "MO_Number");
+
+  /* 로딩 화면 */
+  document.getElementById("tpBarTitle").textContent = "📋 TECH PACK — " + escH(g(r,"Style_SKU"));
+  document.getElementById("tpContent").innerHTML = [
+    "<div style='text-align:center;padding:80px 40px;color:#64748B'>",
+    "<div class='spinner' style='margin:0 auto 20px'></div>",
+    "<div style='font-size:14px;font-weight:700;margin-bottom:6px'>사이즈 스펙 로딩 중...</div>",
+    "<div style='font-size:11px'>MO: " + escH(moNum) + "</div>",
+    "</div>"
+  ].join("");
   document.getElementById("tpOv").classList.add("active");
 
-  /* ★ getRecordById로 서브폼 전체 데이터 가져오기 */
-  ZOHO.CREATOR.API.getRecordById({
-    appName: APP,
-    reportName: REP,
-    id: id
-  }).then(function(res) {
-    /* getRecordById 응답에서 서브폼이 포함된 전체 레코드 */
-    var fullR = (res && res.code === 3000 && res.data) ? res.data : r;
-    openTechPackRender(id, fullR);
+  /* ★ All_Top_Specs / All_Bottom_Specs 리포트에서 MO_Number로 필터 조회 */
+  var criteria = "(MO_Number=="" + moNum + "")";
+
+  Promise.all([
+    ZOHO.CREATOR.API.getAllRecords({
+      appName: APP,
+      reportName: "All_Top_Specs",
+      criteria: criteria,
+      page: 1,
+      pageSize: 200
+    }),
+    ZOHO.CREATOR.API.getAllRecords({
+      appName: APP,
+      reportName: "All_Bottom_Specs",
+      criteria: criteria,
+      page: 1,
+      pageSize: 200
+    })
+  ]).then(function(results) {
+    var topLines = (results[0] && results[0].code === 3000 && results[0].data) ? results[0].data : [];
+    var btmLines = (results[1] && results[1].code === 3000 && results[1].data) ? results[1].data : [];
+    console.log("[TechPack] Top 행 수:", topLines.length, "Bottom 행 수:", btmLines.length);
+    if(topLines.length > 0) {
+      console.log("[TechPack] Top 첫 row 키:", Object.keys(topLines[0]));
+      console.log("[TechPack] Top 첫 row:", JSON.stringify(topLines[0]).substring(0,300));
+    }
+    openTechPackRender(r, topLines, btmLines);
   }).catch(function(e) {
-    console.warn("[TechPack] getRecordById 실패, 기존 데이터 사용:", e);
-    openTechPackRender(id, r);
+    console.warn("[TechPack] 리포트 조회 실패:", e);
+    openTechPackRender(r, [], []);
   });
 }
 
-function openTechPackRender(id, r) {
-  /* ★ 임시 진단: 서브폼 실제 구조 확인 */
-  var _tss = r["Top_Size_Specs"];
-  var _bss = r["Bottom_Size_Specs"];
-  var _msg = "=== Top_Size_Specs ===\n";
-  _msg += "타입: " + typeof _tss + " / Array: " + Array.isArray(_tss) + "\n";
-  if(_tss) {
-    var _arr = Array.isArray(_tss) ? _tss : Object.values(_tss);
-    _msg += "행 수: " + _arr.length + "\n";
-    if(_arr.length > 0) {
-      _msg += "첫 행 키: " + Object.keys(_arr[0]).join(", ") + "\n";
-      _msg += "첫 행 값: " + JSON.stringify(_arr[0]).substring(0, 300);
-    }
-  } else { _msg += "없음(null)"; }
-  alert(_msg);
-
+function openTechPackRender(r, topLines, btmLines) {
   var sku = g(r, "Style_SKU");
   var s = allStyles.find(function(st){ return g(st,"Style_SKU")===sku || g(st,"SKU")===sku; }) || {};
 
-  /* ★ 서브폼 원본 구조 덤프 (콘솔 F12에서 확인) */
-  dumpSubform(r, "Top_Size_Specs");
-  dumpSubform(r, "Bottom_Size_Specs");
-
-  /* ★ 서브폼 행 정규화 후 파싱 */
-  var topRaw  = r["Top_Size_Specs"] || (s["Top_Size_Specs"] ? s["Top_Size_Specs"] : null);
-  var topLines = normalizeSubformRows(topRaw);
-  console.log("[TechPack] Top 정규화 행 수:", topLines.length);
-  /* ★ 필드명 직접 지정 파서 사용 */
+  /* ★ 전용 리포트(All_Top_Specs / All_Bottom_Specs)에서 가져온 데이터 직접 파싱 */
+  console.log("[TechPack] Top 행 수:", topLines.length, "/ Bottom 행 수:", btmLines.length);
   var topSpecs = parseSpecsByFieldName(topLines, "Top");
-
-  var btmRaw  = r["Bottom_Size_Specs"] || (s["Bottom_Size_Specs"] ? s["Bottom_Size_Specs"] : null);
-  var btmLines = normalizeSubformRows(btmRaw);
-  console.log("[TechPack] Bottom 정규화 행 수:", btmLines.length);
-  /* ★ 필드명 직접 지정 파서 사용 */
   var btmSpecs = parseSpecsByFieldName(btmLines, "Bottom");
 
   /* 이미지 */
@@ -981,21 +980,15 @@ function openTechPackRender(id, r) {
   var lining  = g(s,"Lining_Type"); if(lining==="-") lining = g(r,"Lining_Type");
 
   /* ★ 디버그 배너 — 실제 키 목록 화면에 표시 */
-  var rawTopLen = topRaw ? (Array.isArray(topRaw) ? topRaw.length : Object.keys(topRaw).length) : 0;
-  var rawBtmLen = btmRaw ? (Array.isArray(btmRaw) ? btmRaw.length : Object.keys(btmRaw).length) : 0;
+  /* 변수 정리: 이전 코드 제거됨 */
+
   var parsedTopN = Object.keys(topSpecs).length;
   var parsedBtmN = Object.keys(btmSpecs).length;
-
-  /* 첫 번째 row의 실제 키 목록 추출 */
-  var topFirstKeys = topLines.length > 0 ? Object.keys(topLines[0]) : [];
-  var btmFirstKeys = btmLines.length > 0 ? Object.keys(btmLines[0]) : [];
-  var topFirstRaw  = topLines.length > 0 ? JSON.stringify(topLines[0]).substring(0, 300) : "없음";
-
-  var _topKeys = (window["_tp_Top_keys"] || topFirstKeys).join(", ") || "아직없음";
-  var _topRaw  = window["_tp_Top_raw"]  || topFirstRaw || "아직없음";
-  var debugInfo = "Top: 원본" + rawTopLen + "행, 파싱POM=" + parsedTopN + " / Bottom: 원본" + rawBtmLen + "행, 파싱POM=" + parsedBtmN;
-  debugInfo += " || Top row키: [" + _topKeys + "]";
-  debugInfo += " || Top row값(앞200): " + _topRaw.substring(0, 200);
+  var topFirstKeysStr = topLines.length > 0 ? Object.keys(topLines[0]).join(", ") : "없음";
+  var debugInfo = "Top: " + topLines.length + "행 → POM " + parsedTopN + "개 / Bottom: " + btmLines.length + "행 → POM " + parsedBtmN + "개";
+  if(parsedTopN === 0 && topLines.length > 0) {
+    debugInfo += " ⚠️ Top 첫row 키: [" + topFirstKeysStr + "]";
+  }
 
   var p = [];
   p.push("<div class='tp-head'>");
