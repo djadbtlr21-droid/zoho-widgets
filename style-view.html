@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Style View vFinal (Thumbnail Fix)</title>
+<title>Style View vFinal (Bug Free)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
@@ -94,6 +94,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .pop-item-left .pi-meta{font-size:9px;color:#94A3B8;margin-top:2px}
 .pop-empty{text-align:center;padding:30px;color:var(--z-text-muted);font-size:13px}
 
+/* Modal (Style Info) */
 .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:3000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
 .modal-overlay.active{display:flex}
 .modal-box-lg{background:#fff;border-radius:12px;width:92%;max-width:760px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:modalIn .25s ease-out}
@@ -114,13 +115,16 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .detail-label{font-size:9px;font-weight:700;color:var(--z-text-muted);line-height:1.4}
 .detail-value{font-size:13px;font-weight:600;color:var(--z-text-main)}
 .detail-value.empty{color:#CBD5E1;font-weight:400;font-style:italic}
+
+/* 이미지 갤러리 섹션 */
 .modal-images{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
 .modal-img-wrap{text-align:center}
 .modal-img-box{width:120px;height:120px;background:#F8FAFC;border:1px solid var(--z-border);border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;color:#CBD5E1;position:relative}
 .modal-img-box img{width:100%;height:100%;object-fit:contain;cursor:pointer;transition:transform .2s;position:absolute;top:0;left:0}
 .modal-img-box:hover{border-color:var(--z-accent);box-shadow:0 2px 8px rgba(59,130,246,.15)}
-.modal-img-label{font-size:8px;color:var(--z-text-muted);margin-top:3px;font-weight:600}
+.modal-img-label{font-size:9px;color:var(--z-text-muted);margin-top:4px;font-weight:700}
 
+/* Chart */
 .chart-card{background:#fff;border:1px solid var(--z-border);border-radius:8px;padding:16px;margin-top:20px}
 .chart-title{font-size:13px;font-weight:800;color:var(--z-text-main);margin-bottom:14px;display:flex;align-items:center;gap:6px}
 .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:5px}
@@ -128,7 +132,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .bar-track{width:180px;height:20px;background:#F1F5F9;border-radius:4px;overflow:hidden;flex-shrink:0}
 .bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:6px;font-size:9px;font-weight:800;color:#fff;min-width:22px;transition:width .5s ease}
 .bar-count{font-size:11px;font-weight:800;color:var(--z-text-main);min-width:24px}
-
 .error-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C;white-space:pre-wrap;}
 
 /* =========================================================
@@ -177,6 +180,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .memo-box { flex: 1; display: flex; flex-direction: column; }
 .memo-content { flex: 1; min-height: 120px; padding: 10px; font-size: 11px; color: #475569; line-height:1.6; }
 
+.col-right { display: flex; flex-direction: column; }
 .img-wrap{padding:10px;display:flex;align-items:center;justify-content:center;position:relative}
 .style-img{height:180px;background:#F8FAFC}
 .sketch-img{height:340px;background:#fff;flex:1}
@@ -197,32 +201,41 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 </style>
 </head>
 <body>
-<div id="loadingScreen" class="loading-screen"><div class="spinner"></div><div class="loading-text">데이터를 불러오는 중...</div></div>
-<div id="mainContent" style="display:none">
-  <div class="page-header">
-    <h1><span class="icon-s">S</span> Style View / 스타일 현황표 / 款式现况表</h1>
-    <button onclick="goTo('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_Styles')" style="background:var(--z-primary);color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px">+ New Style</button>
-  </div>
-  <div class="mkpi-row" id="kpiRow"></div>
-  <div class="filter-bar">
-    <input type="text" class="search-box" id="searchBox" placeholder="🔍 SKU, 스타일명, Brand 검색...">
-    <select class="filter-select" id="filterCategory"><option value="">All Category</option></select>
-    <select class="filter-select" id="filterGender"><option value="">All Gender</option></select>
-    <select class="filter-select" id="filterSeason"><option value="">All Season</option></select>
-    <select class="filter-select" id="filterStatus"><option value="">All Status</option></select>
-  </div>
-  <div id="monthlyTables"></div>
-  <div id="chartSection" class="chart-card" style="display:none">
-    <div class="chart-title">📊 Style Type Distribution / 스타일 유형 분포 / 款式类型分布</div>
-    <div id="barChart"></div>
-  </div>
-</div>
 
-<div id="errorScreen" style="display:none"><div class="error-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다</div><div id="errorMsg" style="font-size:12px"></div></div></div>
+<div id="mainApp" class="main-app">
+  <div id="loadingScreen" class="loading-screen"><div class="spinner"></div><div class="loading-text">데이터를 불러오는 중...</div></div>
+  <div id="mainContent" style="display:none">
+    <div class="page-header">
+      <h1><span class="icon-s">S</span> Style View / 스타일 현황표 / 款式现况表</h1>
+      <button onclick="goTo('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_Styles')" style="background:var(--z-primary);color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px">+ New Style</button>
+    </div>
+
+    <div class="mkpi-row" id="kpiRow"></div>
+
+    <div class="filter-bar">
+      <input type="text" class="search-box" id="searchBox" placeholder="🔍 SKU, 스타일명, Brand 검색...">
+      <select class="filter-select" id="filterCategory"><option value="">All Category</option></select>
+      <select class="filter-select" id="filterGender"><option value="">All Gender</option></select>
+      <select class="filter-select" id="filterSeason"><option value="">All Season</option></select>
+      <select class="filter-select" id="filterStatus"><option value="">All Status</option></select>
+    </div>
+    <div id="monthlyTables"></div>
+
+    <div id="chartSection" class="chart-card" style="display:none">
+      <div class="chart-title">📊 Style Type Distribution / 스타일 유형 분포 / 款式类型分布</div>
+      <div id="barChart"></div>
+    </div>
+  </div>
+
+  <div id="errorScreen" style="display:none"><div class="error-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다</div><div id="errorMsg" style="font-size:12px"></div></div></div>
+</div>
 
 <div class="pop-ov" id="kpiPopOv">
   <div class="pop-box">
-    <div class="pop-hd"><div><div class="pop-title" id="kpiPopTitle">-</div><div class="pop-sub" id="kpiPopSub">-</div></div><div class="pop-close" id="kpiPopClose" onclick="document.getElementById('kpiPopOv').classList.remove('active')">✕</div></div>
+    <div class="pop-hd">
+      <div><div class="pop-title" id="kpiPopTitle">-</div><div class="pop-sub" id="kpiPopSub">-</div></div>
+      <div class="pop-close" id="kpiPopClose" onclick="document.getElementById('kpiPopOv').classList.remove('active')">✕</div>
+    </div>
     <div class="pop-body" id="kpiPopBody"></div>
   </div>
 </div>
@@ -240,7 +253,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
         <div><div class="modal-title" id="modalTitle">-</div><div class="modal-subtitle" id="modalSubtitle">-</div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
-        <button id="btnTechPack" onclick="openTechPack()" style="background:#000;color:#fff;border:none;padding:7px 14px;border-radius:6px;font-size:11px;font-weight:900;cursor:pointer;letter-spacing:.5px">📋 TECH PACK</button>
+        <button id="btnTechPack" onclick="openTechPack()" style="background:#000;color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:900;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.2);letter-spacing:0.5px">📋 TECH PACK</button>
         <button id="btnEdit" onclick="editStyle()" style="background:#EFF6FF;color:var(--z-primary);border:1px solid #BFDBFE;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit</button>
         <button id="btnNewMO" onclick="newMO()" style="background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">+ New MO</button>
         <div class="modal-close-lg" id="modalClose" onclick="closeModal()">✕</div>
@@ -262,9 +275,12 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 </div>
 
 <script>
+/* ════════════════════════════════════════
+   Style View vFinal (Bug Free)
+   All_Styles 리포트 + Tech Pack 기능
+════════════════════════════════════════ */
 var APP="eom", REP="All_Styles", MO_REP="All_MO";
-var TOP_SPEC_REP = "All_Top_Specs";   
-var BTM_SPEC_REP = "All_Bottom_Specs";
+var TOP_SPEC_REP = "All_Top_Specs", BTM_SPEC_REP = "All_Bottom_Specs";
 var allRec=[], filtered=[], moSkus=new Set(), allMOs=[]; 
 var today=new Date(), todayStr=today.toISOString().split("T")[0];
 var _currentRec = null;
@@ -273,7 +289,7 @@ var MAP={
   Gender:{"W":"Women / 여성 / 女","M":"Men / 남성 / 男","U":"Unisex / 남녀공용 / 男女通用"},
   Category:{"S":"Set / 세트 / 套装","I":"Individual / 단품 / 单品"},
   Top_Type:{"B":"Bra-top / 브라탑 / 运动内衣","C":"Crop / 크롭 / 露脐装","T":"Tank / 탱크 / 背心"},
-  Sleeve:{"L":"Long / 긴팔 / 长袖","S":"Short / 반팔 / 短袖","N":"None / 민소매 / 无袖"},
+  Sleeve:{"L":"Long / 긴팔 / 长袖","S":"Short / 반팔 / 짧은소매","N":"None / 민소매 / 无袖"},
   Fit:{"O":"Oversize / 루즈핏 / 宽松版","R":"Regular / 레귤러핏 / 标准版","S":"Slim / 슬림핏 / 修身版"},
   Details:{"Z":"Zip-up(Full) / 짚업 / 全开拉链","H":"Half-zip / 반짚업 / 半拉链","N":"Round-neck / 라운드넥 / 圆领","C":"Cami-strap / 끈나시 / 吊带","W":"Wide-strap / 와이드 / 宽肩带","D":"Hood / 후드 / 连帽"},
   Bottom_Type:{"L":"Leggings / 레깅스 / 紧身裤","W":"Wide / 와이드 / 宽腿裤","J":"Jogger / 조거 / 束脚裤","F":"Flare / 나팔 / 喇叭裤","P":"Pleats / 플리츠 / 褶皱","A":"A-line / A라인 / A字版","B":"Shorts / 반바지 / 短裤"},
@@ -299,9 +315,6 @@ function g(r,f){var v=r[f];if(v==null||v==="")return"-";if(typeof v==="object"&&
 function escH(s){var d=document.createElement("div");d.textContent=String(s);return d.innerHTML}
 function tc(s){s=(s||"").toLowerCase();if(s.indexOf("active")>=0||s.indexOf("approved")>=0||s.indexOf("완성")>=0||s.indexOf("승인")>=0)return"tag-appr";if(s.indexOf("progress")>=0||s.indexOf("sampling")>=0||s.indexOf("샘플")>=0||s.indexOf("진행")>=0)return"tag-prog";if(s.indexOf("rejected")>=0||s.indexOf("cancel")>=0)return"tag-fail";return"tag-draft"}
 
-// ==========================================
-// ★ 1. 메인 화면 썸네일 전용 엑스박스 완벽 차단 로더
-// ==========================================
 function getAllImgs(r, field) {
   var v = r[field];
   if (!v) return [];
@@ -317,8 +330,31 @@ function getAllImgs(r, field) {
 }
 function getImg1(r){ var imgs=getAllImgs(r,"Style_Image"); return imgs.length>0?imgs[0]:null; }
 function getImgUrl(r,field){ var imgs=getAllImgs(r,field); return imgs.length>0?imgs[0]:null; }
+function getSubformLines(r, fieldName){var v=r[fieldName];if(!v)return[];if(Array.isArray(v))return v;if(typeof v==="object"&&v!==null)return Object.values(v);return[];}
 
-// 메인 테이블의 썸네일들도 권한 에러(엑스박스)를 피하기 위해 조호 API 렌더러로 교체합니다.
+var _safeQ = [], _safeBusy = false;
+function _runSafeQ() {
+  if(_safeQ.length === 0) { _safeBusy = false; return; }
+  _safeBusy = true;
+  var task = _safeQ.shift();
+  var el = task.id ? document.getElementById(task.id) : task.el;
+  if(!el) { setTimeout(_runSafeQ, 50); return; }
+
+  var img = document.createElement("img");
+  img.style.cssText = task.css || "width:100%;height:100%;object-fit:cover";
+  if (task.clk) { img.onclick = function() { openLightbox(this.src); }; }
+
+  var done = false;
+  function next() {
+    if(done) return;
+    done = true;
+    setTimeout(_runSafeQ, 80);
+  }
+  try {
+    ZOHO.CREATOR.UTIL.setImageData(img, task.url, function() { el.innerHTML = ""; el.appendChild(img); next(); });
+    setTimeout(next, 3000);
+  } catch(e) { next(); }
+}
 function qImgFast(elOrId, url) {
   var el = typeof elOrId === "string" ? document.getElementById(elOrId) : elOrId;
   if(!el) return;
@@ -328,14 +364,11 @@ function qImgFast(elOrId, url) {
   
   var img = document.createElement("img");
   img.style.cssText = "width:100%;height:100%;object-fit:cover";
-  
-  // 엑스박스가 뜨지 않도록 setImageData 무조건 사용
   ZOHO.CREATOR.UTIL.setImageData(img, u, function() {
     el.innerHTML = "";
     el.appendChild(img);
   });
 }
-
 function loadTableImgs() {
   var els = document.querySelectorAll("[data-img]");
   if(els.length === 0) return;
@@ -359,20 +392,17 @@ function loadTableImgs() {
   }
 }
 
-// ==========================================
-// ★ 2. 모달창 팝업용 다이렉트 이미지 렌더러 (엑스박스 절대 안뜸)
-// ==========================================
 function renderZohoImage(elId, url, click) {
   var el = document.getElementById(elId);
   if(!el) return;
-  if(!url || url === "-") {
-    el.innerHTML = '<div class="no-img" style="color:#CBD5E1;font-size:30px;font-weight:900">📷</div>';
-    return;
-  }
+  if(!url || url === "-") { el.innerHTML = '<div class="no-img" style="color:#CBD5E1;font-size:30px;font-weight:900">📷</div>'; return; }
+  var u = Array.isArray(url) ? url[0] : url;
+  if(typeof u === "object" && u !== null) u = u.url || u.display_value || "";
+  if(!u || u === "-") { el.innerHTML = '<div class="no-img" style="color:#CBD5E1;font-size:30px;font-weight:900">📷</div>'; return; }
+  
   var img = document.createElement("img");
   img.style.cssText = "width:100%;height:100%;object-fit:contain;cursor:" + (click ? "pointer" : "default");
-  
-  ZOHO.CREATOR.UTIL.setImageData(img, url, function() {
+  ZOHO.CREATOR.UTIL.setImageData(img, u, function() {
     el.innerHTML = "";
     el.appendChild(img);
     if(click) {
@@ -590,7 +620,6 @@ function loadAllModalImgs(rec){
   var iu=getImg1(rec);
   if(iu) renderZohoImage("modalThumb", iu, false);
 
-  // ★ 모달창 갤러리 이미지 다이렉트 렌더러 적용 (엑스박스 절대 차단)
   var si = getAllImgs(rec, "Style_Image").slice(0, 5);
   var tfs = getAllImgs(rec, "Top_Flat_Sketch").slice(0, 5);
   var bfs = getAllImgs(rec, "Bottom_Flat_Sketch").slice(0, 5);
@@ -607,7 +636,6 @@ function buildDetail(d){
   function it(l,v){return'<div class="detail-item"><span class="detail-label">'+l+'</span><span class="detail-value">'+v+'</span></div>'}
   var ordered=moSkus.has(g(d,"Style_SKU"));
   
-  // ★ (수정완료) 이미지 섹션을 모달창 최상단으로 끌어올림!
   var si = getAllImgs(d, "Style_Image").slice(0, 5);
   var tfs = getAllImgs(d, "Top_Flat_Sketch").slice(0, 5);
   var bfs = getAllImgs(d, "Bottom_Flat_Sketch").slice(0, 5);
@@ -659,11 +687,12 @@ function buildDetail(d){
   return h;
 }
 
+function closeLightbox(){document.getElementById("lightboxOverlay").style.display="none";document.getElementById("lightboxImg").src=""}
 function closeModal(){document.getElementById("modalOverlay").classList.remove("active");_currentRec=null}
 document.addEventListener("keydown",function(e){if(e.key==="Escape"){if(document.getElementById("lightboxOverlay").style.display==="flex")closeLightbox();else { closeModal(); document.getElementById("tpOv").classList.remove("active"); document.getElementById("kpiPopOv").classList.remove("active"); }}});
 
 /* ══════════════════════════════════════
-   ★ Tech Pack 모달 (Style View 전용 / 엑스박스 완벽 차단)
+   ★ Tech Pack 모달 (Style View 전용)
    ══════════════════════════════════════ */
 
 function parseUniversalSpecs(lines) {
@@ -691,6 +720,21 @@ function parseUniversalSpecs(lines) {
   return spObj;
 }
 
+function fetchSubformRowsSafely(reportName, ids) {
+  return new Promise(function(resolve) {
+    if (!ids || ids.length === 0) return resolve([]);
+    var results = [];
+    var i = 0;
+    function next() {
+      if (i >= ids.length) return resolve(results);
+      ZOHO.CREATOR.API.getRecordById({appName: APP, reportName: reportName, id: ids[i]})
+      .then(function(res) { if(res && res.data) results.push(res.data); i++; setTimeout(next, 20); })
+      .catch(function(err) { i++; setTimeout(next, 20); });
+    }
+    next();
+  });
+}
+
 function openTechPack() {
   if(!_currentRec) return;
   
@@ -701,21 +745,30 @@ function openTechPack() {
 
   try {
     var s = _currentRec;
-    var tsLines = getSubformLines(s, "Top_Size_Specs");
-    var bsLines = getSubformLines(s, "Bottom_Size_Specs");
+    var topIds = (s.Top_Size_Specs || []).map(function(x){return x.ID;}).filter(Boolean);
+    var btmIds = (s.Bottom_Size_Specs || []).map(function(x){return x.ID;}).filter(Boolean);
 
-    var topSpecs = parseUniversalSpecs(tsLines);
-    var btmSpecs = parseUniversalSpecs(bsLines);
+    fetchSubformRowsSafely("All_Top_Specs", topIds).then(function(topLines) {
+      fetchSubformRowsSafely("All_Bottom_Specs", btmIds).then(function(btmLines) {
+        
+        var topSpecs = parseUniversalSpecs(topLines);
+        if (Object.keys(topSpecs).length === 0) topSpecs = parseUniversalSpecs(s.Top_Size_Specs || []);
+        
+        var btmSpecs = parseUniversalSpecs(btmLines);
+        if (Object.keys(btmSpecs).length === 0) btmSpecs = parseUniversalSpecs(s.Bottom_Size_Specs || []);
 
-    var sku = g(s, "Style_SKU");
-    var mo = allMOs.find(function(m){ return g(m,"Style_SKU")===sku || g(m,"SKU")===sku; });
+        var sku = g(s, "Style_SKU");
+        var mo = allMOs.find(function(m){ return g(m,"Style_SKU")===sku || g(m,"SKU")===sku; });
 
-    renderTechPackHTML(s, mo, topSpecs, btmSpecs, tsLines.length, bsLines.length);
+        renderTechPackHTML(s, mo, topSpecs, btmSpecs, topIds.length, btmIds.length);
+        
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      });
+    });
 
   } catch(e) {
-    alert("데이터 처리 중 에러가 발생했습니다: " + e.message);
-    console.error("Tech Pack Error:", e);
-  } finally {
+    alert("데이터 처리 중 에러가 발생했습니다.");
     btn.innerHTML = originalText;
     btn.disabled = false;
   }
@@ -755,7 +808,7 @@ function renderTechPackHTML(s, mo, topSpecs, btmSpecs, topIdCount, btmIdCount) {
   p.push("<tr><th>SIZE RANGE</th><td>S, M, L, XL</td></tr>");
   p.push("</tbody></table>");
   
-  p.push("<div class='tp-box'><div class='tp-box-title'>STYLE IMAGE</div><div class='img-wrap style-img' id='tpImgStyle'></div></div>");
+  p.push("<div class='tp-box'><div class='tp-box-title'>STYLE IMAGE</div><div class='img-wrap style-img' id='tpImgStyle'><div class='spinner-sm'></div></div></div>");
   
   p.push("<div class='tp-box'><div class='tp-box-title'>FABRIC & FIT DETAILS</div>");
   p.push("<div style='padding:10px;font-size:11px;line-height:1.6'>");
@@ -805,8 +858,8 @@ function renderTechPackHTML(s, mo, topSpecs, btmSpecs, topIdCount, btmIdCount) {
   p.push("</div>"); 
 
   p.push("<div class='col-right'>");
-  p.push("<div class='tp-box'><div class='tp-box-title'>TOP SKETCH</div><div class='img-wrap sketch-img' id='tpImgTop'></div></div>");
-  p.push("<div class='tp-box'><div class='tp-box-title'>BOTTOM SKETCH</div><div class='img-wrap sketch-img' id='tpImgBtm'></div></div>");
+  p.push("<div class='tp-box'><div class='tp-box-title'>TOP SKETCH</div><div class='img-wrap sketch-img' id='tpImgTop'><div class='spinner-sm'></div></div></div>");
+  p.push("<div class='tp-box'><div class='tp-box-title'>BOTTOM SKETCH</div><div class='img-wrap sketch-img' id='tpImgBtm'><div class='spinner-sm'></div></div></div>");
   p.push("</div>");
 
   p.push("</div>"); 
@@ -815,9 +868,24 @@ function renderTechPackHTML(s, mo, topSpecs, btmSpecs, topIdCount, btmIdCount) {
   document.getElementById("tpContent").innerHTML = p.join("");
   document.getElementById("tpOv").classList.add("active");
 
-  renderZohoImage("tpImgStyle", imgStyle, false);
-  renderZohoImage("tpImgTop", imgTop, false);
-  renderZohoImage("tpImgBtm", imgBtm, false);
+  function fastImgZoho(elId, url) {
+    var el = document.getElementById(elId);
+    if(!el) return;
+    if(!url || url === "-") { el.innerHTML = '<div class="no-img">📷</div>'; return; }
+    var u = Array.isArray(url) ? url[0] : url;
+    if(typeof u === "object" && u !== null) u = u.url || u.display_value || "";
+    if(!u || u === "-") { el.innerHTML = '<div class="no-img">📷</div>'; return; }
+    
+    var img = document.createElement("img");
+    img.style.cssText = "width:100%;height:100%;object-fit:contain";
+    ZOHO.CREATOR.UTIL.setImageData(img, u, function() {
+      el.innerHTML = ""; el.appendChild(img);
+    });
+  }
+
+  fastImgZoho("tpImgStyle", imgStyle);
+  fastImgZoho("tpImgTop", imgTop);
+  fastImgZoho("tpImgBtm", imgBtm);
 }
 </script>
 </body>
