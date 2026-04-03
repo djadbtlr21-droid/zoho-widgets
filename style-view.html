@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Style View v34 (Tech Pack Integration)</title>
+<title>Style View v35 (Ultimate Tech Pack Fix)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
@@ -136,7 +136,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .error-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C}
 
 /* =========================================================
-   ★ TECH PACK (작업지시서) 모달 전용 스타일 (A4 가로형)
+   ★ TECH PACK 모달 오버레이 스타일 (A4 가로형)
    ========================================================= */
 .tp-modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#CBD5E1;z-index:6000;overflow-y:auto}
 .tp-modal-ov.active{display:block}
@@ -149,7 +149,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .tp-btn-close{background:rgba(255,255,255,.2);color:#fff} 
 .tp-btn-close:hover{background:rgba(255,255,255,.3)}
 
-/* A4 가로(Landscape) 캔버스 */
 .a4-landscape{font-family:'Roboto','Noto Sans KR',sans-serif;width:297mm;min-height:210mm;margin:40px auto;padding:12mm;box-sizing:border-box;background:#fff;box-shadow:0 15px 50px rgba(0,0,0,.2);position:relative}
 .a4-landscape *{box-sizing:border-box}
 
@@ -161,13 +160,11 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .doc-title h1{font-size:28px;font-weight:900;margin:0 0 4px 0;letter-spacing:3px;color:#000}
 .doc-title p{margin:0;font-size:11px;color:#475569;font-weight:700}
 
-/* 3단 그리드 재조정 (우측 도안을 더 넓고 높게) */
 .tp-grid{display:grid;grid-template-columns:280px 1fr 340px;gap:20px}
 .tp-box{border:2px solid #000;margin-bottom:15px;background:#fff;display:flex;flex-direction:column}
 .tp-box-title{background:#000;color:#fff;padding:6px 10px;font-size:13px;font-weight:900;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.5px}
 .tp-box-title span{font-size:10px;font-weight:400;color:#CBD5E1;letter-spacing:0}
 
-/* 왼쪽 열 */
 .col-left { display: flex; flex-direction: column; }
 .info-tbl{width:100%;border-collapse:collapse;font-size:11px;text-align:left;margin-bottom:15px}
 .info-tbl th,.info-tbl td{border-bottom:1px solid #CBD5E1;padding:7px 10px}
@@ -175,7 +172,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .info-tbl td{font-weight:900;color:#0F172A}
 .info-tbl tr:last-child th,.info-tbl tr:last-child td{border-bottom:none}
 
-/* 중앙 열 */
 .col-mid { display: flex; flex-direction: column; }
 .spec-tbl{width:100%;border-collapse:collapse;text-align:center}
 .spec-tbl th,.spec-tbl td{border:1px solid #CBD5E1;padding:7px 4px}
@@ -185,14 +181,12 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .memo-box { flex: 1; display: flex; flex-direction: column; }
 .memo-content { flex: 1; min-height: 120px; padding: 10px; font-size: 11px; color: #475569; line-height:1.6; }
 
-/* 오른쪽 열 (이미지) */
 .img-wrap{padding:10px;display:flex;align-items:center;justify-content:center;position:relative}
 .style-img{height:180px;background:#F8FAFC}
 .sketch-img{height:340px;background:#fff;flex:1}
 .img-wrap img{max-width:100%;max-height:100%;object-fit:contain}
 .no-img{color:#CBD5E1;font-size:30px;font-weight:900}
 
-/* 프린트 시 깔끔하게 A4 한장으로 나오도록 설정 */
 @media print{
   #mainApp, .pop-ov, .modal-overlay, #lightboxOverlay { display: none !important; }
   .tp-modal-ov { position: static !important; display: block !important; background: #fff !important; overflow: visible !important; height: auto !important; }
@@ -207,33 +201,30 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 </style>
 </head>
 <body>
-
-<div id="mainApp">
-  <div id="loadingScreen" class="loading-screen"><div class="spinner"></div><div class="loading-text">데이터를 불러오는 중...</div></div>
-  <div id="mainContent" style="display:none">
-    <div class="page-header"><h1><span class="icon-s">S</span> Style View / 스타일 현황표 / 款式现况表</h1>
-      <button onclick="goTo('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_Styles')" style="background:var(--z-primary);color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px">+ New Style</button>
-    </div>
-
-    <div class="mkpi-row" id="kpiRow"></div>
-
-    <div class="filter-bar">
-      <input type="text" class="search-box" id="searchBox" placeholder="🔍 SKU, 스타일명, Brand 검색...">
-      <select class="filter-select" id="filterCategory"><option value="">All Category</option></select>
-      <select class="filter-select" id="filterGender"><option value="">All Gender</option></select>
-      <select class="filter-select" id="filterSeason"><option value="">All Season</option></select>
-      <select class="filter-select" id="filterStatus"><option value="">All Status</option></select>
-    </div>
-    <div id="monthlyTables"></div>
-
-    <div id="chartSection" class="chart-card" style="display:none">
-      <div class="chart-title">📊 Style Type Distribution / 스타일 유형 분포 / 款式类型分布</div>
-      <div id="barChart"></div>
-    </div>
+<div id="loadingScreen" class="loading-screen"><div class="spinner"></div><div class="loading-text">데이터를 불러오는 중...</div></div>
+<div id="mainApp" style="display:none">
+  <div class="page-header"><h1><span class="icon-s">S</span> Style View / 스타일 현황표 / 款式现况表</h1>
+    <button onclick="goTo('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_Styles')" style="background:var(--z-primary);color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px">+ New Style</button>
   </div>
 
-  <div id="errorScreen" style="display:none"><div class="error-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다</div><div id="errorMsg" style="font-size:12px"></div></div></div>
+  <div class="mkpi-row" id="kpiRow"></div>
+
+  <div class="filter-bar">
+    <input type="text" class="search-box" id="searchBox" placeholder="🔍 SKU, 스타일명, Brand 검색...">
+    <select class="filter-select" id="filterCategory"><option value="">All Category</option></select>
+    <select class="filter-select" id="filterGender"><option value="">All Gender</option></select>
+    <select class="filter-select" id="filterSeason"><option value="">All Season</option></select>
+    <select class="filter-select" id="filterStatus"><option value="">All Status</option></select>
+  </div>
+  <div id="monthlyTables"></div>
+
+  <div id="chartSection" class="chart-card" style="display:none">
+    <div class="chart-title">📊 Style Type Distribution / 스타일 유형 분포 / 款式类型分布</div>
+    <div id="barChart"></div>
+  </div>
 </div>
+
+<div id="errorScreen" style="display:none"><div class="error-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다</div><div id="errorMsg" style="font-size:12px"></div></div></div>
 
 <div class="pop-ov" id="kpiPopOv">
   <div class="pop-box">
@@ -281,7 +272,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 
 <script>
 var APP="eom",REP="All_Styles",MO_REP="All_MO";
-var allRec=[],filtered=[],moSkus=new Set(), allMOs=[]; // ★ MO 레코드도 저장해둠
+var allRec=[],filtered=[],moSkus=new Set(), allMOs=[]; 
 var today=new Date(), todayStr=today.toISOString().split("T")[0];
 
 var MAP={
@@ -315,7 +306,6 @@ function openModalById(id) {
 }
 
 ZOHO.CREATOR.init().then(function(){
-  // MO 데이터 로드 시 전체 배열을 allMOs에 보관해둡니다. (Tech Pack 정보용)
   ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:MO_REP,page:1,pageSize:200}).then(function(r){
     if(r&&r.code===3000&&r.data){
       allMOs = r.data;
@@ -328,7 +318,7 @@ ZOHO.CREATOR.init().then(function(){
 function loadStyles(){
   ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:REP,page:1,pageSize:200}).then(function(r){
     if(r&&r.code===3000&&r.data){
-      allRec=r.data;filtered=allRec.slice();renderMKPI();buildFilters();renderTables();renderChart();hide("loadingScreen");show("mainContent");setTimeout(loadTableImgs,500)
+      allRec=r.data;filtered=allRec.slice();renderMKPI();buildFilters();renderTables();renderChart();hide("loadingScreen");show("mainApp");setTimeout(loadTableImgs,500)
     } else showErr("로드 실패")
   }).catch(function(e){showErr(JSON.stringify(e))})
 }
@@ -344,6 +334,7 @@ function tc(s){s=(s||"").toLowerCase();if(s.indexOf("active")>=0||s.indexOf("app
 function getImg1(r){var i=r["Style_Image"];if(!i)return null;if(Array.isArray(i)&&i.length>0)return i[0];if(typeof i==="string"&&i.length>5)return i;if(typeof i==="object"&&i.display_value)return i.display_value;return null}
 function getAllImgs(r,field){var i=r[field];if(!i)return[];if(Array.isArray(i))return i.filter(function(x){return x&&typeof x==="string"&&x.length>5});if(typeof i==="object"&&!Array.isArray(i)){var u=[];Object.keys(i).forEach(function(k){var v=i[k];if(v&&typeof v==="string"&&v.length>5)u.push(v)});return u}if(typeof i==="string"&&i.length>5)return[i];return[]}
 function getImgUrl(r,field){var imgs=getAllImgs(r,field);return imgs.length>0?imgs[0]:null}
+function getSubformLines(r, fieldName){var v=r[fieldName];if(!v)return[];if(Array.isArray(v))return v;if(typeof v==="object"&&v!==null)return Object.values(v);return[];}
 
 var _safeQ = [];
 var _safeBusy = false;
@@ -376,13 +367,27 @@ function _runSafeQ() {
   } catch(e) { next(); }
 }
 
+// ★ 네이티브 & 큐 하이브리드 이미지 렌더러 (초고속 로딩 지원)
 function qImg(elOrId, url, css, clk) {
-  _safeQ.push({
-    id: typeof elOrId === "string" ? elOrId : null,
-    el: typeof elOrId === "object" ? elOrId : null,
-    url: url, css: css, clk: clk
-  });
-  if(!_safeBusy) _runSafeQ();
+  var el = typeof elOrId === "string" ? document.getElementById(elOrId) : elOrId;
+  if(!el) return;
+  var u = Array.isArray(url) ? url[0] : url;
+  if(typeof u === "object" && u !== null) u = u.url || u.display_value || "";
+  if(!u || u === "-") return;
+  
+  // URL이 공개 주소이거나 api/v2면 즉시 렌더링해서 큐 병목을 완벽히 피함
+  if(u.indexOf("/api/v2/") >= 0 || u.indexOf("http") >= 0) {
+    var img = document.createElement("img");
+    img.style.cssText = css || "width:100%;height:100%;object-fit:cover";
+    if (clk) { img.onclick = function() { openLightbox(this.src); }; }
+    img.src = u;
+    el.innerHTML = "";
+    el.appendChild(img);
+  } else {
+    // 안전한 큐 방식
+    _safeQ.push({ el: el, url: url, css: css, clk: clk });
+    if(!_safeBusy) _runSafeQ();
+  }
 }
 
 function loadTableImgs() {
@@ -396,7 +401,7 @@ function loadTableImgs() {
           var url = el.getAttribute("data-img");
           if(url) {
             qImg(el, url, "width:100%;height:100%;object-fit:cover", false);
-            el.removeAttribute("data-img");
+            el.removeAttribute("data-img"); 
           }
           observer.unobserve(el);
         }
@@ -704,9 +709,44 @@ document.getElementById("modalOverlay").addEventListener("click",function(e){if(
 document.addEventListener("keydown",function(e){if(e.key==="Escape"){if(document.getElementById("lightboxOverlay").style.display==="flex")closeLightbox();else { closeModal(); document.getElementById("tpOv").classList.remove("active"); }}});
 
 /* =========================================================
-   ★ Tech Pack 모달 (Style View 버전) - 완벽 가로형(Landscape) 3단 레이아웃
+   ★ Tech Pack 모달 (Style View 전용 / 에러 완벽 차단)
    ========================================================= */
-// 팝업 이벤트 바인딩
+
+// 1. 이벤트 리스너 바인딩
+document.getElementById('btn-tp-close').addEventListener('click',function(){
+  document.getElementById("tpOv").classList.remove("active");
+});
+document.getElementById('btn-tp-print').addEventListener('click',function(){
+  window.print();
+});
+
+// 2. 만능 사이즈 스펙 파서 (오타 및 자료형 예외 완벽 처리)
+function parseUniversalSpecs(lines) {
+  var spObj = {};
+  if(!Array.isArray(lines)) return spObj;
+  
+  lines.forEach(function(row) {
+    var pom="-", size="-", spec="-", tol="-";
+    Object.keys(row).forEach(function(k){
+      var kl = k.toUpperCase();
+      var val = typeof row[k] === "object" && row[k] !== null ? (row[k].display_value || "") : String(row[k] || "");
+      if(val==="null" || val==="undefined") val="-";
+
+      if(kl.indexOf("POM") >= 0 || kl === "MEASUREMENT_POINT") pom = val;
+      else if(kl.indexOf("SELECT_SIZE") >= 0 || kl.indexOf("SELECT") >= 0 || k === "Size") size = val.toUpperCase();
+      else if((kl.indexOf("SPEC") >= 0 || kl.indexOf("VALUE") >= 0 || kl === "CM") && kl.indexOf("SPECS") === -1 && kl.indexOf("SIZE") === -1) spec = val;
+      else if(kl.indexOf("TOL") >= 0) tol = val;
+    });
+
+    if(pom === "-" || pom === "") return;
+    if(!spObj[pom]) spObj[pom] = {tol:tol, S:"-", M:"-", L:"-", XL:"-", XXL:"-"};
+    if(size && size !== "-" && spObj[pom][size] !== undefined) spObj[pom][size] = spec;
+    if(tol !== "-" && tol !== "") spObj[pom].tol = tol;
+  });
+  return spObj;
+}
+
+// 3. 작업지시서 열기 함수 (try-catch 적용)
 function openTechPack() {
   if(!_currentRecId) return;
   
@@ -715,87 +755,41 @@ function openTechPack() {
   btn.innerHTML = "⏳ LOADING SPECS...";
   btn.disabled = true;
 
-  // 1. 현재 Style 마스터 레코드 가져오기
-  var s = allRec.find(function(x) { return String(x.ID) === String(_currentRecId); });
-  if (!s) { btn.disabled = false; btn.innerHTML = originalText; return; }
+  try {
+    // 마스터 스타일 폼 데이터 가져오기
+    var s = allRec.find(function(x) { return String(x.ID) === String(_currentRecId); });
+    if (!s) { btn.disabled = false; btn.innerHTML = originalText; return; }
 
-  // 2. 조회가 필요한 서브폼 ID 추출
-  var topIds = (s.Top_Size_Specs || []).map(function(x){return x.ID;}).filter(Boolean);
-  var btmIds = (s.Bottom_Size_Specs || []).map(function(x){return x.ID;}).filter(Boolean);
+    // 단일 데이터 처리 에러를 완벽 방지하는 getSubformLines() 사용!
+    var tsLines = getSubformLines(s, "Top_Size_Specs");
+    var bsLines = getSubformLines(s, "Bottom_Size_Specs");
 
-  // 3. 서브폼 전용 리포트로 다이렉트 1:1 릴레이 호출 (에러 없는 가장 안전한 방식)
-  function fetchSafely(reportName, ids) {
-    return new Promise(function(resolve) {
-      if (!ids || ids.length === 0) return resolve([]);
-      var results = [];
-      var i = 0;
-      function next() {
-        if (i >= ids.length) return resolve(results);
-        ZOHO.CREATOR.API.getRecordById({appName: APP, reportName: reportName, id: ids[i]})
-        .then(function(res) { if(res && res.data) results.push(res.data); i++; setTimeout(next, 20); })
-        .catch(function(err) { i++; setTimeout(next, 20); });
-      }
-      next();
-    });
-  }
+    var topSpecs = parseUniversalSpecs(tsLines);
+    var btmSpecs = parseUniversalSpecs(bsLines);
 
-  Promise.all([
-    fetchSafely("All_Top_Specs", topIds),
-    fetchSafely("All_Bottom_Specs", btmIds)
-  ]).then(function(results) {
-    var topLines = results[0].filter(Boolean);
-    var btmLines = results[1].filter(Boolean);
-
-    // 만능 파서 (숨겨진 필드명, 오타 전부 찾아냄)
-    function parseUniversalSpecs(lines) {
-      var spObj = {};
-      lines.forEach(function(row) {
-        var pom="-", size="-", spec="-", tol="-";
-        Object.keys(row).forEach(function(k){
-          var kl = k.toUpperCase();
-          var val = typeof row[k] === "object" && row[k] !== null ? (row[k].display_value || "") : String(row[k] || "");
-          if(val==="null" || val==="undefined") val="-";
-
-          if(kl.indexOf("POM") >= 0 || kl === "MEASUREMENT_POINT") pom = val;
-          else if(kl.indexOf("SELECT_SIZE") >= 0 || kl.indexOf("SELECT") >= 0 || k === "Size") size = val.toUpperCase();
-          else if((kl.indexOf("SPEC") >= 0 || kl.indexOf("VALUE") >= 0 || kl === "CM") && kl.indexOf("SPECS") === -1 && kl.indexOf("SIZE") === -1) spec = val;
-          else if(kl.indexOf("TOL") >= 0) tol = val;
-        });
-
-        if(pom === "-" || pom === "") return;
-        if(!spObj[pom]) spObj[pom] = {tol:tol, S:"-", M:"-", L:"-", XL:"-", XXL:"-"};
-        if(size && size !== "-" && spObj[pom][size] !== undefined) spObj[pom][size] = spec;
-        if(tol !== "-" && tol !== "") spObj[pom].tol = tol;
-      });
-      return spObj;
-    }
-
-    var topSpecs = parseUniversalSpecs(topLines);
-    if(Object.keys(topSpecs).length === 0) topSpecs = parseUniversalSpecs(s.Top_Size_Specs || []);
-
-    var btmSpecs = parseUniversalSpecs(btmLines);
-    if(Object.keys(btmSpecs).length === 0) btmSpecs = parseUniversalSpecs(s.Bottom_Size_Specs || []);
-
-    // MO 정보 연동: 이 Style에 연동된 MO 레코드가 있는지 확인 (없으면 빈값)
+    // 해당 스타일의 MO가 있으면 매칭 (메모나 색상 가져오기 용도)
     var sku = g(s, "Style_SKU");
     var mo = allMOs.find(function(m){ return g(m,"Style_SKU")===sku || g(m,"SKU")===sku; });
 
-    renderTechPackHTML(s, mo, topSpecs, btmSpecs, topIds.length, btmIds.length);
+    renderTechPackHTML(s, mo, topSpecs, btmSpecs, tsLines.length, bsLines.length);
 
+  } catch(e) {
+    alert("데이터 처리 중 에러가 발생했습니다: " + e.message);
+    console.error("Tech Pack Error:", e);
+  } finally {
     btn.innerHTML = originalText;
     btn.disabled = false;
-  });
+  }
 }
 
+// 4. HTML 렌더링
 function renderTechPackHTML(s, mo, topSpecs, btmSpecs, topIdCount, btmIdCount) {
   var sku = g(s, "Style_SKU");
   
-  // 이미지 추출
   var imgStyle = getImgUrl(s, "Style_Image") || (mo ? getImgUrl(mo, "Style_Image") : null);
   var imgTop = getImgUrl(s, "Top_Flat_Sketch") || getImgUrl(s, "Top_Sketch") || getImgUrl(s, "Flat_Sketch") || (mo ? getImgUrl(mo, "Top_Sketch") : null);
   var imgBtm = getImgUrl(s, "Bottom_Flat_Sketch") || getImgUrl(s, "Bottom_Sketch") || (mo ? getImgUrl(mo, "Bottom_Sketch") : null);
 
-  // 정보 추출 (우선순위: MO -> Style)
   var moNum = mo ? g(mo, "MO_Number") : "-";
   var factory = mo ? cleanFactory(g(mo, "Factory")) : cleanFactory(g(s, "Business_Entity"));
   
@@ -810,7 +804,6 @@ function renderTechPackHTML(s, mo, topSpecs, btmSpecs, topIdCount, btmIdCount) {
 
   p.push("<div class='tp-grid'>"); 
 
-  // ================= 1열: 기본 정보, Style Image, 원단 =================
   p.push("<div class='col-left'>");
   p.push("<table class='info-tbl'><tbody>");
   p.push("<tr><th>MO NO.</th><td style='color:#3B82F6;font-size:13px'>" + escH(moNum) + "</td></tr>");
@@ -824,7 +817,7 @@ function renderTechPackHTML(s, mo, topSpecs, btmSpecs, topIdCount, btmIdCount) {
   p.push("<tr><th>SIZE RANGE</th><td>S, M, L, XL</td></tr>");
   p.push("</tbody></table>");
   
-  p.push("<div class='tp-box'><div class='tp-box-title'>STYLE IMAGE</div><div class='img-wrap style-img' id='tpImgStyle'><div class='spinner-sm'></div></div></div>");
+  p.push("<div class='tp-box'><div class='tp-box-title'>STYLE IMAGE</div><div class='img-wrap style-img' id='tpImgStyle'></div></div>");
   
   p.push("<div class='tp-box'><div class='tp-box-title'>FABRIC & FIT DETAILS</div>");
   p.push("<div style='padding:10px;font-size:11px;line-height:1.6'>");
@@ -836,7 +829,6 @@ function renderTechPackHTML(s, mo, topSpecs, btmSpecs, topIdCount, btmIdCount) {
   p.push("</div></div>");
   p.push("</div>");
 
-  // ================= 2열: 사이즈 스펙 및 비고란 =================
   p.push("<div class='col-mid'>");
   
   function drawSpec(title, spObj, idCount) {
@@ -848,10 +840,7 @@ function renderTechPackHTML(s, mo, topSpecs, btmSpecs, topIdCount, btmIdCount) {
     
     var keys = Object.keys(spObj);
     if(keys.length === 0) {
-      var dbg = "<b>[데이터 없음]</b> 사이즈 정보를 불러오지 못했습니다.<br><br>";
-      dbg += "- 폼에 입력된 서브폼 행 개수: " + idCount + "개<br>";
-      dbg += "- 서브폼 전용 리포트 연결 권한을 확인해주세요.";
-      h += "<tr><td colspan='6' style='color:#EF4444;padding:20px;font-size:10px;text-align:left;word-break:break-all'>" + dbg + "</td></tr>";
+      h += "<tr><td colspan='6' style='color:#EF4444;padding:25px;font-size:11px;font-weight:400'>사이즈 데이터가 없습니다.<br><br>Style 폼에 입력된 줄 수: " + idCount + "개</td></tr>";
     } else {
       keys.forEach(function(pom) {
         var o = spObj[pom];
@@ -875,10 +864,9 @@ function renderTechPackHTML(s, mo, topSpecs, btmSpecs, topIdCount, btmIdCount) {
   p.push("</div></div>");
   p.push("</div>"); 
 
-  // ================= 3열: 도안 이미지 =================
   p.push("<div class='col-right'>");
-  p.push("<div class='tp-box'><div class='tp-box-title'>TOP SKETCH</div><div class='img-wrap sketch-img' id='tpImgTop'><div class='spinner-sm'></div></div></div>");
-  p.push("<div class='tp-box'><div class='tp-box-title'>BOTTOM SKETCH</div><div class='img-wrap sketch-img' id='tpImgBtm'><div class='spinner-sm'></div></div></div>");
+  p.push("<div class='tp-box'><div class='tp-box-title'>TOP SKETCH</div><div class='img-wrap sketch-img' id='tpImgTop'></div></div>");
+  p.push("<div class='tp-box'><div class='tp-box-title'>BOTTOM SKETCH</div><div class='img-wrap sketch-img' id='tpImgBtm'></div></div>");
   p.push("</div>");
 
   p.push("</div>"); 
@@ -887,34 +875,10 @@ function renderTechPackHTML(s, mo, topSpecs, btmSpecs, topIdCount, btmIdCount) {
   document.getElementById("tpContent").innerHTML = p.join("");
   document.getElementById("tpOv").classList.add("active");
 
-  // ★ 네이티브 이미지 로딩 함수 (0.1초 렌더링)
-  function fastImgZoho(elId, url) {
-    var el = document.getElementById(elId);
-    if(!el) return;
-    if(!url || url === "-") { el.innerHTML = '<div class="no-img">📷</div>'; return; }
-    var u = Array.isArray(url) ? url[0] : url;
-    if(typeof u === "object" && u !== null) u = u.url || u.display_value || "";
-    if(!u || u === "-") { el.innerHTML = '<div class="no-img">📷</div>'; return; }
-    
-    var img = document.createElement("img");
-    img.style.cssText = "width:100%;height:100%;object-fit:contain";
-    ZOHO.CREATOR.UTIL.setImageData(img, u, function() {
-      el.innerHTML = ""; el.appendChild(img);
-    });
-  }
-
-  fastImgZoho("tpImgStyle", imgStyle);
-  fastImgZoho("tpImgTop", imgTop);
-  fastImgZoho("tpImgBtm", imgBtm);
+  qImg("tpImgStyle", imgStyle, "width:100%;height:100%;object-fit:contain", false);
+  qImg("tpImgTop", imgTop, "width:100%;height:100%;object-fit:contain", false);
+  qImg("tpImgBtm", imgBtm, "width:100%;height:100%;object-fit:contain", false);
 }
-
-document.getElementById('btn-tp-close').addEventListener('click',function(){
-  document.getElementById("tpOv").classList.remove("active");
-});
-document.getElementById('btn-tp-print').addEventListener('click',function(){
-  window.print();
-});
-
 </script>
 </body>
 </html>
