@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Style View v34</title>
+<title>Style View vFinal (Thumbnail Fix)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
@@ -20,6 +20,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
 .page-header h1{font-size:17px;font-weight:900;color:var(--z-text-main);display:flex;align-items:center;gap:8px}
 .page-header h1 .icon-s{width:26px;height:26px;background:var(--z-primary);border-radius:5px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900}
+
 .mkpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 420px;gap:12px;margin-bottom:21px}
 .mkpi-card{background:var(--z-card-bg);border:1px solid var(--z-border);border-radius:10px;padding:14px;position:relative;overflow:hidden}
 .mkpi-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px}
@@ -38,6 +39,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .mkpi-stat-n{font-size:20px;font-weight:900;line-height:1}
 .mkpi-stat-l{font-size:10px;font-weight:700;color:var(--z-text-muted);margin-top:4px;line-height:1.3}
 .mkpi-stat .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;vertical-align:middle}
+
 .delay-card{background:#FFF5F5;border:1px solid #FECACA;border-radius:10px;padding:14px;position:relative;overflow:hidden;display:flex;flex-direction:column}
 .delay-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:#FCA5A5}
 .delay-card-title{font-size:12px;font-weight:800;color:#DC2626;margin-bottom:4px;display:flex;align-items:center;gap:6px}
@@ -48,6 +50,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .delay-item:hover{background:#FEF2F2}
 .delay-mo{font-size:10px;font-weight:800;color:#DC2626}
 .delay-style{font-size:8px;color:#64748B;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
 .filter-bar{display:flex;justify-content:flex-end;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
 .search-box{background:#fff;border:1px solid var(--z-border);border-radius:6px;padding:5px 10px;font-size:11px;width:200px;outline:none;font-family:inherit}
 .search-box:focus{border-color:var(--z-accent);box-shadow:0 0 0 2px rgba(59,130,246,.1)}
@@ -65,8 +68,8 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .z-table tbody tr:hover td{background:#EFF6FF}
 .z-table tbody tr.not-ordered:hover td{background:#FEE2E2}
 .style-info{display:flex;align-items:center;gap:8px}
-.style-thumb{width:34px;height:34px;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#94A3B8;flex-shrink:0;overflow:hidden}
-.style-thumb img{width:100%;height:100%;object-fit:cover}
+.style-thumb{width:34px;height:34px;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#94A3B8;flex-shrink:0;overflow:hidden;position:relative}
+.style-thumb img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
 .style-code{font-weight:800;color:var(--z-primary);font-size:11px;display:block}
 .style-name{font-size:9px;color:var(--z-text-muted);display:block;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tag{padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;display:inline-flex;align-items:center;white-space:nowrap}
@@ -74,6 +77,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .tag-prog{background:#FEF3C7;color:#B45309;border:1px solid #FDE68A}
 .tag-appr{background:#D1FAE5;color:#065F46;border:1px solid #A7F3D0}
 .tag-fail{background:#FEF2F2;color:#B91C1C;border:1px solid #FECACA}
+
 .pop-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:2000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
 .pop-ov.active{display:flex}
 .pop-box{background:#fff;border-radius:12px;width:92%;max-width:700px;max-height:82vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:modalIn .2s ease-out}
@@ -89,14 +93,15 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .pop-item-left .pi-name{font-size:10px;color:var(--z-text-muted);margin-top:2px}
 .pop-item-left .pi-meta{font-size:9px;color:#94A3B8;margin-top:2px}
 .pop-empty{text-align:center;padding:30px;color:var(--z-text-muted);font-size:13px}
+
 .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:3000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
 .modal-overlay.active{display:flex}
 .modal-box-lg{background:#fff;border-radius:12px;width:92%;max-width:760px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:modalIn .25s ease-out}
 @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .modal-header{padding:20px 24px 16px;border-bottom:1px solid var(--z-border);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:#fff;z-index:10;border-radius:12px 12px 0 0}
 .modal-header-left{display:flex;align-items:center;gap:14px}
-.modal-thumb-lg{width:64px;height:64px;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
-.modal-thumb-lg img{width:100%;height:100%;object-fit:cover}
+.modal-thumb-lg{width:64px;height:64px;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;position:relative}
+.modal-thumb-lg img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
 .modal-title{font-size:18px;font-weight:900;color:var(--z-primary)}
 .modal-subtitle{font-size:12px;color:var(--z-text-muted);margin-top:2px}
 .modal-close-lg{width:32px;height:32px;border-radius:8px;border:1px solid var(--z-border);background:#F8FAFC;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--z-text-muted)}
@@ -111,10 +116,11 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .detail-value.empty{color:#CBD5E1;font-weight:400;font-style:italic}
 .modal-images{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
 .modal-img-wrap{text-align:center}
-.modal-img-box{width:120px;height:120px;background:#F8FAFC;border:1px solid var(--z-border);border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;color:#CBD5E1}
-.modal-img-box img{width:100%;height:100%;object-fit:contain;cursor:pointer;transition:transform .2s}
+.modal-img-box{width:120px;height:120px;background:#F8FAFC;border:1px solid var(--z-border);border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;color:#CBD5E1;position:relative}
+.modal-img-box img{width:100%;height:100%;object-fit:contain;cursor:pointer;transition:transform .2s;position:absolute;top:0;left:0}
 .modal-img-box:hover{border-color:var(--z-accent);box-shadow:0 2px 8px rgba(59,130,246,.15)}
 .modal-img-label{font-size:8px;color:var(--z-text-muted);margin-top:3px;font-weight:600}
+
 .chart-card{background:#fff;border:1px solid var(--z-border);border-radius:8px;padding:16px;margin-top:20px}
 .chart-title{font-size:13px;font-weight:800;color:var(--z-text-main);margin-bottom:14px;display:flex;align-items:center;gap:6px}
 .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:5px}
@@ -122,54 +128,70 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .bar-track{width:180px;height:20px;background:#F1F5F9;border-radius:4px;overflow:hidden;flex-shrink:0}
 .bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:6px;font-size:9px;font-weight:800;color:#fff;min-width:22px;transition:width .5s ease}
 .bar-count{font-size:11px;font-weight:800;color:var(--z-text-main);min-width:24px}
-.error-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C}
 
-/* ══ Tech Pack 모달 스타일 ══ */
+.error-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C;white-space:pre-wrap;}
+
+/* =========================================================
+   ★ TECH PACK 모달 오버레이 스타일 (A4 가로형)
+   ========================================================= */
 .tp-modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#CBD5E1;z-index:6000;overflow-y:auto}
 .tp-modal-ov.active{display:block}
 .tp-print-bar{position:sticky;top:0;background:#0F172A;color:#fff;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;z-index:6010;box-shadow:0 4px 10px rgba(0,0,0,.15)}
 .tp-print-bar span{font-family:'Roboto',sans-serif;font-weight:900;font-size:16px;letter-spacing:1px}
 .tp-btn-grp{display:flex;gap:10px}
-.tp-btn{border:none;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:900;cursor:pointer;font-family:'Roboto',sans-serif}
-.tp-btn-print{background:#3B82F6;color:#fff}.tp-btn-print:hover{background:#2563EB}
-.tp-btn-close{background:rgba(255,255,255,.2);color:#fff}.tp-btn-close:hover{background:rgba(255,255,255,.3)}
-.a4-landscape{font-family:'Roboto','Noto Sans KR',sans-serif;width:297mm;min-height:210mm;margin:40px auto;padding:12mm;box-sizing:border-box;background:#fff;box-shadow:0 15px 50px rgba(0,0,0,.2)}
+.tp-btn{border:none;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:900;cursor:pointer;text-transform:uppercase;font-family:'Roboto',sans-serif;transition:all 0.2s}
+.tp-btn-print{background:#3B82F6;color:#fff;box-shadow:0 2px 4px rgba(59,130,246,0.3)} 
+.tp-btn-print:hover{background:#2563EB;transform:translateY(-1px)}
+.tp-btn-close{background:rgba(255,255,255,.2);color:#fff} 
+.tp-btn-close:hover{background:rgba(255,255,255,.3)}
+
+.a4-landscape{font-family:'Roboto','Noto Sans KR',sans-serif;width:297mm;min-height:210mm;margin:40px auto;padding:12mm;box-sizing:border-box;background:#fff;box-shadow:0 15px 50px rgba(0,0,0,.2);position:relative}
 .a4-landscape *{box-sizing:border-box}
+
 .tp-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:5px solid #000;padding-bottom:12px;margin-bottom:15px}
 .tp-brand{font-size:32px;font-weight:900;letter-spacing:1.5px;color:#000;display:flex;align-items:center;gap:10px}
-.tp-brand .logo-ic{width:36px;height:36px;background:#000;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)}
+.tp-brand .logo-ic{width:36px;height:36px;background:#000;clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)}
 .tp-brand span{color:#3B82F6}
 .doc-title{text-align:right}
-.doc-title h1{font-size:28px;font-weight:900;margin:0 0 4px;letter-spacing:3px;color:#000}
+.doc-title h1{font-size:28px;font-weight:900;margin:0 0 4px 0;letter-spacing:3px;color:#000}
 .doc-title p{margin:0;font-size:11px;color:#475569;font-weight:700}
-.tp-grid{display:grid;grid-template-columns:300px 1fr 280px;gap:20px}
-.tp-box{border:2px solid #000;margin-bottom:15px;background:#fff}
-.tp-box-title{background:#000;color:#fff;padding:6px 10px;font-size:13px;font-weight:900;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;letter-spacing:.5px}
-.tp-box-title span{font-size:10px;font-weight:400;color:#CBD5E1}
-.info-tbl{width:100%;border-collapse:collapse;font-size:11px}
-.info-tbl th,.info-tbl td{border-bottom:1px solid #CBD5E1;padding:8px 10px}
+
+.tp-grid{display:grid;grid-template-columns:280px 1fr 340px;gap:20px}
+.tp-box{border:2px solid #000;margin-bottom:15px;background:#fff;display:flex;flex-direction:column}
+.tp-box-title{background:#000;color:#fff;padding:6px 10px;font-size:13px;font-weight:900;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.5px}
+.tp-box-title span{font-size:10px;font-weight:400;color:#CBD5E1;letter-spacing:0}
+
+.col-left { display: flex; flex-direction: column; }
+.info-tbl{width:100%;border-collapse:collapse;font-size:11px;text-align:left;margin-bottom:15px}
+.info-tbl th,.info-tbl td{border-bottom:1px solid #CBD5E1;padding:7px 10px}
 .info-tbl th{font-weight:800;color:#475569;width:35%;background:#F8FAFC}
 .info-tbl td{font-weight:900;color:#0F172A}
 .info-tbl tr:last-child th,.info-tbl tr:last-child td{border-bottom:none}
+
+.col-mid { display: flex; flex-direction: column; }
 .spec-tbl{width:100%;border-collapse:collapse;text-align:center}
-.spec-tbl th,.spec-tbl td{border:1px solid #CBD5E1;padding:7px 5px}
+.spec-tbl th,.spec-tbl td{border:1px solid #CBD5E1;padding:7px 4px}
 .spec-tbl th{background:#F1F5F9;font-weight:900;font-size:11px;color:#000}
 .spec-tbl td{font-weight:700;font-size:12px;color:#000}
 .spec-tbl .pom{text-align:left;padding-left:10px;font-size:11px}
-.img-wrap{height:220px;padding:10px;display:flex;align-items:center;justify-content:center}
-.img-wrap.style-img{height:160px;background:#F8FAFC}
-.img-wrap img{max-width:100%;max-height:100%;object-fit:contain}
+.memo-box { flex: 1; display: flex; flex-direction: column; }
+.memo-content { flex: 1; min-height: 120px; padding: 10px; font-size: 11px; color: #475569; line-height:1.6; }
+
+.img-wrap{padding:10px;display:flex;align-items:center;justify-content:center;position:relative}
+.style-img{height:180px;background:#F8FAFC}
+.sketch-img{height:340px;background:#fff;flex:1}
+.img-wrap img{max-width:100%;max-height:100%;object-fit:contain;position:absolute;top:0;left:0}
 .no-img{color:#CBD5E1;font-size:30px;font-weight:900}
-.tp-debug{background:#FEF9C3;border:1px solid #FDE68A;border-radius:4px;padding:6px 10px;margin-bottom:12px;font-size:10px;color:#A16207;font-family:monospace;word-break:break-all}
 
 @media print{
-  body > *:not(#tpOv){display:none!important}
-  .tp-modal-ov{position:static!important;display:block!important;background:#fff!important;overflow:visible!important;height:auto!important}
-  .tp-print-bar,.tp-debug{display:none!important}
-  .a4-landscape{margin:0!important;padding:10mm!important;box-shadow:none!important;width:100%!important}
-  @page{size:A4 landscape;margin:0}
-  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  #mainApp, .pop-ov, .modal-overlay, #lightboxOverlay { display: none !important; }
+  .tp-modal-ov { position: static !important; display: block !important; background: #fff !important; overflow: visible !important; height: auto !important; }
+  .tp-print-bar { display: none !important; }
+  .a4-landscape { margin: 0 !important; padding: 10mm !important; box-shadow: none !important; border: none !important; width: 100% !important; max-width: 100% !important; }
+  @page { size: A4 landscape; margin: 0; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 }
+
 @media(max-width:1100px){.mkpi-row{grid-template-columns:1fr 1fr}.detail-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:768px){.mkpi-row{grid-template-columns:1fr}.detail-grid{grid-template-columns:1fr 1fr}.bar-label{min-width:200px;max-width:200px}}
 </style>
@@ -198,7 +220,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 
 <div id="errorScreen" style="display:none"><div class="error-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다</div><div id="errorMsg" style="font-size:12px"></div></div></div>
 
-<!-- KPI 팝업 -->
 <div class="pop-ov" id="kpiPopOv">
   <div class="pop-box">
     <div class="pop-hd"><div><div class="pop-title" id="kpiPopTitle">-</div><div class="pop-sub" id="kpiPopSub">-</div></div><div class="pop-close" id="kpiPopClose" onclick="document.getElementById('kpiPopOv').classList.remove('active')">✕</div></div>
@@ -206,13 +227,11 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
   </div>
 </div>
 
-<!-- 라이트박스 -->
 <div id="lightboxOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:4000;justify-content:center;align-items:center;cursor:pointer;backdrop-filter:blur(4px)" onclick="closeLightbox()">
   <img id="lightboxImg" style="max-width:90%;max-height:90%;object-fit:contain;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.5)" onclick="event.stopPropagation()">
   <div style="position:absolute;top:20px;right:24px;color:#fff;font-size:28px;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.15);border-radius:50%" onclick="closeLightbox()">✕</div>
 </div>
 
-<!-- Style 상세 모달 -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-box-lg">
     <div class="modal-header">
@@ -221,7 +240,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
         <div><div class="modal-title" id="modalTitle">-</div><div class="modal-subtitle" id="modalSubtitle">-</div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
-        <!-- ★ Tech Pack 버튼 추가 -->
         <button id="btnTechPack" onclick="openTechPack()" style="background:#000;color:#fff;border:none;padding:7px 14px;border-radius:6px;font-size:11px;font-weight:900;cursor:pointer;letter-spacing:.5px">📋 TECH PACK</button>
         <button id="btnEdit" onclick="editStyle()" style="background:#EFF6FF;color:var(--z-primary);border:1px solid #BFDBFE;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit</button>
         <button id="btnNewMO" onclick="newMO()" style="background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">+ New MO</button>
@@ -232,7 +250,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
   </div>
 </div>
 
-<!-- Tech Pack 모달 -->
 <div id="tpOv" class="tp-modal-ov">
   <div class="tp-print-bar">
     <span id="tpBarTitle">📋 TECH PACK</span>
@@ -245,14 +262,10 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 </div>
 
 <script>
-/* ════════════════════════════════════════
-   Style View v34
-   All_Styles 리포트 + Tech Pack 기능 추가
-════════════════════════════════════════ */
 var APP="eom", REP="All_Styles", MO_REP="All_MO";
-var TOP_SPEC_REP = "All_Top_Specs";   /* Style SKU 기준 서브폼 리포트 */
+var TOP_SPEC_REP = "All_Top_Specs";   
 var BTM_SPEC_REP = "All_Bottom_Specs";
-var allRec=[], filtered=[], moSkus=new Set();
+var allRec=[], filtered=[], moSkus=new Set(), allMOs=[]; 
 var today=new Date(), todayStr=today.toISOString().split("T")[0];
 var _currentRec = null;
 
@@ -278,154 +291,200 @@ var SHORT={
   Bottom_Length:{"3":"3-Tier(Short)","5":"5-Tier(Mid)","7":"7-Tier(Mid-full)","9":"9-Tier(Full)"},
   Gender:{"W":"Women","M":"Men","U":"Unisex"}
 };
+
 function mv(f,v){return(!v||v==="-")?"-":(MAP[f]&&MAP[f][v])?MAP[f][v]:v}
 function sv(f,v){return(!v||v==="-")?null:(SHORT[f]&&SHORT[f][v])?SHORT[f][v]:v}
+function cleanFactory(v){if(!v||v==="-")return"-";return v.replace(/^[_\s]*\d+[_\s]*/,"")}
 function g(r,f){var v=r[f];if(v==null||v==="")return"-";if(typeof v==="object"&&v.display_value)return v.display_value;return String(v)}
 function escH(s){var d=document.createElement("div");d.textContent=String(s);return d.innerHTML}
 function tc(s){s=(s||"").toLowerCase();if(s.indexOf("active")>=0||s.indexOf("approved")>=0||s.indexOf("완성")>=0||s.indexOf("승인")>=0)return"tag-appr";if(s.indexOf("progress")>=0||s.indexOf("sampling")>=0||s.indexOf("샘플")>=0||s.indexOf("진행")>=0)return"tag-prog";if(s.indexOf("rejected")>=0||s.indexOf("cancel")>=0)return"tag-fail";return"tag-draft"}
-function getImg1(r){
-  var i=r["Style_Image"];
-  if(!i)return null;
-  if(Array.isArray(i)&&i.length>0){
-    var first=i[0];
-    if(typeof first==="string"&&first.length>5)return first;
-    if(typeof first==="object"&&first!==null){
-      if(first.display_value&&first.display_value.length>5)return first.display_value;
-      if(first.value&&first.value.length>5)return first.value;
+
+// ==========================================
+// ★ 1. 메인 화면 썸네일 전용 엑스박스 완벽 차단 로더
+// ==========================================
+function getAllImgs(r, field) {
+  var v = r[field];
+  if (!v) return [];
+  var arr = Array.isArray(v) ? v : [v];
+  var res = [];
+  arr.forEach(function(item) {
+    if (!item) return;
+    if (typeof item === 'string' && item.length > 5) res.push(item);
+    else if (typeof item === 'object' && item.url) res.push(item.url);
+    else if (typeof item === 'object' && item.display_value) res.push(item.display_value);
+  });
+  return res;
+}
+function getImg1(r){ var imgs=getAllImgs(r,"Style_Image"); return imgs.length>0?imgs[0]:null; }
+function getImgUrl(r,field){ var imgs=getAllImgs(r,field); return imgs.length>0?imgs[0]:null; }
+
+// 메인 테이블의 썸네일들도 권한 에러(엑스박스)를 피하기 위해 조호 API 렌더러로 교체합니다.
+function qImgFast(elOrId, url) {
+  var el = typeof elOrId === "string" ? document.getElementById(elOrId) : elOrId;
+  if(!el) return;
+  var u = Array.isArray(url) ? url[0] : url;
+  if(typeof u === "object" && u !== null) u = u.url || u.display_value || "";
+  if(!u || u === "-") return;
+  
+  var img = document.createElement("img");
+  img.style.cssText = "width:100%;height:100%;object-fit:cover";
+  
+  // 엑스박스가 뜨지 않도록 setImageData 무조건 사용
+  ZOHO.CREATOR.UTIL.setImageData(img, u, function() {
+    el.innerHTML = "";
+    el.appendChild(img);
+  });
+}
+
+function loadTableImgs() {
+  var els = document.querySelectorAll("[data-img]");
+  if(els.length === 0) return;
+  if("IntersectionObserver" in window) {
+    var obs = new IntersectionObserver(function(entries, observer){
+      entries.forEach(function(ent){
+        if(ent.isIntersecting){
+          var el = ent.target;
+          var url = el.getAttribute("data-img");
+          if(url && url !== "null" && url !== "undefined" && url.length > 10) {
+            qImgFast(el, url);
+            el.removeAttribute("data-img"); 
+          }
+          observer.unobserve(el);
+        }
+      });
+    }, {rootMargin:"300px"});
+    els.forEach(function(el){ obs.observe(el); });
+  } else {
+    els.forEach(function(el){ var url = el.getAttribute("data-img"); if(url) qImgFast(el, url); });
+  }
+}
+
+// ==========================================
+// ★ 2. 모달창 팝업용 다이렉트 이미지 렌더러 (엑스박스 절대 안뜸)
+// ==========================================
+function renderZohoImage(elId, url, click) {
+  var el = document.getElementById(elId);
+  if(!el) return;
+  if(!url || url === "-") {
+    el.innerHTML = '<div class="no-img" style="color:#CBD5E1;font-size:30px;font-weight:900">📷</div>';
+    return;
+  }
+  var img = document.createElement("img");
+  img.style.cssText = "width:100%;height:100%;object-fit:contain;cursor:" + (click ? "pointer" : "default");
+  
+  ZOHO.CREATOR.UTIL.setImageData(img, url, function() {
+    el.innerHTML = "";
+    el.appendChild(img);
+    if(click) {
+      img.onclick = function(e){
+        e.stopPropagation();
+        var lbImg = document.getElementById("lightboxImg");
+        lbImg.src = img.src; 
+        document.getElementById("lightboxOverlay").style.display="flex";
+      };
     }
-    return null;
-  }
-  if(typeof i==="string"&&i.length>5)return i;
-  if(typeof i==="object"&&i.display_value&&i.display_value.length>5)return i.display_value;
-  return null;
+  });
 }
-function getAllImgs(r,field){
-  var i=r[field];
-  if(!i)return[];
-  if(Array.isArray(i)){
-    var out=[];
-    i.forEach(function(x){
-      if(!x)return;
-      if(typeof x==="string"&&x.length>5)out.push(x);
-      else if(typeof x==="object"){
-        if(x.display_value&&x.display_value.length>5)out.push(x.display_value);
-        else if(x.value&&x.value.length>5)out.push(x.value);
-      }
-    });
-    return out;
-  }
-  if(typeof i==="object"&&!Array.isArray(i)){
-    var u=[];
-    Object.keys(i).forEach(function(k){
-      var v=i[k];
-      if(v&&typeof v==="string"&&v.length>5)u.push(v);
-      else if(v&&typeof v==="object"){
-        if(v.display_value&&v.display_value.length>5)u.push(v.display_value);
-      }
-    });
-    return u;
-  }
-  if(typeof i==="string"&&i.length>5)return[i];
-  return[];
+
+function openModalById(id) {
+  var r = allRec.find(function(x){ return String(x.ID) === String(id); });
+  if(r) openModal(r);
 }
-function openModalById(id){var r=allRec.find(function(x){return String(x.ID)===String(id)});if(r)openModal(r)}
+
+ZOHO.CREATOR.init().then(function(){
+  ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:MO_REP,page:1,pageSize:200}).then(function(r){
+    if(r&&r.code===3000&&r.data){
+      allMOs = r.data;
+      r.data.forEach(function(m){var s=g(m,"Style_SKU");if(s==="-")s=g(m,"SKU");if(s!=="-")moSkus.add(s)});
+    }
+    loadStyles();
+  }).catch(function(){loadStyles()})
+});
+
+function loadStyles(){
+  ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:REP,page:1,pageSize:200}).then(function(r){
+    if(r&&r.code===3000&&r.data){
+      allRec=r.data;filtered=allRec.slice();renderMKPI();buildFilters();renderTables();renderChart();hide("loadingScreen");show("mainContent");
+      setTimeout(loadTableImgs, 500);
+    } else showErr("데이터를 불러올 수 없습니다. 폼 이름을 확인해주세요.");
+  }).catch(function(e){showErr("데이터 파싱 에러: " + (e.message || JSON.stringify(e)));})
+}
+
 function show(i){document.getElementById(i).style.display="block"}
 function hide(i){document.getElementById(i).style.display="none"}
 function showErr(m){hide("loadingScreen");show("errorScreen");document.getElementById("errorMsg").textContent=m}
 function goTo(url){window.open(url,"_blank")}
 function editStyle(){if(!_currentRec)return;goTo("https://creatorapp.zoho.com/jeramoda/eom/#Report:All_Styles")}
 function newMO(){goTo("https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_MO")}
+function isOrderDelayed(r) {
+  var sku = g(r, "Style_SKU"); if (sku === "-") sku = g(r, "SKU");
+  if (moSkus.has(sku)) return false; 
+  var py = parseInt(g(r, "Plan_Year")); var pm = parseInt(g(r, "Plan_Month"));
+  if (isNaN(py) || isNaN(pm)) return false;
+  if (py < 100) py += 2000;
+  var deadline = new Date(py, pm - 1, 20); 
+  var todayD = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  return todayD > deadline;
+}
 function parseYM(key){var m=key.match(/(\d+)년\s*(\d+)월/);if(!m)return null;var y=parseInt(m[1]);if(y<100)y+=2000;return{y:y,m:parseInt(m[2])}}
-function isOrderDelayed(r){var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");if(moSkus.has(sku))return false;var py=parseInt(g(r,"Plan_Year")),pm=parseInt(g(r,"Plan_Month"));if(isNaN(py)||isNaN(pm))return false;if(py<100)py+=2000;var deadline=new Date(py,pm-1,20);var todayD=new Date(today.getFullYear(),today.getMonth(),today.getDate());return todayD>deadline}
 
-/* ── 이미지 로더 ── */
-var _safeQ=[],_safeBusy=false;
-function _runSafeQ(){
-  if(!_safeQ.length){_safeBusy=false;return}
-  _safeBusy=true;var task=_safeQ.shift();
-  var el=task.id?document.getElementById(task.id):task.el;
-  if(!el){setTimeout(_runSafeQ,50);return}
-  /* ★ URL 정규화: 객체/배열 → 문자열로 변환 */
-  var url=task.url;
-  if(Array.isArray(url))url=url[0];
-  if(typeof url==="object"&&url!==null){url=url.display_value||url.value||""}
-  url=String(url||"").trim();
-  if(!url||url==="-"||url==="null"||url==="undefined"){setTimeout(_runSafeQ,50);return}
-  var img=document.createElement("img");
-  img.style.cssText=task.css||"width:100%;height:100%;object-fit:cover";
-  if(task.clk)img.onclick=function(){openLightbox(this.src)};
-  var done=false;
-  function next(){if(done)return;done=true;setTimeout(_runSafeQ,80)}
-  try{ZOHO.CREATOR.UTIL.setImageData(img,url,function(){el.innerHTML="";el.appendChild(img);next()});setTimeout(next,3000)}catch(e){next()}
-}
-function qImg(elOrId,url,css,clk){_safeQ.push({id:typeof elOrId==="string"?elOrId:null,el:typeof elOrId==="object"?elOrId:null,url:url,css:css,clk:clk});if(!_safeBusy)_runSafeQ()}
-function loadTableImgs(){
-  var els=document.querySelectorAll("[data-img]");if(!els.length)return;
-  if("IntersectionObserver" in window){var obs=new IntersectionObserver(function(entries,observer){entries.forEach(function(ent){if(ent.isIntersecting){var el=ent.target;var url=el.getAttribute("data-img");if(url&&url!=="null"&&url!=="undefined"&&url.length>10){qImg(el,url,"width:100%;height:100%;object-fit:cover",false);el.removeAttribute("data-img")}observer.unobserve(el)}})},{rootMargin:"300px"});els.forEach(function(el){obs.observe(el)})}
-  else{els.forEach(function(el){var url=el.getAttribute("data-img");if(url)qImg(el,url,"width:100%;height:100%;object-fit:cover",false)})}
-}
-function openLightbox(src){if(!src)return;document.getElementById("lightboxImg").src=src;document.getElementById("lightboxOverlay").style.display="flex"}
-function closeLightbox(){document.getElementById("lightboxOverlay").style.display="none";document.getElementById("lightboxImg").src=""}
-
-/* ── 데이터 로드 ── */
-ZOHO.CREATOR.init().then(function(){
-  ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:MO_REP,page:1,pageSize:200}).then(function(r){
-    if(r&&r.code===3000&&r.data)r.data.forEach(function(m){var s=g(m,"Style_SKU");if(s==="-")s=g(m,"SKU");if(s!=="-")moSkus.add(s)});
-    loadStyles();
-  }).catch(function(){loadStyles()});
-}).catch(function(e){showErr("ZOHO 초기화 실패: "+JSON.stringify(e))});
-
-function loadStyles(){
-  ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:REP,page:1,pageSize:200}).then(function(r){
-    if(r&&r.code===3000&&r.data){
-      allRec=r.data;filtered=allRec.slice();
-      /* ★ 디버그: 첫 레코드 Style_Image 구조 출력 */
-      if(allRec.length>0){
-        var _si=allRec[0]["Style_Image"];
-        console.log("[IMG DEBUG] Style_Image 타입:", typeof _si);
-        console.log("[IMG DEBUG] Style_Image 값:", JSON.stringify(_si).substring(0,300));
-        console.log("[IMG DEBUG] getImg1 결과:", getImg1(allRec[0]));
-      }
-      renderMKPI();buildFilters();renderTables();renderChart();
-      hide("loadingScreen");show("mainContent");
-      setTimeout(loadTableImgs,500);
-    } else showErr("로드 실패");
-  }).catch(function(e){showErr(JSON.stringify(e))});
-}
-
-/* ── KPI 렌더 ── */
 function renderMKPI(){
   var groups={};
-  filtered.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[key])groups[key]=[];groups[key].push(r)});
-  var colors=["#818CF8","#F59E0B","#34D399"];var h="";var ci=0;
+  filtered.forEach(function(r){
+    var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");
+    var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";
+    if(!groups[key])groups[key]=[];groups[key].push(r)});
+
+  var colors=["#818CF8","#F59E0B","#34D399"];
+  var ringColors=["#A5B4FC","#FDE68A","#A7F3D0"];
+  var h="";var ci=0;
+
   Object.keys(groups).sort().forEach(function(key){
-    if(key==="미지정")return;
-    var items=groups[key],c=colors[ci%colors.length];ci++;
+    if(key==="미지정") return;
+    var items=groups[key];var c=colors[ci%colors.length];var rc=ringColors[ci%ringColors.length];ci++;
     var tot=items.length,sm=0,ord=0,nord=0;
+    
     items.forEach(function(r){
       var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");
       var sStat=(g(r,"Sample_Status")+" "+g(r,"Style_Status")).toLowerCase();
       if(sStat.indexOf("sampling")>=0||sStat.indexOf("샘플")>=0)sm++;
-      if(moSkus.has(sku))ord++;else nord++;
+      if(moSkus.has(sku)) ord++; else nord++;
     });
+
     var pct=tot>0?Math.round((ord/tot)*100):0;
     var r36=36,circ=2*Math.PI*r36,offset=circ-(pct/100)*circ;
-    var ke=encodeURIComponent(key),ym=parseYM(key);
-    var yy=ym?ym.y.toString().slice(-2):"",mm=ym?(ym.m<10?"0"+ym.m:ym.m):"";
-    var tt=ym?(yy+"."+mm+" Style KPI / "+yy+"年 "+ym.m+"月 款式 KPI"):"Style KPI";
-    h+='<div class="mkpi-card"><div class="mkpi-header"><div class="mkpi-title">📅 '+tt+'</div></div>';
-    h+='<div class="mkpi-body"><div class="mkpi-ring"><svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="#E5E7EB" stroke-width="6"/><circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="'+c+'" stroke-width="6" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'" stroke-linecap="round"/></svg><div class="mkpi-ring-pct" style="color:'+c+'">'+pct+'%</div></div>';
+    var trail="#E5E7EB";
+    var keyEnc=encodeURIComponent(key);
+    var ym=parseYM(key);
+    var yy = ym ? ym.y.toString().slice(-2) : "";
+    var mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
+    var titleText = ym ? (yy+"."+mm+" Style KPI / "+yy+"年 "+ym.m+"月 款式 KPI") : "Style KPI / 款式 KPI";
+
+    h+='<div class="mkpi-card">';
+    h+='<div class="mkpi-header"><div class="mkpi-title">📅 '+titleText+'</div></div>';
+    h+='<div class="mkpi-body">';
+    h+='<div class="mkpi-ring"><svg width="80" height="80" viewBox="0 0 80 80">';
+    h+='<circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="'+trail+'" stroke-width="6"/>';
+    h+='<circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="'+c+'" stroke-width="6" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'" stroke-linecap="round"/>';
+    h+='</svg><div class="mkpi-ring-pct" style="color:'+c+'">'+pct+'%</div></div>';
     h+='<div class="mkpi-stats">';
-    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+ke+'\',\'all\')"><div class="mkpi-stat-n" style="color:#6366F1">'+tot+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A5B4FC"></span>총 스타일 / 总款式</div></div>';
-    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+ke+'\',\'sm\')"><div class="mkpi-stat-n" style="color:#F59E0B">'+sm+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FDE68A"></span>샘플제작중 / 样品制作中</div></div>';
-    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+ke+'\',\'ord\')"><div class="mkpi-stat-n" style="color:#34D399">'+ord+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A7F3D0"></span>오더완료 / 订单完成</div></div>';
-    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+ke+'\',\'nord\')"><div class="mkpi-stat-n" style="color:#EF4444">'+nord+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FCA5A5"></span>미오더 / 未下订单</div></div>';
+    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'all\')"><div class="mkpi-stat-n" style="color:#6366F1">'+tot+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A5B4FC"></span>총 스타일 / 总款式</div></div>';
+    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'sm\')"><div class="mkpi-stat-n" style="color:#F59E0B">'+sm+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FDE68A"></span>샘플제작중 / 样品制作中</div></div>';
+    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'ord\')"><div class="mkpi-stat-n" style="color:#34D399">'+ord+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A7F3D0"></span>오더완료 / 订单完成</div></div>';
+    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'nord\')"><div class="mkpi-stat-n" style="color:#EF4444">'+nord+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FCA5A5"></span>미오더 / 未下订单</div></div>';
     h+='</div></div></div>';
   });
-  var da=filtered.filter(function(r){return isOrderDelayed(r)});
-  h+='<div class="delay-card"><div class="delay-card-title">⚠️ 오더 지연 현황<br><span style="font-size:10px;color:#EF4444;font-weight:600">订单延误现况</span></div><div class="delay-total">'+da.length+'<span>건 지연 / 件延误</span></div><div class="delay-list" style="margin-bottom:8px">';
-  if(!da.length)h+='<div style="text-align:center;padding:16px;color:#94A3B8;font-size:11px">지연 없음 / 无延误 ✓</div>';
-  else da.forEach(function(r){var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");h+='<div class="delay-item" onclick="openModalById(\''+r.ID+'\')"><div><div class="delay-mo">'+escH(sku)+'</div><div class="delay-style">'+escH(g(r,"Style_Name"))+'</div></div></div>'});
+
+  var delayedAll=filtered.filter(function(r){return isOrderDelayed(r)});
+  h+='<div class="delay-card"><div class="delay-card-title">⚠️ 오더 지연 현황<br><span style="font-size:10px;color:#EF4444;font-weight:600">订单延误现况</span></div><div class="delay-total">'+delayedAll.length+'<span>건 지연 / 件延误</span></div><div class="delay-list" style="margin-bottom:8px">';
+  if(delayedAll.length===0){
+    h+='<div style="text-align:center;padding:16px;color:#94A3B8;font-size:11px">지연 없음 / 无延误 ✓</div>';
+  } else {
+    delayedAll.forEach(function(r){
+      var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");
+      h+='<div class="delay-item" onclick="openModalById(\''+r.ID+'\')"><div><div class="delay-mo">'+escH(sku)+'</div><div class="delay-style">'+escH(g(r,"Style_Name"))+'</div></div></div>';
+    });
+  }
   h+='</div><div style="font-size:10px;font-weight:bold;color:#94A3B8;text-align:center;padding-top:8px;border-top:1px dashed #FECACA;line-height:1.4">당월 20일까지 오더 미진행 시 지연으로 간주<br>若当月20日前未下订单，视为延误</div></div>';
   document.getElementById("kpiRow").innerHTML=h;
 }
@@ -433,27 +492,33 @@ function renderMKPI(){
 function openKpiPop(keyEnc,type){
   var key=decodeURIComponent(keyEnc);var groups={};
   filtered.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var k=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[k])groups[k]=[];groups[k].push(r)});
-  var items=groups[key]||[];
-  var tn={all:"총 스타일 / 总款式",sm:"샘플 제작 중 / 样品制作中",ord:"오더완료 / 订单完成",nord:"미오더 / 未下订单"};
-  var popItems=items.filter(function(r){var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");var sStat=(g(r,"Sample_Status")+" "+g(r,"Style_Status")).toLowerCase();if(type==="all")return true;if(type==="sm")return sStat.indexOf("sampling")>=0||sStat.indexOf("샘플")>=0;if(type==="ord")return moSkus.has(sku);if(type==="nord")return !moSkus.has(sku);return true});
-  document.getElementById("kpiPopTitle").textContent=key+" — "+tn[type];
+  var items=groups[key]||[];var typeNames={all:"총 스타일 / 总款式",sm:"샘플 제작 중 / 样品制作中",ord:"오더완료 / 订单完成",nord:"미오더 / 未下订单"};
+  
+  var popItems=items.filter(function(r){
+    var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");
+    var sStat=(g(r,"Sample_Status")+" "+g(r,"Style_Status")).toLowerCase();
+    if(type==="all")return true;
+    if(type==="sm")return sStat.indexOf("sampling")>=0||sStat.indexOf("샘플")>=0;
+    if(type==="ord")return moSkus.has(sku);
+    if(type==="nord")return !moSkus.has(sku);
+    return true;
+  });
+
+  document.getElementById("kpiPopTitle").textContent=key+" — "+typeNames[type];
   document.getElementById("kpiPopSub").textContent="총 "+popItems.length+"건";
   var h="";
-  if(!popItems.length)h='<div class="pop-empty">해당 스타일이 없습니다</div>';
-  else popItems.forEach(function(r){var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");h+='<div class="pop-item" onclick="openModalById(\''+r.ID+'\')"><div class="pop-item-left"><div class="pi-mo">'+escH(sku)+'</div><div class="pi-name">'+escH(g(r,"Style_Name"))+'</div><div class="pi-meta">Category: '+escH(mv("Category",g(r,"Category")))+' · Gender: '+escH(mv("Gender",g(r,"Gender")))+'</div></div><span class="tag '+tc(g(r,"Style_Status"))+'">'+escH(g(r,"Style_Status"))+'</span></div>'});
+  if(popItems.length===0){h='<div class="pop-empty">해당 스타일이 없습니다</div>'}
+  else{
+    popItems.forEach(function(r){
+      var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");var isDel=isOrderDelayed(r);
+      h+='<div class="pop-item" onclick="openModalById(\''+r.ID+'\')"><div class="pop-item-left"><div class="pi-mo">'+escH(sku)+(isDel?'<span class="dly-badge">DELAYED</span>':'')+'</div><div class="pi-name">'+escH(g(r,"Style_Name"))+'</div><div class="pi-meta">Category: '+escH(mv("Category",g(r,"Category")))+' · Gender: '+escH(mv("Gender",g(r,"Gender")))+'</div></div><span class="tag '+tc(g(r,"Style_Status"))+'">'+escH(g(r,"Style_Status"))+'</span></div>';
+    });
+  }
   document.getElementById("kpiPopBody").innerHTML=h;
   document.getElementById("kpiPopOv").classList.add("active");
 }
 
-function buildFilters(){
-  var cat={},gen={},se={},st={};
-  allRec.forEach(function(r){var c=g(r,"Category");if(c!=="-")cat[c]=mv("Category",c);var ge=g(r,"Gender");if(ge!=="-")gen[ge]=mv("Gender",ge);var s=g(r,"Season");if(s!=="-")se[s]=1;var t=g(r,"Style_Status");if(t!=="-")st[t]=1});
-  var el;
-  el=document.getElementById("filterCategory");Object.keys(cat).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+escH(cat[k])+'</option>'});
-  el=document.getElementById("filterGender");Object.keys(gen).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+escH(gen[k])+'</option>'});
-  el=document.getElementById("filterSeason");Object.keys(se).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});
-  el=document.getElementById("filterStatus");Object.keys(st).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});
-}
+function buildFilters(){var cat={},gen={},se={},st={};allRec.forEach(function(r){var c=g(r,"Category");if(c!=="-")cat[c]=mv("Category",c);var ge=g(r,"Gender");if(ge!=="-")gen[ge]=mv("Gender",ge);var s=g(r,"Season");if(s!=="-")se[s]=1;var t=g(r,"Style_Status");if(t!=="-")st[t]=1});var el;el=document.getElementById("filterCategory");Object.keys(cat).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+escH(cat[k])+'</option>'});el=document.getElementById("filterGender");Object.keys(gen).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+escH(gen[k])+'</option>'});el=document.getElementById("filterSeason");Object.keys(se).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});el=document.getElementById("filterStatus");Object.keys(st).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});}
 
 var COLORS=["#3B82F6","#8B5CF6","#EC4899","#F97316","#10B981","#06B6D4","#EF4444","#F59E0B","#6366F1","#14B8A6","#E11D48","#84CC16","#0EA5E9","#A855F7","#F43F5E"];
 function renderChart(){
@@ -491,11 +556,7 @@ function renderTables(){
     html+='<div class="month-section"><div class="month-card"><div class="month-header"><div class="month-title">📅 '+tt+'</div><span class="month-count">'+items.length+' styles</span></div><div class="table-scroll"><table class="z-table"><thead><tr><th style="width:18%">Style Info</th><th style="width:7%">Brand</th><th style="width:7%">Season</th><th style="width:12%">Gender</th><th style="width:12%">Category</th><th style="width:14%">Material_Type</th><th style="width:8%">Target_Cost</th><th style="width:10%">Status</th><th style="width:6%">Sample</th><th style="width:8%">Order</th></tr></thead><tbody>';
     items.forEach(function(r){
       var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");
-      var iu=getImg1(r);
-      /* ★ iu가 객체이면 문자열 변환 */
-      if(iu&&typeof iu==="object"){iu=iu.display_value||iu.value||null}
-      if(iu&&typeof iu==="string"&&iu.length<10)iu=null; /* 너무 짧은 값 제거 */
-      var ia=iu?' data-img="'+iu+'"':'';
+      var iu=getImg1(r),ia=iu?' data-img="'+iu+'"':'';
       var ordered=moSkus.has(sku);
       var trStyle=(!ordered)?' style="background:#FEF2F2;cursor:pointer"':' style="cursor:pointer"';
       var trClass=(!ordered)?"not-ordered":"";
@@ -512,22 +573,31 @@ function af(){var q=document.getElementById("searchBox").value.toLowerCase().tri
 
 /* ── Style 상세 모달 ── */
 function openModal(rec){
-  _safeQ=[];
   _currentRec=rec;
   document.getElementById("modalTitle").textContent=g(rec,"Style_SKU");
   document.getElementById("modalSubtitle").textContent=g(rec,"Style_Name");
-  var te=document.getElementById("modalThumb");te.innerHTML='<div class="spinner-sm"></div>';
+  
+  var te=document.getElementById("modalThumb");
+  te.innerHTML='<div class="spinner-sm"></div>';
+  
   document.getElementById("modalBody").innerHTML=buildDetail(rec);
   document.getElementById("modalOverlay").classList.add("active");
+  
   setTimeout(function(){loadAllModalImgs(rec)},50);
 }
 
 function loadAllModalImgs(rec){
-  var iu=getImg1(rec);if(iu)qImg("modalThumb",iu,"width:100%;height:100%;object-fit:cover",false);
-  var si=getAllImgs(rec,"Style_Image"),fi=getAllImgs(rec,"Flat_Sketch"),smi=getAllImgs(rec,"Sample_Images");
-  si.forEach(function(u,i){qImg("sImg"+i,u,"width:100%;height:100%;object-fit:contain;cursor:pointer",true)});
-  fi.forEach(function(u,i){qImg("fImg"+i,u,"width:100%;height:100%;object-fit:contain;cursor:pointer",true)});
-  smi.forEach(function(u,i){qImg("smImg"+i,u,"width:100%;height:100%;object-fit:contain;cursor:pointer",true)});
+  var iu=getImg1(rec);
+  if(iu) renderZohoImage("modalThumb", iu, false);
+
+  // ★ 모달창 갤러리 이미지 다이렉트 렌더러 적용 (엑스박스 절대 차단)
+  var si = getAllImgs(rec, "Style_Image").slice(0, 5);
+  var tfs = getAllImgs(rec, "Top_Flat_Sketch").slice(0, 5);
+  var bfs = getAllImgs(rec, "Bottom_Flat_Sketch").slice(0, 5);
+
+  si.forEach(function(u,i){ renderZohoImage("mdl_si_" + i, u, true); });
+  tfs.forEach(function(u,i){ renderZohoImage("mdl_tfs_" + i, u, true); });
+  bfs.forEach(function(u,i){ renderZohoImage("mdl_bfs_" + i, u, true); });
 }
 
 function buildDetail(d){
@@ -536,6 +606,33 @@ function buildDetail(d){
   function dt(v){return'<span class="tag '+tc(v)+'">'+escH(v)+'</span>'}
   function it(l,v){return'<div class="detail-item"><span class="detail-label">'+l+'</span><span class="detail-value">'+v+'</span></div>'}
   var ordered=moSkus.has(g(d,"Style_SKU"));
+  
+  // ★ (수정완료) 이미지 섹션을 모달창 최상단으로 끌어올림!
+  var si = getAllImgs(d, "Style_Image").slice(0, 5);
+  var tfs = getAllImgs(d, "Top_Flat_Sketch").slice(0, 5);
+  var bfs = getAllImgs(d, "Bottom_Flat_Sketch").slice(0, 5);
+
+  if (si.length || tfs.length || bfs.length) {
+    h += '<div class="modal-section"><div class="modal-section-title" style="border-bottom:2px solid #FBCFE8;color:#CA8A04">📸 Style Images & Sketches</div>';
+    
+    if(si.length) {
+      h += '<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin-bottom:6px">Style Image (Max 5)</div><div class="modal-images">';
+      si.forEach(function(u, i) { h += '<div class="modal-img-wrap"><div class="modal-img-box" id="mdl_si_'+i+'"><div class="spinner-sm"></div></div></div>'; });
+      h += '</div><div style="height:10px"></div>';
+    }
+    if(tfs.length) {
+      h += '<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin-bottom:6px">Top Flat Sketch (Max 5)</div><div class="modal-images">';
+      tfs.forEach(function(u, i) { h += '<div class="modal-img-wrap"><div class="modal-img-box" id="mdl_tfs_'+i+'"><div class="spinner-sm"></div></div></div>'; });
+      h += '</div><div style="height:10px"></div>';
+    }
+    if(bfs.length) {
+      h += '<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin-bottom:6px">Bottom Flat Sketch (Max 5)</div><div class="modal-images">';
+      bfs.forEach(function(u, i) { h += '<div class="modal-img-wrap"><div class="modal-img-box" id="mdl_bfs_'+i+'"><div class="spinner-sm"></div></div></div>'; });
+      h += '</div>';
+    }
+    h += '</div>';
+  }
+
   h+='<div class="modal-section"><div class="modal-section-title">📌 기본 정보 / Identity / 基本信息</div><div class="detail-grid">';
   h+=it("Style SKU",dv(g(d,"Style_SKU")));h+=it("Style Name",dv(g(d,"Style_Name")));h+=it("Style Number",dv(g(d,"Style_Number")));
   h+=it("Season",dv(g(d,"Season")));h+=it("Plan Year",dv(g(d,"Plan_Year")));h+=it("Plan Month",dv(g(d,"Plan_Month")));
@@ -559,169 +656,169 @@ function buildDetail(d){
   h+='<div class="modal-section"><div class="modal-section-title">💰 원가 정보 / Costing / 成本</div><div class="detail-grid">';
   h+=it("Target Cost",dv(g(d,"Target_Cost")));h+=it("Final Cost",dv(g(d,"Final_Cost")));h+=it("Total BOM Cost",dv(g(d,"Total_BOM_Cost")));h+=it("Cost Notes",dv(g(d,"Cost_Notes")));
   h+='</div></div>';
-  var si=getAllImgs(d,"Style_Image"),fi=getAllImgs(d,"Flat_Sketch"),smi=getAllImgs(d,"Sample_Images");
-  if(si.length||fi.length||smi.length){
-    h+='<div class="modal-section"><div class="modal-section-title">📸 이미지 / Images / 图片</div>';
-    if(si.length){h+='<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin-bottom:6px">Style Images ('+si.length+')</div><div class="modal-images">';si.forEach(function(u,i){h+='<div class="modal-img-wrap"><div class="modal-img-box" id="sImg'+i+'"><div class="spinner-sm"></div></div><div class="modal-img-label">Style '+(i+1)+'</div></div>'});h+='</div>'}
-    if(fi.length){h+='<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin:10px 0 6px">Flat Sketch ('+fi.length+')</div><div class="modal-images">';fi.forEach(function(u,i){h+='<div class="modal-img-wrap"><div class="modal-img-box" id="fImg'+i+'"><div class="spinner-sm"></div></div><div class="modal-img-label">Sketch '+(i+1)+'</div></div>'});h+='</div>'}
-    if(smi.length){h+='<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin:10px 0 6px">Sample Images ('+smi.length+')</div><div class="modal-images">';smi.forEach(function(u,i){h+='<div class="modal-img-wrap"><div class="modal-img-box" id="smImg'+i+'"><div class="spinner-sm"></div></div><div class="modal-img-label">Sample '+(i+1)+'</div></div>'});h+='</div>'}
-    h+='</div>';
-  }
   return h;
 }
 
 function closeModal(){document.getElementById("modalOverlay").classList.remove("active");_currentRec=null}
-/* kpiPopOv, modalOverlay는 항상 DOM에 있으므로 addEventListener OK */
-document.getElementById("kpiPopOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
-/* modalOverlay 배경 클릭 닫기 */
-document.getElementById("modalOverlay").addEventListener("click",function(e){if(e.target===this)closeModal()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){if(document.getElementById("lightboxOverlay").style.display==="flex")closeLightbox();else { closeModal(); document.getElementById("tpOv").classList.remove("active"); document.getElementById("kpiPopOv").classList.remove("active"); }}});
 
 /* ══════════════════════════════════════
-   TECH PACK
-   All_Top_Specs / All_Bottom_Specs 에서
-   Style_SKU로 필터해서 가져오기
-══════════════════════════════════════ */
-function safeVal(v){
-  if(v==null||v==="")return"-";
-  if(typeof v==="object"&&v!==null){if(v.display_value!=null)return String(v.display_value).trim();if(v.value!=null)return String(v.value).trim();return"-"}
-  return String(v).trim();
-}
-function normSize(raw){
-  if(raw==null)return null;
-  var s=(typeof raw==="object"&&raw!==null)?(raw.display_value!=null?String(raw.display_value):raw.value!=null?String(raw.value):""):String(raw);
-  s=s.split("/")[0].trim().toUpperCase();
-  if(s==="S"||s==="M"||s==="L"||s==="XL"||s==="XXL")return s;
-  return null;
-}
-function parseSpecs(lines,prefix){
-  var pomKey=prefix+"_POM",sizeKey=prefix+"_Select_Size",specKey=prefix+"_Spec",tolKey=prefix+"_Tol";
-  var spObj={};
-  if(!lines||!lines.length)return spObj;
-  console.log("[TechPack] parseSpecs prefix="+prefix+" rows="+lines.length);
-  if(lines.length>0){console.log("[TechPack] 첫 row 키:",Object.keys(lines[0]));console.log("[TechPack] 첫 row:",JSON.stringify(lines[0]).substring(0,300))}
-  lines.forEach(function(row){
-    var pom=safeVal(row[pomKey]),size=normSize(row[sizeKey]),spec=safeVal(row[specKey]),tol=safeVal(row[tolKey]);
-    if(!pom||pom==="-")return;
-    if(!spObj[pom])spObj[pom]={tol:tol,S:"-",M:"-",L:"-",XL:"-",XXL:"-"};
-    if(size&&spObj[pom][size]!==undefined)spObj[pom][size]=spec;
-    if(tol&&tol!=="-")spObj[pom].tol=tol;
+   ★ Tech Pack 모달 (Style View 전용 / 엑스박스 완벽 차단)
+   ══════════════════════════════════════ */
+
+function parseUniversalSpecs(lines) {
+  var spObj = {};
+  if(!Array.isArray(lines)) return spObj;
+  
+  lines.forEach(function(row) {
+    var pom="-", size="-", spec="-", tol="-";
+    Object.keys(row).forEach(function(k){
+      var kl = k.toUpperCase();
+      var val = typeof row[k] === "object" && row[k] !== null ? (row[k].display_value || "") : String(row[k] || "");
+      if(val==="null" || val==="undefined") val="-";
+
+      if(kl.indexOf("POM") >= 0 || kl === "MEASUREMENT_POINT") pom = val;
+      else if(kl.indexOf("SELECT_SIZE") >= 0 || kl.indexOf("SELECT") >= 0 || k === "Size") size = val.toUpperCase();
+      else if((kl.indexOf("SPEC") >= 0 || kl.indexOf("VALUE") >= 0 || kl === "CM") && kl.indexOf("SPECS") === -1 && kl.indexOf("SIZE") === -1) spec = val;
+      else if(kl.indexOf("TOL") >= 0) tol = val;
+    });
+
+    if(pom === "-" || pom === "") return;
+    if(!spObj[pom]) spObj[pom] = {tol:tol, S:"-", M:"-", L:"-", XL:"-", XXL:"-"};
+    if(size && size !== "-" && spObj[pom][size] !== undefined) spObj[pom][size] = spec;
+    if(tol !== "-" && tol !== "") spObj[pom].tol = tol;
   });
-  console.log("[TechPack] 결과 POM수:",Object.keys(spObj).length);
   return spObj;
 }
-function drawSpec(title,spObj){
-  var keys=Object.keys(spObj);
-  var hasXXL=keys.some(function(k){return spObj[k].XXL&&spObj[k].XXL!=="-"});
-  var cols=hasXXL?7:6;
-  var h="<div class='tp-box'><div class='tp-box-title'>"+title+" <span>Unit: cm</span></div>";
-  h+="<table class='spec-tbl'><thead><tr><th style='width:38%;text-align:left;padding-left:8px'>Point of Measure / 측정 부위</th><th style='width:12%'>TOL(±)</th><th>S</th><th>M</th><th>L</th><th>XL</th>";
-  if(hasXXL)h+="<th>XXL</th>";
-  h+="</tr></thead><tbody>";
-  if(!keys.length){h+="<tr><td colspan='"+cols+"' style='color:#94A3B8;padding:20px;text-align:center'>사이즈 데이터가 없습니다.</td></tr>";}
-  else keys.forEach(function(pom){var o=spObj[pom];h+="<tr><td class='pom'>"+escH(pom)+"</td><td style='text-align:center'>"+escH(o.tol)+"</td><td>"+escH(o.S)+"</td><td>"+escH(o.M)+"</td><td>"+escH(o.L)+"</td><td>"+escH(o.XL)+"</td>"+(hasXXL?"<td>"+escH(o.XXL||"-")+"</td>":"")+"</tr>"});
-  h+="</tbody></table></div>";return h;
-}
-function loadTpImg(elId,url){
-  var el=document.getElementById(elId);if(!el)return;
-  if(!url){el.innerHTML='<div class="no-img">📷</div>';return}
-  var img=document.createElement("img");img.style.cssText="width:100%;height:100%;object-fit:contain";
-  try{ZOHO.CREATOR.UTIL.setImageData(img,url,function(){el.innerHTML="";el.appendChild(img)})}catch(e){el.innerHTML='<div class="no-img">📷</div>'}
+
+function openTechPack() {
+  if(!_currentRec) return;
+  
+  var btn = document.getElementById("btnTechPack");
+  var originalText = btn.innerHTML;
+  btn.innerHTML = "⏳ LOADING...";
+  btn.disabled = true;
+
+  try {
+    var s = _currentRec;
+    var tsLines = getSubformLines(s, "Top_Size_Specs");
+    var bsLines = getSubformLines(s, "Bottom_Size_Specs");
+
+    var topSpecs = parseUniversalSpecs(tsLines);
+    var btmSpecs = parseUniversalSpecs(bsLines);
+
+    var sku = g(s, "Style_SKU");
+    var mo = allMOs.find(function(m){ return g(m,"Style_SKU")===sku || g(m,"SKU")===sku; });
+
+    renderTechPackHTML(s, mo, topSpecs, btmSpecs, tsLines.length, bsLines.length);
+
+  } catch(e) {
+    alert("데이터 처리 중 에러가 발생했습니다: " + e.message);
+    console.error("Tech Pack Error:", e);
+  } finally {
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  }
 }
 
-function openTechPack(){
-  var d=_currentRec;if(!d)return;
-  var sku=g(d,"Style_SKU");
-  if(sku==="-")sku=g(d,"SKU");
+function renderTechPackHTML(s, mo, topSpecs, btmSpecs, topIdCount, btmIdCount) {
+  var sku = g(s, "Style_SKU");
+  
+  var imgStyle = getImgUrl(s, "Style_Image") || (mo ? getImgUrl(mo, "Style_Image") : null);
+  var imgTop = getImgUrl(s, "Top_Flat_Sketch") || getImgUrl(s, "Top_Sketch") || getImgUrl(s, "Flat_Sketch") || (mo ? getImgUrl(mo, "Top_Sketch") : null);
+  var imgBtm = getImgUrl(s, "Bottom_Flat_Sketch") || getImgUrl(s, "Bottom_Sketch") || (mo ? getImgUrl(mo, "Bottom_Sketch") : null);
 
-  /* 로딩 화면 */
-  document.getElementById("tpBarTitle").textContent="📋 TECH PACK — "+escH(sku);
-  document.getElementById("tpContent").innerHTML="<div style='text-align:center;padding:80px 40px;color:#64748B'><div class='spinner' style='margin:0 auto 20px'></div><div style='font-size:14px;font-weight:700;margin-bottom:6px'>사이즈 스펙 로딩 중...</div><div style='font-size:11px'>Style: "+escH(sku)+"</div></div>";
+  var moNum = mo ? g(mo, "MO_Number") : "-";
+  var factory = mo ? cleanFactory(g(mo, "Factory")) : cleanFactory(g(s, "Business_Entity"));
+  
+  var colors = mo ? (g(mo, "Top_Color") !== "-" ? g(mo, "Top_Color") + (g(mo, "Bottom_Color") !== "-" ? " / " + g(mo, "Bottom_Color") : "") : g(s, "Available_Colors")) : g(s, "Available_Colors");
+  if(!colors || colors === "-") colors = "-";
+
+  var p = [];
+  p.push("<div class='tp-head'>");
+  p.push("<div class='tp-brand'><div class='logo-ic'></div> ZOHO <span>APPAREL</span></div>");
+  p.push("<div class='doc-title'><h1>TECH PACK</h1><p>DATE: " + todayStr + " &nbsp;|&nbsp; REV: 1.0</p></div>");
+  p.push("</div>");
+
+  p.push("<div class='tp-grid'>"); 
+
+  p.push("<div class='col-left'>");
+  p.push("<table class='info-tbl'><tbody>");
+  p.push("<tr><th>MO NO.</th><td style='color:#3B82F6;font-size:13px'>" + escH(moNum) + "</td></tr>");
+  p.push("<tr><th>STYLE NO.</th><td>" + escH(sku) + "</td></tr>");
+  p.push("<tr><th>STYLE NAME</th><td>" + escH(g(s, "Style_Name")) + "</td></tr>");
+  p.push("<tr><th>FACTORY</th><td>" + escH(factory) + "</td></tr>");
+  p.push("<tr><th>SEASON</th><td>" + escH(g(s, "Season")) + "</td></tr>");
+  p.push("<tr><th>CATEGORY</th><td>" + escH(mv("Category",g(s, "Category"))) + "</td></tr>");
+  p.push("<tr><th>TARGET</th><td>" + escH(mv("Gender",g(s, "Gender"))) + "</td></tr>");
+  p.push("<tr><th>COLORS (T/B)</th><td style='color:#059669'>" + escH(colors) + "</td></tr>");
+  p.push("<tr><th>SIZE RANGE</th><td>S, M, L, XL</td></tr>");
+  p.push("</tbody></table>");
+  
+  p.push("<div class='tp-box'><div class='tp-box-title'>STYLE IMAGE</div><div class='img-wrap style-img' id='tpImgStyle'></div></div>");
+  
+  p.push("<div class='tp-box'><div class='tp-box-title'>FABRIC & FIT DETAILS</div>");
+  p.push("<div style='padding:10px;font-size:11px;line-height:1.6'>");
+  p.push("<b>MAIN:</b> " + escH(mv("Material_Type",g(s, "Material_Type"))) + "<br>");
+  p.push("<b>LINING:</b> " + escH(mv("Lining_Type",g(s, "Lining_Type"))) + " (" + escH(g(s, "blended_percentage")) + ")<br><br>");
+  p.push("<b>Top:</b> " + escH(mv("Top_Type",g(s,"Top_Type"))) + " / " + escH(mv("Sleeve",g(s,"Sleeve"))) + "<br>");
+  p.push("<b>Btm:</b> " + escH(mv("Bottom_Type",g(s,"Bottom_Type"))) + " / " + escH(mv("Bottom_Length",g(s,"Bottom_Length"))) + "<br>");
+  p.push("<b>Fit:</b> " + escH(mv("Fit",g(s,"Fit"))) + " | <b>Detail:</b> " + escH(mv("Details",g(s,"Details"))));
+  p.push("</div></div>");
+  p.push("</div>");
+
+  p.push("<div class='col-mid'>");
+  
+  function drawSpec(title, spObj, idCount) {
+    var h = "<div class='tp-box'><div class='tp-box-title'>" + title + " <span>Unit: cm</span></div>";
+    h += "<table class='spec-tbl'><thead><tr>";
+    h += "<th style='width:45%'>Point of Measure (측정부위)</th><th style='width:15%'>TOL(±)</th>";
+    h += "<th style='width:10%'>S</th><th style='width:10%'>M</th><th style='width:10%'>L</th><th style='width:10%'>XL</th>";
+    h += "</tr></thead><tbody>";
+    
+    var keys = Object.keys(spObj);
+    if(keys.length === 0) {
+      var dbg = "<b>[데이터 없음]</b> 사이즈 정보를 불러오지 못했습니다.<br><br>";
+      dbg += "- 폼에 입력된 서브폼 개수: " + idCount + "개<br>";
+      h += "<tr><td colspan='6' style='color:#EF4444;padding:25px;font-size:11px;text-align:left;word-break:break-all'>" + dbg + "</td></tr>";
+    } else {
+      keys.forEach(function(pom) {
+        var o = spObj[pom];
+        h += "<tr>";
+        h += "<td class='pom'>" + escH(pom) + "</td><td>" + escH(o.tol) + "</td>";
+        h += "<td>" + escH(o.S) + "</td><td>" + escH(o.M) + "</td><td>" + escH(o.L) + "</td><td>" + escH(o.XL) + "</td>";
+        h += "</tr>";
+      });
+    }
+    h += "</tbody></table></div>";
+    return h;
+  }
+  
+  p.push(drawSpec("📏 TOP MEASUREMENTS", topSpecs, topIdCount));
+  p.push(drawSpec("📏 BOTTOM MEASUREMENTS", btmSpecs, btmIdCount));
+  
+  p.push("<div class='tp-box memo-box'><div class='tp-box-title'>REMARKS / 비고란 (작업 지시사항)</div>");
+  p.push("<div class='memo-content'>");
+  var pNote = mo ? g(mo, "Plan_Notes") : null;
+  if(pNote && pNote !== "-") p.push("<div style='color:#DC2626;font-weight:700;white-space:pre-wrap'>" + escH(pNote) + "</div>");
+  p.push("</div></div>");
+  p.push("</div>"); 
+
+  p.push("<div class='col-right'>");
+  p.push("<div class='tp-box'><div class='tp-box-title'>TOP SKETCH</div><div class='img-wrap sketch-img' id='tpImgTop'></div></div>");
+  p.push("<div class='tp-box'><div class='tp-box-title'>BOTTOM SKETCH</div><div class='img-wrap sketch-img' id='tpImgBtm'></div></div>");
+  p.push("</div>");
+
+  p.push("</div>"); 
+
+  document.getElementById("tpBarTitle").textContent = "📋 TECH PACK — " + escH(sku);
+  document.getElementById("tpContent").innerHTML = p.join("");
   document.getElementById("tpOv").classList.add("active");
 
-  /* All_Top_Specs / All_Bottom_Specs 에서 Style_SKU로 필터 */
-  var crit = 'Style_SKU == "' + sku + '"';
-
-  Promise.all([
-    ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:TOP_SPEC_REP,criteria:crit,page:1,pageSize:200}),
-    ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:BTM_SPEC_REP,criteria:crit,page:1,pageSize:200})
-  ]).then(function(res){
-    var topLines=(res[0]&&res[0].code===3000&&res[0].data)?res[0].data:[];
-    var btmLines=(res[1]&&res[1].code===3000&&res[1].data)?res[1].data:[];
-    renderTechPack(d,topLines,btmLines);
-  }).catch(function(e){
-    console.warn("[TechPack] 조회 실패:",e);
-    renderTechPack(d,[],[]);
-  });
+  renderZohoImage("tpImgStyle", imgStyle, false);
+  renderZohoImage("tpImgTop", imgTop, false);
+  renderZohoImage("tpImgBtm", imgBtm, false);
 }
-
-function renderTechPack(d,topLines,btmLines){
-  var sku=g(d,"Style_SKU");if(sku==="-")sku=g(d,"SKU");
-  var todayStr2=new Date().toISOString().split("T")[0];
-
-  var topSpecs=parseSpecs(topLines,"Top"),btmSpecs=parseSpecs(btmLines,"Bottom");
-
-  /* 이미지 */
-  var imgStyle=getAllImgs(d,"Style_Image")[0]||null;
-  var imgTop=getAllImgs(d,"Top_Flat_Sketch")[0]||getAllImgs(d,"Flat_Sketch")[0]||null;
-  var imgBtm=getAllImgs(d,"Bottom_Flat_Sketch")[0]||null;
-
-  /* 색상/원단 */
-  var tColor=safeVal(d["Top_Color"]),bColor=safeVal(d["Bottom_Color"]);
-  var colorStr=[tColor!=="-"?tColor:"",bColor!=="-"?bColor:""].filter(Boolean).join(" / ")||g(d,"Available_Colors");
-  var matType=mv("Material_Type",g(d,"Material_Type"));
-  var blend=g(d,"blended_percentage");
-  var lining=mv("Lining_Type",g(d,"Lining_Type"));
-
-  /* 디버그 배너 */
-  var dbg="Top: "+topLines.length+"행 → POM "+Object.keys(topSpecs).length+"개 / Bottom: "+btmLines.length+"행 → POM "+Object.keys(btmSpecs).length+"개";
-  if(topLines.length>0)dbg+=" | Top 첫row키: ["+Object.keys(topLines[0]).join(", ")+"]";
-
-  var p=[];
-  p.push("<div class='tp-head'><div class='tp-brand'><div class='logo-ic'></div> ZOHO <span>APPAREL</span></div><div class='doc-title'><h1>TECH PACK</h1><p>DATE: "+todayStr2+" &nbsp;|&nbsp; REV: 1.0</p></div></div>");
-  p.push("<div class='tp-debug'>🔍 v34: "+escH(dbg)+"</div>");
-  p.push("<div class='tp-grid'>");
-
-  /* 왼쪽: 기본 정보 */
-  p.push("<div><table class='info-tbl'><tbody>");
-  p.push("<tr><th>STYLE NO.</th><td style='color:#3B82F6;font-size:12px'>"+escH(sku)+"</td></tr>");
-  p.push("<tr><th>STYLE NAME</th><td>"+escH(g(d,"Style_Name"))+"</td></tr>");
-  p.push("<tr><th>BRAND</th><td>"+escH(g(d,"Business_Entity"))+"</td></tr>");
-  p.push("<tr><th>SEASON</th><td>"+escH(g(d,"Season"))+"</td></tr>");
-  p.push("<tr><th>CATEGORY</th><td>"+escH(mv("Category",g(d,"Category")))+"</td></tr>");
-  p.push("<tr><th>TARGET</th><td>"+escH(mv("Gender",g(d,"Gender")))+"</td></tr>");
-  p.push("<tr><th>COLORS</th><td style='color:#059669'>"+escH(colorStr!=="-"?colorStr:g(d,"Available_Colors"))+"</td></tr>");
-  p.push("<tr><th>SIZES</th><td>"+escH(g(d,"Available_Sizes")!=="-"?g(d,"Available_Sizes"):"S, M, L, XL")+"</td></tr>");
-  p.push("</tbody></table><br>");
-  p.push("<div class='tp-box'><div class='tp-box-title'>FABRIC & MATERIAL</div><div style='padding:8px 10px;font-size:11px;line-height:1.5'><b>MAIN:</b> "+escH(matType)+"<br><b>LINING:</b> "+escH(lining)+" ("+escH(blend)+")</div></div>");
-  p.push("<div class='tp-box'><div class='tp-box-title'>FIT & DETAILS</div><div style='padding:8px 10px;font-size:11px;line-height:1.5'><b>Top:</b> "+escH(mv("Top_Type",g(d,"Top_Type")))+" / "+escH(mv("Sleeve",g(d,"Sleeve")))+"<br><b>Btm:</b> "+escH(mv("Bottom_Type",g(d,"Bottom_Type")))+" / "+escH(mv("Bottom_Length",g(d,"Bottom_Length")))+"<br><b>Fit:</b> "+escH(mv("Fit",g(d,"Fit")))+"<br><b>Detail:</b> "+escH(mv("Details",g(d,"Details")));
-  var sNote=g(d,"Sample_Notes");if(sNote&&sNote!=="-")p.push("<br><b style='color:#DC2626'>NOTE:</b> "+escH(sNote));
-  p.push("</div></div></div>");
-
-  /* 중앙: 사이즈 스펙 */
-  p.push("<div>"+drawSpec("📏 TOP MEASUREMENTS",topSpecs)+drawSpec("📏 BOTTOM MEASUREMENTS",btmSpecs)+"</div>");
-
-  /* 오른쪽: 이미지 */
-  p.push("<div>");
-  p.push("<div class='tp-box'><div class='tp-box-title'>STYLE IMAGE</div><div class='img-wrap style-img' id='tpImgStyle'><div class='spinner-sm'></div></div></div>");
-  p.push("<div class='tp-box'><div class='tp-box-title'>TOP SKETCH</div><div class='img-wrap' id='tpImgTop'><div class='spinner-sm'></div></div></div>");
-  p.push("<div class='tp-box'><div class='tp-box-title'>BOTTOM SKETCH</div><div class='img-wrap' id='tpImgBtm'><div class='spinner-sm'></div></div></div>");
-  p.push("</div></div>"); /* tp-grid */
-
-  document.getElementById("tpBarTitle").textContent="📋 TECH PACK — "+escH(sku);
-  document.getElementById("tpContent").innerHTML=p.join("");
-  setTimeout(function(){loadTpImg("tpImgStyle",imgStyle);loadTpImg("tpImgTop",imgTop);loadTpImg("tpImgBtm",imgBtm)},100);
-}
-
-/* Tech Pack 버튼 — onclick 인라인으로 처리 (모달 내부 버튼은 addEventListener 불가) */
-
-/* ESC */
-document.addEventListener("keydown",function(e){
-  if(e.key!=="Escape")return;
-  if(document.getElementById("lightboxOverlay").style.display==="flex"){closeLightbox();return}
-  if(document.getElementById("tpOv").classList.contains("active")){document.getElementById("tpOv").classList.remove("active");return}
-  if(document.getElementById("kpiPopOv").classList.contains("active")){document.getElementById("kpiPopOv").classList.remove("active");return}
-  closeModal();
-});
 </script>
 </body>
 </html>
