@@ -20,7 +20,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
 .page-header h1{font-size:17px;font-weight:900;color:var(--z-text-main);display:flex;align-items:center;gap:8px}
 .page-header h1 .icon-s{width:26px;height:26px;background:var(--z-primary);border-radius:5px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900}
-
 .mkpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 420px;gap:12px;margin-bottom:21px}
 .mkpi-card{background:var(--z-card-bg);border:1px solid var(--z-border);border-radius:10px;padding:14px;position:relative;overflow:hidden}
 .mkpi-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px}
@@ -39,7 +38,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .mkpi-stat-n{font-size:20px;font-weight:900;line-height:1}
 .mkpi-stat-l{font-size:10px;font-weight:700;color:var(--z-text-muted);margin-top:4px;line-height:1.3}
 .mkpi-stat .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;vertical-align:middle}
-
 .delay-card{background:#FFF5F5;border:1px solid #FECACA;border-radius:10px;padding:14px;position:relative;overflow:hidden;display:flex;flex-direction:column}
 .delay-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:#FCA5A5}
 .delay-card-title{font-size:12px;font-weight:800;color:#DC2626;margin-bottom:4px;display:flex;align-items:center;gap:6px}
@@ -50,7 +48,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .delay-item:hover{background:#FEF2F2}
 .delay-mo{font-size:10px;font-weight:800;color:#DC2626}
 .delay-style{font-size:8px;color:#64748B;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
 .filter-bar{display:flex;justify-content:flex-end;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
 .search-box{background:#fff;border:1px solid var(--z-border);border-radius:6px;padding:5px 10px;font-size:11px;width:200px;outline:none;font-family:inherit}
 .search-box:focus{border-color:var(--z-accent);box-shadow:0 0 0 2px rgba(59,130,246,.1)}
@@ -77,7 +74,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .tag-prog{background:#FEF3C7;color:#B45309;border:1px solid #FDE68A}
 .tag-appr{background:#D1FAE5;color:#065F46;border:1px solid #A7F3D0}
 .tag-fail{background:#FEF2F2;color:#B91C1C;border:1px solid #FECACA}
-
 .pop-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:2000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
 .pop-ov.active{display:flex}
 .pop-box{background:#fff;border-radius:12px;width:92%;max-width:700px;max-height:82vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:modalIn .2s ease-out}
@@ -93,8 +89,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .pop-item-left .pi-name{font-size:10px;color:var(--z-text-muted);margin-top:2px}
 .pop-item-left .pi-meta{font-size:9px;color:#94A3B8;margin-top:2px}
 .pop-empty{text-align:center;padding:30px;color:var(--z-text-muted);font-size:13px}
-
-/* Modal (Style Info) */
 .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:3000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
 .modal-overlay.active{display:flex}
 .modal-box-lg{background:#fff;border-radius:12px;width:92%;max-width:760px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:modalIn .25s ease-out}
@@ -115,16 +109,12 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .detail-label{font-size:9px;font-weight:700;color:var(--z-text-muted);line-height:1.4}
 .detail-value{font-size:13px;font-weight:600;color:var(--z-text-main)}
 .detail-value.empty{color:#CBD5E1;font-weight:400;font-style:italic}
-
-/* 이미지 갤러리 섹션 */
 .modal-images{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
 .modal-img-wrap{text-align:center}
 .modal-img-box{width:120px;height:120px;background:#F8FAFC;border:1px solid var(--z-border);border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;color:#CBD5E1;position:relative}
 .modal-img-box img{width:100%;height:100%;object-fit:contain;cursor:pointer;transition:transform .2s;position:absolute;top:0;left:0}
 .modal-img-box:hover{border-color:var(--z-accent);box-shadow:0 2px 8px rgba(59,130,246,.15)}
 .modal-img-label{font-size:9px;color:var(--z-text-muted);margin-top:4px;font-weight:700}
-
-/* Chart */
 .chart-card{background:#fff;border:1px solid var(--z-border);border-radius:8px;padding:16px;margin-top:20px}
 .chart-title{font-size:13px;font-weight:800;color:var(--z-text-main);margin-bottom:14px;display:flex;align-items:center;gap:6px}
 .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:5px}
@@ -133,69 +123,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:6px;font-size:9px;font-weight:800;color:#fff;min-width:22px;transition:width .5s ease}
 .bar-count{font-size:11px;font-weight:800;color:var(--z-text-main);min-width:24px}
 .error-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C;white-space:pre-wrap;}
-
-/* =========================================================
-   ★ TECH PACK 모달 오버레이 스타일 (A4 가로형)
-   ========================================================= */
-.tp-modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#CBD5E1;z-index:6000;overflow-y:auto}
-.tp-modal-ov.active{display:block}
-.tp-print-bar{position:sticky;top:0;background:#0F172A;color:#fff;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;z-index:6010;box-shadow:0 4px 10px rgba(0,0,0,.15)}
-.tp-print-bar span{font-family:'Roboto',sans-serif;font-weight:900;font-size:16px;letter-spacing:1px}
-.tp-btn-grp{display:flex;gap:10px}
-.tp-btn{border:none;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:900;cursor:pointer;text-transform:uppercase;font-family:'Roboto',sans-serif;transition:all 0.2s}
-.tp-btn-print{background:#3B82F6;color:#fff;box-shadow:0 2px 4px rgba(59,130,246,0.3)} 
-.tp-btn-print:hover{background:#2563EB;transform:translateY(-1px)}
-.tp-btn-close{background:rgba(255,255,255,.2);color:#fff} 
-.tp-btn-close:hover{background:rgba(255,255,255,.3)}
-
-.a4-landscape{font-family:'Roboto','Noto Sans KR',sans-serif;width:297mm;min-height:210mm;margin:40px auto;padding:12mm;box-sizing:border-box;background:#fff;box-shadow:0 15px 50px rgba(0,0,0,.2);position:relative}
-.a4-landscape *{box-sizing:border-box}
-
-.tp-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:5px solid #000;padding-bottom:12px;margin-bottom:15px}
-.tp-brand{font-size:32px;font-weight:900;letter-spacing:1.5px;color:#000;display:flex;align-items:center;gap:10px}
-.tp-brand .logo-ic{width:36px;height:36px;background:#000;clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)}
-.tp-brand span{color:#3B82F6}
-.doc-title{text-align:right}
-.doc-title h1{font-size:28px;font-weight:900;margin:0 0 4px 0;letter-spacing:3px;color:#000}
-.doc-title p{margin:0;font-size:11px;color:#475569;font-weight:700}
-
-.tp-grid{display:grid;grid-template-columns:280px 1fr 340px;gap:20px}
-.tp-box{border:2px solid #000;margin-bottom:15px;background:#fff;display:flex;flex-direction:column}
-.tp-box-title{background:#000;color:#fff;padding:6px 10px;font-size:13px;font-weight:900;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.5px}
-.tp-box-title span{font-size:10px;font-weight:400;color:#CBD5E1;letter-spacing:0}
-
-.col-left { display: flex; flex-direction: column; }
-.info-tbl{width:100%;border-collapse:collapse;font-size:11px;text-align:left;margin-bottom:15px}
-.info-tbl th,.info-tbl td{border-bottom:1px solid #CBD5E1;padding:7px 10px}
-.info-tbl th{font-weight:800;color:#475569;width:35%;background:#F8FAFC}
-.info-tbl td{font-weight:900;color:#0F172A}
-.info-tbl tr:last-child th,.info-tbl tr:last-child td{border-bottom:none}
-
-.col-mid { display: flex; flex-direction: column; }
-.spec-tbl{width:100%;border-collapse:collapse;text-align:center}
-.spec-tbl th,.spec-tbl td{border:1px solid #CBD5E1;padding:7px 4px}
-.spec-tbl th{background:#F1F5F9;font-weight:900;font-size:11px;color:#000}
-.spec-tbl td{font-weight:700;font-size:12px;color:#000}
-.spec-tbl .pom{text-align:left;padding-left:10px;font-size:11px}
-.memo-box { flex: 1; display: flex; flex-direction: column; }
-.memo-content { flex: 1; min-height: 120px; padding: 10px; font-size: 11px; color: #475569; line-height:1.6; }
-
-.col-right { display: flex; flex-direction: column; }
-.img-wrap{padding:10px;display:flex;align-items:center;justify-content:center;position:relative}
-.style-img{height:180px;background:#F8FAFC}
-.sketch-img{height:340px;background:#fff;flex:1}
-.img-wrap img{max-width:100%;max-height:100%;object-fit:contain;position:absolute;top:0;left:0}
-.no-img{color:#CBD5E1;font-size:30px;font-weight:900}
-
-@media print{
-  #mainApp, .pop-ov, .modal-overlay, #lightboxOverlay { display: none !important; }
-  .tp-modal-ov { position: static !important; display: block !important; background: #fff !important; overflow: visible !important; height: auto !important; }
-  .tp-print-bar { display: none !important; }
-  .a4-landscape { margin: 0 !important; padding: 10mm !important; box-shadow: none !important; border: none !important; width: 100% !important; max-width: 100% !important; }
-  @page { size: A4 landscape; margin: 0; }
-  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-}
-
 @media(max-width:1100px){.mkpi-row{grid-template-columns:1fr 1fr}.detail-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:768px){.mkpi-row{grid-template-columns:1fr}.detail-grid{grid-template-columns:1fr 1fr}.bar-label{min-width:200px;max-width:200px}}
 </style>
@@ -209,9 +136,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
       <h1><span class="icon-s">S</span> Style View / 스타일 현황표 / 款式现况表</h1>
       <button onclick="goTo('https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_Styles')" style="background:var(--z-primary);color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px">+ New Style</button>
     </div>
-
     <div class="mkpi-row" id="kpiRow"></div>
-
     <div class="filter-bar">
       <input type="text" class="search-box" id="searchBox" placeholder="🔍 SKU, 스타일명, Brand 검색...">
       <select class="filter-select" id="filterCategory"><option value="">All Category</option></select>
@@ -220,13 +145,11 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
       <select class="filter-select" id="filterStatus"><option value="">All Status</option></select>
     </div>
     <div id="monthlyTables"></div>
-
     <div id="chartSection" class="chart-card" style="display:none">
       <div class="chart-title">📊 Style Type Distribution / 스타일 유형 분포 / 款式类型分布</div>
       <div id="barChart"></div>
     </div>
   </div>
-
   <div id="errorScreen" style="display:none"><div class="error-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다</div><div id="errorMsg" style="font-size:12px"></div></div></div>
 </div>
 
@@ -234,6 +157,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
   <div class="pop-box">
     <div class="pop-hd">
       <div><div class="pop-title" id="kpiPopTitle">-</div><div class="pop-sub" id="kpiPopSub">-</div></div>
+      <!-- ★ onclick 인라인 -->
       <div class="pop-close" id="kpiPopClose" onclick="document.getElementById('kpiPopOv').classList.remove('active')">✕</div>
     </div>
     <div class="pop-body" id="kpiPopBody"></div>
@@ -253,7 +177,9 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
         <div><div class="modal-title" id="modalTitle">-</div><div class="modal-subtitle" id="modalSubtitle">-</div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
-        <button id="btnTechPack" onclick="openTechPack()" style="background:#000;color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:900;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.2);letter-spacing:0.5px">📋 TECH PACK</button>
+        <!-- ★ Tech Pack 버튼: 파스텔톤, 옆 버튼과 동일 크기, onclick 인라인 -->
+        <button id="btnTechPack" onclick="openTechPack()" style="background:#EDE9FE;color:#6D28D9;border:1px solid #C4B5FD;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">📋 Tech Pack</button>
+        <!-- ★ Edit, New MO, Close 모두 onclick 인라인 -->
         <button id="btnEdit" onclick="editStyle()" style="background:#EFF6FF;color:var(--z-primary);border:1px solid #BFDBFE;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit</button>
         <button id="btnNewMO" onclick="newMO()" style="background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">+ New MO</button>
         <div class="modal-close-lg" id="modalClose" onclick="closeModal()">✕</div>
@@ -263,25 +189,14 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
   </div>
 </div>
 
-<div id="tpOv" class="tp-modal-ov">
-  <div class="tp-print-bar">
-    <span id="tpBarTitle">📋 TECH PACK</span>
-    <div class="tp-btn-grp">
-      <button id="btnTpPrint" onclick="window.print()" class="tp-btn tp-btn-print">Print / PDF</button>
-      <button id="btnTpClose" onclick="document.getElementById('tpOv').classList.remove('active')" class="tp-btn tp-btn-close">Close</button>
-    </div>
-  </div>
-  <div class="a4-landscape" id="tpContent"></div>
-</div>
-
 <script>
 /* ════════════════════════════════════════
-   Style View vFinal (Bug Free)
-   All_Styles 리포트 + Tech Pack 기능
+   Style View vFinal
+   Tech Pack → Zoho record-print URL 방식
+   버튼: 파스텔 보라색 (Edit/NewMO와 동일 크기)
 ════════════════════════════════════════ */
 var APP="eom", REP="All_Styles", MO_REP="All_MO";
-var TOP_SPEC_REP = "All_Top_Specs", BTM_SPEC_REP = "All_Bottom_Specs";
-var allRec=[], filtered=[], moSkus=new Set(), allMOs=[]; 
+var allRec=[], filtered=[], moSkus=new Set(), allMOs=[];
 var today=new Date(), todayStr=today.toISOString().split("T")[0];
 var _currentRec = null;
 
@@ -330,8 +245,8 @@ function getAllImgs(r, field) {
 }
 function getImg1(r){ var imgs=getAllImgs(r,"Style_Image"); return imgs.length>0?imgs[0]:null; }
 function getImgUrl(r,field){ var imgs=getAllImgs(r,field); return imgs.length>0?imgs[0]:null; }
-function getSubformLines(r, fieldName){var v=r[fieldName];if(!v)return[];if(Array.isArray(v))return v;if(typeof v==="object"&&v!==null)return Object.values(v);return[];}
 
+/* ── 이미지 로더 ── */
 var _safeQ = [], _safeBusy = false;
 function _runSafeQ() {
   if(_safeQ.length === 0) { _safeBusy = false; return; }
@@ -339,17 +254,11 @@ function _runSafeQ() {
   var task = _safeQ.shift();
   var el = task.id ? document.getElementById(task.id) : task.el;
   if(!el) { setTimeout(_runSafeQ, 50); return; }
-
   var img = document.createElement("img");
   img.style.cssText = task.css || "width:100%;height:100%;object-fit:cover";
   if (task.clk) { img.onclick = function() { openLightbox(this.src); }; }
-
   var done = false;
-  function next() {
-    if(done) return;
-    done = true;
-    setTimeout(_runSafeQ, 80);
-  }
+  function next() { if(done) return; done = true; setTimeout(_runSafeQ, 80); }
   try {
     ZOHO.CREATOR.UTIL.setImageData(img, task.url, function() { el.innerHTML = ""; el.appendChild(img); next(); });
     setTimeout(next, 3000);
@@ -361,13 +270,9 @@ function qImgFast(elOrId, url) {
   var u = Array.isArray(url) ? url[0] : url;
   if(typeof u === "object" && u !== null) u = u.url || u.display_value || "";
   if(!u || u === "-") return;
-  
   var img = document.createElement("img");
   img.style.cssText = "width:100%;height:100%;object-fit:cover";
-  ZOHO.CREATOR.UTIL.setImageData(img, u, function() {
-    el.innerHTML = "";
-    el.appendChild(img);
-  });
+  ZOHO.CREATOR.UTIL.setImageData(img, u, function() { el.innerHTML = ""; el.appendChild(img); });
 }
 function loadTableImgs() {
   var els = document.querySelectorAll("[data-img]");
@@ -380,7 +285,7 @@ function loadTableImgs() {
           var url = el.getAttribute("data-img");
           if(url && url !== "null" && url !== "undefined" && url.length > 10) {
             qImgFast(el, url);
-            el.removeAttribute("data-img"); 
+            el.removeAttribute("data-img");
           }
           observer.unobserve(el);
         }
@@ -391,15 +296,13 @@ function loadTableImgs() {
     els.forEach(function(el){ var url = el.getAttribute("data-img"); if(url) qImgFast(el, url); });
   }
 }
-
 function renderZohoImage(elId, url, click) {
   var el = document.getElementById(elId);
   if(!el) return;
-  if(!url || url === "-") { el.innerHTML = '<div class="no-img" style="color:#CBD5E1;font-size:30px;font-weight:900">📷</div>'; return; }
+  if(!url || url === "-") { el.innerHTML = '<div style="color:#CBD5E1;font-size:24px">📷</div>'; return; }
   var u = Array.isArray(url) ? url[0] : url;
   if(typeof u === "object" && u !== null) u = u.url || u.display_value || "";
-  if(!u || u === "-") { el.innerHTML = '<div class="no-img" style="color:#CBD5E1;font-size:30px;font-weight:900">📷</div>'; return; }
-  
+  if(!u || u === "-") { el.innerHTML = '<div style="color:#CBD5E1;font-size:24px">📷</div>'; return; }
   var img = document.createElement("img");
   img.style.cssText = "width:100%;height:100%;object-fit:contain;cursor:" + (click ? "pointer" : "default");
   ZOHO.CREATOR.UTIL.setImageData(img, u, function() {
@@ -408,9 +311,8 @@ function renderZohoImage(elId, url, click) {
     if(click) {
       img.onclick = function(e){
         e.stopPropagation();
-        var lbImg = document.getElementById("lightboxImg");
-        lbImg.src = img.src; 
-        document.getElementById("lightboxOverlay").style.display="flex";
+        document.getElementById("lightboxImg").src = img.src;
+        document.getElementById("lightboxOverlay").style.display = "flex";
       };
     }
   });
@@ -421,6 +323,7 @@ function openModalById(id) {
   if(r) openModal(r);
 }
 
+/* ── 데이터 로드 ── */
 ZOHO.CREATOR.init().then(function(){
   ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:MO_REP,page:1,pageSize:200}).then(function(r){
     if(r&&r.code===3000&&r.data){
@@ -428,16 +331,23 @@ ZOHO.CREATOR.init().then(function(){
       r.data.forEach(function(m){var s=g(m,"Style_SKU");if(s==="-")s=g(m,"SKU");if(s!=="-")moSkus.add(s)});
     }
     loadStyles();
-  }).catch(function(){loadStyles()})
+  }).catch(function(){loadStyles()});
+}).catch(function(e){
+  document.getElementById("loadingScreen").style.display="none";
+  document.getElementById("errorScreen").style.display="block";
+  document.getElementById("errorMsg").textContent="ZOHO 초기화 실패: "+JSON.stringify(e);
 });
 
 function loadStyles(){
   ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:REP,page:1,pageSize:200}).then(function(r){
     if(r&&r.code===3000&&r.data){
-      allRec=r.data;filtered=allRec.slice();renderMKPI();buildFilters();renderTables();renderChart();hide("loadingScreen");show("mainContent");
+      allRec=r.data;filtered=allRec.slice();
+      renderMKPI();buildFilters();renderTables();renderChart();
+      document.getElementById("loadingScreen").style.display="none";
+      document.getElementById("mainContent").style.display="block";
       setTimeout(loadTableImgs, 500);
-    } else showErr("데이터를 불러올 수 없습니다. 폼 이름을 확인해주세요.");
-  }).catch(function(e){showErr("데이터 파싱 에러: " + (e.message || JSON.stringify(e)));})
+    } else showErr("데이터를 불러올 수 없습니다.");
+  }).catch(function(e){showErr("데이터 파싱 에러: " + (e.message || JSON.stringify(e)));});
 }
 
 function show(i){document.getElementById(i).style.display="block"}
@@ -448,122 +358,82 @@ function editStyle(){if(!_currentRec)return;goTo("https://creatorapp.zoho.com/je
 function newMO(){goTo("https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_MO")}
 function isOrderDelayed(r) {
   var sku = g(r, "Style_SKU"); if (sku === "-") sku = g(r, "SKU");
-  if (moSkus.has(sku)) return false; 
-  var py = parseInt(g(r, "Plan_Year")); var pm = parseInt(g(r, "Plan_Month"));
+  if (moSkus.has(sku)) return false;
+  var py = parseInt(g(r, "Plan_Year")), pm = parseInt(g(r, "Plan_Month"));
   if (isNaN(py) || isNaN(pm)) return false;
   if (py < 100) py += 2000;
-  var deadline = new Date(py, pm - 1, 20); 
-  var todayD = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  return todayD > deadline;
+  return new Date(today.getFullYear(), today.getMonth(), today.getDate()) > new Date(py, pm-1, 20);
 }
 function parseYM(key){var m=key.match(/(\d+)년\s*(\d+)월/);if(!m)return null;var y=parseInt(m[1]);if(y<100)y+=2000;return{y:y,m:parseInt(m[2])}}
 
+/* ── KPI ── */
 function renderMKPI(){
   var groups={};
-  filtered.forEach(function(r){
-    var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");
-    var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";
-    if(!groups[key])groups[key]=[];groups[key].push(r)});
-
-  var colors=["#818CF8","#F59E0B","#34D399"];
-  var ringColors=["#A5B4FC","#FDE68A","#A7F3D0"];
-  var h="";var ci=0;
-
+  filtered.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var key=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[key])groups[key]=[];groups[key].push(r)});
+  var colors=["#818CF8","#F59E0B","#34D399"], h="", ci=0;
   Object.keys(groups).sort().forEach(function(key){
     if(key==="미지정") return;
-    var items=groups[key];var c=colors[ci%colors.length];var rc=ringColors[ci%ringColors.length];ci++;
+    var items=groups[key],c=colors[ci%colors.length];ci++;
     var tot=items.length,sm=0,ord=0,nord=0;
-    
-    items.forEach(function(r){
-      var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");
-      var sStat=(g(r,"Sample_Status")+" "+g(r,"Style_Status")).toLowerCase();
-      if(sStat.indexOf("sampling")>=0||sStat.indexOf("샘플")>=0)sm++;
-      if(moSkus.has(sku)) ord++; else nord++;
-    });
-
+    items.forEach(function(r){var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");var ss=(g(r,"Sample_Status")+" "+g(r,"Style_Status")).toLowerCase();if(ss.indexOf("sampling")>=0||ss.indexOf("샘플")>=0)sm++;if(moSkus.has(sku))ord++;else nord++});
     var pct=tot>0?Math.round((ord/tot)*100):0;
     var r36=36,circ=2*Math.PI*r36,offset=circ-(pct/100)*circ;
-    var trail="#E5E7EB";
-    var keyEnc=encodeURIComponent(key);
-    var ym=parseYM(key);
-    var yy = ym ? ym.y.toString().slice(-2) : "";
-    var mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
-    var titleText = ym ? (yy+"."+mm+" Style KPI / "+yy+"年 "+ym.m+"月 款式 KPI") : "Style KPI / 款式 KPI";
-
-    h+='<div class="mkpi-card">';
-    h+='<div class="mkpi-header"><div class="mkpi-title">📅 '+titleText+'</div></div>';
-    h+='<div class="mkpi-body">';
-    h+='<div class="mkpi-ring"><svg width="80" height="80" viewBox="0 0 80 80">';
-    h+='<circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="'+trail+'" stroke-width="6"/>';
-    h+='<circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="'+c+'" stroke-width="6" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'" stroke-linecap="round"/>';
-    h+='</svg><div class="mkpi-ring-pct" style="color:'+c+'">'+pct+'%</div></div>';
-    h+='<div class="mkpi-stats">';
-    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'all\')"><div class="mkpi-stat-n" style="color:#6366F1">'+tot+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A5B4FC"></span>총 스타일 / 总款式</div></div>';
-    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'sm\')"><div class="mkpi-stat-n" style="color:#F59E0B">'+sm+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FDE68A"></span>샘플제작중 / 样品制作中</div></div>';
-    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'ord\')"><div class="mkpi-stat-n" style="color:#34D399">'+ord+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A7F3D0"></span>오더완료 / 订单完成</div></div>';
-    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'nord\')"><div class="mkpi-stat-n" style="color:#EF4444">'+nord+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FCA5A5"></span>미오더 / 未下订单</div></div>';
+    var ke=encodeURIComponent(key),ym=parseYM(key);
+    var yy=ym?ym.y.toString().slice(-2):"",mm=ym?(ym.m<10?"0"+ym.m:ym.m):"";
+    var tt=ym?(yy+"."+mm+" Style KPI / "+yy+"年 "+ym.m+"月 款式 KPI"):"Style KPI";
+    h+='<div class="mkpi-card"><div class="mkpi-header"><div class="mkpi-title">📅 '+tt+'</div></div>';
+    h+='<div class="mkpi-body"><div class="mkpi-ring"><svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="#E5E7EB" stroke-width="6"/><circle cx="40" cy="40" r="'+r36+'" fill="none" stroke="'+c+'" stroke-width="6" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'" stroke-linecap="round"/></svg><div class="mkpi-ring-pct" style="color:'+c+'">'+pct+'%</div></div>';
+    h+='<div class="mkpi-stats"><div class="mkpi-stat" onclick="openKpiPop(\''+ke+'\',\'all\')"><div class="mkpi-stat-n" style="color:#6366F1">'+tot+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A5B4FC"></span>총 스타일 / 总款式</div></div>';
+    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+ke+'\',\'sm\')"><div class="mkpi-stat-n" style="color:#F59E0B">'+sm+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FDE68A"></span>샘플제작중 / 样品制作中</div></div>';
+    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+ke+'\',\'ord\')"><div class="mkpi-stat-n" style="color:#34D399">'+ord+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A7F3D0"></span>오더완료 / 订单完成</div></div>';
+    h+='<div class="mkpi-stat" onclick="openKpiPop(\''+ke+'\',\'nord\')"><div class="mkpi-stat-n" style="color:#EF4444">'+nord+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FCA5A5"></span>미오더 / 未下订单</div></div>';
     h+='</div></div></div>';
   });
-
-  var delayedAll=filtered.filter(function(r){return isOrderDelayed(r)});
-  h+='<div class="delay-card"><div class="delay-card-title">⚠️ 오더 지연 현황<br><span style="font-size:10px;color:#EF4444;font-weight:600">订单延误现况</span></div><div class="delay-total">'+delayedAll.length+'<span>건 지연 / 件延误</span></div><div class="delay-list" style="margin-bottom:8px">';
-  if(delayedAll.length===0){
-    h+='<div style="text-align:center;padding:16px;color:#94A3B8;font-size:11px">지연 없음 / 无延误 ✓</div>';
-  } else {
-    delayedAll.forEach(function(r){
-      var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");
-      h+='<div class="delay-item" onclick="openModalById(\''+r.ID+'\')"><div><div class="delay-mo">'+escH(sku)+'</div><div class="delay-style">'+escH(g(r,"Style_Name"))+'</div></div></div>';
-    });
-  }
+  var da=filtered.filter(function(r){return isOrderDelayed(r)});
+  h+='<div class="delay-card"><div class="delay-card-title">⚠️ 오더 지연 현황<br><span style="font-size:10px;color:#EF4444;font-weight:600">订单延误现况</span></div><div class="delay-total">'+da.length+'<span>건 지연 / 件延误</span></div><div class="delay-list" style="margin-bottom:8px">';
+  if(!da.length)h+='<div style="text-align:center;padding:16px;color:#94A3B8;font-size:11px">지연 없음 / 无延误 ✓</div>';
+  else da.forEach(function(r){var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");h+='<div class="delay-item" onclick="openModalById(\''+r.ID+'\')"><div><div class="delay-mo">'+escH(sku)+'</div><div class="delay-style">'+escH(g(r,"Style_Name"))+'</div></div></div>'});
   h+='</div><div style="font-size:10px;font-weight:bold;color:#94A3B8;text-align:center;padding-top:8px;border-top:1px dashed #FECACA;line-height:1.4">당월 20일까지 오더 미진행 시 지연으로 간주<br>若当月20日前未下订单，视为延误</div></div>';
   document.getElementById("kpiRow").innerHTML=h;
 }
 
 function openKpiPop(keyEnc,type){
-  var key=decodeURIComponent(keyEnc);var groups={};
+  var key=decodeURIComponent(keyEnc),groups={};
   filtered.forEach(function(r){var py=g(r,"Plan_Year"),pm=g(r,"Plan_Month");var k=(py!=="-"&&pm!=="-")?(py+"년 "+pm+"월"):"미지정";if(!groups[k])groups[k]=[];groups[k].push(r)});
-  var items=groups[key]||[];var typeNames={all:"총 스타일 / 总款式",sm:"샘플 제작 중 / 样品制作中",ord:"오더완료 / 订单完成",nord:"미오더 / 未下订单"};
-  
-  var popItems=items.filter(function(r){
-    var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");
-    var sStat=(g(r,"Sample_Status")+" "+g(r,"Style_Status")).toLowerCase();
-    if(type==="all")return true;
-    if(type==="sm")return sStat.indexOf("sampling")>=0||sStat.indexOf("샘플")>=0;
-    if(type==="ord")return moSkus.has(sku);
-    if(type==="nord")return !moSkus.has(sku);
-    return true;
-  });
-
-  document.getElementById("kpiPopTitle").textContent=key+" — "+typeNames[type];
+  var items=groups[key]||[],tn={all:"총 스타일 / 总款式",sm:"샘플 제작 중 / 样品制作中",ord:"오더완료 / 订单完成",nord:"미오더 / 未下订单"};
+  var popItems=items.filter(function(r){var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");var ss=(g(r,"Sample_Status")+" "+g(r,"Style_Status")).toLowerCase();if(type==="all")return true;if(type==="sm")return ss.indexOf("sampling")>=0||ss.indexOf("샘플")>=0;if(type==="ord")return moSkus.has(sku);if(type==="nord")return !moSkus.has(sku);return true});
+  document.getElementById("kpiPopTitle").textContent=key+" — "+tn[type];
   document.getElementById("kpiPopSub").textContent="총 "+popItems.length+"건";
   var h="";
-  if(popItems.length===0){h='<div class="pop-empty">해당 스타일이 없습니다</div>'}
-  else{
-    popItems.forEach(function(r){
-      var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");var isDel=isOrderDelayed(r);
-      h+='<div class="pop-item" onclick="openModalById(\''+r.ID+'\')"><div class="pop-item-left"><div class="pi-mo">'+escH(sku)+(isDel?'<span class="dly-badge">DELAYED</span>':'')+'</div><div class="pi-name">'+escH(g(r,"Style_Name"))+'</div><div class="pi-meta">Category: '+escH(mv("Category",g(r,"Category")))+' · Gender: '+escH(mv("Gender",g(r,"Gender")))+'</div></div><span class="tag '+tc(g(r,"Style_Status"))+'">'+escH(g(r,"Style_Status"))+'</span></div>';
-    });
-  }
+  if(!popItems.length)h='<div class="pop-empty">해당 스타일이 없습니다</div>';
+  else popItems.forEach(function(r){var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");h+='<div class="pop-item" onclick="openModalById(\''+r.ID+'\')"><div class="pop-item-left"><div class="pi-mo">'+escH(sku)+'</div><div class="pi-name">'+escH(g(r,"Style_Name"))+'</div><div class="pi-meta">Category: '+escH(mv("Category",g(r,"Category")))+' · Gender: '+escH(mv("Gender",g(r,"Gender")))+'</div></div><span class="tag '+tc(g(r,"Style_Status"))+'">'+escH(g(r,"Style_Status"))+'</span></div>'});
   document.getElementById("kpiPopBody").innerHTML=h;
   document.getElementById("kpiPopOv").classList.add("active");
 }
 
-function buildFilters(){var cat={},gen={},se={},st={};allRec.forEach(function(r){var c=g(r,"Category");if(c!=="-")cat[c]=mv("Category",c);var ge=g(r,"Gender");if(ge!=="-")gen[ge]=mv("Gender",ge);var s=g(r,"Season");if(s!=="-")se[s]=1;var t=g(r,"Style_Status");if(t!=="-")st[t]=1});var el;el=document.getElementById("filterCategory");Object.keys(cat).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+escH(cat[k])+'</option>'});el=document.getElementById("filterGender");Object.keys(gen).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+escH(gen[k])+'</option>'});el=document.getElementById("filterSeason");Object.keys(se).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});el=document.getElementById("filterStatus");Object.keys(st).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});}
+function buildFilters(){
+  var cat={},gen={},se={},st={};
+  allRec.forEach(function(r){var c=g(r,"Category");if(c!=="-")cat[c]=mv("Category",c);var ge=g(r,"Gender");if(ge!=="-")gen[ge]=mv("Gender",ge);var s=g(r,"Season");if(s!=="-")se[s]=1;var t=g(r,"Style_Status");if(t!=="-")st[t]=1});
+  var el;
+  el=document.getElementById("filterCategory");Object.keys(cat).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+escH(cat[k])+'</option>'});
+  el=document.getElementById("filterGender");Object.keys(gen).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+escH(gen[k])+'</option>'});
+  el=document.getElementById("filterSeason");Object.keys(se).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});
+  el=document.getElementById("filterStatus");Object.keys(st).sort().forEach(function(k){el.innerHTML+='<option value="'+k+'">'+k+'</option>'});
+}
 
 var COLORS=["#3B82F6","#8B5CF6","#EC4899","#F97316","#10B981","#06B6D4","#EF4444","#F59E0B","#6366F1","#14B8A6","#E11D48","#84CC16","#0EA5E9","#A855F7","#F43F5E"];
 function renderChart(){
   var combos={};
   allRec.forEach(function(r){
-    var cat=g(r,"Category"),gen=g(r,"Gender"),top=g(r,"Top_Type"),sl=g(r,"Sleeve"),fit=g(r,"Fit"),det=g(r,"Details"),bot=g(r,"Bottom_Type"),bl=g(r,"Bottom_Length");
-    var catName=sv("Category",cat),details=[];
-    var topN=sv("Top_Type",top);if(topN)details.push(topN);
-    var slN=sv("Sleeve",sl);if(slN)details.push(slN);
-    var fitN=sv("Fit",fit);if(fitN)details.push(fitN);
-    var detN=sv("Details",det);if(detN)details.push(detN);
-    var botN=sv("Bottom_Type",bot);if(botN)details.push(botN);
-    var blN=sv("Bottom_Length",bl);if(blN)details.push(blN);
-    if(!catName&&!details.length)return;
-    var label=(catName?"["+catName+"] ":"")+(details.length?details.join(" + "):"");
+    var cat=g(r,"Category"),catN=sv("Category",cat),details=[];
+    var tn=sv("Top_Type",g(r,"Top_Type"));if(tn)details.push(tn);
+    var sn=sv("Sleeve",g(r,"Sleeve"));if(sn)details.push(sn);
+    var fn=sv("Fit",g(r,"Fit"));if(fn)details.push(fn);
+    var dn=sv("Details",g(r,"Details"));if(dn)details.push(dn);
+    var bn=sv("Bottom_Type",g(r,"Bottom_Type"));if(bn)details.push(bn);
+    var bln=sv("Bottom_Length",g(r,"Bottom_Length"));if(bln)details.push(bln);
+    if(!catN&&!details.length)return;
+    var label=(catN?"["+catN+"] ":"")+(details.length?details.join(" + "):"");
     if(!combos[label])combos[label]={label:label,count:0};
     combos[label].count++;
   });
@@ -589,8 +459,7 @@ function renderTables(){
       var iu=getImg1(r),ia=iu?' data-img="'+iu+'"':'';
       var ordered=moSkus.has(sku);
       var trStyle=(!ordered)?' style="background:#FEF2F2;cursor:pointer"':' style="cursor:pointer"';
-      var trClass=(!ordered)?"not-ordered":"";
-      html+='<tr class="'+trClass+'"'+trStyle+' onclick="openModalById(\''+r.ID+'\')"><td><div class="style-info"><div class="style-thumb"'+ia+'>👕</div><div><span class="style-code">'+escH(sku)+'</span><span class="style-name">'+escH(g(r,"Style_Name"))+'</span></div></div></td><td>'+escH(g(r,"Business_Entity"))+'</td><td>'+escH(g(r,"Season"))+'</td><td>'+escH(mv("Gender",g(r,"Gender")))+'</td><td>'+escH(mv("Category",g(r,"Category")))+'</td><td>'+escH(mv("Material_Type",g(r,"Material_Type")))+'</td><td>'+escH(g(r,"Target_Cost"))+'</td><td><span class="tag '+tc(g(r,"Style_Status"))+'">'+escH(g(r,"Style_Status"))+'</span></td><td><span class="tag '+tc(g(r,"Sample_Status"))+'">'+escH(g(r,"Sample_Status"))+'</span></td><td>'+(ordered?'<span class="tag tag-appr">Ordered</span>':'<span class="tag tag-fail">Not Ordered</span>')+'</td></tr>';
+      html+='<tr class="'+((!ordered)?"not-ordered":"")+'"'+trStyle+' onclick="openModalById(\''+r.ID+'\')"><td><div class="style-info"><div class="style-thumb"'+ia+'>👕</div><div><span class="style-code">'+escH(sku)+'</span><span class="style-name">'+escH(g(r,"Style_Name"))+'</span></div></div></td><td>'+escH(g(r,"Business_Entity"))+'</td><td>'+escH(g(r,"Season"))+'</td><td>'+escH(mv("Gender",g(r,"Gender")))+'</td><td>'+escH(mv("Category",g(r,"Category")))+'</td><td>'+escH(mv("Material_Type",g(r,"Material_Type")))+'</td><td>'+escH(g(r,"Target_Cost"))+'</td><td><span class="tag '+tc(g(r,"Style_Status"))+'">'+escH(g(r,"Style_Status"))+'</span></td><td><span class="tag '+tc(g(r,"Sample_Status"))+'">'+escH(g(r,"Sample_Status"))+'</span></td><td>'+(ordered?'<span class="tag tag-appr">Ordered</span>':'<span class="tag tag-fail">Not Ordered</span>')+'</td></tr>';
     });
     html+='</tbody></table></div></div></div>';
   });
@@ -606,61 +475,35 @@ function openModal(rec){
   _currentRec=rec;
   document.getElementById("modalTitle").textContent=g(rec,"Style_SKU");
   document.getElementById("modalSubtitle").textContent=g(rec,"Style_Name");
-  
-  var te=document.getElementById("modalThumb");
-  te.innerHTML='<div class="spinner-sm"></div>';
-  
+  document.getElementById("modalThumb").innerHTML='<div class="spinner-sm"></div>';
   document.getElementById("modalBody").innerHTML=buildDetail(rec);
   document.getElementById("modalOverlay").classList.add("active");
-  
   setTimeout(function(){loadAllModalImgs(rec)},50);
 }
-
 function loadAllModalImgs(rec){
   var iu=getImg1(rec);
   if(iu) renderZohoImage("modalThumb", iu, false);
-
-  var si = getAllImgs(rec, "Style_Image").slice(0, 5);
-  var tfs = getAllImgs(rec, "Top_Flat_Sketch").slice(0, 5);
-  var bfs = getAllImgs(rec, "Bottom_Flat_Sketch").slice(0, 5);
-
-  si.forEach(function(u,i){ renderZohoImage("mdl_si_" + i, u, true); });
-  tfs.forEach(function(u,i){ renderZohoImage("mdl_tfs_" + i, u, true); });
-  bfs.forEach(function(u,i){ renderZohoImage("mdl_bfs_" + i, u, true); });
+  var si=getAllImgs(rec,"Style_Image").slice(0,5);
+  var tfs=getAllImgs(rec,"Top_Flat_Sketch").slice(0,5);
+  var bfs=getAllImgs(rec,"Bottom_Flat_Sketch").slice(0,5);
+  si.forEach(function(u,i){ renderZohoImage("mdl_si_"+i, u, true); });
+  tfs.forEach(function(u,i){ renderZohoImage("mdl_tfs_"+i, u, true); });
+  bfs.forEach(function(u,i){ renderZohoImage("mdl_bfs_"+i, u, true); });
 }
-
 function buildDetail(d){
   var h="";
   function dv(v){return v==="-"?'<span class="detail-value empty">미입력</span>':escH(v)}
   function dt(v){return'<span class="tag '+tc(v)+'">'+escH(v)+'</span>'}
   function it(l,v){return'<div class="detail-item"><span class="detail-label">'+l+'</span><span class="detail-value">'+v+'</span></div>'}
   var ordered=moSkus.has(g(d,"Style_SKU"));
-  
-  var si = getAllImgs(d, "Style_Image").slice(0, 5);
-  var tfs = getAllImgs(d, "Top_Flat_Sketch").slice(0, 5);
-  var bfs = getAllImgs(d, "Bottom_Flat_Sketch").slice(0, 5);
-
-  if (si.length || tfs.length || bfs.length) {
-    h += '<div class="modal-section"><div class="modal-section-title" style="border-bottom:2px solid #FBCFE8;color:#CA8A04">📸 Style Images & Sketches</div>';
-    
-    if(si.length) {
-      h += '<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin-bottom:6px">Style Image (Max 5)</div><div class="modal-images">';
-      si.forEach(function(u, i) { h += '<div class="modal-img-wrap"><div class="modal-img-box" id="mdl_si_'+i+'"><div class="spinner-sm"></div></div></div>'; });
-      h += '</div><div style="height:10px"></div>';
-    }
-    if(tfs.length) {
-      h += '<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin-bottom:6px">Top Flat Sketch (Max 5)</div><div class="modal-images">';
-      tfs.forEach(function(u, i) { h += '<div class="modal-img-wrap"><div class="modal-img-box" id="mdl_tfs_'+i+'"><div class="spinner-sm"></div></div></div>'; });
-      h += '</div><div style="height:10px"></div>';
-    }
-    if(bfs.length) {
-      h += '<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin-bottom:6px">Bottom Flat Sketch (Max 5)</div><div class="modal-images">';
-      bfs.forEach(function(u, i) { h += '<div class="modal-img-wrap"><div class="modal-img-box" id="mdl_bfs_'+i+'"><div class="spinner-sm"></div></div></div>'; });
-      h += '</div>';
-    }
-    h += '</div>';
+  var si=getAllImgs(d,"Style_Image").slice(0,5),tfs=getAllImgs(d,"Top_Flat_Sketch").slice(0,5),bfs=getAllImgs(d,"Bottom_Flat_Sketch").slice(0,5);
+  if(si.length||tfs.length||bfs.length){
+    h+='<div class="modal-section"><div class="modal-section-title" style="border-bottom:2px solid #FBCFE8;color:#CA8A04">📸 Style Images & Sketches</div>';
+    if(si.length){h+='<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin-bottom:6px">Style Image</div><div class="modal-images">';si.forEach(function(u,i){h+='<div class="modal-img-wrap"><div class="modal-img-box" id="mdl_si_'+i+'"><div class="spinner-sm"></div></div></div>'});h+='</div><div style="height:10px"></div>'}
+    if(tfs.length){h+='<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin-bottom:6px">Top Flat Sketch</div><div class="modal-images">';tfs.forEach(function(u,i){h+='<div class="modal-img-wrap"><div class="modal-img-box" id="mdl_tfs_'+i+'"><div class="spinner-sm"></div></div></div>'});h+='</div><div style="height:10px"></div>'}
+    if(bfs.length){h+='<div style="font-size:10px;font-weight:700;color:var(--z-text-muted);margin-bottom:6px">Bottom Flat Sketch</div><div class="modal-images">';bfs.forEach(function(u,i){h+='<div class="modal-img-wrap"><div class="modal-img-box" id="mdl_bfs_'+i+'"><div class="spinner-sm"></div></div></div>'});h+='</div>'}
+    h+='</div>';
   }
-
   h+='<div class="modal-section"><div class="modal-section-title">📌 기본 정보 / Identity / 基本信息</div><div class="detail-grid">';
   h+=it("Style SKU",dv(g(d,"Style_SKU")));h+=it("Style Name",dv(g(d,"Style_Name")));h+=it("Style Number",dv(g(d,"Style_Number")));
   h+=it("Season",dv(g(d,"Season")));h+=it("Plan Year",dv(g(d,"Plan_Year")));h+=it("Plan Month",dv(g(d,"Plan_Month")));
@@ -689,203 +532,26 @@ function buildDetail(d){
 
 function closeLightbox(){document.getElementById("lightboxOverlay").style.display="none";document.getElementById("lightboxImg").src=""}
 function closeModal(){document.getElementById("modalOverlay").classList.remove("active");_currentRec=null}
-document.addEventListener("keydown",function(e){if(e.key==="Escape"){if(document.getElementById("lightboxOverlay").style.display==="flex")closeLightbox();else { closeModal(); document.getElementById("tpOv").classList.remove("active"); document.getElementById("kpiPopOv").classList.remove("active"); }}});
+
+/* ESC — 모달/팝업 닫기 */
+document.addEventListener("keydown",function(e){
+  if(e.key!=="Escape")return;
+  if(document.getElementById("lightboxOverlay").style.display==="flex"){closeLightbox();return}
+  if(document.getElementById("kpiPopOv").classList.contains("active")){document.getElementById("kpiPopOv").classList.remove("active");return}
+  closeModal();
+});
 
 /* ══════════════════════════════════════
-   ★ Tech Pack 모달 (Style View 전용)
-   ══════════════════════════════════════ */
-
-function parseUniversalSpecs(lines) {
-  var spObj = {};
-  if(!Array.isArray(lines)) return spObj;
-  
-  lines.forEach(function(row) {
-    var pom="-", size="-", spec="-", tol="-";
-    Object.keys(row).forEach(function(k){
-      var kl = k.toUpperCase();
-      var val = typeof row[k] === "object" && row[k] !== null ? (row[k].display_value || "") : String(row[k] || "");
-      if(val==="null" || val==="undefined") val="-";
-
-      if(kl.indexOf("POM") >= 0 || kl === "MEASUREMENT_POINT") pom = val;
-      else if(kl.indexOf("SELECT_SIZE") >= 0 || kl.indexOf("SELECT") >= 0 || k === "Size") size = val.toUpperCase();
-      else if((kl.indexOf("SPEC") >= 0 || kl.indexOf("VALUE") >= 0 || kl === "CM") && kl.indexOf("SPECS") === -1 && kl.indexOf("SIZE") === -1) spec = val;
-      else if(kl.indexOf("TOL") >= 0) tol = val;
-    });
-
-    if(pom === "-" || pom === "") return;
-    if(!spObj[pom]) spObj[pom] = {tol:tol, S:"-", M:"-", L:"-", XL:"-", XXL:"-"};
-    if(size && size !== "-" && spObj[pom][size] !== undefined) spObj[pom][size] = spec;
-    if(tol !== "-" && tol !== "") spObj[pom].tol = tol;
-  });
-  return spObj;
-}
-
-function fetchSubformRowsSafely(reportName, ids) {
-  return new Promise(function(resolve) {
-    if (!ids || ids.length === 0) return resolve([]);
-    var results = [];
-    var i = 0;
-    function next() {
-      if (i >= ids.length) return resolve(results);
-      ZOHO.CREATOR.API.getRecordById({appName: APP, reportName: reportName, id: ids[i]})
-      .then(function(res) { if(res && res.data) results.push(res.data); i++; setTimeout(next, 20); })
-      .catch(function(err) { i++; setTimeout(next, 20); });
-    }
-    next();
-  });
-}
-
+   ★ Tech Pack 버튼 — Zoho record-print URL
+   record-print/Tech_Pack/{레코드ID} 로 새 탭 오픈
+   서브폼 데이터는 Zoho 내부에서 직접 렌더링
+══════════════════════════════════════ */
 function openTechPack() {
   if(!_currentRec) return;
-  
-  var btn = document.getElementById("btnTechPack");
-  var originalText = btn.innerHTML;
-  btn.innerHTML = "⏳ LOADING...";
-  btn.disabled = true;
-
-  try {
-    var s = _currentRec;
-    var topIds = (s.Top_Size_Specs || []).map(function(x){return x.ID;}).filter(Boolean);
-    var btmIds = (s.Bottom_Size_Specs || []).map(function(x){return x.ID;}).filter(Boolean);
-
-    fetchSubformRowsSafely("All_Top_Specs", topIds).then(function(topLines) {
-      fetchSubformRowsSafely("All_Bottom_Specs", btmIds).then(function(btmLines) {
-        
-        var topSpecs = parseUniversalSpecs(topLines);
-        if (Object.keys(topSpecs).length === 0) topSpecs = parseUniversalSpecs(s.Top_Size_Specs || []);
-        
-        var btmSpecs = parseUniversalSpecs(btmLines);
-        if (Object.keys(btmSpecs).length === 0) btmSpecs = parseUniversalSpecs(s.Bottom_Size_Specs || []);
-
-        var sku = g(s, "Style_SKU");
-        var mo = allMOs.find(function(m){ return g(m,"Style_SKU")===sku || g(m,"SKU")===sku; });
-
-        renderTechPackHTML(s, mo, topSpecs, btmSpecs, topIds.length, btmIds.length);
-        
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-      });
-    });
-
-  } catch(e) {
-    alert("데이터 처리 중 에러가 발생했습니다.");
-    btn.innerHTML = originalText;
-    btn.disabled = false;
-  }
-}
-
-function renderTechPackHTML(s, mo, topSpecs, btmSpecs, topIdCount, btmIdCount) {
-  var sku = g(s, "Style_SKU");
-  
-  var imgStyle = getImgUrl(s, "Style_Image") || (mo ? getImgUrl(mo, "Style_Image") : null);
-  var imgTop = getImgUrl(s, "Top_Flat_Sketch") || getImgUrl(s, "Top_Sketch") || getImgUrl(s, "Flat_Sketch") || (mo ? getImgUrl(mo, "Top_Sketch") : null);
-  var imgBtm = getImgUrl(s, "Bottom_Flat_Sketch") || getImgUrl(s, "Bottom_Sketch") || (mo ? getImgUrl(mo, "Bottom_Sketch") : null);
-
-  var moNum = mo ? g(mo, "MO_Number") : "-";
-  var factory = mo ? cleanFactory(g(mo, "Factory")) : cleanFactory(g(s, "Business_Entity"));
-  
-  var colors = mo ? (g(mo, "Top_Color") !== "-" ? g(mo, "Top_Color") + (g(mo, "Bottom_Color") !== "-" ? " / " + g(mo, "Bottom_Color") : "") : g(s, "Available_Colors")) : g(s, "Available_Colors");
-  if(!colors || colors === "-") colors = "-";
-
-  var p = [];
-  p.push("<div class='tp-head'>");
-  p.push("<div class='tp-brand'><div class='logo-ic'></div> ZOHO <span>APPAREL</span></div>");
-  p.push("<div class='doc-title'><h1>TECH PACK</h1><p>DATE: " + todayStr + " &nbsp;|&nbsp; REV: 1.0</p></div>");
-  p.push("</div>");
-
-  p.push("<div class='tp-grid'>"); 
-
-  p.push("<div class='col-left'>");
-  p.push("<table class='info-tbl'><tbody>");
-  p.push("<tr><th>MO NO.</th><td style='color:#3B82F6;font-size:13px'>" + escH(moNum) + "</td></tr>");
-  p.push("<tr><th>STYLE NO.</th><td>" + escH(sku) + "</td></tr>");
-  p.push("<tr><th>STYLE NAME</th><td>" + escH(g(s, "Style_Name")) + "</td></tr>");
-  p.push("<tr><th>FACTORY</th><td>" + escH(factory) + "</td></tr>");
-  p.push("<tr><th>SEASON</th><td>" + escH(g(s, "Season")) + "</td></tr>");
-  p.push("<tr><th>CATEGORY</th><td>" + escH(mv("Category",g(s, "Category"))) + "</td></tr>");
-  p.push("<tr><th>TARGET</th><td>" + escH(mv("Gender",g(s, "Gender"))) + "</td></tr>");
-  p.push("<tr><th>COLORS (T/B)</th><td style='color:#059669'>" + escH(colors) + "</td></tr>");
-  p.push("<tr><th>SIZE RANGE</th><td>S, M, L, XL</td></tr>");
-  p.push("</tbody></table>");
-  
-  p.push("<div class='tp-box'><div class='tp-box-title'>STYLE IMAGE</div><div class='img-wrap style-img' id='tpImgStyle'><div class='spinner-sm'></div></div></div>");
-  
-  p.push("<div class='tp-box'><div class='tp-box-title'>FABRIC & FIT DETAILS</div>");
-  p.push("<div style='padding:10px;font-size:11px;line-height:1.6'>");
-  p.push("<b>MAIN:</b> " + escH(mv("Material_Type",g(s, "Material_Type"))) + "<br>");
-  p.push("<b>LINING:</b> " + escH(mv("Lining_Type",g(s, "Lining_Type"))) + " (" + escH(g(s, "blended_percentage")) + ")<br><br>");
-  p.push("<b>Top:</b> " + escH(mv("Top_Type",g(s,"Top_Type"))) + " / " + escH(mv("Sleeve",g(s,"Sleeve"))) + "<br>");
-  p.push("<b>Btm:</b> " + escH(mv("Bottom_Type",g(s,"Bottom_Type"))) + " / " + escH(mv("Bottom_Length",g(s,"Bottom_Length"))) + "<br>");
-  p.push("<b>Fit:</b> " + escH(mv("Fit",g(s,"Fit"))) + " | <b>Detail:</b> " + escH(mv("Details",g(s,"Details"))));
-  p.push("</div></div>");
-  p.push("</div>");
-
-  p.push("<div class='col-mid'>");
-  
-  function drawSpec(title, spObj, idCount) {
-    var h = "<div class='tp-box'><div class='tp-box-title'>" + title + " <span>Unit: cm</span></div>";
-    h += "<table class='spec-tbl'><thead><tr>";
-    h += "<th style='width:45%'>Point of Measure (측정부위)</th><th style='width:15%'>TOL(±)</th>";
-    h += "<th style='width:10%'>S</th><th style='width:10%'>M</th><th style='width:10%'>L</th><th style='width:10%'>XL</th>";
-    h += "</tr></thead><tbody>";
-    
-    var keys = Object.keys(spObj);
-    if(keys.length === 0) {
-      var dbg = "<b>[데이터 없음]</b> 사이즈 정보를 불러오지 못했습니다.<br><br>";
-      dbg += "- 폼에 입력된 서브폼 개수: " + idCount + "개<br>";
-      h += "<tr><td colspan='6' style='color:#EF4444;padding:25px;font-size:11px;text-align:left;word-break:break-all'>" + dbg + "</td></tr>";
-    } else {
-      keys.forEach(function(pom) {
-        var o = spObj[pom];
-        h += "<tr>";
-        h += "<td class='pom'>" + escH(pom) + "</td><td>" + escH(o.tol) + "</td>";
-        h += "<td>" + escH(o.S) + "</td><td>" + escH(o.M) + "</td><td>" + escH(o.L) + "</td><td>" + escH(o.XL) + "</td>";
-        h += "</tr>";
-      });
-    }
-    h += "</tbody></table></div>";
-    return h;
-  }
-  
-  p.push(drawSpec("📏 TOP MEASUREMENTS", topSpecs, topIdCount));
-  p.push(drawSpec("📏 BOTTOM MEASUREMENTS", btmSpecs, btmIdCount));
-  
-  p.push("<div class='tp-box memo-box'><div class='tp-box-title'>REMARKS / 비고란 (작업 지시사항)</div>");
-  p.push("<div class='memo-content'>");
-  var pNote = mo ? g(mo, "Plan_Notes") : null;
-  if(pNote && pNote !== "-") p.push("<div style='color:#DC2626;font-weight:700;white-space:pre-wrap'>" + escH(pNote) + "</div>");
-  p.push("</div></div>");
-  p.push("</div>"); 
-
-  p.push("<div class='col-right'>");
-  p.push("<div class='tp-box'><div class='tp-box-title'>TOP SKETCH</div><div class='img-wrap sketch-img' id='tpImgTop'><div class='spinner-sm'></div></div></div>");
-  p.push("<div class='tp-box'><div class='tp-box-title'>BOTTOM SKETCH</div><div class='img-wrap sketch-img' id='tpImgBtm'><div class='spinner-sm'></div></div></div>");
-  p.push("</div>");
-
-  p.push("</div>"); 
-
-  document.getElementById("tpBarTitle").textContent = "📋 TECH PACK — " + escH(sku);
-  document.getElementById("tpContent").innerHTML = p.join("");
-  document.getElementById("tpOv").classList.add("active");
-
-  function fastImgZoho(elId, url) {
-    var el = document.getElementById(elId);
-    if(!el) return;
-    if(!url || url === "-") { el.innerHTML = '<div class="no-img">📷</div>'; return; }
-    var u = Array.isArray(url) ? url[0] : url;
-    if(typeof u === "object" && u !== null) u = u.url || u.display_value || "";
-    if(!u || u === "-") { el.innerHTML = '<div class="no-img">📷</div>'; return; }
-    
-    var img = document.createElement("img");
-    img.style.cssText = "width:100%;height:100%;object-fit:contain";
-    ZOHO.CREATOR.UTIL.setImageData(img, u, function() {
-      el.innerHTML = ""; el.appendChild(img);
-    });
-  }
-
-  fastImgZoho("tpImgStyle", imgStyle);
-  fastImgZoho("tpImgTop", imgTop);
-  fastImgZoho("tpImgBtm", imgBtm);
+  var id = _currentRec["ID"] || _currentRec["id"] || "";
+  if(!id) { alert("레코드 ID를 찾을 수 없습니다."); return; }
+  var url = "https://creatorapp.zoho.com/jeramoda/eom/record-print/Tech_Pack/" + id + "/";
+  window.open(url, "_blank");
 }
 </script>
 </body>
