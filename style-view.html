@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Style View v36 (Inline Event Fix)</title>
+<title>Style View v34</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
@@ -20,8 +20,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
 .page-header h1{font-size:17px;font-weight:900;color:var(--z-text-main);display:flex;align-items:center;gap:8px}
 .page-header h1 .icon-s{width:26px;height:26px;background:var(--z-primary);border-radius:5px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900}
-
-/* KPI 상단 행 */
 .mkpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 420px;gap:12px;margin-bottom:21px}
 .mkpi-card{background:var(--z-card-bg);border:1px solid var(--z-border);border-radius:10px;padding:14px;position:relative;overflow:hidden}
 .mkpi-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px}
@@ -40,8 +38,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .mkpi-stat-n{font-size:20px;font-weight:900;line-height:1}
 .mkpi-stat-l{font-size:10px;font-weight:700;color:var(--z-text-muted);margin-top:4px;line-height:1.3}
 .mkpi-stat .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;vertical-align:middle}
-
-/* 생산 지연 현황 카드 */
 .delay-card{background:#FFF5F5;border:1px solid #FECACA;border-radius:10px;padding:14px;position:relative;overflow:hidden;display:flex;flex-direction:column}
 .delay-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:#FCA5A5}
 .delay-card-title{font-size:12px;font-weight:800;color:#DC2626;margin-bottom:4px;display:flex;align-items:center;gap:6px}
@@ -52,7 +48,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .delay-item:hover{background:#FEF2F2}
 .delay-mo{font-size:10px;font-weight:800;color:#DC2626}
 .delay-style{font-size:8px;color:#64748B;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
 .filter-bar{display:flex;justify-content:flex-end;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
 .search-box{background:#fff;border:1px solid var(--z-border);border-radius:6px;padding:5px 10px;font-size:11px;width:200px;outline:none;font-family:inherit}
 .search-box:focus{border-color:var(--z-accent);box-shadow:0 0 0 2px rgba(59,130,246,.1)}
@@ -79,8 +74,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .tag-prog{background:#FEF3C7;color:#B45309;border:1px solid #FDE68A}
 .tag-appr{background:#D1FAE5;color:#065F46;border:1px solid #A7F3D0}
 .tag-fail{background:#FEF2F2;color:#B91C1C;border:1px solid #FECACA}
-
-/* KPI 팝업 */
 .pop-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:2000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
 .pop-ov.active{display:flex}
 .pop-box{background:#fff;border-radius:12px;width:92%;max-width:700px;max-height:82vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:modalIn .2s ease-out}
@@ -96,8 +89,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .pop-item-left .pi-name{font-size:10px;color:var(--z-text-muted);margin-top:2px}
 .pop-item-left .pi-meta{font-size:9px;color:#94A3B8;margin-top:2px}
 .pop-empty{text-align:center;padding:30px;color:var(--z-text-muted);font-size:13px}
-
-/* Modal (Style Info) */
 .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:3000;justify-content:center;align-items:center;backdrop-filter:blur(2px)}
 .modal-overlay.active{display:flex}
 .modal-box-lg{background:#fff;border-radius:12px;width:92%;max-width:760px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:modalIn .25s ease-out}
@@ -118,16 +109,12 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .detail-label{font-size:9px;font-weight:700;color:var(--z-text-muted);line-height:1.4}
 .detail-value{font-size:13px;font-weight:600;color:var(--z-text-main)}
 .detail-value.empty{color:#CBD5E1;font-weight:400;font-style:italic}
-
-/* 이미지 갤러리 섹션 */
 .modal-images{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
 .modal-img-wrap{text-align:center}
 .modal-img-box{width:120px;height:120px;background:#F8FAFC;border:1px solid var(--z-border);border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;color:#CBD5E1}
 .modal-img-box img{width:100%;height:100%;object-fit:contain;cursor:pointer;transition:transform .2s}
 .modal-img-box:hover{border-color:var(--z-accent);box-shadow:0 2px 8px rgba(59,130,246,.15)}
-.modal-img-label{font-size:9px;color:var(--z-text-muted);margin-top:4px;font-weight:700}
-
-/* Chart */
+.modal-img-label{font-size:8px;color:var(--z-text-muted);margin-top:3px;font-weight:600}
 .chart-card{background:#fff;border:1px solid var(--z-border);border-radius:8px;padding:16px;margin-top:20px}
 .chart-title{font-size:13px;font-weight:800;color:var(--z-text-main);margin-bottom:14px;display:flex;align-items:center;gap:6px}
 .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:5px}
@@ -135,12 +122,9 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .bar-track{width:180px;height:20px;background:#F1F5F9;border-radius:4px;overflow:hidden;flex-shrink:0}
 .bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:6px;font-size:9px;font-weight:800;color:#fff;min-width:22px;transition:width .5s ease}
 .bar-count{font-size:11px;font-weight:800;color:var(--z-text-main);min-width:24px}
+.error-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C}
 
-.error-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:20px;text-align:center;color:#B91C1C;white-space:pre-wrap;}
-
-/* =========================================================
-   ★ TECH PACK 모달 오버레이 스타일 (A4 가로형)
-   ========================================================= */
+/* ══ Tech Pack 모달 스타일 ══ */
 .tp-modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#CBD5E1;z-index:6000;overflow-y:auto}
 .tp-modal-ov.active{display:block}
 .tp-print-bar{position:sticky;top:0;background:#0F172A;color:#fff;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;z-index:6010;box-shadow:0 4px 10px rgba(0,0,0,.15)}
@@ -149,7 +133,6 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .tp-btn{border:none;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:900;cursor:pointer;font-family:'Roboto',sans-serif}
 .tp-btn-print{background:#3B82F6;color:#fff}.tp-btn-print:hover{background:#2563EB}
 .tp-btn-close{background:rgba(255,255,255,.2);color:#fff}.tp-btn-close:hover{background:rgba(255,255,255,.3)}
-
 .a4-landscape{font-family:'Roboto','Noto Sans KR',sans-serif;width:297mm;min-height:210mm;margin:40px auto;padding:12mm;box-sizing:border-box;background:#fff;box-shadow:0 15px 50px rgba(0,0,0,.2)}
 .a4-landscape *{box-sizing:border-box}
 .tp-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:5px solid #000;padding-bottom:12px;margin-bottom:15px}
@@ -159,24 +142,20 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 .doc-title{text-align:right}
 .doc-title h1{font-size:28px;font-weight:900;margin:0 0 4px;letter-spacing:3px;color:#000}
 .doc-title p{margin:0;font-size:11px;color:#475569;font-weight:700}
-
 .tp-grid{display:grid;grid-template-columns:300px 1fr 280px;gap:20px}
 .tp-box{border:2px solid #000;margin-bottom:15px;background:#fff}
 .tp-box-title{background:#000;color:#fff;padding:6px 10px;font-size:13px;font-weight:900;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;letter-spacing:.5px}
 .tp-box-title span{font-size:10px;font-weight:400;color:#CBD5E1}
-
 .info-tbl{width:100%;border-collapse:collapse;font-size:11px}
 .info-tbl th,.info-tbl td{border-bottom:1px solid #CBD5E1;padding:8px 10px}
 .info-tbl th{font-weight:800;color:#475569;width:35%;background:#F8FAFC}
 .info-tbl td{font-weight:900;color:#0F172A}
 .info-tbl tr:last-child th,.info-tbl tr:last-child td{border-bottom:none}
-
 .spec-tbl{width:100%;border-collapse:collapse;text-align:center}
 .spec-tbl th,.spec-tbl td{border:1px solid #CBD5E1;padding:7px 5px}
 .spec-tbl th{background:#F1F5F9;font-weight:900;font-size:11px;color:#000}
 .spec-tbl td{font-weight:700;font-size:12px;color:#000}
 .spec-tbl .pom{text-align:left;padding-left:10px;font-size:11px}
-
 .img-wrap{height:220px;padding:10px;display:flex;align-items:center;justify-content:center}
 .img-wrap.style-img{height:160px;background:#F8FAFC}
 .img-wrap img{max-width:100%;max-height:100%;object-fit:contain}
@@ -219,6 +198,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 
 <div id="errorScreen" style="display:none"><div class="error-box"><div style="font-weight:800;font-size:14px;margin-bottom:8px">데이터를 불러올 수 없습니다</div><div id="errorMsg" style="font-size:12px"></div></div></div>
 
+<!-- KPI 팝업 -->
 <div class="pop-ov" id="kpiPopOv">
   <div class="pop-box">
     <div class="pop-hd"><div><div class="pop-title" id="kpiPopTitle">-</div><div class="pop-sub" id="kpiPopSub">-</div></div><div class="pop-close" id="kpiPopClose">✕</div></div>
@@ -226,11 +206,13 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
   </div>
 </div>
 
+<!-- 라이트박스 -->
 <div id="lightboxOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:4000;justify-content:center;align-items:center;cursor:pointer;backdrop-filter:blur(4px)" onclick="closeLightbox()">
   <img id="lightboxImg" style="max-width:90%;max-height:90%;object-fit:contain;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.5)" onclick="event.stopPropagation()">
   <div style="position:absolute;top:20px;right:24px;color:#fff;font-size:28px;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.15);border-radius:50%" onclick="closeLightbox()">✕</div>
 </div>
 
+<!-- Style 상세 모달 -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-box-lg">
     <div class="modal-header">
@@ -239,6 +221,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
         <div><div class="modal-title" id="modalTitle">-</div><div class="modal-subtitle" id="modalSubtitle">-</div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
+        <!-- ★ Tech Pack 버튼 추가 -->
         <button id="btnTechPack" onclick="openTechPack()" style="background:#000;color:#fff;border:none;padding:7px 14px;border-radius:6px;font-size:11px;font-weight:900;cursor:pointer;letter-spacing:.5px">📋 TECH PACK</button>
         <button id="btnEdit" onclick="editStyle()" style="background:#EFF6FF;color:var(--z-primary);border:1px solid #BFDBFE;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit</button>
         <button id="btnNewMO" onclick="newMO()" style="background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">+ New MO</button>
@@ -249,6 +232,7 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
   </div>
 </div>
 
+<!-- Tech Pack 모달 -->
 <div id="tpOv" class="tp-modal-ov">
   <div class="tp-print-bar">
     <span id="tpBarTitle">📋 TECH PACK</span>
@@ -262,11 +246,11 @@ body{background:var(--z-bg);padding:16px;min-height:100vh}
 
 <script>
 /* ════════════════════════════════════════
-   Style View v36 (Inline Event Fix)
+   Style View v34
    All_Styles 리포트 + Tech Pack 기능 추가
 ════════════════════════════════════════ */
 var APP="eom", REP="All_Styles", MO_REP="All_MO";
-var TOP_SPEC_REP = "All_Top_Specs";   
+var TOP_SPEC_REP = "All_Top_Specs";   /* Style SKU 기준 서브폼 리포트 */
 var BTM_SPEC_REP = "All_Bottom_Specs";
 var allRec=[], filtered=[], moSkus=new Set();
 var today=new Date(), todayStr=today.toISOString().split("T")[0];
@@ -492,7 +476,6 @@ function buildDetail(d){
   function dt(v){return'<span class="tag '+tc(v)+'">'+escH(v)+'</span>'}
   function it(l,v){return'<div class="detail-item"><span class="detail-label">'+l+'</span><span class="detail-value">'+v+'</span></div>'}
   var ordered=moSkus.has(g(d,"Style_SKU"));
-  
   h+='<div class="modal-section"><div class="modal-section-title">📌 기본 정보 / Identity / 基本信息</div><div class="detail-grid">';
   h+=it("Style SKU",dv(g(d,"Style_SKU")));h+=it("Style Name",dv(g(d,"Style_Name")));h+=it("Style Number",dv(g(d,"Style_Number")));
   h+=it("Season",dv(g(d,"Season")));h+=it("Plan Year",dv(g(d,"Plan_Year")));h+=it("Plan Month",dv(g(d,"Plan_Month")));
@@ -668,6 +651,8 @@ function renderTechPack(d,topLines,btmLines){
   document.getElementById("tpContent").innerHTML=p.join("");
   setTimeout(function(){loadTpImg("tpImgStyle",imgStyle);loadTpImg("tpImgTop",imgTop);loadTpImg("tpImgBtm",imgBtm)},100);
 }
+
+/* Tech Pack 버튼 — onclick 인라인으로 처리 (모달 내부 버튼은 addEventListener 불가) */
 
 /* ESC */
 document.addEventListener("keydown",function(e){
