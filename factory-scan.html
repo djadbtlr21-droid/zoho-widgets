@@ -90,6 +90,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 /* 뒤로 버튼 */
 .back-link{display:flex;align-items:center;gap:6px;font-size:13px;color:#64748B;cursor:pointer;margin-bottom:16px;font-weight:500}
 .back-link:active{color:#1E3A8A}
+.log-item{padding:10px 0;border-bottom:0.5px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center}
+.log-item:last-child{border-bottom:none}
+.log-left .log-process{font-size:13px;font-weight:600;color:#1E3A8A}
+.log-left .log-meta{font-size:11px;color:#94A3B8;margin-top:2px}
+.log-right{text-align:right}
+.log-qty{font-size:13px;font-weight:600;color:#1A1A2E}
+.log-date{font-size:11px;color:#94A3B8;margin-top:2px}
+.log-empty{text-align:center;padding:16px;font-size:13px;color:#94A3B8}
+.log-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid #F1F5F9}
+.log-item:last-child{border-bottom:none}
+.log-process{font-size:13px;font-weight:600;color:#1E3A8A}
+.log-detail{font-size:11px;color:#64748B;margin-top:2px}
+.log-right{text-align:right}
+.log-qty{font-size:13px;font-weight:600;color:#1A1A2E}
+.log-date{font-size:11px;color:#94A3B8;margin-top:2px}
 </style>
 </head>
 <body>
@@ -228,6 +243,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 var ACCOUNT = "jeramoda";
 var APP = "eom";
 var MO_REPORT = "All_MO";
+var LOG_REPORT = "Add_Production_Log";
 var LOG_FORM = "Add_Production_Log";
 
 var moData = {};
@@ -277,6 +293,7 @@ function showScreen(id) {
 
 function goToScan() {
   moData = {}; moRecordId = ""; selectedProcess = ""; selectedProcessCN = "";
+  document.getElementById('log-section').style.display = 'none';
   document.querySelectorAll('.proc-btn').forEach(function(b){ b.classList.remove('selected'); });
   showScreen('screen-scan');
 }
@@ -464,12 +481,118 @@ function fetchMOData(moNumber, sku, factory) {
   });
 }
 
+function fetchLogHistory(moNumber) {
+  ZOHO.CREATOR.API.getAllRecords({
+    appName: APP,
+    reportName: LOG_REPORT,
+    page: 1,
+    pageSize: 200
+  }).then(function(res) {
+    var logs = [];
+    if (res.code === 3000 && res.data) {
+      logs = res.data.filter(function(r) {
+        return r['MO_Number'] === moNumber;
+      });
+      logs.sort(function(a, b) {
+        return (b['Log_ID'] || 0) - (a['Log_ID'] || 0);
+      });
+    }
+    renderLogHistory(logs);
+  }).catch(function() {
+    document.getElementById('log-history-body').innerHTML =
+      '<div style="text-align:center;padding:12px;color:#EF4444;font-size:12px">记录加载失败</div>';
+  });
+}
+
+function renderLogHistory(logs) {
+  var card = document.getElementById('log-history-card');
+  var body = document.getElementById('log-history-body');
+  if (logs.length === 0) {
+    card.style.display = 'block';
+    body.innerHTML = '<div style="text-align:center;padding:12px;color:#94A3B8;font-size:12px">暂无工序记录</div>';
+    return;
+  }
+  card.style.display = 'block';
+  var h = '';
+  logs.forEach(function(r) {
+    var process = r['Process'] || '-';
+    var completed = parseInt(r['Completed_Qty']) || 0;
+    var defect = parseInt(r['Defect_Qty']) || 0;
+    var worker = r['Worker'] || '-';
+    var date = r['Log_Date'] || '-';
+    var notes = r['Notes'] || '';
+    h += '<div class="log-item">';
+    h += '<div><div class="log-process">' + process + '</div>';
+    h += '<div class="log-detail">负责人: ' + worker + (notes ? ' · ' + notes : '') + '</div></div>';
+    h += '<div class="log-right"><div class="log-qty">完成: ' + completed.toLocaleString() + ' 件';
+    if (defect > 0) h += ' / 不良: ' + defect;
+    h += '</div><div class="log-date">' + date + '</div></div>';
+    h += '</div>';
+  });
+  body.innerHTML = h;
+}
+
+function fetchLogs(moNumber) {
+  var logSection = document.getElementById('log-section');
+  var logList = document.getElementById('log-list');
+  logSection.style.display = 'block';
+  logList.innerHTML = '<div style="text-align:center;padding:16px;font-size:13px;color:#94A3B8">加载中...</div>';
+
+  ZOHO.CREATOR.API.getAllRecords({
+    appName: APP,
+    reportName: LOG_REPORT,
+    page: 1,
+    pageSize: 200
+  }).then(function(res) {
+    if (res.code === 3000 && res.data && res.data.length > 0) {
+      var logs = res.data.filter(function(r) {
+        return r['MO_Number'] === moNumber;
+      });
+      logs.sort(function(a, b) {
+        return new Date(b['Log_Date']) - new Date(a['Log_Date']);
+      });
+      if (logs.length === 0) {
+        logList.innerHTML = '<div class="log-empty">暂无工序记录</div>';
+        return;
+      }
+      var h = '';
+      logs.forEach(function(r) {
+        var process = r['Process'] || '-';
+        var completed = parseInt(r['Completed_Qty']) || 0;
+        var defect = parseInt(r['Defect_Qty']) || 0;
+        var worker = r['Worker'] || '-';
+        var date = r['Log_Date'] || '-';
+        var notes = r['Notes'] || '';
+        h += '<div class="log-item">';
+        h += '<div class="log-left">';
+        h += '<div class="log-process">' + process + '</div>';
+        h += '<div class="log-meta">负责人: ' + worker + (notes ? ' · ' + notes : '') + '</div>';
+        h += '</div>';
+        h += '<div class="log-right">';
+        h += '<div class="log-qty">完成: ' + completed.toLocaleString() + '件';
+        if (defect > 0) h += ' / 不良: ' + defect + '件';
+        h += '</div>';
+        h += '<div class="log-date">' + date + '</div>';
+        h += '</div>';
+        h += '</div>';
+      });
+      logList.innerHTML = h;
+    } else {
+      logList.innerHTML = '<div class="log-empty">暂无工序记录</div>';
+    }
+  }).catch(function() {
+    logList.innerHTML = '<div class="log-empty">记录加载失败</div>';
+  });
+}
+
 function showMOInfo() {
   document.getElementById('d-mo').textContent = moData.mo_number;
   document.getElementById('d-sku').textContent = moData.sku;
   document.getElementById('d-factory').textContent = moData.factory;
   document.getElementById('d-qty').textContent = moData.order_qty.toLocaleString() + ' 件';
   document.getElementById('d-status').textContent = moData.current_status;
+  document.getElementById('log-history-card').style.display = 'none';
+  fetchLogHistory(moData.mo_number);
   showScreen('screen-info');
 }
 
@@ -598,6 +721,7 @@ function showSuccess(completedQty, defectQty, worker) {
   document.getElementById('btn-submit').disabled = false;
   document.getElementById('btn-submit').textContent = '确认提交 →';
   showScreen('screen-success');
+  fetchLogs(moData.mo_number);
 }
 
 function showSubmitError(msg) {
