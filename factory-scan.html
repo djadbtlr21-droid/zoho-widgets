@@ -132,27 +132,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
     <div class="card">
       <div class="process-title">请选择当前工序</div>
       <div class="process-grid">
-        <div class="proc-btn" onclick="selectProcess(this,'Cutting','裁剪')">
+        <div class="proc-btn" onclick="selectProcess(this,'Cutting / 재단 / 裁剪','裁剪')">
           <span class="proc-icon">✂️</span>
           <div class="proc-name">裁剪</div>
           <div class="proc-sub">Cutting</div>
         </div>
-        <div class="proc-btn" onclick="selectProcess(this,'Sewing','缝制')">
+        <div class="proc-btn" onclick="selectProcess(this,'Sewing / 봉제 / 缝制','缝制')">
           <span class="proc-icon">🧵</span>
           <div class="proc-name">缝制</div>
           <div class="proc-sub">Sewing</div>
         </div>
-        <div class="proc-btn" onclick="selectProcess(this,'Packing','包装')">
+        <div class="proc-btn" onclick="selectProcess(this,'Packing / 포장 / 包装','包装')">
           <span class="proc-icon">📦</span>
           <div class="proc-name">包装</div>
           <div class="proc-sub">Packing</div>
         </div>
-        <div class="proc-btn" onclick="selectProcess(this,'Production Completed','生产完成')">
+        <div class="proc-btn" onclick="selectProcess(this,'Production Completed / 생산완료 / 生产完成','生产完成')">
           <span class="proc-icon">✅</span>
           <div class="proc-name">生产完成</div>
           <div class="proc-sub">Production Completed</div>
         </div>
-        <div class="proc-btn proc-full" onclick="selectProcess(this,'Shipped','出货')">
+        <div class="proc-btn proc-full" onclick="selectProcess(this,'Shipped / 출고 / 出货','出货')">
           <span class="proc-icon">🚚</span>
           <div class="proc-name">出货</div>
           <div class="proc-sub">Shipped</div>
@@ -237,31 +237,31 @@ var selectedProcessCN = "";
 
 // 공정별 Add_MO 업데이트 필드 매핑
 var PROCESS_FIELD_MAP = {
-  "Cutting": {
+  "Cutting / 재단 / 裁剪": {
     status: "Cutting / 재단 / 裁剪",
     dateStart: "Cutting_Start_Date",
     dateEnd: "Cutting_End_Date",
     qtyField: "Cut_Quantity"
   },
-  "Sewing": {
+  "Sewing / 봉제 / 缝制": {
     status: "Sewing / 봉제 / 缝制",
     dateStart: "Sewing_Start_Date",
     dateEnd: "Sewing_Completion_Date",
     qtyField: null
   },
-  "Packing": {
+  "Packing / 포장 / 包装": {
     status: "Packing / 포장 / 包装",
     dateStart: "Packing_Start_Date",
     dateEnd: "Packing_End_Date",
     qtyField: null
   },
-  "Production Completed": {
-    status: "Production Completed / 생산완료 / 生产完成",
+  "Production Completed / 생산완료 / 生产完成": {
+    status: "Production Completed / 생산완료 / 生产완성 / 生产完成",
     dateStart: null,
     dateEnd: null,
     qtyField: "Finished_Quantity"
   },
-  "Shipped": {
+  "Shipped / 출고 / 出货": {
     status: "Shipped / 출고 / 出货",
     dateStart: null,
     dateEnd: "Ship_Date",
@@ -433,7 +433,7 @@ function fetchMOData(moNumber, sku, factory) {
       moRecordId = r['ID'];
       moData = {
         mo_number: r['MO_Number'] || moNumber,
-        sku: (r['Style_SKU'] && r['Style_SKU'] !== '-') ? r['Style_SKU'] : (sku || '-'),
+        sku: skuStr,
         factory: factory || (r['Factory'] && r['Factory'].display_value ? r['Factory'].display_value : (r['Factory'] || '-')),
         order_qty: parseInt(r['Plan_Total_Quantity']) || 0,
         current_status: r['Production_Status'] || '-',
@@ -472,7 +472,7 @@ function selectProcess(el, process, processCN) {
 
   // 마대수량 필드: 포장/출고만 표시
   document.getElementById('bag-group').style.display =
-    (process === 'Packing' || process === 'Shipped') ? 'block' : 'none';
+    (process.indexOf('Packing') >= 0 || process.indexOf('Shipped') >= 0) ? 'block' : 'none';
 
   // 입력값 초기화
   ['f-completed','f-defect','f-bag','f-worker','f-notes'].forEach(function(id){
