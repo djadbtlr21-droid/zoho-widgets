@@ -147,12 +147,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
           <div class="proc-name">包装</div>
           <div class="proc-sub">Packing</div>
         </div>
-        <div class="proc-btn" onclick="selectProcess(this,'Production Completed / 생산완료 / 生产完成','生产完成')">
+        <div class="proc-btn" onclick="selectProcess(this,'Completed / 생산완료 / 生产完成','生产完成')">
           <span class="proc-icon">✅</span>
           <div class="proc-name">生产完成</div>
           <div class="proc-sub">Production Completed</div>
         </div>
-        <div class="proc-btn proc-full" onclick="selectProcess(this,'Shipped / 출고 / 出货','出货')">
+        <div class="proc-btn proc-full" onclick="selectProcess(this,'Shipped / 출고완료 / 已出货','出货完成')">
           <span class="proc-icon">🚚</span>
           <div class="proc-name">出货</div>
           <div class="proc-sub">Shipped</div>
@@ -255,14 +255,14 @@ var PROCESS_FIELD_MAP = {
     dateEnd: "Packing_End_Date",
     qtyField: null
   },
-  "Production Completed / 생산완료 / 生产完成": {
-    status: "Production Completed / 생산완료 / 生产완성 / 生产完成",
+  "Completed / 생산완료 / 生产完成": {
+    status: "Completed / 생산완료 / 生产完成",
     dateStart: null,
     dateEnd: null,
     qtyField: "Finished_Quantity"
   },
-  "Shipped / 출고 / 出货": {
-    status: "Shipped / 출고 / 出货",
+  "Shipped / 출고완료 / 已出货": {
+    status: "Shipped / 출고완료 / 已出货",
     dateStart: null,
     dateEnd: "Ship_Date",
     qtyField: null
