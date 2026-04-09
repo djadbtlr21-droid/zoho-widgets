@@ -499,8 +499,9 @@ function selectProcess(el, process, processCN) {
 
 function getTodayStr() {
   var d = new Date();
-  var mm = d.getMonth()+1; var dd = d.getDate();
-  return d.getFullYear()+'-'+(mm<10?'0'+mm:mm)+'-'+(dd<10?'0'+dd:dd);
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var dd = d.getDate();
+  return (dd<10?'0'+dd:dd)+'-'+months[d.getMonth()]+'-'+d.getFullYear();
 }
 
 function submitData() {
