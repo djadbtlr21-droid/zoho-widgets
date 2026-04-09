@@ -424,17 +424,31 @@ function fetchMOData(moNumber, sku, factory) {
   ZOHO.CREATOR.API.getAllRecords({
     appName: APP,
     reportName: MO_REPORT,
-    criteria: 'MO_Number == "' + moNumber + '"',
     page: 1,
-    pageSize: 1
+    pageSize: 200
   }).then(function(res) {
     if (res.code === 3000 && res.data && res.data.length > 0) {
-      var r = res.data[0];
+      var found = null;
+      for (var i = 0; i < res.data.length; i++) {
+        if (res.data[i]['MO_Number'] === moNumber) { found = res.data[i]; break; }
+      }
+      if (!found) {
+        showScreen('screen-scan');
+        alert('未找到订单号: ' + moNumber);
+        return;
+      }
+      var r = found;
       moRecordId = r['ID'];
+      var skuRaw = r['Style_SKU'];
+      var skuStr = sku || '-';
+      if (skuRaw) {
+        if (typeof skuRaw === 'object') skuStr = skuRaw.display_value || skuRaw.Style_SKU || skuStr;
+        else if (skuRaw !== '-') skuStr = skuRaw;
+      }
       moData = {
         mo_number: r['MO_Number'] || moNumber,
         sku: skuStr,
-        factory: factory || (r['Factory'] && r['Factory'].display_value ? r['Factory'].display_value : (r['Factory'] || '-')),
+        factory: factory || '-',
         order_qty: parseInt(r['Plan_Total_Quantity']) || 0,
         current_status: r['Production_Status'] || '-',
         record: r
