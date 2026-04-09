@@ -384,24 +384,39 @@ function closeCamera() {
 
 // QR 데이터 파싱: MO:TS26-15|SKU:26-03-SS26-W|FACTORY:宁军
 function processQRData(qrText) {
-  var parsed = {};
-  qrText.split('|').forEach(function(part) {
-    var idx = part.indexOf(':');
-    if (idx > 0) {
-      var key = part.substring(0, idx).trim();
-      var val = part.substring(idx+1).trim();
-      parsed[key] = val;
-    }
+  qrText = qrText.trim();
+
+  var moNumber = '';
+  var skuVal = '';
+  var factoryVal = '';
+
+  // | 또는 공백/줄바꿈 기준으로 분리
+  var parts = qrText.split(/[|\n\r]+/);
+  parts.forEach(function(part) {
+    part = part.trim();
+    var colonIdx = part.indexOf(':');
+    if (colonIdx < 0) return;
+    var key = part.substring(0, colonIdx).trim().toUpperCase();
+    var val = part.substring(colonIdx + 1).trim();
+    if (key === 'MO') moNumber = val;
+    else if (key === 'SKU') skuVal = val;
+    else if (key === 'FACTORY') factoryVal = val;
   });
 
-  if (!parsed['MO']) {
-    alert('二维码格式不正确，请重新扫描');
-    return;
+  // MO 번호가 없으면 QR 텍스트 전체를 MO 번호로 시도
+  if (!moNumber) {
+    // 혹시 단순 MO 번호만 있는 경우
+    if (qrText.match(/^[A-Z]{2}\d{2}-\d+/i)) {
+      moNumber = qrText;
+    } else {
+      alert('未能识别订单号\n\n扫描内容: ' + qrText);
+      return;
+    }
   }
 
   showScreen('screen-loading');
   document.getElementById('loading-msg').textContent = '正在读取订单信息...';
-  fetchMOData(parsed['MO'], parsed['SKU'], parsed['FACTORY']);
+  fetchMOData(moNumber, skuVal, factoryVal);
 }
 
 // Zoho에서 MO 데이터 조회
