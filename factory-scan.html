@@ -442,7 +442,7 @@ function fetchMOData(moNumber, sku, factory) {
     appName: APP,
     reportName: MO_REPORT,
     page: 1,
-    pageSize: 200
+    pageSize: 100
   }).then(function(res) {
     if (res.code === 3000 && res.data && res.data.length > 0) {
       var found = null;
@@ -486,7 +486,7 @@ function fetchLogHistory(moNumber) {
     appName: APP,
     reportName: LOG_REPORT,
     page: 1,
-    pageSize: 200
+    pageSize: 100
   }).then(function(res) {
     var logs = [];
     if (res.code === 3000 && res.data) {
@@ -542,7 +542,7 @@ function fetchLogs(moNumber) {
     appName: APP,
     reportName: LOG_REPORT,
     page: 1,
-    pageSize: 200
+    pageSize: 100
   }).then(function(res) {
     if (res.code === 3000 && res.data && res.data.length > 0) {
       var logs = res.data.filter(function(r) {
