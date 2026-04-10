@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>工序扫码更新 v13</title>
+<title>工序扫码更新 v14</title>
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -540,24 +540,35 @@ function fetchLogs(moNumber) {
       return;
     }
 
-    var h = '';
+    // DEBUG: show all keys of first record
+    var allKeys = Object.keys(logs[0]);
+    var firstVal = {};
+    allKeys.forEach(function(k){ firstVal[k] = logs[0][k]; });
+    var debugHtml = '<div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:8px;padding:8px;margin-bottom:8px;font-size:10px;color:#92400E;word-break:break-all">';
+    debugHtml += '<b>Keys:</b> ' + JSON.stringify(allKeys) + '<br>';
+    debugHtml += '<b>Worker raw:</b> ' + JSON.stringify(logs[0]['Worker']) + '<br>';
+    debugHtml += '<b>Log_Date raw:</b> ' + JSON.stringify(logs[0]['Log_Date']);
+    debugHtml += '</div>';
+
+    var h = debugHtml;
     logs.forEach(function(r) {
       var process   = r['Process'] || '-';
       var completed = parseInt(r['Completed_Qty']) || 0;
       var defect    = parseInt(r['Defect_Qty']) || 0;
-      var workerRaw = r['Worker'];
-      var worker = '';
-      if (workerRaw && typeof workerRaw === 'object') worker = workerRaw.display_value || '';
-      else worker = workerRaw || '';
-      worker = worker || '未填写';
-      var dateRaw = r['Log_Date'];
-      var date = '';
-      if (dateRaw && typeof dateRaw === 'object') date = dateRaw.display_value || '';
-      else date = dateRaw || '';
-      date = date || '-';
-      var notes     = r['Notes'] || '';
 
-      h += '<div class="log-item">';
+      // Worker: try multiple possible field names
+      var worker = r['Worker'] || r['Worker_Name'] || r['Responsible'] || '';
+      if (typeof worker === 'object') worker = worker.display_value || '';
+      worker = String(worker).trim() || '未填写';
+
+      // Log_Date: try multiple possible field names
+      var date = r['Log_Date'] || r['Log_DateTime'] || r['Created_Time'] || '';
+      if (typeof date === 'object') date = date.display_value || '';
+      date = String(date).trim() || '-';
+
+      var notes = r['Notes'] || '';
+
+      h += '<div class="log-item" onclick="openLogModal(this)" style="cursor:pointer" data-rec='' + JSON.stringify(r).replace(/'/g, "&#39;") + ''>';
       h += '<div><div class="log-process">' + process + '</div>';
       h += '<div class="log-meta">负责人: ' + worker + (notes ? ' · ' + notes : '') + '</div></div>';
       h += '<div><div class="log-qty">完成 ' + completed.toLocaleString() + '件';
@@ -714,9 +725,10 @@ function showErr(msg) {
   btn.disabled = false; btn.textContent = '确认提交 →';
 }
 
-function openLogModal(dataStr) {
+function openLogModal(el) {
   try {
-    var r = JSON.parse(dataStr.replace(/&quot;/g, '"'));
+    var dataStr = el.getAttribute('data-rec');
+    var r = JSON.parse(dataStr.replace(/&#39;/g, "'"));
     var process   = r['Process'] || '-';
     var completed = r['Completed_Qty'] || '0';
     var incomplete = r['Incomplete_Qty'] || '0';
