@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>工序扫码更新 v15</title>
+<title>工序扫码更新 v16</title>
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -540,18 +540,8 @@ function fetchLogs(moNumber) {
       return;
     }
 
-    // DEBUG: show all keys of first record
-    var allKeys = Object.keys(logs[0]);
-    var firstVal = {};
-    allKeys.forEach(function(k){ firstVal[k] = logs[0][k]; });
-    var debugHtml = '<div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:8px;padding:8px;margin-bottom:8px;font-size:10px;color:#92400E;word-break:break-all">';
-    debugHtml += '<b>Keys:</b> ' + JSON.stringify(allKeys) + '<br>';
-    debugHtml += '<b>Worker raw:</b> ' + JSON.stringify(logs[0]['Worker']) + '<br>';
-    debugHtml += '<b>Log_Date raw:</b> ' + JSON.stringify(logs[0]['Log_Date']);
-    debugHtml += '</div>';
-
     window._logData = logs;
-    var h = debugHtml;
+    var h = '';
     logs.forEach(function(r) {
       var process   = r['Process'] || '-';
       var completed = parseInt(r['Completed_Qty']) || 0;
