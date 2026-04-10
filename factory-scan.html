@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>工序扫码更新 v7</title>
+<title>工序扫码更新 v8</title>
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -439,6 +439,7 @@ function fetchLogs(moNumber) {
   section.style.display = 'block';
   list.innerHTML = '<div class="log-loading"><div class="log-spinner"></div>加载中...</div>';
 
+  console.log('[fetchLogs] called with moNumber:', moNumber);
   ZOHO.CREATOR.API.getAllRecords({
     appName: APP,
     reportName: LOG_REPORT,
@@ -499,8 +500,10 @@ function fetchLogs(moNumber) {
     });
     list.innerHTML = h;
 
-  }).catch(function() {
-    list.innerHTML = '<div class="log-empty">暂无记录</div>';
+  }).catch(function(err) {
+    console.log('[fetchLogs] error:', err);
+    list.innerHTML = '<div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:10px;font-size:11px;color:#B91C1C">'
+      + '<b>[ERROR]</b><br>' + JSON.stringify(err) + '</div>';
   });
 }
 
