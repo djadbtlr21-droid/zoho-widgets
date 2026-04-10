@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>工序扫码更新 v6</title>
+<title>工序扫码更新 v7</title>
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -446,13 +446,25 @@ function fetchLogs(moNumber) {
     pageSize: 100
   }).then(function(res) {
     var logs = [];
-    if (res.code === 3000 && res.data && res.data.length > 0) {
-      // DEBUG: show raw MO_Number value from first record
-      if (res.data.length > 0) {
-        var raw = res.data[0]['MO_Number'];
-        alert('DEBUG\n찾는 MO: ' + moNumber + ' (type: ' + typeof moNumber + ')\n받은 MO: ' + JSON.stringify(raw) + ' (type: ' + typeof raw + ')');
-      }
 
+    // DEBUG PANEL
+    var debugInfo = '';
+    debugInfo += '<div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:8px;padding:10px;margin-bottom:8px;font-size:11px;color:#92400E">';
+    debugInfo += '<b>[DEBUG]</b><br>';
+    debugInfo += '찾는 MO: <b>' + moNumber + '</b> (type: ' + typeof moNumber + ')<br>';
+
+    if (res.code === 3000 && res.data && res.data.length > 0) {
+      debugInfo += '총 레코드 수: <b>' + res.data.length + '</b><br>';
+      var raw0 = res.data[0]['MO_Number'];
+      debugInfo += '첫번째 MO_Number: <b>' + JSON.stringify(raw0) + '</b> (type: ' + typeof raw0 + ')';
+    } else {
+      debugInfo += '⚠️ API 응답 없음 또는 빈 데이터<br>';
+      debugInfo += 'res.code: ' + res.code;
+    }
+    debugInfo += '</div>';
+    list.innerHTML = debugInfo;
+
+    if (res.code === 3000 && res.data && res.data.length > 0) {
       logs = res.data.filter(function(r){
         var recMO = r['MO_Number'];
         if (typeof recMO === 'object') recMO = recMO.display_value || '';
@@ -464,7 +476,7 @@ function fetchLogs(moNumber) {
     }
 
     if (logs.length === 0) {
-      list.innerHTML = '<div class="log-empty">暂无工序记录</div>';
+      list.innerHTML += '<div class="log-empty">暂无工序记录</div>';
       return;
     }
 
