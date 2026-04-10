@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>工序扫码更新 v11</title>
+<title>工序扫码更新 v12</title>
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -530,8 +530,16 @@ function fetchLogs(moNumber) {
       var process   = r['Process'] || '-';
       var completed = parseInt(r['Completed_Qty']) || 0;
       var defect    = parseInt(r['Defect_Qty']) || 0;
-      var worker    = r['Worker'] || '-';
-      var date      = r['Log_Date'] || '-';
+      var workerRaw = r['Worker'];
+      var worker = '';
+      if (workerRaw && typeof workerRaw === 'object') worker = workerRaw.display_value || '';
+      else worker = workerRaw || '';
+      worker = worker || '未填写';
+      var dateRaw = r['Log_Date'];
+      var date = '';
+      if (dateRaw && typeof dateRaw === 'object') date = dateRaw.display_value || '';
+      else date = dateRaw || '';
+      date = date || '-';
       var notes     = r['Notes'] || '';
 
       h += '<div class="log-item">';
@@ -620,6 +628,7 @@ function submitData() {
     'Factory':        moData.factory,
     'Process':        selectedProcess,
     'Completed_Qty':  completedQty,
+    'Incomplete_Qty': incompleteQty,
     'Defect_Qty':     defectQty,
     'Bag_Qty':        bagQty,
     'Worker':         worker,
