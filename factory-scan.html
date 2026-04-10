@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>工序扫码更新 v10</title>
+<title>工序扫码更新 v11</title>
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -127,6 +127,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
       <div class="info-row"><span class="info-label">订单数量</span><span class="info-value" id="d-qty">-</span></div>
       <div class="info-row"><span class="info-label">当前状态</span><span class="status-pill" id="d-status">-</span></div>
     </div>
+    <div id="info-notes-card" style="display:none" class="card"></div>
+
     <div class="card">
       <div class="process-title">请选择当前工序</div>
       <div class="process-grid">
@@ -252,6 +254,42 @@ var PROCESS_MAP = {
   "Completed / 생산완료 / 生产完成": { dateStart: null,                dateEnd: null,                      qty: "Finished_Quantity" },
   "Shipped / 출고완료 / 已出货":  { dateStart: null,                   dateEnd: "Ship_Date",               qty: null }
 };
+
+function parsePlanNotes(planNotes) {
+  if (!planNotes) return [];
+  var lines = planNotes.split(/\n|\r\n|\r/);
+  var result = [];
+  lines.forEach(function(line) {
+    if (!line.trim()) return;
+    var parts = line.split('|');
+    var color = '', size = '', qty = '';
+    parts.forEach(function(part) {
+      part = part.trim();
+      if (/^Color:/i.test(part)) color = part.replace(/^Color:/i, '').trim();
+      else if (/^Size:/i.test(part)) size = part.replace(/^Size:/i, '').trim();
+      else if (/^Qty:/i.test(part)) qty = part.replace(/^Qty:/i, '').trim();
+    });
+    if (color || size || qty) result.push({ color: color, size: size, qty: qty });
+  });
+  return result;
+}
+
+function buildNotesTable(planNotes) {
+  var rows = parsePlanNotes(planNotes);
+  if (!rows.length) return '';
+  var h = '<div style="margin-top:10px;border-top:0.5px solid #E2E8F0;padding-top:10px">';
+  h += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;font-size:11px;font-weight:700;color:#94A3B8;padding:4px 0;border-bottom:0.5px solid #F1F5F9;margin-bottom:4px">';
+  h += '<span>颜色/Color</span><span style="text-align:center">尺码/Size</span><span style="text-align:right">数量/Qty</span></div>';
+  rows.forEach(function(r) {
+    h += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;font-size:12px;padding:5px 0;border-bottom:0.5px solid #F8FAFC">';
+    h += '<span style="color:#374151">' + r.color + '</span>';
+    h += '<span style="text-align:center;color:#374151">' + r.size + '</span>';
+    h += '<span style="text-align:right;font-weight:600;color:#1E3A8A">' + r.qty + '</span>';
+    h += '</div>';
+  });
+  h += '</div>';
+  return h;
+}
 
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
@@ -412,7 +450,7 @@ function fetchMOData(moNumber, sku, factory) {
         factory: factory || '-',
         order_qty: parseInt(r['Plan_Total_Quantity']) || 0,
         current_status: r['Production_Status'] || '-',
-        plan_lines: r['Plan_MO_Lines'] || []
+        plan_notes: r['Plan_Notes'] || ''
       };
 
       document.getElementById('d-mo').textContent      = moData.mo_number;
@@ -420,6 +458,16 @@ function fetchMOData(moNumber, sku, factory) {
       document.getElementById('d-factory').textContent  = moData.factory;
       document.getElementById('d-qty').textContent      = moData.order_qty.toLocaleString() + ' 件';
       document.getElementById('d-status').textContent   = moData.current_status;
+
+      // Show Plan_Notes table on screen-info
+      var notesTable = buildNotesTable(moData.plan_notes);
+      var notesCard = document.getElementById('info-notes-card');
+      if (notesTable) {
+        notesCard.innerHTML = '<div class="card-title">订单明细 / 주문내용</div>' + notesTable;
+        notesCard.style.display = 'block';
+      } else {
+        notesCard.style.display = 'none';
+      }
 
       showScreen('screen-info');
 
@@ -458,7 +506,17 @@ function fetchLogs(moNumber) {
         return recMO === moNumber;
       });
       logs.sort(function(a, b){
-        return new Date(b['Log_Date'] || 0) - new Date(a['Log_Date'] || 0);
+        var da = a['Log_Date'] || '';
+        var db = b['Log_Date'] || '';
+        // Parse dd-MMM-yyyy HH:mm:ss for reliable comparison
+        function parseDate(s) {
+          if (!s) return 0;
+          var months = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+          var m = s.match(/(\d{2})-([A-Za-z]{3})-(\d{4})\s+(\d{2}):(\d{2}):(\d{2})/);
+          if (!m) return 0;
+          return new Date(+m[3], months[m[2]], +m[1], +m[4], +m[5], +m[6]).getTime();
+        }
+        return parseDate(db) - parseDate(da);
       });
     }
 
@@ -503,29 +561,10 @@ function selectProcess(el, process, processCN) {
   document.getElementById('c-process').textContent  = processCN + ' (' + process + ')';
   document.getElementById('c-orderqty').textContent = moData.order_qty.toLocaleString() + ' 件';
 
-  // Render subform lines
-  var lines = moData.plan_lines || [];
+  // Render Plan_Notes table on screen-input
   var subformEl = document.getElementById('c-subform');
-  if (lines.length > 0) {
-    var sh = '<div style="margin-top:8px;border-top:0.5px solid #F1F5F9;padding-top:8px">';
-    sh += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;font-size:11px;font-weight:700;color:#94A3B8;padding:4px 0;border-bottom:0.5px solid #F1F5F9;margin-bottom:4px">';
-    sh += '<span>颜色/Color</span><span style="text-align:center">尺码/Size</span><span style="text-align:right">数量/Qty</span></div>';
-    var arr = Array.isArray(lines) ? lines : Object.values(lines);
-    arr.forEach(function(line) {
-      var color = line['Plan_Color'] || '-';
-      var size  = line['Plan_Sizes'] || '-';
-      var qty   = parseInt(line['Plan_Quantity']) || 0;
-      sh += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;font-size:12px;padding:4px 0;border-bottom:0.5px solid #F8FAFC">';
-      sh += '<span style="color:#374151">' + color + '</span>';
-      sh += '<span style="text-align:center;color:#374151">' + size + '</span>';
-      sh += '<span style="text-align:right;font-weight:600;color:#1E3A8A">' + qty.toLocaleString() + '</span>';
-      sh += '</div>';
-    });
-    sh += '</div>';
-    subformEl.innerHTML = sh;
-  } else {
-    subformEl.innerHTML = '';
-  }
+  var notesHtml = buildNotesTable(moData.plan_notes);
+  subformEl.innerHTML = notesHtml || '';
 
   var showBag = (process.indexOf('Packing') >= 0 || process.indexOf('Shipped') >= 0);
   document.getElementById('bag-group').style.display = showBag ? 'block' : 'none';
