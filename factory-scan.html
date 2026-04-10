@@ -447,7 +447,11 @@ function fetchLogs(moNumber) {
   }).then(function(res) {
     var logs = [];
     if (res.code === 3000 && res.data && res.data.length > 0) {
-      logs = res.data.filter(function(r){ return r['MO_Number'] === moNumber; });
+      logs = res.data.filter(function(r){
+        var recMO = r['MO_Number'];
+        if (typeof recMO === 'object') recMO = recMO.display_value || '';
+        return recMO === moNumber;
+      });
       logs.sort(function(a, b){
         return new Date(b['Log_Date'] || 0) - new Date(a['Log_Date'] || 0);
       });
