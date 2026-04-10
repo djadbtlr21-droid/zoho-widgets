@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>工序扫码更新 v5</title>
+<title>工序扫码更新 v6</title>
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -447,6 +447,12 @@ function fetchLogs(moNumber) {
   }).then(function(res) {
     var logs = [];
     if (res.code === 3000 && res.data && res.data.length > 0) {
+      // DEBUG: show raw MO_Number value from first record
+      if (res.data.length > 0) {
+        var raw = res.data[0]['MO_Number'];
+        alert('DEBUG\n찾는 MO: ' + moNumber + ' (type: ' + typeof moNumber + ')\n받은 MO: ' + JSON.stringify(raw) + ' (type: ' + typeof raw + ')');
+      }
+
       logs = res.data.filter(function(r){
         var recMO = r['MO_Number'];
         if (typeof recMO === 'object') recMO = recMO.display_value || '';
