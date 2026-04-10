@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>工序扫码更新 v14</title>
+<title>工序扫码更新 v15</title>
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -550,6 +550,7 @@ function fetchLogs(moNumber) {
     debugHtml += '<b>Log_Date raw:</b> ' + JSON.stringify(logs[0]['Log_Date']);
     debugHtml += '</div>';
 
+    window._logData = logs;
     var h = debugHtml;
     logs.forEach(function(r) {
       var process   = r['Process'] || '-';
@@ -568,7 +569,8 @@ function fetchLogs(moNumber) {
 
       var notes = r['Notes'] || '';
 
-      h += '<div class="log-item" onclick="openLogModal(this)" style="cursor:pointer" data-rec='' + JSON.stringify(r).replace(/'/g, "&#39;") + ''>';
+      var logIdx = logs.indexOf(r);
+      h += '<div class="log-item" onclick="openLogModal(' + logIdx + ')" style="cursor:pointer">';
       h += '<div><div class="log-process">' + process + '</div>';
       h += '<div class="log-meta">负责人: ' + worker + (notes ? ' · ' + notes : '') + '</div></div>';
       h += '<div><div class="log-qty">完成 ' + completed.toLocaleString() + '件';
@@ -725,10 +727,10 @@ function showErr(msg) {
   btn.disabled = false; btn.textContent = '确认提交 →';
 }
 
-function openLogModal(el) {
+function openLogModal(idx) {
   try {
-    var dataStr = el.getAttribute('data-rec');
-    var r = JSON.parse(dataStr.replace(/&#39;/g, "'"));
+    var r = window._logData[idx];
+    if (!r) return;
     var process   = r['Process'] || '-';
     var completed = r['Completed_Qty'] || '0';
     var incomplete = r['Incomplete_Qty'] || '0';
