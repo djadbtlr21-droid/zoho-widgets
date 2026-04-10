@@ -3,22 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>工序扫码更新</title>
+<title>工序扫码更新 v4</title>
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#F5F7FA;min-height:100vh;padding:16px}
 .container{max-width:480px;margin:0 auto}
-.screen{display:none}
-.screen.active{display:block}
+.screen{display:none}.screen.active{display:block}
 
-/* 헤더 */
 .hdr{text-align:center;margin-bottom:24px;padding-top:8px}
 .hdr h1{font-size:20px;font-weight:700;color:#1A1A2E}
 .hdr p{font-size:13px;color:#64748B;margin-top:4px}
 .logo-badge{display:inline-block;background:#1E3A8A;color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:8px;letter-spacing:1px}
 
-/* 스캔 화면 */
 .scan-area{background:#fff;border:2px dashed #CBD5E1;border-radius:16px;padding:40px 20px;text-align:center;margin-bottom:16px;cursor:pointer;transition:border-color .2s,background .2s}
 .scan-area:active{background:#F0F7FF;border-color:#3B82F6}
 .qr-icon{width:80px;height:80px;margin:0 auto 16px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -32,16 +29,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 .btn-main{width:100%;padding:16px;background:#1E3A8A;color:#fff;border:none;border-radius:12px;font-size:17px;font-weight:700;cursor:pointer;letter-spacing:.5px}
 .btn-main:active{background:#1e40af;transform:scale(.98)}
 
-/* 카드 */
 .card{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:16px;margin-bottom:12px}
 .card-title{font-size:12px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
-.info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #F1F5F9}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid #F1F5F9}
 .info-row:last-child{border-bottom:none}
 .info-label{font-size:13px;color:#64748B}
 .info-value{font-size:13px;font-weight:600;color:#1A1A2E;text-align:right;max-width:60%}
 .status-pill{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;background:#FEF3C7;color:#B45309}
 
-/* 공정 버튼 */
 .process-title{font-size:14px;font-weight:700;color:#1A1A2E;margin-bottom:10px}
 .process-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
 .proc-btn{padding:14px 8px;border:1.5px solid #E2E8F0;border-radius:10px;background:#fff;cursor:pointer;text-align:center;transition:all .15s}
@@ -53,16 +48,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 .proc-btn.selected .proc-name{color:#1E3A8A}
 .proc-full{grid-column:1 / -1}
 
-/* 입력 폼 */
 .input-group{margin-bottom:14px}
 .input-group label{font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:6px}
 .input-group label span{color:#EF4444;margin-left:2px}
 .input-field{width:100%;padding:12px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:15px;color:#1A1A2E;background:#fff;outline:none;-webkit-appearance:none}
 .input-field:focus{border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
 .input-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.ref-badge{display:inline-block;font-size:11px;color:#7C3AED;background:#F5F3FF;padding:2px 8px;border-radius:6px;margin-bottom:8px;font-weight:600}
 
-/* 버튼 */
 .btn-row{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:8px}
 .btn-back{padding:14px;border:1.5px solid #E2E8F0;border-radius:10px;background:#fff;font-size:14px;font-weight:600;color:#64748B;cursor:pointer}
 .btn-back:active{background:#F8FAFC}
@@ -70,41 +62,32 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 .btn-submit:active{background:#1e40af;transform:scale(.98)}
 .btn-submit:disabled{background:#94A3B8;cursor:not-allowed}
 
-/* 성공 화면 */
 .success-wrap{text-align:center;padding:32px 16px}
-.success-circle{width:80px;height:80px;border-radius:50%;background:#D1FAE5;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:36px}
+.success-circle{width:80px;height:80px;border-radius:50%;background:#D1FAE5;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:36px;color:#065F46}
 .success-wrap h2{font-size:22px;font-weight:700;color:#065F46;margin-bottom:6px}
 .success-wrap p{font-size:14px;color:#64748B;margin-bottom:24px}
 .btn-again{width:100%;padding:14px;border:1.5px solid #E2E8F0;border-radius:10px;background:#fff;font-size:15px;font-weight:600;color:#1A1A2E;cursor:pointer;margin-bottom:10px}
 .btn-again:active{background:#F8FAFC}
 
-/* 로딩 */
 .loading-wrap{text-align:center;padding:40px 16px}
 .spinner{width:36px;height:36px;border:3px solid #E2E8F0;border-top-color:#1E3A8A;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-wrap p{font-size:14px;color:#64748B}
 
-/* 에러 */
 .err-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:16px;text-align:center;color:#B91C1C;font-size:13px;margin-bottom:12px}
-
-/* 뒤로 버튼 */
 .back-link{display:flex;align-items:center;gap:6px;font-size:13px;color:#64748B;cursor:pointer;margin-bottom:16px;font-weight:500}
 .back-link:active{color:#1E3A8A}
-.log-item{padding:10px 0;border-bottom:0.5px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center}
-.log-item:last-child{border-bottom:none}
-.log-left .log-process{font-size:13px;font-weight:600;color:#1E3A8A}
-.log-left .log-meta{font-size:11px;color:#94A3B8;margin-top:2px}
-.log-right{text-align:right}
-.log-qty{font-size:13px;font-weight:600;color:#1A1A2E}
-.log-date{font-size:11px;color:#94A3B8;margin-top:2px}
-.log-empty{text-align:center;padding:16px;font-size:13px;color:#94A3B8}
-.log-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid #F1F5F9}
+
+/* 공정 기록 */
+.log-item{padding:10px 0;border-bottom:0.5px solid #F1F5F9;display:flex;justify-content:space-between;align-items:flex-start}
 .log-item:last-child{border-bottom:none}
 .log-process{font-size:13px;font-weight:600;color:#1E3A8A}
-.log-detail{font-size:11px;color:#64748B;margin-top:2px}
-.log-right{text-align:right}
-.log-qty{font-size:13px;font-weight:600;color:#1A1A2E}
-.log-date{font-size:11px;color:#94A3B8;margin-top:2px}
+.log-meta{font-size:11px;color:#94A3B8;margin-top:3px}
+.log-qty{font-size:13px;font-weight:600;color:#1A1A2E;text-align:right}
+.log-date{font-size:11px;color:#94A3B8;margin-top:3px;text-align:right}
+.log-empty{text-align:center;padding:16px;font-size:13px;color:#94A3B8}
+.log-loading{text-align:center;padding:12px;font-size:12px;color:#94A3B8}
+.log-spinner{width:20px;height:20px;border:2px solid #E2E8F0;border-top-color:#1E3A8A;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 6px}
 </style>
 </head>
 <body>
@@ -165,13 +148,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
         <div class="proc-btn" onclick="selectProcess(this,'Completed / 생산완료 / 生产完成','生产完成')">
           <span class="proc-icon">✅</span>
           <div class="proc-name">生产完成</div>
-          <div class="proc-sub">Production Completed</div>
+          <div class="proc-sub">Completed</div>
         </div>
         <div class="proc-btn proc-full" onclick="selectProcess(this,'Shipped / 출고완료 / 已出货','出货完成')">
           <span class="proc-icon">🚚</span>
           <div class="proc-name">出货</div>
           <div class="proc-sub">Shipped</div>
         </div>
+      </div>
+    </div>
+
+    <!-- 공정 기록 -->
+    <div class="card" id="log-section" style="display:none">
+      <div class="card-title">工序记录 / 공정기록</div>
+      <div id="log-list">
+        <div class="log-loading"><div class="log-spinner"></div>加载中...</div>
       </div>
     </div>
   </div>
@@ -239,101 +230,71 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 </div>
 
 <script>
-// ⚙️ 설정 (앱 이름 바뀌면 여기만 수정)
+// ⚙️ 설정
 var ACCOUNT = "jeramoda";
 var APP = "eom";
 var MO_REPORT = "All_MO";
-var LOG_REPORT = "Add_Production_Log";
 var LOG_FORM = "Add_Production_Log";
+var LOG_REPORT = "Add_Production_Log";
 
 var moData = {};
 var moRecordId = "";
 var selectedProcess = "";
 var selectedProcessCN = "";
 
-// 공정별 Add_MO 업데이트 필드 매핑
-var PROCESS_FIELD_MAP = {
-  "Cutting / 재단 / 裁剪": {
-    status: "Cutting / 재단 / 裁剪",
-    dateStart: "Cutting_Start_Date",
-    dateEnd: "Cutting_End_Date",
-    qtyField: "Cut_Quantity"
-  },
-  "Sewing / 봉제 / 缝制": {
-    status: "Sewing / 봉제 / 缝制",
-    dateStart: "Sewing_Start_Date",
-    dateEnd: "Sewing_Completion_Date",
-    qtyField: null
-  },
-  "Packing / 포장 / 包装": {
-    status: "Packing / 포장 / 包装",
-    dateStart: "Packing_Start_Date",
-    dateEnd: "Packing_End_Date",
-    qtyField: null
-  },
-  "Completed / 생산완료 / 生产完成": {
-    status: "Completed / 생산완료 / 生产完成",
-    dateStart: null,
-    dateEnd: null,
-    qtyField: "Finished_Quantity"
-  },
-  "Shipped / 출고완료 / 已出货": {
-    status: "Shipped / 출고완료 / 已出货",
-    dateStart: null,
-    dateEnd: "Ship_Date",
-    qtyField: null
-  }
+var PROCESS_MAP = {
+  "Cutting / 재단 / 裁剪":       { dateStart: "Cutting_Start_Date",   dateEnd: "Cutting_End_Date",        qty: "Cut_Quantity" },
+  "Sewing / 봉제 / 缝制":        { dateStart: "Sewing_Start_Date",    dateEnd: "Sewing_Completion_Date",  qty: null },
+  "Packing / 포장 / 包装":       { dateStart: "Packing_Start_Date",   dateEnd: "Packing_End_Date",        qty: null },
+  "Completed / 생산완료 / 生产完成": { dateStart: null,                dateEnd: null,                      qty: "Finished_Quantity" },
+  "Shipped / 출고완료 / 已出货":  { dateStart: null,                   dateEnd: "Ship_Date",               qty: null }
 };
 
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
   document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
 }
 
 function goToScan() {
   moData = {}; moRecordId = ""; selectedProcess = ""; selectedProcessCN = "";
-  document.getElementById('log-section').style.display = 'none';
   document.querySelectorAll('.proc-btn').forEach(function(b){ b.classList.remove('selected'); });
+  document.getElementById('log-section').style.display = 'none';
+  document.getElementById('log-list').innerHTML = '';
   showScreen('screen-scan');
 }
 
 function resetAll() {
-  goToScan();
   ['f-completed','f-defect','f-bag','f-worker','f-notes'].forEach(function(id){
     var el = document.getElementById(id); if(el) el.value = '';
   });
   document.getElementById('submit-err').innerHTML = '';
+  goToScan();
 }
 
-// QR 스캔 (jsQR 라이브러리 사용)
+// ── QR 스캔 ──────────────────────────────────────
 function startScan() {
-  // jsQR을 동적으로 로드
   if (typeof jsQR === 'undefined') {
-    var script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';
-    script.onload = function(){ openCamera(); };
-    script.onerror = function(){ alert('二维码扫描功能加载失败，请重试'); };
-    document.head.appendChild(script);
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';
+    s.onload = openCamera;
+    s.onerror = function(){ alert('扫描功能加载失败，请重试'); };
+    document.head.appendChild(s);
   } else {
     openCamera();
   }
 }
 
 function openCamera() {
-  // 카메라 UI 생성
   var overlay = document.createElement('div');
   overlay.id = 'cam-overlay';
   overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center';
 
   var video = document.createElement('video');
-  video.id = 'cam-video';
   video.style.cssText = 'width:100%;max-width:480px;max-height:60vh;object-fit:cover;border-radius:8px';
-  video.setAttribute('playsinline','');
-  video.setAttribute('autoplay','');
+  video.setAttribute('playsinline',''); video.setAttribute('autoplay','');
 
   var canvas = document.createElement('canvas');
-  canvas.id = 'cam-canvas';
   canvas.style.display = 'none';
 
   var hint = document.createElement('p');
@@ -343,12 +304,10 @@ function openCamera() {
   var closeBtn = document.createElement('button');
   closeBtn.style.cssText = 'margin-top:16px;padding:12px 32px;background:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;color:#1E3A8A';
   closeBtn.textContent = '取消';
-  closeBtn.onclick = function(){ closeCamera(); };
+  closeBtn.onclick = function(){ stopCamera(stream); };
 
-  overlay.appendChild(video);
-  overlay.appendChild(canvas);
-  overlay.appendChild(hint);
-  overlay.appendChild(closeBtn);
+  overlay.appendChild(video); overlay.appendChild(canvas);
+  overlay.appendChild(hint); overlay.appendChild(closeBtn);
   document.body.appendChild(overlay);
 
   var stream = null;
@@ -356,28 +315,25 @@ function openCamera() {
 
   navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
     .then(function(s) {
-      stream = s;
-      video.srcObject = s;
-      video.play();
+      stream = s; video.srcObject = s; video.play();
       requestAnimationFrame(tick);
     })
     .catch(function(err) {
-      closeCamera();
+      stopCamera(null);
       alert('无法访问摄像头: ' + err.message);
     });
 
   function tick() {
     if (!scanning) return;
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+      canvas.width = video.videoWidth; canvas.height = video.videoHeight;
       var ctx = canvas.getContext('2d');
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       var code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' });
       if (code) {
         scanning = false;
-        closeCamera(stream);
+        stopCamera(stream);
         processQRData(code.data);
         return;
       }
@@ -385,50 +341,33 @@ function openCamera() {
     requestAnimationFrame(tick);
   }
 
-  function closeCamera(s) {
+  function stopCamera(s) {
     scanning = false;
     if (s) s.getTracks().forEach(function(t){ t.stop(); });
     var el = document.getElementById('cam-overlay');
     if (el) el.remove();
   }
-
-  window._closeCamera = function(){ closeCamera(stream); };
 }
 
-function closeCamera() {
-  if (window._closeCamera) window._closeCamera();
-}
-
-// QR 데이터 파싱: MO:TS26-15|SKU:26-03-SS26-W|FACTORY:宁军
+// ── QR 파싱 ──────────────────────────────────────
 function processQRData(qrText) {
-  qrText = qrText.trim();
+  qrText = (qrText || '').trim();
+  var moNumber = '', skuVal = '', factoryVal = '';
 
-  var moNumber = '';
-  var skuVal = '';
-  var factoryVal = '';
-
-  // | 또는 공백/줄바꿈 기준으로 분리
-  var parts = qrText.split(/[|\n\r]+/);
-  parts.forEach(function(part) {
+  qrText.split(/[|\n\r]+/).forEach(function(part) {
     part = part.trim();
-    var colonIdx = part.indexOf(':');
-    if (colonIdx < 0) return;
-    var key = part.substring(0, colonIdx).trim().toUpperCase();
-    var val = part.substring(colonIdx + 1).trim();
+    var idx = part.indexOf(':');
+    if (idx < 0) return;
+    var key = part.substring(0, idx).trim().toUpperCase();
+    var val = part.substring(idx + 1).trim();
     if (key === 'MO') moNumber = val;
     else if (key === 'SKU') skuVal = val;
     else if (key === 'FACTORY') factoryVal = val;
   });
 
-  // MO 번호가 없으면 QR 텍스트 전체를 MO 번호로 시도
   if (!moNumber) {
-    // 혹시 단순 MO 번호만 있는 경우
-    if (qrText.match(/^[A-Z]{2}\d{2}-\d+/i)) {
-      moNumber = qrText;
-    } else {
-      alert('未能识别订单号\n\n扫描内容: ' + qrText);
-      return;
-    }
+    if (/^[A-Z]{2}\d{2}-\d+/i.test(qrText)) moNumber = qrText;
+    else { alert('未能识别订单号\n\n扫描内容: ' + qrText); return; }
   }
 
   showScreen('screen-loading');
@@ -436,7 +375,7 @@ function processQRData(qrText) {
   fetchMOData(moNumber, skuVal, factoryVal);
 }
 
-// Zoho에서 MO 데이터 조회
+// ── Zoho MO 조회 ─────────────────────────────────
 function fetchMOData(moNumber, sku, factory) {
   ZOHO.CREATOR.API.getAllRecords({
     appName: APP,
@@ -451,26 +390,38 @@ function fetchMOData(moNumber, sku, factory) {
       }
       if (!found) {
         showScreen('screen-scan');
-        alert('未找到订单号: ' + moNumber);
+        alert('未找到订单号: ' + moNumber + '\n请确认后重新扫描');
         return;
       }
       var r = found;
       moRecordId = r['ID'];
+
       var skuRaw = r['Style_SKU'];
       var skuStr = sku || '-';
       if (skuRaw) {
         if (typeof skuRaw === 'object') skuStr = skuRaw.display_value || skuRaw.Style_SKU || skuStr;
         else if (skuRaw !== '-') skuStr = skuRaw;
       }
+
       moData = {
         mo_number: r['MO_Number'] || moNumber,
         sku: skuStr,
         factory: factory || '-',
         order_qty: parseInt(r['Plan_Total_Quantity']) || 0,
-        current_status: r['Production_Status'] || '-',
-        record: r
+        current_status: r['Production_Status'] || '-'
       };
-      showMOInfo();
+
+      document.getElementById('d-mo').textContent      = moData.mo_number;
+      document.getElementById('d-sku').textContent      = moData.sku;
+      document.getElementById('d-factory').textContent  = moData.factory;
+      document.getElementById('d-qty').textContent      = moData.order_qty.toLocaleString() + ' 件';
+      document.getElementById('d-status').textContent   = moData.current_status;
+
+      showScreen('screen-info');
+
+      // 300ms 딜레이 후 로그 조회
+      setTimeout(function(){ fetchLogs(moData.mo_number); }, 300);
+
     } else {
       showScreen('screen-scan');
       alert('未找到订单号: ' + moNumber + '\n请确认后重新扫描');
@@ -481,7 +432,13 @@ function fetchMOData(moNumber, sku, factory) {
   });
 }
 
-function fetchLogHistory(moNumber) {
+// ── 공정 기록 조회 (단일 함수) ───────────────────
+function fetchLogs(moNumber) {
+  var section = document.getElementById('log-section');
+  var list    = document.getElementById('log-list');
+  section.style.display = 'block';
+  list.innerHTML = '<div class="log-loading"><div class="log-spinner"></div>加载中...</div>';
+
   ZOHO.CREATOR.API.getAllRecords({
     appName: APP,
     reportName: LOG_REPORT,
@@ -489,129 +446,57 @@ function fetchLogHistory(moNumber) {
     pageSize: 100
   }).then(function(res) {
     var logs = [];
-    if (res.code === 3000 && res.data) {
-      logs = res.data.filter(function(r) {
-        return r['MO_Number'] === moNumber;
-      });
-      logs.sort(function(a, b) {
-        return (b['Log_ID'] || 0) - (a['Log_ID'] || 0);
-      });
-    }
-    renderLogHistory(logs);
-  }).catch(function() {
-    document.getElementById('log-history-body').innerHTML =
-      '<div style="text-align:center;padding:12px;color:#EF4444;font-size:12px">记录加载失败</div>';
-  });
-}
-
-function renderLogHistory(logs) {
-  var card = document.getElementById('log-history-card');
-  var body = document.getElementById('log-history-body');
-  if (logs.length === 0) {
-    card.style.display = 'block';
-    body.innerHTML = '<div style="text-align:center;padding:12px;color:#94A3B8;font-size:12px">暂无工序记录</div>';
-    return;
-  }
-  card.style.display = 'block';
-  var h = '';
-  logs.forEach(function(r) {
-    var process = r['Process'] || '-';
-    var completed = parseInt(r['Completed_Qty']) || 0;
-    var defect = parseInt(r['Defect_Qty']) || 0;
-    var worker = r['Worker'] || '-';
-    var date = r['Log_Date'] || '-';
-    var notes = r['Notes'] || '';
-    h += '<div class="log-item">';
-    h += '<div><div class="log-process">' + process + '</div>';
-    h += '<div class="log-detail">负责人: ' + worker + (notes ? ' · ' + notes : '') + '</div></div>';
-    h += '<div class="log-right"><div class="log-qty">完成: ' + completed.toLocaleString() + ' 件';
-    if (defect > 0) h += ' / 不良: ' + defect;
-    h += '</div><div class="log-date">' + date + '</div></div>';
-    h += '</div>';
-  });
-  body.innerHTML = h;
-}
-
-function fetchLogs(moNumber) {
-  var logSection = document.getElementById('log-section');
-  var logList = document.getElementById('log-list');
-  logSection.style.display = 'block';
-  logList.innerHTML = '<div style="text-align:center;padding:16px;font-size:13px;color:#94A3B8">加载中...</div>';
-
-  ZOHO.CREATOR.API.getAllRecords({
-    appName: APP,
-    reportName: LOG_REPORT,
-    page: 1,
-    pageSize: 100
-  }).then(function(res) {
     if (res.code === 3000 && res.data && res.data.length > 0) {
-      var logs = res.data.filter(function(r) {
-        return r['MO_Number'] === moNumber;
+      logs = res.data.filter(function(r){ return r['MO_Number'] === moNumber; });
+      logs.sort(function(a, b){
+        return new Date(b['Log_Date'] || 0) - new Date(a['Log_Date'] || 0);
       });
-      logs.sort(function(a, b) {
-        return new Date(b['Log_Date']) - new Date(a['Log_Date']);
-      });
-      if (logs.length === 0) {
-        logList.innerHTML = '<div class="log-empty">暂无工序记录</div>';
-        return;
-      }
-      var h = '';
-      logs.forEach(function(r) {
-        var process = r['Process'] || '-';
-        var completed = parseInt(r['Completed_Qty']) || 0;
-        var defect = parseInt(r['Defect_Qty']) || 0;
-        var worker = r['Worker'] || '-';
-        var date = r['Log_Date'] || '-';
-        var notes = r['Notes'] || '';
-        h += '<div class="log-item">';
-        h += '<div class="log-left">';
-        h += '<div class="log-process">' + process + '</div>';
-        h += '<div class="log-meta">负责人: ' + worker + (notes ? ' · ' + notes : '') + '</div>';
-        h += '</div>';
-        h += '<div class="log-right">';
-        h += '<div class="log-qty">完成: ' + completed.toLocaleString() + '件';
-        if (defect > 0) h += ' / 不良: ' + defect + '件';
-        h += '</div>';
-        h += '<div class="log-date">' + date + '</div>';
-        h += '</div>';
-        h += '</div>';
-      });
-      logList.innerHTML = h;
-    } else {
-      logList.innerHTML = '<div class="log-empty">暂无工序记录</div>';
     }
+
+    if (logs.length === 0) {
+      list.innerHTML = '<div class="log-empty">暂无工序记录</div>';
+      return;
+    }
+
+    var h = '';
+    logs.forEach(function(r) {
+      var process   = r['Process'] || '-';
+      var completed = parseInt(r['Completed_Qty']) || 0;
+      var defect    = parseInt(r['Defect_Qty']) || 0;
+      var worker    = r['Worker'] || '-';
+      var date      = r['Log_Date'] || '-';
+      var notes     = r['Notes'] || '';
+
+      h += '<div class="log-item">';
+      h += '<div><div class="log-process">' + process + '</div>';
+      h += '<div class="log-meta">负责人: ' + worker + (notes ? ' · ' + notes : '') + '</div></div>';
+      h += '<div><div class="log-qty">完成 ' + completed.toLocaleString() + '件';
+      if (defect > 0) h += ' / 不良 ' + defect + '件';
+      h += '</div><div class="log-date">' + date + '</div></div>';
+      h += '</div>';
+    });
+    list.innerHTML = h;
+
   }).catch(function() {
-    logList.innerHTML = '<div class="log-empty">暂无记录</div>';
+    list.innerHTML = '<div class="log-empty">暂无记录</div>';
   });
 }
 
-function showMOInfo() {
-  document.getElementById('d-mo').textContent = moData.mo_number;
-  document.getElementById('d-sku').textContent = moData.sku;
-  document.getElementById('d-factory').textContent = moData.factory;
-  document.getElementById('d-qty').textContent = moData.order_qty.toLocaleString() + ' 件';
-  document.getElementById('d-status').textContent = moData.current_status;
-  document.getElementById('log-history-card').style.display = 'none';
-  fetchLogHistory(moData.mo_number);
-  showScreen('screen-info');
-}
-
+// ── 공정 선택 ─────────────────────────────────────
 function selectProcess(el, process, processCN) {
   document.querySelectorAll('.proc-btn').forEach(function(b){ b.classList.remove('selected'); });
   el.classList.add('selected');
   selectedProcess = process;
   selectedProcessCN = processCN;
 
-  document.getElementById('c-mo').textContent = moData.mo_number;
-  document.getElementById('c-sku').textContent = moData.sku;
-  document.getElementById('c-process').textContent = processCN + ' (' + process + ')';
+  document.getElementById('c-mo').textContent       = moData.mo_number;
+  document.getElementById('c-sku').textContent      = moData.sku;
+  document.getElementById('c-process').textContent  = processCN + ' (' + process + ')';
   document.getElementById('c-orderqty').textContent = moData.order_qty.toLocaleString() + ' 件';
 
-  // 마대수량 필드: 포장/출고만 표시
-  document.getElementById('bag-group').style.display =
-    (process.indexOf('Packing') >= 0 || process.indexOf('Shipped') >= 0) ? 'block' : 'none';
+  var showBag = (process.indexOf('Packing') >= 0 || process.indexOf('Shipped') >= 0);
+  document.getElementById('bag-group').style.display = showBag ? 'block' : 'none';
 
-  // 입력값 초기화
   ['f-completed','f-defect','f-bag','f-worker','f-notes'].forEach(function(id){
     var el2 = document.getElementById(id); if(el2) el2.value = '';
   });
@@ -620,42 +505,44 @@ function selectProcess(el, process, processCN) {
   setTimeout(function(){ showScreen('screen-input'); }, 150);
 }
 
+// ── 날짜 형식 dd-MMM-yyyy ─────────────────────────
 function getTodayStr() {
   var d = new Date();
   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var dd = d.getDate();
-  return (dd<10?'0'+dd:dd)+'-'+months[d.getMonth()]+'-'+d.getFullYear();
+  return (dd < 10 ? '0' + dd : dd) + '-' + months[d.getMonth()] + '-' + d.getFullYear();
 }
 
+// ── 제출 ──────────────────────────────────────────
 function submitData() {
   var completedQty = parseInt(document.getElementById('f-completed').value) || 0;
-  var defectQty = parseInt(document.getElementById('f-defect').value) || 0;
-  var bagQty = parseInt(document.getElementById('f-bag').value) || 0;
-  var worker = document.getElementById('f-worker').value.trim();
-  var notes = document.getElementById('f-notes').value.trim();
-  var todayStr = getTodayStr();
+  var defectQty    = parseInt(document.getElementById('f-defect').value) || 0;
+  var bagQty       = parseInt(document.getElementById('f-bag').value) || 0;
+  var worker       = document.getElementById('f-worker').value.trim();
+  var notes        = document.getElementById('f-notes').value.trim();
+  var todayStr     = getTodayStr();
 
   if (completedQty <= 0) {
     document.getElementById('submit-err').innerHTML = '<div class="err-box">请输入完成数量</div>';
     return;
   }
 
-  document.getElementById('btn-submit').disabled = true;
-  document.getElementById('btn-submit').textContent = '提交中...';
+  var btn = document.getElementById('btn-submit');
+  btn.disabled = true; btn.textContent = '提交中...';
   document.getElementById('submit-err').innerHTML = '';
 
-  // 1단계: Add_Production_Log에 새 레코드 추가
+  // 1. Add_Production_Log 저장
   var logData = {
-    'MO_Number': moData.mo_number,
-    'SKU': moData.sku,
-    'Factory': moData.factory,
-    'Process': selectedProcess,
+    'MO_Number':    moData.mo_number,
+    'SKU':          moData.sku,
+    'Factory':      moData.factory,
+    'Process':      selectedProcess,
     'Completed_Qty': completedQty,
-    'Defect_Qty': defectQty,
-    'Bag_Qty': bagQty,
-    'Worker': worker,
-    'Log_Date': todayStr,
-    'Notes': notes
+    'Defect_Qty':   defectQty,
+    'Bag_Qty':      bagQty,
+    'Worker':       worker,
+    'Log_Date':     todayStr,
+    'Notes':        notes
   };
 
   ZOHO.CREATOR.API.addRecord({
@@ -664,77 +551,68 @@ function submitData() {
     data: { data: logData }
   }).then(function(res) {
     if (res.code === 3000) {
-      // 2단계: Add_MO 레코드 업데이트
-      updateMORecord(completedQty, defectQty, todayStr, worker, notes);
+      updateMO(completedQty, todayStr);
     } else {
-      showSubmitError('日志保存失败: ' + JSON.stringify(res));
+      showErr('日志保存失败: ' + JSON.stringify(res));
     }
   }).catch(function(err) {
-    showSubmitError('提交失败，请重试: ' + JSON.stringify(err));
+    showErr('提交失败，请重试: ' + JSON.stringify(err));
   });
 }
 
-function updateMORecord(completedQty, defectQty, todayStr, worker, notes) {
-  var fieldMap = PROCESS_FIELD_MAP[selectedProcess];
-  if (!fieldMap) {
-    showSuccess(completedQty, defectQty, worker);
-    return;
+// 2. Add_MO 상태 업데이트
+function updateMO(completedQty, todayStr) {
+  var map = PROCESS_MAP[selectedProcess];
+  var updateData = { 'Production_Status': selectedProcess };
+  if (map) {
+    if (map.dateStart) updateData[map.dateStart] = todayStr;
+    if (map.dateEnd)   updateData[map.dateEnd]   = todayStr;
+    if (map.qty)       updateData[map.qty]        = completedQty;
   }
-
-  var updateData = {};
-
-  // Production_Status 업데이트
-  updateData['Production_Status'] = fieldMap.status;
-
-  // 날짜 자동 기록
-  if (fieldMap.dateStart) updateData[fieldMap.dateStart] = todayStr;
-  if (fieldMap.dateEnd) updateData[fieldMap.dateEnd] = todayStr;
-
-  // 수량 필드 업데이트
-  if (fieldMap.qtyField) updateData[fieldMap.qtyField] = completedQty;
 
   ZOHO.CREATOR.API.updateRecord({
     appName: APP,
     reportName: MO_REPORT,
     id: moRecordId,
     data: { data: updateData }
-  }).then(function(res) {
-    showSuccess(completedQty, defectQty, worker);
-  }).catch(function(err) {
-    // MO 업데이트 실패해도 로그는 저장됐으니 성공으로 처리
-    showSuccess(completedQty, defectQty, worker);
+  }).then(function() {
+    showSuccess();
+  }).catch(function() {
+    showSuccess(); // 로그는 저장됐으니 성공 처리
   });
 }
 
-function showSuccess(completedQty, defectQty, worker) {
+function showSuccess() {
+  var completedQty = parseInt(document.getElementById('f-completed').value) || 0;
+  var defectQty    = parseInt(document.getElementById('f-defect').value) || 0;
+  var worker       = document.getElementById('f-worker').value.trim() || '未填写';
   var now = new Date();
   var timeStr = now.toLocaleDateString('zh-CN') + ' ' +
-    now.toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'});
+    now.toLocaleTimeString('zh-CN', { hour:'2-digit', minute:'2-digit' });
 
-  document.getElementById('s-mo').textContent = moData.mo_number;
-  document.getElementById('s-process').textContent = selectedProcessCN + ' (' + selectedProcess + ')';
+  document.getElementById('s-mo').textContent        = moData.mo_number;
+  document.getElementById('s-process').textContent   = selectedProcessCN + ' (' + selectedProcess + ')';
   document.getElementById('s-completed').textContent = completedQty.toLocaleString() + ' 件';
-  document.getElementById('s-defect').textContent = defectQty.toLocaleString() + ' 件';
-  document.getElementById('s-worker').textContent = worker || '未填写';
-  document.getElementById('s-time').textContent = timeStr;
+  document.getElementById('s-defect').textContent    = defectQty.toLocaleString() + ' 件';
+  document.getElementById('s-worker').textContent    = worker;
+  document.getElementById('s-time').textContent      = timeStr;
 
-  document.getElementById('btn-submit').disabled = false;
-  document.getElementById('btn-submit').textContent = '确认提交 →';
+  var btn = document.getElementById('btn-submit');
+  btn.disabled = false; btn.textContent = '确认提交 →';
   showScreen('screen-success');
-  setTimeout(function(){ fetchLogs(moData.mo_number); }, 300);
 }
 
-function showSubmitError(msg) {
+function showErr(msg) {
   document.getElementById('submit-err').innerHTML = '<div class="err-box">' + msg + '</div>';
-  document.getElementById('btn-submit').disabled = false;
-  document.getElementById('btn-submit').textContent = '确认提交 →';
+  var btn = document.getElementById('btn-submit');
+  btn.disabled = false; btn.textContent = '确认提交 →';
 }
 
 // SDK 초기화
 ZOHO.CREATOR.init().then(function() {
-  // 초기화 완료 - 스캔 준비됨
+  // ready
 }).catch(function(err) {
-  console.log('ZOHO init error:', err);
+  console.log('ZOHO init:', err);
 });
 </script>
 </body>
