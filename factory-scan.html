@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>工序扫码更新 v8</title>
+<title>工序扫码更新 v9</title>
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -235,7 +235,7 @@ var ACCOUNT = "jeramoda";
 var APP = "eom";
 var MO_REPORT = "All_MO";
 var LOG_FORM = "Add_Production_Log";
-var LOG_REPORT = "Add_Production_Log";
+var LOG_REPORT = "Production_Log_Report";
 
 var moData = {};
 var moRecordId = "";
@@ -439,7 +439,6 @@ function fetchLogs(moNumber) {
   section.style.display = 'block';
   list.innerHTML = '<div class="log-loading"><div class="log-spinner"></div>加载中...</div>';
 
-  console.log('[fetchLogs] called with moNumber:', moNumber);
   ZOHO.CREATOR.API.getAllRecords({
     appName: APP,
     reportName: LOG_REPORT,
@@ -447,23 +446,6 @@ function fetchLogs(moNumber) {
     pageSize: 100
   }).then(function(res) {
     var logs = [];
-
-    // DEBUG PANEL
-    var debugInfo = '';
-    debugInfo += '<div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:8px;padding:10px;margin-bottom:8px;font-size:11px;color:#92400E">';
-    debugInfo += '<b>[DEBUG]</b><br>';
-    debugInfo += '찾는 MO: <b>' + moNumber + '</b> (type: ' + typeof moNumber + ')<br>';
-
-    if (res.code === 3000 && res.data && res.data.length > 0) {
-      debugInfo += '총 레코드 수: <b>' + res.data.length + '</b><br>';
-      var raw0 = res.data[0]['MO_Number'];
-      debugInfo += '첫번째 MO_Number: <b>' + JSON.stringify(raw0) + '</b> (type: ' + typeof raw0 + ')';
-    } else {
-      debugInfo += '⚠️ API 응답 없음 또는 빈 데이터<br>';
-      debugInfo += 'res.code: ' + res.code;
-    }
-    debugInfo += '</div>';
-    list.innerHTML = debugInfo;
 
     if (res.code === 3000 && res.data && res.data.length > 0) {
       logs = res.data.filter(function(r){
@@ -477,7 +459,7 @@ function fetchLogs(moNumber) {
     }
 
     if (logs.length === 0) {
-      list.innerHTML += '<div class="log-empty">暂无工序记录</div>';
+      list.innerHTML = '<div class="log-empty">暂无工序记录</div>';
       return;
     }
 
@@ -500,10 +482,8 @@ function fetchLogs(moNumber) {
     });
     list.innerHTML = h;
 
-  }).catch(function(err) {
-    console.log('[fetchLogs] error:', err);
-    list.innerHTML = '<div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:10px;font-size:11px;color:#B91C1C">'
-      + '<b>[ERROR]</b><br>' + JSON.stringify(err) + '</div>';
+  }).catch(function() {
+    list.innerHTML = '<div class="log-empty">暂无记录</div>';
   });
 }
 
