@@ -581,7 +581,7 @@ function fetchLogs(moNumber) {
       logList.innerHTML = '<div class="log-empty">暂无工序记录</div>';
     }
   }).catch(function() {
-    logList.innerHTML = '<div class="log-empty">记录加载失败</div>';
+    logList.innerHTML = '<div class="log-empty">暂无记录</div>';
   });
 }
 
@@ -721,7 +721,7 @@ function showSuccess(completedQty, defectQty, worker) {
   document.getElementById('btn-submit').disabled = false;
   document.getElementById('btn-submit').textContent = '确认提交 →';
   showScreen('screen-success');
-  fetchLogs(moData.mo_number);
+  setTimeout(function(){ fetchLogs(moData.mo_number); }, 300);
 }
 
 function showSubmitError(msg) {
