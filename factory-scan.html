@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>工序扫码更新 v9</title>
+<title>工序扫码更新 v10</title>
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -173,29 +173,32 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
     <div class="card">
       <div class="card-title">订单确认</div>
       <div class="info-row"><span class="info-label">订单号</span><span class="info-value" id="c-mo">-</span></div>
-      <div class="info-row"><span class="info-label">品号</span><span class="info-value" id="c-sku">-</span></div>
+      <div class="info-row"><span class="info-label">SKU</span><span class="info-value" id="c-sku">-</span></div>
       <div class="info-row"><span class="info-label">工序</span><span class="info-value" id="c-process" style="color:#1E3A8A">-</span></div>
       <div class="info-row"><span class="info-label">订单数量 (参考)</span><span class="info-value" id="c-orderqty" style="color:#7C3AED">-</span></div>
+      <div id="c-subform"></div>
     </div>
     <div class="card">
       <div class="card-title">请输入数量信息</div>
-      <div class="input-row">
-        <div class="input-group">
-          <label>完成数量<span>*</span></label>
-          <input class="input-field" type="number" id="f-completed" placeholder="0" min="0" inputmode="numeric">
-        </div>
-        <div class="input-group">
-          <label>不良数量</label>
-          <input class="input-field" type="number" id="f-defect" placeholder="0" min="0" inputmode="numeric">
-        </div>
+      <div class="input-group">
+        <label>完成数量<span>*</span></label>
+        <input class="input-field" type="number" id="f-completed" placeholder="0" min="0" inputmode="numeric">
+      </div>
+      <div class="input-group">
+        <label>未完成数量</label>
+        <input class="input-field" type="number" id="f-incomplete" placeholder="0" min="0" inputmode="numeric">
+      </div>
+      <div class="input-group">
+        <label>不良数量</label>
+        <input class="input-field" type="number" id="f-defect" placeholder="0" min="0" inputmode="numeric">
       </div>
       <div class="input-group" id="bag-group" style="display:none">
         <label>麻袋数量</label>
         <input class="input-field" type="number" id="f-bag" placeholder="0" min="0" inputmode="numeric">
       </div>
       <div class="input-group">
-        <label>负责人</label>
-        <input class="input-field" type="text" id="f-worker" placeholder="请输入姓名">
+        <label>负责人<span>*</span></label>
+        <input class="input-field" type="text" id="f-worker" placeholder="请输入姓名（必填）">
       </div>
       <div class="input-group">
         <label>备注 <span style="color:#94A3B8;font-weight:400">(选填)</span></label>
@@ -265,7 +268,7 @@ function goToScan() {
 }
 
 function resetAll() {
-  ['f-completed','f-defect','f-bag','f-worker','f-notes'].forEach(function(id){
+  ['f-completed','f-incomplete','f-defect','f-bag','f-worker','f-notes'].forEach(function(id){
     var el = document.getElementById(id); if(el) el.value = '';
   });
   document.getElementById('submit-err').innerHTML = '';
@@ -408,7 +411,8 @@ function fetchMOData(moNumber, sku, factory) {
         sku: skuStr,
         factory: factory || '-',
         order_qty: parseInt(r['Plan_Total_Quantity']) || 0,
-        current_status: r['Production_Status'] || '-'
+        current_status: r['Production_Status'] || '-',
+        plan_lines: r['Plan_MO_Lines'] || []
       };
 
       document.getElementById('d-mo').textContent      = moData.mo_number;
@@ -499,10 +503,34 @@ function selectProcess(el, process, processCN) {
   document.getElementById('c-process').textContent  = processCN + ' (' + process + ')';
   document.getElementById('c-orderqty').textContent = moData.order_qty.toLocaleString() + ' 件';
 
+  // Render subform lines
+  var lines = moData.plan_lines || [];
+  var subformEl = document.getElementById('c-subform');
+  if (lines.length > 0) {
+    var sh = '<div style="margin-top:8px;border-top:0.5px solid #F1F5F9;padding-top:8px">';
+    sh += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;font-size:11px;font-weight:700;color:#94A3B8;padding:4px 0;border-bottom:0.5px solid #F1F5F9;margin-bottom:4px">';
+    sh += '<span>颜色/Color</span><span style="text-align:center">尺码/Size</span><span style="text-align:right">数量/Qty</span></div>';
+    var arr = Array.isArray(lines) ? lines : Object.values(lines);
+    arr.forEach(function(line) {
+      var color = line['Plan_Color'] || '-';
+      var size  = line['Plan_Sizes'] || '-';
+      var qty   = parseInt(line['Plan_Quantity']) || 0;
+      sh += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;font-size:12px;padding:4px 0;border-bottom:0.5px solid #F8FAFC">';
+      sh += '<span style="color:#374151">' + color + '</span>';
+      sh += '<span style="text-align:center;color:#374151">' + size + '</span>';
+      sh += '<span style="text-align:right;font-weight:600;color:#1E3A8A">' + qty.toLocaleString() + '</span>';
+      sh += '</div>';
+    });
+    sh += '</div>';
+    subformEl.innerHTML = sh;
+  } else {
+    subformEl.innerHTML = '';
+  }
+
   var showBag = (process.indexOf('Packing') >= 0 || process.indexOf('Shipped') >= 0);
   document.getElementById('bag-group').style.display = showBag ? 'block' : 'none';
 
-  ['f-completed','f-defect','f-bag','f-worker','f-notes'].forEach(function(id){
+  ['f-completed','f-incomplete','f-defect','f-bag','f-worker','f-notes'].forEach(function(id){
     var el2 = document.getElementById(id); if(el2) el2.value = '';
   });
   document.getElementById('submit-err').innerHTML = '';
@@ -515,7 +543,11 @@ function getTodayStr() {
   var d = new Date();
   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var dd = d.getDate();
-  return (dd < 10 ? '0' + dd : dd) + '-' + months[d.getMonth()] + '-' + d.getFullYear();
+  var hh = d.getHours();
+  var mm = d.getMinutes();
+  var ss = d.getSeconds();
+  return (dd < 10 ? '0' + dd : dd) + '-' + months[d.getMonth()] + '-' + d.getFullYear()
+    + ' ' + (hh < 10 ? '0' + hh : hh) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (ss < 10 ? '0' + ss : ss);
 }
 
 // ── 제출 ──────────────────────────────────────────
@@ -531,23 +563,29 @@ function submitData() {
     document.getElementById('submit-err').innerHTML = '<div class="err-box">请输入完成数量</div>';
     return;
   }
+  if (!worker) {
+    document.getElementById('submit-err').innerHTML = '<div class="err-box">请输入负责人姓名（必填）</div>';
+    return;
+  }
 
   var btn = document.getElementById('btn-submit');
   btn.disabled = true; btn.textContent = '提交中...';
   document.getElementById('submit-err').innerHTML = '';
 
   // 1. Add_Production_Log 저장
+  var incompleteQty = parseInt(document.getElementById('f-incomplete').value) || 0;
+
   var logData = {
-    'MO_Number':    moData.mo_number,
-    'SKU':          moData.sku,
-    'Factory':      moData.factory,
-    'Process':      selectedProcess,
-    'Completed_Qty': completedQty,
-    'Defect_Qty':   defectQty,
-    'Bag_Qty':      bagQty,
-    'Worker':       worker,
-    'Log_Date':     todayStr,
-    'Notes':        notes
+    'MO_Number':      moData.mo_number,
+    'SKU':            moData.sku,
+    'Factory':        moData.factory,
+    'Process':        selectedProcess,
+    'Completed_Qty':  completedQty,
+    'Defect_Qty':     defectQty,
+    'Bag_Qty':        bagQty,
+    'Worker':         worker,
+    'Log_Date':       todayStr,
+    'Notes':          notes
   };
 
   ZOHO.CREATOR.API.addRecord({
