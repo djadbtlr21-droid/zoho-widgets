@@ -9,7 +9,7 @@
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:'Manrope','Noto Sans SC',-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;background:#F5F3EF;min-height:100vh;}
+body{font-family:'Manrope','Noto Sans SC',-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;background:#F5F3EF;min-height:100vh;margin:0;}
 .container{max-width:480px;margin:0 auto}
 .screen{display:none}.screen.active{display:block}
 
@@ -126,7 +126,7 @@ body{font-family:'Manrope','Noto Sans SC',-apple-system,BlinkMacSystemFont,'Ping
   </div>
 
   <!-- 로딩 화면 -->
-  <div class="screen" id="screen-loading">
+  <div class="screen" id="screen-loading" style="background:#F5F3EF;">
     <div class="loading-wrap">
       <div class="spinner"></div>
       <p id="loading-msg">正在读取订单信息...</p>
@@ -411,8 +411,12 @@ function openCamera() {
       var code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' });
       if (code) {
         scanning = false;
+        var scannedData = code.data;
         stopCamera(stream);
-        processQRData(code.data);
+        // 카메라 overlay 제거 후 확실히 로딩 화면 표시
+        setTimeout(function(){
+          processQRData(scannedData);
+        }, 100);
         return;
       }
     }
@@ -428,6 +432,10 @@ function openCamera() {
 
 function processQRData(qrText) {
   qrText = (qrText || '').trim();
+  if (!qrText) {
+    alert('QR 데이터가 비어있습니다. 다시 스캔해주세요.');
+    return;
+  }
   var moNumber = '', skuVal = '', factoryVal = '';
   qrText.split(/[|\n\r]+/).forEach(function(part) {
     part = part.trim();
@@ -440,11 +448,17 @@ function processQRData(qrText) {
     else if (key === 'FACTORY') factoryVal = val;
   });
   if (!moNumber) {
-    if (/^[A-Z]{2}\d{2}-\d+/i.test(qrText)) moNumber = qrText;
-    else { alert('未能识别订单号\n\n扫描内容: ' + qrText); return; }
+    if (/^[A-Z]{2}\d{2}-\d+/i.test(qrText)) {
+      moNumber = qrText;
+    } else {
+      alert('QR 인식 실패\n\n스캔된 내용: ' + qrText + '\n\nMO:번호|SKU:값|FACTORY:값 형식인지 확인해주세요.');
+      return;
+    }
   }
+  // 즉시 로딩 화면으로 전환
   showScreen('screen-loading');
-  document.getElementById('loading-msg').textContent = '正在读取订单信息...';
+  var loadingEl = document.getElementById('loading-msg');
+  if (loadingEl) loadingEl.textContent = '正在读取订单信息... (' + moNumber + ')';
   fetchMOData(moNumber, skuVal, factoryVal);
 }
 
