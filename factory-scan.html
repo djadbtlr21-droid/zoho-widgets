@@ -3,113 +3,126 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>工序扫码更新 v16</title>
+<title>工序扫码更新 v18</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#F5F7FA;min-height:100vh;padding:16px}
+body{font-family:'Manrope','Noto Sans SC',-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;background:#F5F3EF;min-height:100vh;}
 .container{max-width:480px;margin:0 auto}
 .screen{display:none}.screen.active{display:block}
 
-.hdr{text-align:center;margin-bottom:24px;padding-top:8px}
-.hdr h1{font-size:20px;font-weight:700;color:#1A1A2E}
-.hdr p{font-size:13px;color:#64748B;margin-top:4px}
-.logo-badge{display:inline-block;background:#1E3A8A;color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:8px;letter-spacing:1px}
+/* ─ 스캔 화면 다크+골드 ─ */
+#screen-scan{background:#1A1A1A;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;gap:28px;}
+.scan-wordmark{font-family:'Bebas Neue',cursive;font-size:11px;letter-spacing:6px;color:#555;}
+.scan-frame-wrap{width:200px;height:200px;position:relative;display:flex;align-items:center;justify-content:center;}
+.sc-corner{position:absolute;width:24px;height:24px;border-color:#E8D5B0;border-style:solid;}
+.sc-tl{top:0;left:0;border-width:2px 0 0 2px;}.sc-tr{top:0;right:0;border-width:2px 2px 0 0;}
+.sc-bl{bottom:0;left:0;border-width:0 0 2px 2px;}.sc-br{bottom:0;right:0;border-width:0 2px 2px 0;}
+.sc-inner{width:140px;height:140px;border:1px solid #2E2E2E;border-radius:4px;display:flex;align-items:center;justify-content:center;}
+.sc-dot{width:8px;height:8px;border-radius:50%;background:#E8D5B0;animation:scpulse 2s infinite;}
+@keyframes scpulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.sc-line{position:absolute;top:20%;left:10%;right:10%;height:1px;background:#E8D5B094;animation:scmove 2s ease-in-out infinite;}
+@keyframes scmove{0%{top:20%;}100%{top:80%;}}
+.scan-label-wrap p{font-size:13px;color:#C8C4BC;line-height:1.8;font-weight:300;text-align:center;}
+.btn-scan-start{background:transparent;color:#E8D5B0;border:3px solid #E8D5B0;padding:16px 0;border-radius:2px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;width:100%;max-width:260px;cursor:pointer;font-family:inherit;}
+.scan-hint-wrap p{font-size:11px;color:#C8C4BC;letter-spacing:0.5px;line-height:1.8;text-align:center;}
 
-.scan-area{background:#fff;border:2px dashed #CBD5E1;border-radius:16px;padding:40px 20px;text-align:center;margin-bottom:16px;cursor:pointer;transition:border-color .2s,background .2s}
-.scan-area:active{background:#F0F7FF;border-color:#3B82F6}
-.qr-icon{width:80px;height:80px;margin:0 auto 16px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.qr-icon div{border:4px solid #94A3B8;border-radius:4px}
-.qr-icon div:nth-child(1){border-right:none;border-bottom:none}
-.qr-icon div:nth-child(2){border-left:none;border-bottom:none}
-.qr-icon div:nth-child(3){border-right:none;border-top:none}
-.qr-icon div:nth-child(4){border-left:none;border-top:none}
-.scan-area p{font-size:16px;color:#64748B;font-weight:500}
-.scan-area small{font-size:12px;color:#94A3B8;display:block;margin-top:6px}
-.btn-main{width:100%;padding:16px;background:#1E3A8A;color:#fff;border:none;border-radius:12px;font-size:17px;font-weight:700;cursor:pointer;letter-spacing:.5px}
-.btn-main:active{background:#1e40af;transform:scale(.98)}
+.card{background:#fff;border-radius:2px;padding:16px;margin-bottom:0;}
+.card-title{font-size:9px;font-weight:700;color:#B0A898;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid #F1F5F3;}
+.info-row:last-child{border-bottom:none;}
+.info-label{font-size:12px;color:#8A8070;}
+.info-value{font-size:12px;font-weight:600;color:#1A1A1A;text-align:right;max-width:60%;}
+.status-pill{background:#1A1A1A;color:#E8D5B0;font-size:10px;font-weight:700;letter-spacing:1.5px;padding:4px 10px;border-radius:1px;text-transform:uppercase;display:inline-block;}
 
-.card{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:16px;margin-bottom:12px}
-.card-title{font-size:12px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
-.info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid #F1F5F9}
-.info-row:last-child{border-bottom:none}
-.info-label{font-size:13px;color:#64748B}
-.info-value{font-size:13px;font-weight:600;color:#1A1A2E;text-align:right;max-width:60%}
-.status-pill{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;background:#FEF3C7;color:#B45309}
+.process-title{font-size:9px;font-weight:700;color:#B0A898;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;}
+.process-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.proc-btn{padding:14px 8px;border:1px solid #E8E4DE;border-radius:2px;background:#fff;cursor:pointer;text-align:center;transition:all .12s;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.proc-btn:active{transform:scale(.97);}
+.proc-btn.selected{border:1.5px solid #C9A84C;background:#F5EFE3;}
+.proc-icon{font-size:20px;display:block;}
+.proc-name{font-size:13px;font-weight:700;color:#1A1A1A;}
+.proc-sub{font-size:9px;color:#B0A898;letter-spacing:1px;text-transform:uppercase;}
+.proc-btn.selected .proc-name{color:#7A5C1E;}
+.proc-btn.selected .proc-sub{color:#C9A84C;}
+.proc-full{grid-column:1/-1;}
 
-.process-title{font-size:14px;font-weight:700;color:#1A1A2E;margin-bottom:10px}
-.process-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.proc-btn{padding:14px 8px;border:1.5px solid #E2E8F0;border-radius:10px;background:#fff;cursor:pointer;text-align:center;transition:all .15s}
-.proc-btn:active{transform:scale(.96)}
-.proc-btn.selected{border-color:#1E3A8A;background:#EFF6FF}
-.proc-icon{font-size:22px;display:block;margin-bottom:6px}
-.proc-name{font-size:14px;font-weight:700;color:#1A1A2E}
-.proc-sub{font-size:10px;color:#94A3B8;margin-top:2px}
-.proc-btn.selected .proc-name{color:#1E3A8A}
-.proc-full{grid-column:1 / -1}
-
+/* ── 수정: 입력필드 흰색 배경 ── */
 .input-group{margin-bottom:14px}
 .input-group label{font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:6px}
 .input-group label span{color:#EF4444;margin-left:2px}
-.input-field{width:100%;padding:12px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:15px;color:#1A1A2E;background:#fff;outline:none;-webkit-appearance:none}
-.input-field:focus{border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
-.input-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.input-field{width:100%;padding:10px 6px;border:1.5px solid #DDD9D1;border-radius:4px;font-size:18px;font-weight:700;color:#2E2A24;background:#ffffff;outline:none;-webkit-appearance:none;text-align:center;font-family:inherit;}
+.input-field:focus{border-color:#C9A84C;box-shadow:0 0 0 3px rgba(201,168,76,.10);}
+.input-field.text-field{font-size:14px;font-weight:600;text-align:left;padding:12px 14px;}
+.input-field::placeholder{color:#C8C4BC;font-weight:400;}
 
-.btn-row{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:8px}
-.btn-back{padding:14px;border:1.5px solid #E2E8F0;border-radius:10px;background:#fff;font-size:14px;font-weight:600;color:#64748B;cursor:pointer}
-.btn-back:active{background:#F8FAFC}
-.btn-submit{padding:14px;border:none;border-radius:10px;background:#1E3A8A;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
-.btn-submit:active{background:#1e40af;transform:scale(.98)}
-.btn-submit:disabled{background:#94A3B8;cursor:not-allowed}
+.btn-row{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:4px;}
+.btn-back{padding:14px;border:1.5px solid #E2E0DA;border-radius:2px;background:#fff;font-size:13px;font-weight:600;color:#888;cursor:pointer;font-family:inherit;}
+.btn-submit{padding:14px;border:none;border-radius:2px;background:#E8D5B0;color:#5C4318;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:inherit;}
+.btn-submit:active{background:#D4C09A;}
+.btn-submit:disabled{background:#D4CFC7;color:#9A8870;cursor:not-allowed;}
 
-.success-wrap{text-align:center;padding:32px 16px}
-.success-circle{width:80px;height:80px;border-radius:50%;background:#D1FAE5;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:36px;color:#065F46}
-.success-wrap h2{font-size:22px;font-weight:700;color:#065F46;margin-bottom:6px}
-.success-wrap p{font-size:14px;color:#64748B;margin-bottom:24px}
-.btn-again{width:100%;padding:14px;border:1.5px solid #E2E8F0;border-radius:10px;background:#fff;font-size:15px;font-weight:600;color:#1A1A2E;cursor:pointer;margin-bottom:10px}
-.btn-again:active{background:#F8FAFC}
+.success-wrap{background:#F5F3EF;min-height:100vh;padding-bottom:32px;}
+.success-banner{background:#fff;margin:16px;border-radius:2px;padding:24px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;border-bottom:3px solid #C9A84C;}
+.success-icon{width:52px;height:52px;border-radius:50%;border:2px solid #C9A84C;display:flex;align-items:center;justify-content:center;}
+.success-title{font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:3px;color:#2E2A24;text-align:center;line-height:1.2;}
+.result-block{background:#fff;border-radius:2px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin:0 16px 6px;}
+.result-block-accent{border-left:3px solid #C9A84C;}
+.result-key{font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0A898;text-transform:uppercase;}
+.result-val{font-size:13px;font-weight:700;color:#2E2A24;}
+.result-val.defect-val{color:#B05A52;}
+.btn-again{width:calc(100% - 32px);margin:8px 16px;padding:15px;border:none;background:#3A3020;color:#E8D5B0;border-radius:2px;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-family:inherit;display:block;}
+.btn-rescan{width:calc(100% - 32px);margin:0 16px;padding:13px;border:1.5px solid #E2E0DA;background:transparent;color:#B0A898;border-radius:2px;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:inherit;display:block;}
 
-.loading-wrap{text-align:center;padding:40px 16px}
-.spinner{width:36px;height:36px;border:3px solid #E2E8F0;border-top-color:#1E3A8A;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px}
+.loading-wrap{text-align:center;padding:40px 16px;background:#F5F3EF;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.spinner{width:36px;height:36px;border:3px solid #E8D5B040;border-top-color:#C9A84C;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-wrap p{font-size:14px;color:#64748B}
+.loading-wrap p{font-size:14px;color:#888;}
 
-.err-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:16px;text-align:center;color:#B91C1C;font-size:13px;margin-bottom:12px}
-.back-link{display:flex;align-items:center;gap:6px;font-size:13px;color:#64748B;cursor:pointer;margin-bottom:16px;font-weight:500}
-.back-link:active{color:#1E3A8A}
+.err-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:4px;padding:14px;text-align:center;color:#B91C1C;font-size:13px;margin-bottom:10px;}
+.back-link{display:flex;align-items:center;gap:6px;font-size:13px;color:#E8D5B0;cursor:pointer;margin-bottom:16px;font-weight:600;background:none;border:none;font-family:inherit;}
 
-/* 공정 기록 */
-.log-item{padding:10px 0;border-bottom:0.5px solid #F1F5F9;display:flex;justify-content:space-between;align-items:flex-start}
-.log-item:last-child{border-bottom:none}
-.log-process{font-size:13px;font-weight:600;color:#1E3A8A}
-.log-meta{font-size:11px;color:#94A3B8;margin-top:3px}
-.log-qty{font-size:13px;font-weight:600;color:#1A1A2E;text-align:right}
-.log-date{font-size:11px;color:#94A3B8;margin-top:3px;text-align:right}
-.log-empty{text-align:center;padding:16px;font-size:13px;color:#94A3B8}
-.log-item:hover{background:#F8FAFC;border-radius:8px}
-.modal-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid #F1F5F9;font-size:13px}
-.modal-row:last-child{border-bottom:none}
-.modal-label{color:#64748B}.modal-value{font-weight:600;color:#1A1A2E;text-align:right;max-width:60%}
-.log-loading{text-align:center;padding:12px;font-size:12px;color:#94A3B8}
-.log-spinner{width:20px;height:20px;border:2px solid #E2E8F0;border-top-color:#1E3A8A;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 6px}
+.log-item{padding:11px 14px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:0.5px solid #F5F3EF;cursor:pointer;}
+.log-item:last-child{border:none;}
+.log-process{font-size:11px;font-weight:700;color:#7A5C1E;display:flex;align-items:center;gap:5px;}
+.log-dot{width:5px;height:5px;border-radius:50%;background:#C9A84C;flex-shrink:0;display:inline-block;}
+.log-meta{font-size:12.5px;font-weight:700;color:#2E2A24;margin-top:3px;padding-left:10px;}
+.log-qty{font-size:13px;font-weight:700;color:#1A1A1A;text-align:right;}
+.log-defect{font-size:10px;font-weight:700;color:#B05A52;text-align:right;}
+.log-date{font-size:12px;font-weight:700;color:#7A6A58;margin-top:3px;text-align:right;}
+.log-empty{text-align:center;padding:16px;font-size:13px;color:#B0A898;}
+.log-loading{text-align:center;padding:12px;font-size:12px;color:#B0A898;}
+.log-spinner{width:20px;height:20px;border:2px solid #E8E4DE;border-top-color:#C9A84C;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 6px;}
+.modal-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid #F1F5F9;font-size:13px;}
+.modal-row:last-child{border-bottom:none;}
+.modal-label{color:#8A8070;}.modal-value{font-weight:600;color:#1A1A1A;text-align:right;max-width:60%;}
 </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- 스캔 화면 -->
+  <!-- 스캔 화면: 다크+골드 -->
   <div class="screen active" id="screen-scan">
-    <div class="hdr">
-      <div class="logo-badge">EOM · FACTORY</div>
-      <h1>工序扫码更新</h1>
-      <p>扫描二维码以更新生产状态</p>
+    <div class="scan-wordmark">IKU Production System</div>
+    <div class="scan-frame-wrap">
+      <div class="sc-corner sc-tl"></div>
+      <div class="sc-corner sc-tr"></div>
+      <div class="sc-corner sc-bl"></div>
+      <div class="sc-corner sc-br"></div>
+      <div class="sc-inner"><div class="sc-dot"></div></div>
+      <div class="sc-line"></div>
     </div>
-    <div class="scan-area" onclick="startScan()">
-      <div class="qr-icon"><div></div><div></div><div></div><div></div></div>
-      <p>点击扫描二维码</p>
-      <small>请将摄像头对准订单二维码</small>
+    <div class="scan-label-wrap">
+      <p>QR코드를 프레임 안에 맞춰주세요</p>
+      <p>请将二维码对准框内</p>
     </div>
-    <button class="btn-main" onclick="startScan()">📷 扫描二维码</button>
+    <button class="btn-scan-start" onclick="startScan()">SCAN START / 开始扫码</button>
+    <div class="scan-hint-wrap">
+      <p>카메라가 자동으로 QR을 인식합니다</p>
+      <p>摄像头将自动识别二维码</p>
+    </div>
   </div>
 
   <!-- 로딩 화면 -->
@@ -122,7 +135,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 
   <!-- MO 정보 + 공정 선택 -->
   <div class="screen" id="screen-info">
-    <div class="back-link" onclick="goToScan()">← 重新扫码</div>
+    <button class="back-link" onclick="goToScan()">← 重新扫码</button>
     <div class="card">
       <div class="card-title">订单信息确认</div>
       <div class="info-row"><span class="info-label">订单号 (MO)</span><span class="info-value" id="d-mo">-</span></div>
@@ -175,7 +188,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 
   <!-- 수량 입력 화면 -->
   <div class="screen" id="screen-input">
-    <div class="back-link" onclick="showScreen('screen-info')">← 返回选择工序</div>
+    <div style="background:#1A1A1A;padding:22px 20px 18px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="back-link" onclick="showScreen('screen-info')" style="font-size:16px;">←</button>
+        <div>
+          <div style="font-family:'Bebas Neue',cursive;font-size:32px;letter-spacing:3px;color:#E8D5B0;line-height:1;" id="input-hero-proc">CUTTING</div>
+          <div style="font-size:10px;color:#666;letter-spacing:2px;margin-top:4px;" id="input-hero-mo">-</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:4px;margin-top:14px;" id="input-progress">
+        <div style="height:3px;flex:1;background:#E8D5B0;border-radius:1px;"></div>
+        <div style="height:3px;flex:1;background:#E8D5B0;border-radius:1px;"></div>
+        <div style="height:3px;flex:1;background:#2E2E2E;border-radius:1px;"></div>
+      </div>
+    </div>
     <div class="card">
       <div class="card-title">订单确认</div>
       <div class="info-row"><span class="info-label">订单号</span><span class="info-value" id="c-mo">-</span></div>
@@ -184,55 +210,61 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
       <div class="info-row"><span class="info-label">订单数量 (参考)</span><span class="info-value" id="c-orderqty" style="color:#7C3AED">-</span></div>
       <div id="c-subform"></div>
     </div>
-    <div class="card">
-      <div class="card-title">请输入数量信息</div>
-      <div class="input-group">
-        <label>完成数量<span>*</span></label>
+    <div style="padding:0 16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+      <div style="background:#fff;border-radius:2px;padding:12px 10px;border-bottom:3px solid #C9A84C;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0A898;text-transform:uppercase;margin-bottom:6px;">完成 *</div>
         <input class="input-field" type="number" id="f-completed" placeholder="0" min="0" inputmode="numeric">
       </div>
-      <div class="input-group">
-        <label>未完成数量</label>
+      <div style="background:#fff;border-radius:2px;padding:12px 10px;border-bottom:3px solid #E0DBD3;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0A898;text-transform:uppercase;margin-bottom:6px;">未完成</div>
         <input class="input-field" type="number" id="f-incomplete" placeholder="0" min="0" inputmode="numeric">
       </div>
-      <div class="input-group">
-        <label>不良数量</label>
+      <div style="background:#fff;border-radius:2px;padding:12px 10px;border-bottom:3px solid #D4847A;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B05A52;text-transform:uppercase;margin-bottom:6px;">不良</div>
         <input class="input-field" type="number" id="f-defect" placeholder="0" min="0" inputmode="numeric">
       </div>
-      <div class="input-group" id="bag-group" style="display:none">
-        <label>麻袋数量</label>
+      <div id="bag-group" style="display:none;background:#fff;border-radius:2px;padding:12px 10px;border-bottom:3px solid #E0DBD3;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0A898;text-transform:uppercase;margin-bottom:6px;">麻袋数量</div>
         <input class="input-field" type="number" id="f-bag" placeholder="0" min="0" inputmode="numeric">
       </div>
-      <div class="input-group">
-        <label>负责人<span>*</span></label>
-        <input class="input-field" type="text" id="f-worker" placeholder="请输入姓名（必填）">
+      <div style="background:#fff;border-radius:2px;padding:14px 16px;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0A898;text-transform:uppercase;margin-bottom:6px;">负责人 / 담당자 *</div>
+        <input class="input-field text-field" type="text" id="f-worker" placeholder="이름을 입력하세요">
       </div>
-      <div class="input-group">
-        <label>备注 <span style="color:#94A3B8;font-weight:400">(选填)</span></label>
-        <input class="input-field" type="text" id="f-notes" placeholder="请输入备注内容">
+      <div style="background:#fff;border-radius:2px;padding:14px 16px;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0A898;text-transform:uppercase;margin-bottom:6px;">备注 / 메모</div>
+        <input class="input-field text-field" type="text" id="f-notes" placeholder="선택사항">
       </div>
+    </div>
+    <div style="padding:0 16px;display:flex;flex-direction:column;gap:8px;margin-top:8px;" id="worker-area">
     </div>
     <div id="submit-err"></div>
     <div class="btn-row">
-      <button class="btn-back" onclick="showScreen('screen-info')">← 返回</button>
+      <button class="btn-back" onclick="showScreen('screen-info')" style="border-radius:2px;font-family:inherit;">← 返回</button>
       <button class="btn-submit" id="btn-submit" onclick="submitData()">确认提交 →</button>
     </div>
   </div>
 
   <!-- 성공 화면 -->
   <div class="screen" id="screen-success">
-    <div class="success-wrap">
-      <div class="success-circle">✓</div>
-      <h2>提交成功！</h2>
-      <p>工序状态已更新至系统</p>
-      <div class="card" style="text-align:left">
-        <div class="info-row"><span class="info-label">订单号</span><span class="info-value" id="s-mo">-</span></div>
-        <div class="info-row"><span class="info-label">工序</span><span class="info-value" id="s-process" style="color:#1E3A8A">-</span></div>
-        <div class="info-row"><span class="info-label">完成数量</span><span class="info-value" id="s-completed">-</span></div>
-        <div class="info-row"><span class="info-label">不良数量</span><span class="info-value" id="s-defect">-</span></div>
-        <div class="info-row"><span class="info-label">负责人</span><span class="info-value" id="s-worker">-</span></div>
-        <div class="info-row"><span class="info-label">记录时间</span><span class="info-value" id="s-time">-</span></div>
+    <div style="background:#1A1A1A;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-family:'Bebas Neue',cursive;letter-spacing:3px;font-size:12px;color:#E8D5B0;">SAVED</span>
+      <span style="font-size:11px;color:#555;letter-spacing:1px;" id="s-mo-hdr">-</span>
+    </div>
+    <div style="background:#F5F3EF;min-height:calc(100vh - 48px);padding-bottom:32px;">
+      <div style="background:#fff;margin:16px;border-radius:2px;padding:24px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;border-bottom:3px solid #C9A84C;">
+        <div style="width:52px;height:52px;border-radius:50%;border:2px solid #C9A84C;display:flex;align-items:center;justify-content:center;">
+          <svg viewBox="0 0 22 22" fill="none" width="22" height="22"><polyline points="4,11 9,16 18,6" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:3px;color:#2E2A24;line-height:1.2;">저장 완료 · 提交成功</div>
+          <div style="font-size:10px;color:#B0A898;letter-spacing:1px;margin-top:4px;">공정 기록이 저장되었습니다</div>
+        </div>
       </div>
-      <button class="btn-again" onclick="resetAll()">继续扫码</button>
+      <div id="result-rows" style="padding:0 16px;display:flex;flex-direction:column;gap:6px;"></div>
+      <div style="padding:16px;display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+        <button onclick="goToScan()" style="padding:15px;border:none;background:#3A3020;color:#E8D5B0;border-radius:2px;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-family:inherit;width:100%;">← NEW SCAN / 새 스캔</button>
+      </div>
     </div>
   </div>
 
@@ -250,7 +282,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 </div>
 
 <script>
-// ⚙️ 설정
 var ACCOUNT = "jeramoda";
 var APP = "eom";
 var MO_REPORT = "All_MO";
@@ -328,7 +359,6 @@ function resetAll() {
   goToScan();
 }
 
-// ── QR 스캔 ──────────────────────────────────────
 function startScan() {
   if (typeof jsQR === 'undefined') {
     var s = document.createElement('script');
@@ -345,30 +375,23 @@ function openCamera() {
   var overlay = document.createElement('div');
   overlay.id = 'cam-overlay';
   overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center';
-
   var video = document.createElement('video');
   video.style.cssText = 'width:100%;max-width:480px;max-height:60vh;object-fit:cover;border-radius:8px';
   video.setAttribute('playsinline',''); video.setAttribute('autoplay','');
-
   var canvas = document.createElement('canvas');
   canvas.style.display = 'none';
-
   var hint = document.createElement('p');
   hint.style.cssText = 'color:#fff;font-size:14px;margin-top:16px;text-align:center';
   hint.textContent = '将二维码对准中心区域';
-
   var closeBtn = document.createElement('button');
   closeBtn.style.cssText = 'margin-top:16px;padding:12px 32px;background:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;color:#1E3A8A';
   closeBtn.textContent = '取消';
   closeBtn.onclick = function(){ stopCamera(stream); };
-
   overlay.appendChild(video); overlay.appendChild(canvas);
   overlay.appendChild(hint); overlay.appendChild(closeBtn);
   document.body.appendChild(overlay);
-
   var stream = null;
   var scanning = true;
-
   navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
     .then(function(s) {
       stream = s; video.srcObject = s; video.play();
@@ -378,7 +401,6 @@ function openCamera() {
       stopCamera(null);
       alert('无法访问摄像头: ' + err.message);
     });
-
   function tick() {
     if (!scanning) return;
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
@@ -396,7 +418,6 @@ function openCamera() {
     }
     requestAnimationFrame(tick);
   }
-
   function stopCamera(s) {
     scanning = false;
     if (s) s.getTracks().forEach(function(t){ t.stop(); });
@@ -405,11 +426,9 @@ function openCamera() {
   }
 }
 
-// ── QR 파싱 ──────────────────────────────────────
 function processQRData(qrText) {
   qrText = (qrText || '').trim();
   var moNumber = '', skuVal = '', factoryVal = '';
-
   qrText.split(/[|\n\r]+/).forEach(function(part) {
     part = part.trim();
     var idx = part.indexOf(':');
@@ -420,18 +439,15 @@ function processQRData(qrText) {
     else if (key === 'SKU') skuVal = val;
     else if (key === 'FACTORY') factoryVal = val;
   });
-
   if (!moNumber) {
     if (/^[A-Z]{2}\d{2}-\d+/i.test(qrText)) moNumber = qrText;
     else { alert('未能识别订单号\n\n扫描内容: ' + qrText); return; }
   }
-
   showScreen('screen-loading');
   document.getElementById('loading-msg').textContent = '正在读取订单信息...';
   fetchMOData(moNumber, skuVal, factoryVal);
 }
 
-// ── Zoho MO 조회 ─────────────────────────────────
 function fetchMOData(moNumber, sku, factory) {
   ZOHO.CREATOR.API.getAllRecords({
     appName: APP,
@@ -451,14 +467,12 @@ function fetchMOData(moNumber, sku, factory) {
       }
       var r = found;
       moRecordId = r['ID'];
-
       var skuRaw = r['Style_SKU'];
       var skuStr = sku || '-';
       if (skuRaw) {
         if (typeof skuRaw === 'object') skuStr = skuRaw.display_value || skuRaw.Style_SKU || skuStr;
         else if (skuRaw !== '-') skuStr = skuRaw;
       }
-
       moData = {
         mo_number: r['MO_Number'] || moNumber,
         sku: skuStr,
@@ -467,14 +481,12 @@ function fetchMOData(moNumber, sku, factory) {
         current_status: r['Production_Status'] || '-',
         plan_notes: r['Plan_Notes'] || ''
       };
-
+      var hdrMo = document.getElementById('hdr-mo'); if(hdrMo) hdrMo.textContent = moData.mo_number;
       document.getElementById('d-mo').textContent      = moData.mo_number;
       document.getElementById('d-sku').textContent      = moData.sku;
       document.getElementById('d-factory').textContent  = moData.factory;
       document.getElementById('d-qty').textContent      = moData.order_qty.toLocaleString() + ' 件';
       document.getElementById('d-status').textContent   = moData.current_status;
-
-      // Show Plan_Notes table on screen-info
       var notesTable = buildNotesTable(moData.plan_notes);
       var notesCard = document.getElementById('info-notes-card');
       if (notesTable) {
@@ -483,12 +495,8 @@ function fetchMOData(moNumber, sku, factory) {
       } else {
         notesCard.style.display = 'none';
       }
-
       showScreen('screen-info');
-
-      // 300ms 딜레이 후 로그 조회
       setTimeout(function(){ fetchLogs(moData.mo_number); }, 300);
-
     } else {
       showScreen('screen-scan');
       alert('未找到订单号: ' + moNumber + '\n请确认后重新扫描');
@@ -499,13 +507,23 @@ function fetchMOData(moNumber, sku, factory) {
   });
 }
 
-// ── 공정 기록 조회 (단일 함수) ───────────────────
+// ── 날짜 형식 변환: dd-MMM-yyyy HH:mm:ss → yyyy-mm-dd HH:mm ──
+function formatDate(raw) {
+  if (!raw) return '-';
+  var s = (typeof raw === 'object') ? (raw.display_value || '') : String(raw);
+  s = s.trim();
+  if (!s) return '-';
+  var months = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
+  var m = s.match(/^(\d{2})-([A-Za-z]{3})-(\d{4})\s+(\d{2}:\d{2})/);
+  if (m) return m[3] + '-' + (months[m[2]] || m[2]) + '-' + m[1] + ' ' + m[4];
+  return s;
+}
+
 function fetchLogs(moNumber) {
   var section = document.getElementById('log-section');
   var list    = document.getElementById('log-list');
   section.style.display = 'block';
   list.innerHTML = '<div class="log-loading"><div class="log-spinner"></div>加载中...</div>';
-
   ZOHO.CREATOR.API.getAllRecords({
     appName: APP,
     reportName: LOG_REPORT,
@@ -513,7 +531,6 @@ function fetchLogs(moNumber) {
     pageSize: 100
   }).then(function(res) {
     var logs = [];
-
     if (res.code === 3000 && res.data && res.data.length > 0) {
       logs = res.data.filter(function(r){
         var recMO = r['MO_Number'];
@@ -521,9 +538,6 @@ function fetchLogs(moNumber) {
         return recMO === moNumber;
       });
       logs.sort(function(a, b){
-        var da = a['Log_Date'] || '';
-        var db = b['Log_Date'] || '';
-        // Parse dd-MMM-yyyy HH:mm:ss for reliable comparison
         function parseDate(s) {
           if (!s) return 0;
           var months = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
@@ -531,79 +545,67 @@ function fetchLogs(moNumber) {
           if (!m) return 0;
           return new Date(+m[3], months[m[2]], +m[1], +m[4], +m[5], +m[6]).getTime();
         }
-        return parseDate(db) - parseDate(da);
+        var da = a['Log_Date'] || '';
+        var db = b['Log_Date'] || '';
+        if (typeof da === 'object') da = da.display_value || '';
+        if (typeof db === 'object') db = db.display_value || '';
+        return parseDate(String(db)) - parseDate(String(da));
       });
     }
-
     if (logs.length === 0) {
       list.innerHTML = '<div class="log-empty">暂无工序记录</div>';
       return;
     }
-
     window._logData = logs;
     var h = '';
     logs.forEach(function(r) {
       var process   = r['Process'] || '-';
       var completed = parseInt(r['Completed_Qty']) || 0;
       var defect    = parseInt(r['Defect_Qty']) || 0;
-
-      // Worker: try multiple possible field names
       var worker = r['Worker'] || r['Worker_Name'] || r['Responsible'] || '';
       if (typeof worker === 'object') worker = worker.display_value || '';
       worker = String(worker).trim() || '未填写';
-
-      // Log_Date: try multiple possible field names
-      var date = r['Log_Date'] || r['Log_DateTime'] || r['Created_Time'] || '';
-      if (typeof date === 'object') date = date.display_value || '';
-      date = String(date).trim() || '-';
-
+      var date = formatDate(r['Log_Date'] || r['Log_DateTime'] || r['Created_Time'] || '');
       var notes = r['Notes'] || '';
-
       var logIdx = logs.indexOf(r);
       h += '<div class="log-item" onclick="openLogModal(' + logIdx + ')" style="cursor:pointer">';
-      h += '<div><div class="log-process">' + process + '</div>';
+      h += '<div><div class="log-process"><span class="log-dot"></span>' + process + '</div>';
       h += '<div class="log-meta">负责人: ' + worker + (notes ? ' · ' + notes : '') + '</div></div>';
       h += '<div><div class="log-qty">完成 ' + completed.toLocaleString() + '件';
-      if (defect > 0) h += ' / 不良 ' + defect + '件';
-      h += '</div><div class="log-date">' + date + '</div></div>';
+      h += '</div>';
+      if (defect > 0) h += '<div class="log-defect">▲ 불량 ' + defect + '件</div>';
+      h += '<div class="log-date">' + date + '</div></div>';
       h += '</div>';
     });
     list.innerHTML = h;
-
   }).catch(function() {
     list.innerHTML = '<div class="log-empty">暂无记录</div>';
   });
 }
 
-// ── 공정 선택 ─────────────────────────────────────
 function selectProcess(el, process, processCN) {
   document.querySelectorAll('.proc-btn').forEach(function(b){ b.classList.remove('selected'); });
   el.classList.add('selected');
   selectedProcess = process;
   selectedProcessCN = processCN;
-
+  var hp = document.getElementById('input-hero-proc'); if(hp) hp.textContent = processCN;
+  var hm = document.getElementById('input-hero-mo'); if(hm) hm.textContent = processCN + ' · ' + moData.mo_number;
   document.getElementById('c-mo').textContent       = moData.mo_number;
   document.getElementById('c-sku').textContent      = moData.sku;
   document.getElementById('c-process').textContent  = processCN + ' (' + process + ')';
   document.getElementById('c-orderqty').textContent = moData.order_qty.toLocaleString() + ' 件';
-
-  // Render Plan_Notes table on screen-input
   var subformEl = document.getElementById('c-subform');
   var notesHtml = buildNotesTable(moData.plan_notes);
   subformEl.innerHTML = notesHtml || '';
-
   var showBag = (process.indexOf('Packing') >= 0 || process.indexOf('Shipped') >= 0);
   document.getElementById('bag-group').style.display = showBag ? 'block' : 'none';
-
   ['f-completed','f-incomplete','f-defect','f-bag','f-worker','f-notes'].forEach(function(id){
     var el2 = document.getElementById(id); if(el2) el2.value = '';
   });
   document.getElementById('submit-err').innerHTML = '';
-
   setTimeout(function(){ showScreen('screen-input'); }, 150);
 }
 
-// ── 날짜 형식 dd-MMM-yyyy ─────────────────────────
 function getTodayStr() {
   var d = new Date();
   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -615,15 +617,14 @@ function getTodayStr() {
     + ' ' + (hh < 10 ? '0' + hh : hh) + ':' + (mm < 10 ? '0' + mm : mm) + ':' + (ss < 10 ? '0' + ss : ss);
 }
 
-// ── 제출 ──────────────────────────────────────────
 function submitData() {
   var completedQty = parseInt(document.getElementById('f-completed').value) || 0;
   var defectQty    = parseInt(document.getElementById('f-defect').value) || 0;
+  var incompleteQty = parseInt(document.getElementById('f-incomplete').value) || 0;
   var bagQty       = parseInt(document.getElementById('f-bag').value) || 0;
   var worker       = document.getElementById('f-worker').value.trim();
   var notes        = document.getElementById('f-notes').value.trim();
   var todayStr     = getTodayStr();
-
   if (completedQty <= 0) {
     document.getElementById('submit-err').innerHTML = '<div class="err-box">请输入完成数量</div>';
     return;
@@ -632,14 +633,9 @@ function submitData() {
     document.getElementById('submit-err').innerHTML = '<div class="err-box">请输入负责人姓名（必填）</div>';
     return;
   }
-
   var btn = document.getElementById('btn-submit');
   btn.disabled = true; btn.textContent = '提交中...';
   document.getElementById('submit-err').innerHTML = '';
-
-  // 1. Add_Production_Log 저장
-  var incompleteQty = parseInt(document.getElementById('f-incomplete').value) || 0;
-
   var logData = {
     'MO_Number':      moData.mo_number,
     'SKU':            moData.sku,
@@ -653,7 +649,6 @@ function submitData() {
     'Log_Date':       todayStr,
     'Notes':          notes
   };
-
   ZOHO.CREATOR.API.addRecord({
     appName: APP,
     formName: LOG_FORM,
@@ -669,7 +664,6 @@ function submitData() {
   });
 }
 
-// 2. Add_MO 상태 업데이트
 function updateMO(completedQty, todayStr) {
   var map = PROCESS_MAP[selectedProcess];
   var updateData = { 'Production_Status': selectedProcess };
@@ -678,7 +672,6 @@ function updateMO(completedQty, todayStr) {
     if (map.dateEnd)   updateData[map.dateEnd]   = todayStr;
     if (map.qty)       updateData[map.qty]        = completedQty;
   }
-
   ZOHO.CREATOR.API.updateRecord({
     appName: APP,
     reportName: MO_REPORT,
@@ -687,25 +680,53 @@ function updateMO(completedQty, todayStr) {
   }).then(function() {
     showSuccess();
   }).catch(function() {
-    showSuccess(); // 로그는 저장됐으니 성공 처리
+    showSuccess();
   });
 }
 
 function showSuccess() {
   var completedQty = parseInt(document.getElementById('f-completed').value) || 0;
+  var incompleteQty = parseInt(document.getElementById('f-incomplete').value) || 0;
   var defectQty    = parseInt(document.getElementById('f-defect').value) || 0;
   var worker       = document.getElementById('f-worker').value.trim() || '未填写';
+  var notes        = document.getElementById('f-notes').value.trim();
   var now = new Date();
-  var timeStr = now.toLocaleDateString('zh-CN') + ' ' +
-    now.toLocaleTimeString('zh-CN', { hour:'2-digit', minute:'2-digit' });
-
-  document.getElementById('s-mo').textContent        = moData.mo_number;
-  document.getElementById('s-process').textContent   = selectedProcessCN + ' (' + selectedProcess + ')';
-  document.getElementById('s-completed').textContent = completedQty.toLocaleString() + ' 件';
-  document.getElementById('s-defect').textContent    = defectQty.toLocaleString() + ' 件';
-  document.getElementById('s-worker').textContent    = worker;
-  document.getElementById('s-time').textContent      = timeStr;
-
+  var timeStr = now.getFullYear() + '-'
+    + String(now.getMonth()+1).padStart(2,'0') + '-'
+    + String(now.getDate()).padStart(2,'0') + ' '
+    + String(now.getHours()).padStart(2,'0') + ':'
+    + String(now.getMinutes()).padStart(2,'0');
+  var hdr = document.getElementById('s-mo-hdr');
+  if(hdr) hdr.textContent = moData.mo_number;
+  var rows = '';
+  rows += '<div style="background:#fff;border-radius:2px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;border-left:3px solid #C9A84C;">';
+  rows += '<span style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0A898;text-transform:uppercase;">공정</span>';
+  rows += '<span style="font-size:12px;font-weight:700;color:#7A5C1E;">'+selectedProcessCN+' · '+selectedProcess+'</span></div>';
+  rows += '<div style="background:#fff;border-radius:2px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;">';
+  rows += '<span style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0A898;text-transform:uppercase;">완성수량</span>';
+  rows += '<span style="font-size:13px;font-weight:700;color:#2E2A24;">'+completedQty.toLocaleString()+' 件</span></div>';
+  if(incompleteQty>0){
+    rows += '<div style="background:#fff;border-radius:2px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;">';
+    rows += '<span style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0A898;text-transform:uppercase;">미완성수량</span>';
+    rows += '<span style="font-size:13px;font-weight:700;color:#2E2A24;">'+incompleteQty.toLocaleString()+' 件</span></div>';
+  }
+  if(defectQty>0){
+    rows += '<div style="background:#fff;border-radius:2px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;">';
+    rows += '<span style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0A898;text-transform:uppercase;">불량수량</span>';
+    rows += '<span style="font-size:13px;font-weight:700;color:#B05A52;">'+defectQty.toLocaleString()+' 件</span></div>';
+  }
+  rows += '<div style="background:#fff;border-radius:2px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;">';
+  rows += '<span style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0A898;text-transform:uppercase;">담당자</span>';
+  rows += '<span style="font-size:13px;font-weight:700;color:#2E2A24;">'+worker+'</span></div>';
+  rows += '<div style="background:#fff;border-radius:2px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;">';
+  rows += '<span style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0A898;text-transform:uppercase;">기록시간</span>';
+  rows += '<span style="font-size:12px;font-weight:700;color:#7A6A58;">'+timeStr+'</span></div>';
+  if(notes){
+    rows += '<div style="background:#fff;border-radius:2px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;">';
+    rows += '<span style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0A898;text-transform:uppercase;">메모</span>';
+    rows += '<span style="font-size:12px;color:#888;">'+notes+'</span></div>';
+  }
+  document.getElementById('result-rows').innerHTML = rows;
   var btn = document.getElementById('btn-submit');
   btn.disabled = false; btn.textContent = '确认提交 →';
   showScreen('screen-success');
@@ -721,18 +742,15 @@ function openLogModal(idx) {
   try {
     var r = window._logData[idx];
     if (!r) return;
-    var process   = r['Process'] || '-';
-    var completed = r['Completed_Qty'] || '0';
+    var process    = r['Process'] || '-';
+    var completed  = r['Completed_Qty'] || '0';
     var incomplete = r['Incomplete_Qty'] || '0';
-    var defect    = r['Defect_Qty'] || '0';
-    var workerRaw = r['Worker'];
+    var defect     = r['Defect_Qty'] || '0';
+    var workerRaw  = r['Worker'];
     var worker = workerRaw && typeof workerRaw === 'object' ? workerRaw.display_value : String(workerRaw || '');
     worker = worker.trim() || '未填写';
-    var dateRaw = r['Log_Date'];
-    var date = dateRaw && typeof dateRaw === 'object' ? dateRaw.display_value : String(dateRaw || '');
-    date = date.trim() || '-';
+    var date = formatDate(r['Log_Date'] || r['Log_DateTime'] || '');
     var notes = r['Notes'] || '-';
-
     var h = '';
     h += '<div class="modal-row"><span class="modal-label">工序</span><span class="modal-value">' + process + '</span></div>';
     h += '<div class="modal-row"><span class="modal-label">完成数量</span><span class="modal-value">' + completed + ' 件</span></div>';
@@ -741,7 +759,6 @@ function openLogModal(idx) {
     h += '<div class="modal-row"><span class="modal-label">负责人</span><span class="modal-value">' + worker + '</span></div>';
     h += '<div class="modal-row"><span class="modal-label">记录时间</span><span class="modal-value">' + date + '</span></div>';
     h += '<div class="modal-row"><span class="modal-label">备注</span><span class="modal-value">' + notes + '</span></div>';
-
     document.getElementById('log-modal-body').innerHTML = h;
     document.getElementById('log-modal-ov').style.display = 'flex';
   } catch(e) {
@@ -753,9 +770,7 @@ function closeLogModal() {
   document.getElementById('log-modal-ov').style.display = 'none';
 }
 
-// SDK 초기화
 ZOHO.CREATOR.init().then(function() {
-  // ready
 }).catch(function(err) {
   console.log('ZOHO init:', err);
 });
