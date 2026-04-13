@@ -3,176 +3,180 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>工序扫码更新 v25</title>
+<title>工序扫码更新 v26</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
-:root{
-  --gold:#D4B976;--gold-light:#E8D5A0;--gold-dim:#A89058;--gold-glow:rgba(212,185,118,.15);
-  --dark:#0F0F0F;--dark2:#1A1A1A;--dark3:#242424;--dark4:#2E2E2E;
-  --surface:#FAFAF8;--surface2:#F5F3EF;--surface3:#EDEBE6;
-  --text:#1A1814;--text2:#5C5648;--text3:#9C9588;--text4:#C4BFAE;
-  --accent:#C9A84C;--danger:#C45C52;--danger-bg:#FFF5F4;
-  --radius:10px;--radius-sm:6px;--radius-xs:4px;
-  --shadow-sm:0 1px 3px rgba(0,0,0,.04),0 1px 2px rgba(0,0,0,.06);
-  --shadow-md:0 4px 12px rgba(0,0,0,.06),0 1px 3px rgba(0,0,0,.08);
-  --transition:all .2s cubic-bezier(.4,0,.2,1);
-}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:'Manrope','Noto Sans SC',-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;background:var(--dark);min-height:100vh;margin:0;-webkit-font-smoothing:antialiased;}
-.container{max-width:480px;margin:0 auto;background:var(--dark);min-height:100vh;}
-.screen{display:none;animation:fadeIn .3s cubic-bezier(.4,0,.2,1)}.screen.active{display:block}
+body{font-family:'Manrope','Noto Sans SC',-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;background:#0A0A0A;min-height:100vh;margin:0;-webkit-font-smoothing:antialiased;}
+.container{max-width:480px;margin:0 auto;background:#0A0A0A;min-height:100vh;}
+.screen{display:none;animation:fadeIn .3s ease}.screen.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 
-/* ─ 스캔 화면: Claude Code 시네마틱 다크+골드 ─ */
-#screen-scan{
-  background:var(--dark);
-  background-image:radial-gradient(ellipse at 50% 20%,rgba(212,185,118,.06) 0%,transparent 60%);
-  min-height:100vh;flex-direction:column;align-items:center;justify-content:center;
-  padding:48px 28px;gap:32px;position:relative;overflow:hidden;
-}
+/* ─ 스캔 화면 ─ */
+#screen-scan{background:#0A0A0A;background-image:radial-gradient(ellipse at 50% 20%,rgba(201,168,76,.06) 0%,transparent 60%);min-height:100vh;flex-direction:column;align-items:center;justify-content:space-between;padding:48px 28px 40px;position:relative;overflow:hidden;}
 #screen-scan.active{display:flex;}
-#screen-scan::before{
-  content:'';position:absolute;top:-40%;left:-20%;width:140%;height:80%;
-  background:radial-gradient(ellipse,rgba(212,185,118,.04) 0%,transparent 70%);
-  pointer-events:none;
-}
-.scan-wordmark{font-family:'Bebas Neue',cursive;font-size:11px;letter-spacing:8px;color:var(--gold-dim);text-transform:uppercase;opacity:.7;}
-.scan-frame-wrap{width:200px;height:200px;position:relative;display:flex;align-items:center;justify-content:center;}
-.sc-corner{position:absolute;width:28px;height:28px;border-color:var(--gold);border-style:solid;transition:var(--transition);}
+#screen-scan::before{content:'';position:absolute;top:-40%;left:-20%;width:140%;height:80%;background:radial-gradient(ellipse,rgba(201,168,76,.04) 0%,transparent 70%);pointer-events:none;}
+.scan-wordmark{font-family:'Bebas Neue',cursive;font-size:11px;letter-spacing:8px;color:rgba(201,168,76,.4);text-transform:uppercase;text-align:center;}
+.scan-frame-wrap{width:200px;height:200px;position:relative;display:flex;align-items:center;justify-content:center;margin:0 auto;}
+.sc-corner{position:absolute;width:28px;height:28px;border-color:#C9A84C;border-style:solid;transition:all .2s;}
 .sc-tl{top:0;left:0;border-width:2px 0 0 2px;border-radius:2px 0 0 0}
 .sc-tr{top:0;right:0;border-width:2px 2px 0 0;border-radius:0 2px 0 0}
 .sc-bl{bottom:0;left:0;border-width:0 0 2px 2px;border-radius:0 0 0 2px}
 .sc-br{bottom:0;right:0;border-width:0 2px 2px 0;border-radius:0 0 2px 0}
-.scan-frame-wrap:hover .sc-corner{border-color:var(--gold-light);}
-.sc-inner{width:140px;height:140px;border:1px solid var(--dark3);border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(212,185,118,.02);}
-.sc-dot{width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 20px rgba(212,185,118,.3);animation:scpulse 2.5s ease-in-out infinite;}
+.scan-frame-wrap:hover .sc-corner{border-color:#E8D5A0;}
+.sc-inner{width:140px;height:140px;border:1px solid #242424;border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(201,168,76,.02);}
+.sc-dot{width:10px;height:10px;border-radius:50%;background:#C9A84C;box-shadow:0 0 20px rgba(201,168,76,.3);animation:scpulse 2.5s ease-in-out infinite;}
 @keyframes scpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.25;transform:scale(.85)}}
-.sc-line{position:absolute;top:20%;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,var(--gold-light),transparent);opacity:.5;animation:scmove 2.2s ease-in-out infinite;}
+.sc-line{position:absolute;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.6),transparent);opacity:.5;animation:scmove 2.2s ease-in-out infinite;}
 @keyframes scmove{0%,100%{top:20%;opacity:.3}50%{top:78%;opacity:.6}}
-.scan-label-wrap p{font-size:13px;color:rgba(200,196,188,.8);line-height:2;font-weight:300;text-align:center;letter-spacing:.3px;}
-.btn-scan-start{
-  background:transparent;color:var(--gold);border:2px solid var(--gold);
-  padding:16px 0;border-radius:var(--radius-xs);font-size:13px;font-weight:700;
-  letter-spacing:3px;text-transform:uppercase;width:100%;max-width:260px;
-  cursor:pointer;font-family:inherit;transition:var(--transition);position:relative;overflow:hidden;
-}
-.btn-scan-start::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(212,185,118,.08),transparent);opacity:0;transition:var(--transition);}
-.btn-scan-start:active{transform:scale(.98);background:rgba(212,185,118,.08)}
-.btn-scan-start:active::after{opacity:1}
-.scan-hint-wrap p{font-size:11px;color:rgba(200,196,188,.5);letter-spacing:.5px;line-height:2;text-align:center;}
-.btn-upload-qr{
-  background:transparent;color:rgba(212,185,118,.6);
-  border:1.5px solid rgba(212,185,118,.35);
-  padding:13px 0;border-radius:var(--radius-xs);
-  font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
-  width:100%;max-width:260px;cursor:pointer;font-family:inherit;
-  transition:var(--transition);
-}
-.btn-upload-qr:active{background:rgba(212,185,118,.06);border-color:rgba(212,185,118,.6);}
+.scan-label-wrap{text-align:center;}
+.scan-label-wrap p{font-size:13px;color:rgba(196,186,170,.8);line-height:2;font-weight:300;}
+.scan-btns{width:100%;display:flex;flex-direction:column;gap:10px;align-items:center;}
+.btn-scan-start{background:transparent;color:#C9A84C;border:2px solid #C9A84C;padding:16px 0;border-radius:2px;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;width:100%;max-width:260px;cursor:pointer;font-family:inherit;transition:all .2s;}
+.btn-scan-start:active{background:rgba(201,168,76,.08);}
+.btn-upload-qr{background:transparent;color:rgba(201,168,76,.5);border:1.5px solid rgba(201,168,76,.25);padding:13px 0;border-radius:2px;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;width:100%;max-width:260px;cursor:pointer;font-family:inherit;transition:all .2s;}
+.btn-upload-qr:active{border-color:rgba(201,168,76,.6);}
+.scan-hint{font-size:11px;color:rgba(196,186,170,.4);letter-spacing:.5px;text-align:center;line-height:1.8;}
 
-/* ─ 이후 화면: 내 디자인 (화이트모드) + Claude Code 그림자/전환 효과 ─ */
-.card{background:#fff;border-radius:var(--radius-sm);padding:16px;margin-bottom:0;box-shadow:var(--shadow-sm);border:1px solid rgba(0,0,0,.03);transition:var(--transition);}
-.card-title{font-size:9px;font-weight:700;color:#B0A898;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;}
-.info-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid #F1F5F3;}
-.info-row:last-child{border-bottom:none;}
-.info-label{font-size:12px;color:#8A8070;}
-.info-value{font-size:12px;font-weight:600;color:#1A1A1A;text-align:right;max-width:60%;}
-.status-pill{background:#1A1A1A;color:var(--gold);font-size:10px;font-weight:700;letter-spacing:1.5px;padding:4px 10px;border-radius:var(--radius-xs);text-transform:uppercase;display:inline-block;}
-
-.process-title{font-size:9px;font-weight:700;color:#B0A898;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;}
-.process-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
-.proc-btn{
-  padding:14px 8px;border:1.5px solid rgba(0,0,0,.06);border-radius:var(--radius-sm);
-  background:#fff;cursor:pointer;text-align:center;transition:var(--transition);
-  display:flex;flex-direction:column;align-items:center;gap:5px;
-  box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
-}
-.proc-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--gold-glow),transparent);opacity:0;transition:var(--transition);}
-.proc-btn:active{transform:scale(.97);}
-.proc-btn.selected{border:2px solid var(--accent);background:linear-gradient(135deg,#FAF6EC,#FDF9F0);box-shadow:0 2px 12px rgba(201,168,76,.12);}
-.proc-btn.selected::before{opacity:1}
-.proc-icon{font-size:20px;display:block;transition:var(--transition);}
-.proc-btn.selected .proc-icon{transform:scale(1.1);}
-.proc-name{font-size:13px;font-weight:700;color:#1A1A1A;}
-.proc-sub{font-size:9px;color:#B0A898;letter-spacing:1px;text-transform:uppercase;}
-.proc-btn.selected .proc-name{color:#7A5C1E;}
-.proc-btn.selected .proc-sub{color:var(--accent);}
-.proc-full{grid-column:1/-1;}
-
-.input-field{width:100%;padding:10px 6px;border:1.5px solid #DDD9D1;border-radius:var(--radius-sm);font-size:18px;font-weight:700;color:#2E2A24;background:#ffffff;outline:none;-webkit-appearance:none;text-align:center;font-family:inherit;transition:var(--transition);}
-.input-field:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(201,168,76,.10);}
-.input-field.text-field{font-size:14px;font-weight:600;text-align:left;padding:12px 14px;}
-.input-field::placeholder{color:#C8C4BC;font-weight:400;}
-
-.btn-row{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:4px;}
-.btn-back{padding:14px;border:1.5px solid rgba(0,0,0,.08);border-radius:var(--radius-sm);background:#fff;font-size:13px;font-weight:600;color:#888;cursor:pointer;font-family:inherit;transition:var(--transition);}
-.btn-back:active{background:var(--surface3);}
-.btn-submit{padding:14px;border:none;border-radius:var(--radius-sm);background:linear-gradient(135deg,#D4B976,#C9A84C);color:#4A3510;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:inherit;transition:var(--transition);box-shadow:0 2px 8px rgba(201,168,76,.2);}
-.btn-submit:active{transform:scale(.98);box-shadow:0 1px 4px rgba(201,168,76,.15);}
-.btn-submit:disabled{background:linear-gradient(135deg,#D4CFC7,#C4BFAE);color:#9A8870;cursor:not-allowed;box-shadow:none;}
-
-.success-wrap{background:var(--surface2);min-height:100vh;padding-bottom:32px;}
-.success-banner{background:#fff;margin:16px;border-radius:var(--radius-sm);padding:24px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;border-bottom:3px solid var(--accent);box-shadow:var(--shadow-md);}
-.success-icon{width:52px;height:52px;border-radius:50%;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;animation:successPop .5s cubic-bezier(.34,1.56,.64,1);}
-@keyframes successPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-.success-title{font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:3px;color:#2E2A24;text-align:center;line-height:1.2;}
-.result-block{background:#fff;border-radius:var(--radius-sm);padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin:0 16px 6px;box-shadow:var(--shadow-sm);}
-.result-block-accent{border-left:3px solid var(--accent);}
-.result-key{font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0A898;text-transform:uppercase;}
-.result-val{font-size:13px;font-weight:700;color:#2E2A24;}
-.result-val.defect-val{color:#B05A52;}
-.btn-again{width:calc(100% - 32px);margin:8px 16px;padding:15px;border:none;background:#3A3020;color:var(--gold);border-radius:var(--radius-sm);font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-family:inherit;display:block;transition:var(--transition);}
-.btn-again:active{background:var(--dark3);}
-.btn-rescan{width:calc(100% - 32px);margin:0 16px;padding:13px;border:1.5px solid rgba(0,0,0,.08);background:transparent;color:#B0A898;border-radius:var(--radius-sm);font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:inherit;display:block;transition:var(--transition);}
-
-.loading-wrap{text-align:center;padding:40px 16px;background:var(--surface2);min-height:100vh;flex-direction:column;align-items:center;justify-content:center;}
+/* ─ 로딩 ─ */
+#screen-loading{background:#F5F3EF;min-height:100vh;}
 #screen-loading.active .loading-wrap{display:flex;}
-.spinner{width:36px;height:36px;border:3px solid rgba(212,185,118,.15);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px;}
+.loading-wrap{text-align:center;padding:40px 16px;background:#F5F3EF;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;}
+.spinner{width:36px;height:36px;border:3px solid rgba(201,168,76,.15);border-top-color:#C9A84C;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-wrap p{font-size:14px;color:#888;font-weight:500;}
 
-.err-box{background:var(--danger-bg);border:1px solid #FECACA;border-radius:var(--radius-sm);padding:14px;text-align:center;color:#B91C1C;font-size:13px;margin-bottom:10px;font-weight:600;}
-.qty-box{background:#fff;border-radius:var(--radius-sm);padding:12px 10px;border-bottom:3px solid var(--surface3);box-shadow:var(--shadow-sm);transition:var(--transition);}
-.qty-box:focus-within{box-shadow:var(--shadow-md);transform:translateY(-1px);}
-.qty-box.complete-box{border-bottom-color:var(--accent);}
-.qty-box.defect-box{border-bottom-color:var(--danger);}
-.qty-box-label{font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0A898;text-transform:uppercase;margin-bottom:8px;}
-.worker-box{background:#fff;border-radius:var(--radius-sm);padding:14px 16px;box-shadow:var(--shadow-sm);transition:var(--transition);}
-.worker-box:focus-within{box-shadow:var(--shadow-md);transform:translateY(-1px);}
-.field-label{font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0A898;text-transform:uppercase;margin-bottom:8px;}
-.back-link{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--gold);cursor:pointer;font-weight:600;background:none;border:none;font-family:inherit;transition:var(--transition);}
+/* ─ INFO 화면 ─ */
+#screen-info{background:#F5F3EF;min-height:100vh;}
+.info-header-bar{background:#1A1A1A;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;}
+.back-link{background:none;border:none;color:#C9A84C;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:opacity .2s;}
 .back-link:active{opacity:.7;}
+.header-tag{font-family:'Bebas Neue',cursive;letter-spacing:3px;font-size:12px;color:#C9A84C;}
+.hdr-mo-txt{font-size:11px;color:#555;letter-spacing:1px;}
 
-.log-item{padding:11px 14px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:0.5px solid rgba(0,0,0,.04);cursor:pointer;transition:var(--transition);}
-.log-item:last-child{border:none;}
-.log-item:active{background:var(--surface);}
-.log-process{font-size:11px;font-weight:700;color:#7A5C1E;display:flex;align-items:center;gap:5px;}
-.log-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;display:inline-block;box-shadow:0 0 6px rgba(201,168,76,.3);}
-.log-meta{font-size:12.5px;font-weight:700;color:#2E2A24;margin-top:3px;padding-left:10px;}
-.log-qty{font-size:13px;font-weight:700;color:#1A1A1A;text-align:right;}
-.log-defect{font-size:10px;font-weight:700;color:#B05A52;text-align:right;}
-.log-date{font-size:12px;font-weight:700;color:#7A6A58;margin-top:3px;text-align:right;}
-.log-empty{text-align:center;padding:16px;font-size:13px;color:#B0A898;}
-.log-loading{text-align:center;padding:12px;font-size:12px;color:#B0A898;}
-.log-spinner{width:20px;height:20px;border:2px solid rgba(0,0,0,.06);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 6px;}
+/* 주문정보 카드 (v24 스타일) */
+.info-card{background:#fff;border-radius:12px;margin:14px 16px 0;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.info-card-title{font-size:10px;font-weight:700;color:#B0A898;text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid #F3F1EC;}
+.info-row:last-child{border:none;}
+.info-label{font-size:12px;color:#8A8070;}
+.info-value{font-size:12px;font-weight:700;color:#1A1A1A;text-align:right;max-width:60%;}
+.status-badge{background:#FEF3C7;color:#B45309;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;display:inline-block;}
+
+/* 주문명세 카드 */
+.notes-card{background:#fff;border-radius:12px;margin:10px 16px 0;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.notes-card-title{font-size:10px;font-weight:700;color:#B0A898;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;}
+.notes-head{display:grid;grid-template-columns:1fr 70px 70px;font-size:10px;font-weight:700;color:#B0A898;letter-spacing:1px;padding:4px 0;border-bottom:0.5px solid #F3F1EC;margin-bottom:4px;}
+.notes-head span:nth-child(2){text-align:center;}.notes-head span:nth-child(3){text-align:right;}
+.notes-row{display:grid;grid-template-columns:1fr 70px 70px;font-size:12px;padding:7px 0;border-bottom:0.5px solid #F8F6F2;}
+.notes-row:last-child{border:none;}
+.notes-row span{color:#1A1A1A;}.notes-row span:nth-child(2){text-align:center;color:#8A8070;}
+.notes-row span:nth-child(3){text-align:right;font-weight:700;color:#C9A84C;}
+
+/* 공정 선택: 세로 리스트 */
+.section-label{font-size:9px;font-weight:700;letter-spacing:2.5px;color:#B0A898;text-transform:uppercase;display:block;margin:16px 16px 8px;}
+.proc-list{margin:0 16px;display:flex;flex-direction:column;gap:6px;}
+.proc-card{background:#fff;border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border:1.5px solid transparent;transition:all .12s;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.proc-card:active{transform:scale(.99);}
+.proc-card.selected{border-color:#C9A84C;background:#FFFBF2;}
+.proc-card.current-proc{border-color:rgba(201,168,76,.3);}
+.proc-card-left{display:flex;align-items:center;gap:14px;}
+.proc-num{font-family:'Bebas Neue',cursive;font-size:22px;color:#E0DDD6;line-height:1;width:26px;}
+.proc-card.selected .proc-num,.proc-card.current-proc .proc-num{color:#C9A84C;}
+.proc-zh{font-size:15px;font-weight:700;color:#1A1A1A;}
+.proc-card.selected .proc-zh{color:#6B4810;}
+.proc-en{font-size:10px;color:#B0A898;font-weight:500;margin-top:2px;letter-spacing:.5px;}
+.proc-card.selected .proc-en{color:#C9A84C;}
+.proc-card-right{display:flex;align-items:center;gap:8px;}
+.current-badge{background:#D1FAE5;color:#065F46;font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.5px;white-space:nowrap;}
+.proc-arrow{font-size:16px;color:#D8D4CC;}.proc-card.selected .proc-arrow{color:#C9A84C;}
+
+/* 공정기록: 타임라인 */
+.log-section-wrap{margin:16px 16px 24px;}
+#log-section{display:none;}
+.log-tl-item{display:flex;gap:12px;padding:10px 0;position:relative;cursor:pointer;}
+.log-tl-item:not(:last-child)::after{content:'';position:absolute;left:5px;top:22px;bottom:-10px;width:1px;background:#E8E4DC;}
+.log-dot{width:11px;height:11px;border-radius:50%;background:#C9A84C;flex-shrink:0;margin-top:3px;border:2px solid #F5F3EF;box-shadow:0 0 6px rgba(201,168,76,.2);}
+.log-content{flex:1;}
+.log-proc{font-size:12px;font-weight:700;color:#1A1A1A;}
+.log-worker{font-size:11px;color:#B0A898;margin-top:2px;font-weight:600;}
+.log-right{text-align:right;}
+.log-qty{font-size:13px;font-weight:700;color:#1A1A1A;}
+.log-defect{font-size:10px;font-weight:700;color:#C45C52;margin-top:2px;}
+.log-date{font-size:12px;font-weight:700;color:#7A6A58;margin-top:2px;}
+.log-empty{text-align:center;padding:20px;font-size:13px;color:#B0A898;}
+.log-loading{text-align:center;padding:16px;font-size:12px;color:#B0A898;}
+.log-spinner{width:20px;height:20px;border:2px solid rgba(0,0,0,.06);border-top-color:#C9A84C;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 6px;}
+
+/* ─ INPUT 화면 ─ */
+#screen-input{background:#0A0A0A;min-height:100vh;}
+.input-hero{background:#0A0A0A;padding:20px 20px 18px;background-image:radial-gradient(ellipse at 30% 50%,rgba(201,168,76,.05) 0%,transparent 60%);}
+.input-hero-top{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.input-proc-name{font-family:'Bebas Neue',cursive;font-size:34px;letter-spacing:3px;color:#C9A84C;line-height:1;}
+.input-proc-eng{font-size:10px;color:rgba(255,255,255,.25);letter-spacing:2px;margin-top:4px;}
+.input-mo-tag{font-size:10px;color:rgba(255,255,255,.2);letter-spacing:3px;}
+.input-progress{display:flex;gap:4px;margin-top:14px;}
+.input-progress-bar{height:3px;flex:1;border-radius:2px;}
+.input-progress-bar.active{background:#C9A84C;}.input-progress-bar.inactive{background:#2A2A1A;}
+.input-body{background:#F5F3EF;padding:16px;display:flex;flex-direction:column;gap:10px;}
+.qty-tiles{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.qty-tile{background:#fff;border-radius:8px;padding:12px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;border-bottom:3px solid #E8E4DC;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .15s;}
+.qty-tile:focus-within{box-shadow:0 4px 12px rgba(0,0,0,.06);transform:translateY(-1px);}
+.qty-tile.gold{border-bottom-color:#C9A84C;}.qty-tile.danger{border-bottom-color:#C45C52;}
+.qty-tile-label{font-size:8px;font-weight:700;letter-spacing:1px;color:#B0A898;text-transform:uppercase;text-align:center;line-height:1.5;}
+.qty-tile.danger .qty-tile-label{color:#C45C52;}
+.qty-tile input{width:100%;background:transparent;border:none;outline:none;font-family:inherit;font-size:22px;font-weight:700;color:#1A1208;text-align:center;padding:0;}
+.qty-tile input::placeholder{color:#E0DDD8;font-weight:300;}
+.bag-wrap{display:none;}
+.bag-wrap .qty-tile{max-width:33%;}
+.field-wrap{background:#fff;border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .15s;}
+.field-wrap:focus-within{box-shadow:0 4px 12px rgba(0,0,0,.06);transform:translateY(-1px);}
+.field-label{font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0A898;text-transform:uppercase;}
+.field-wrap input{background:transparent;border:none;border-bottom:1.5px solid #EAE7E1;outline:none;font-family:inherit;font-size:14px;font-weight:600;color:#1A1208;padding:6px 0;width:100%;transition:border-color .15s;}
+.field-wrap input:focus{border-bottom-color:#C9A84C;}
+.field-wrap input::placeholder{color:#C8C4BC;font-weight:400;}
+.err-box{background:#FFF5F4;border:1px solid #FECACA;border-radius:6px;padding:12px;text-align:center;color:#B91C1C;font-size:13px;font-weight:600;}
+.btn-row{display:grid;grid-template-columns:1fr 2fr;gap:8px;}
+.btn-back{padding:14px;border:1px solid #E0DDD8;border-radius:6px;background:#fff;font-family:inherit;font-size:12px;font-weight:600;color:#B0A898;cursor:pointer;transition:all .15s;}
+.btn-back:active{background:#F0EDE8;}
+.btn-submit{padding:14px;border:none;border-radius:6px;background:linear-gradient(135deg,#D4B976,#C9A84C);color:#3A2208;font-family:inherit;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .15s;box-shadow:0 2px 8px rgba(201,168,76,.2);}
+.btn-submit:active{transform:scale(.98);}
+.btn-submit:disabled{background:linear-gradient(135deg,#D4CFC7,#C4BFAE);color:#9A8870;cursor:not-allowed;box-shadow:none;}
+
+/* ─ SUCCESS 화면 ─ */
+#screen-success{background:#F5F3EF;min-height:100vh;}
+.success-top{background:#1A1A1A;padding:24px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.success-icon{width:56px;height:56px;border-radius:50%;border:2px solid #C9A84C;display:flex;align-items:center;justify-content:center;animation:successPop .5s cubic-bezier(.34,1.56,.64,1);}
+@keyframes successPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.success-title{font-family:'Bebas Neue',cursive;font-size:26px;letter-spacing:3px;color:#F5F3EF;text-align:center;}
+.success-sub{font-size:10px;color:#4A4030;letter-spacing:1.5px;text-align:center;}
+.result-wrap{padding:16px;display:flex;flex-direction:column;gap:6px;}
+.result-row{background:#fff;border-radius:6px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.result-row.accent{border-left:3px solid #C9A84C;}
+.result-k{font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0A898;text-transform:uppercase;}
+.result-v{font-size:13px;font-weight:700;color:#1A1208;}.result-v.dv{color:#C45C52;}
+.success-actions{padding:0 16px 32px;display:flex;flex-direction:column;gap:8px;}
+.btn-next{padding:15px;border:none;border-radius:6px;background:#1A1208;color:#C9A84C;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;width:100%;transition:all .15s;}
+.btn-next:active{background:#2A2010;}
+.btn-rescan{padding:13px;border:1px solid #E0DDD8;border-radius:6px;background:transparent;color:#B0A898;font-family:inherit;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;width:100%;transition:all .15s;}
+
+/* ─ 모달 ─ */
 .modal-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid rgba(0,0,0,.04);font-size:13px;}
-.modal-row:last-child{border-bottom:none;}
+.modal-row:last-child{border:none;}
 .modal-label{color:#8A8070;font-weight:500;}.modal-value{font-weight:700;color:#1A1A1A;text-align:right;max-width:60%;}
 </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- 스캔 화면: 다크+골드 -->
+  <!-- 스캔 화면 -->
   <div class="screen active" id="screen-scan">
     <div class="scan-wordmark">IKU Production System</div>
     <div class="scan-frame-wrap">
-      <div class="sc-corner sc-tl"></div>
-      <div class="sc-corner sc-tr"></div>
-      <div class="sc-corner sc-bl"></div>
-      <div class="sc-corner sc-br"></div>
+      <div class="sc-corner sc-tl"></div><div class="sc-corner sc-tr"></div>
+      <div class="sc-corner sc-bl"></div><div class="sc-corner sc-br"></div>
       <div class="sc-inner"><div class="sc-dot"></div></div>
       <div class="sc-line"></div>
     </div>
@@ -180,174 +184,154 @@ body{font-family:'Manrope','Noto Sans SC',-apple-system,BlinkMacSystemFont,'Ping
       <p>QR코드를 프레임 안에 맞춰주세요</p>
       <p>请将二维码对准框内</p>
     </div>
-    <button class="btn-scan-start" onclick="startScan()">SCAN START / 开始扫码</button>
-    <button class="btn-upload-qr" onclick="document.getElementById('qr-file-input').click()">QR Upload / 上传二维码</button>
-    <input type="file" id="qr-file-input" accept="image/*" style="display:none;" onchange="handleQRUpload(this)">
-    <div class="scan-hint-wrap">
+    <div class="scan-btns">
+      <button class="btn-scan-start" onclick="startScan()">SCAN START / 开始扫码</button>
+      <button class="btn-upload-qr" onclick="document.getElementById('qr-file-input').click()">QR UPLOAD / 上传二维码</button>
+      <input type="file" id="qr-file-input" accept="image/*" style="display:none;" onchange="handleQRUpload(this)">
+    </div>
+    <div class="scan-hint">
       <p>카메라가 자동으로 QR을 인식합니다</p>
       <p>摄像头将自动识别二维码</p>
     </div>
   </div>
 
   <!-- 로딩 화면 -->
-  <div class="screen" id="screen-loading" style="background:var(--surface2);">
+  <div class="screen" id="screen-loading">
     <div class="loading-wrap">
       <div class="spinner"></div>
       <p id="loading-msg">正在读取订单信息...</p>
     </div>
   </div>
 
-  <!-- MO 정보 + 공정 선택 -->
-  <div class="screen" id="screen-info" style="background:var(--surface2);">
-    <button class="back-link" onclick="goToScan()">← 重新扫码</button>
-    <div class="card">
-      <div class="card-title">订单信息确认</div>
+  <!-- INFO 화면 -->
+  <div class="screen" id="screen-info">
+    <div class="info-header-bar">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="back-link" onclick="goToScan()">← 重新扫码</button>
+      </div>
+      <span class="hdr-mo-txt" id="hdr-mo"></span>
+    </div>
+
+    <!-- 주문정보 카드 -->
+    <div class="info-card">
+      <div class="info-card-title">订单信息确认</div>
       <div class="info-row"><span class="info-label">订单号 (MO)</span><span class="info-value" id="d-mo">-</span></div>
-      <div class="info-row"><span class="info-label">品号 (SKU)</span><span class="info-value" id="d-sku">-</span></div>
+      <div class="info-row"><span class="info-label">品号 (SKU)</span><span class="info-value" style="font-size:11px;" id="d-sku">-</span></div>
       <div class="info-row"><span class="info-label">工厂</span><span class="info-value" id="d-factory">-</span></div>
       <div class="info-row"><span class="info-label">订单数量</span><span class="info-value" id="d-qty">-</span></div>
-      <div class="info-row"><span class="info-label">当前状态</span><span class="status-pill" id="d-status">-</span></div>
+      <div class="info-row"><span class="info-label">当前状态</span><span class="status-badge" id="d-status">-</span></div>
     </div>
-    <div id="info-notes-card" style="display:none" class="card"></div>
 
-    <div class="card">
-      <div class="process-title">请选择当前工序</div>
-      <div class="process-grid">
-        <div class="proc-btn" onclick="selectProcess(this,'Cutting / 재단 / 裁剪','裁剪')">
-          <span class="proc-icon">✂️</span>
-          <div class="proc-name">裁剪</div>
-          <div class="proc-sub">Cutting</div>
-        </div>
-        <div class="proc-btn" onclick="selectProcess(this,'Sewing / 봉제 / 缝制','缝制')">
-          <span class="proc-icon">🧵</span>
-          <div class="proc-name">缝制</div>
-          <div class="proc-sub">Sewing</div>
-        </div>
-        <div class="proc-btn" onclick="selectProcess(this,'Packing / 포장 / 包装','包装')">
-          <span class="proc-icon">📦</span>
-          <div class="proc-name">包装</div>
-          <div class="proc-sub">Packing</div>
-        </div>
-        <div class="proc-btn" onclick="selectProcess(this,'Completed / 생산완료 / 生产完成','生产完成')">
-          <span class="proc-icon">✅</span>
-          <div class="proc-name">生产完成</div>
-          <div class="proc-sub">Completed</div>
-        </div>
-        <div class="proc-btn proc-full" onclick="selectProcess(this,'Shipped / 출고완료 / 已出货','出货完成')">
-          <span class="proc-icon">🚚</span>
-          <div class="proc-name">出货</div>
-          <div class="proc-sub">Shipped</div>
-        </div>
+    <!-- 주문명세 카드 -->
+    <div class="notes-card" id="info-notes-card" style="display:none;"></div>
+
+    <!-- 공정 선택 -->
+    <span class="section-label">공정 선택 · 选择工序</span>
+    <div class="proc-list">
+      <div class="proc-card" onclick="selectProcess(this,'Cutting / 재단 / 裁剪','裁剪')">
+        <div class="proc-card-left"><span class="proc-num">01</span><div><div class="proc-zh">裁剪</div><div class="proc-en">CUTTING / 재단</div></div></div>
+        <div class="proc-card-right"><span class="proc-arrow">›</span></div>
+      </div>
+      <div class="proc-card" onclick="selectProcess(this,'Sewing / 봉제 / 缝制','缝制')">
+        <div class="proc-card-left"><span class="proc-num">02</span><div><div class="proc-zh">缝制</div><div class="proc-en">SEWING / 봉제</div></div></div>
+        <div class="proc-card-right"><span class="proc-arrow">›</span></div>
+      </div>
+      <div class="proc-card" onclick="selectProcess(this,'Packing / 포장 / 包装','包装')">
+        <div class="proc-card-left"><span class="proc-num">03</span><div><div class="proc-zh">包装</div><div class="proc-en">PACKING / 포장</div></div></div>
+        <div class="proc-card-right"><span class="proc-arrow">›</span></div>
+      </div>
+      <div class="proc-card" onclick="selectProcess(this,'Completed / 생산완료 / 生产完成','生产完成')">
+        <div class="proc-card-left"><span class="proc-num">04</span><div><div class="proc-zh">生产完成</div><div class="proc-en">COMPLETED / 완료</div></div></div>
+        <div class="proc-card-right"><span class="proc-arrow">›</span></div>
+      </div>
+      <div class="proc-card" onclick="selectProcess(this,'Shipped / 출고완료 / 已出货','出货完成')">
+        <div class="proc-card-left"><span class="proc-num">05</span><div><div class="proc-zh">出货</div><div class="proc-en">SHIPPED / 출고</div></div></div>
+        <div class="proc-card-right"><span class="proc-arrow">›</span></div>
       </div>
     </div>
 
-    <!-- 공정 기록 -->
-    <div class="card" id="log-section" style="display:none">
-      <div class="card-title">工序记录 / 공정기록</div>
-      <div id="log-list">
-        <div class="log-loading"><div class="log-spinner"></div>加载中...</div>
+    <!-- 공정기록 타임라인 -->
+    <div class="log-section-wrap">
+      <div id="log-section">
+        <span class="section-label" style="margin-left:0;">공정기록 · 工序记录</span>
+        <div id="log-list">
+          <div class="log-loading"><div class="log-spinner"></div>加载中...</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- 수량 입력 화면 -->
-  <div class="screen" id="screen-input" style="background:var(--surface2);">
-    <div style="background:#1A1A1A;padding:22px 20px 18px;">
-      <div style="display:flex;align-items:center;gap:10px;">
+  <!-- INPUT 화면 -->
+  <div class="screen" id="screen-input">
+    <div class="input-hero">
+      <div class="input-hero-top">
         <button class="back-link" onclick="showScreen('screen-info')" style="font-size:16px;">←</button>
         <div>
-          <div style="display:flex;align-items:baseline;gap:10px;">
-            <div style="font-family:'Bebas Neue',cursive;font-size:32px;letter-spacing:3px;color:var(--gold);line-height:1;" id="input-hero-proc">CUTTING</div>
-            <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,.35);letter-spacing:1px;" id="input-hero-eng">Cutting</div>
-          </div>
-          <div style="font-size:10px;color:rgba(255,255,255,.3);letter-spacing:2px;margin-top:4px;" id="input-hero-mo">-</div>
+          <div class="input-proc-name" id="input-hero-proc">裁剪</div>
+          <div class="input-proc-eng" id="input-hero-eng">CUTTING</div>
         </div>
       </div>
-      <div style="display:flex;gap:4px;margin-top:14px;" id="input-progress">
-        <div style="height:3px;flex:1;background:#E8D5B0;border-radius:1px;"></div>
-        <div style="height:3px;flex:1;background:#E8D5B0;border-radius:1px;"></div>
-        <div style="height:3px;flex:1;background:#2E2E2E;border-radius:1px;"></div>
+      <div class="input-mo-tag" id="input-hero-mo">-</div>
+      <div class="input-progress">
+        <div class="input-progress-bar active"></div>
+        <div class="input-progress-bar active"></div>
+        <div class="input-progress-bar inactive"></div>
       </div>
     </div>
-    <div class="card">
-      <div class="card-title">订单确认</div>
-      <div class="info-row"><span class="info-label">订单号</span><span class="info-value" id="c-mo">-</span></div>
-      <div class="info-row"><span class="info-label">SKU</span><span class="info-value" id="c-sku">-</span></div>
-      <div class="info-row"><span class="info-label">工序</span><span class="info-value" id="c-process" style="color:#1E3A8A">-</span></div>
-      <div class="info-row"><span class="info-label">订单数量 (参考)</span><span class="info-value" id="c-orderqty" style="color:#7C3AED">-</span></div>
-      <div id="c-subform"></div>
-    </div>
-    <div style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
-
-      <!-- 수량 3칸 그리드 -->
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
-        <div class="qty-box complete-box">
-          <div class="qty-box-label">完成 / 완성 *</div>
-          <input class="input-field" type="number" id="f-completed" placeholder="0" min="0" inputmode="numeric">
+    <div class="input-body">
+      <div class="qty-tiles">
+        <div class="qty-tile gold">
+          <div class="qty-tile-label">完成 / 완성 *</div>
+          <input type="number" id="f-completed" placeholder="0" min="0" inputmode="numeric">
         </div>
-        <div class="qty-box">
-          <div class="qty-box-label">未完成 / 미완성</div>
-          <input class="input-field" type="number" id="f-incomplete" placeholder="0" min="0" inputmode="numeric">
+        <div class="qty-tile">
+          <div class="qty-tile-label">未完成 / 미완성</div>
+          <input type="number" id="f-incomplete" placeholder="0" min="0" inputmode="numeric">
         </div>
-        <div class="qty-box defect-box">
-          <div class="qty-box-label" style="color:var(--danger);">不良 / 불량</div>
-          <input class="input-field" type="number" id="f-defect" placeholder="0" min="0" inputmode="numeric">
+        <div class="qty-tile danger">
+          <div class="qty-tile-label">不良 / 불량</div>
+          <input type="number" id="f-defect" placeholder="0" min="0" inputmode="numeric">
         </div>
       </div>
-
-      <!-- 마대 (packing/shipped만 표시) -->
-      <div id="bag-group" style="display:none;">
-        <div class="qty-box" style="max-width:33%;border-bottom-color:#B0A898;">
-          <div class="qty-box-label">麻袋数量 / 마대수량</div>
-          <input class="input-field" type="number" id="f-bag" placeholder="0" min="0" inputmode="numeric">
+      <div class="bag-wrap" id="bag-group">
+        <div class="qty-tile" style="width:33%;">
+          <div class="qty-tile-label">麻袋数量 / 마대수량</div>
+          <input type="number" id="f-bag" placeholder="0" min="0" inputmode="numeric">
         </div>
       </div>
-
-      <!-- 담당자 (전체 너비) -->
-      <div class="worker-box">
+      <div class="field-wrap">
         <div class="field-label">负责人 / 담당자 *</div>
-        <input class="input-field text-field" type="text" id="f-worker" placeholder="이름을 입력하세요">
+        <input type="text" id="f-worker" placeholder="이름을 입력하세요">
       </div>
-
-      <!-- 메모 (전체 너비) -->
-      <div class="worker-box">
+      <div class="field-wrap">
         <div class="field-label">备注 / 메모</div>
-        <input class="input-field text-field" type="text" id="f-notes" placeholder="선택사항">
+        <input type="text" id="f-notes" placeholder="선택사항">
       </div>
-
-    </div>
-    <div id="submit-err" style="padding:0 16px;"></div>
-    <div class="btn-row" style="padding:0 16px 24px;">
-      <button class="btn-back" onclick="showScreen('screen-info')">← 返回</button>
-      <button class="btn-submit" id="btn-submit" onclick="submitData()">确认提交 →</button>
+      <div id="submit-err"></div>
+      <div class="btn-row">
+        <button class="btn-back" onclick="showScreen('screen-info')">← 返回</button>
+        <button class="btn-submit" id="btn-submit" onclick="submitData()">确认提交 →</button>
+      </div>
     </div>
   </div>
 
-  <!-- 성공 화면 -->
-  <div class="screen" id="screen-success" style="background:var(--surface2);">
-    <div style="background:#1A1A1A;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;">
-      <span style="font-family:'Bebas Neue',cursive;letter-spacing:3px;font-size:12px;color:#E8D5B0;">SAVED</span>
-      <span style="font-size:11px;color:#555;letter-spacing:1px;" id="s-mo-hdr">-</span>
+  <!-- SUCCESS 화면 -->
+  <div class="screen" id="screen-success">
+    <div class="success-top">
+      <div class="success-icon">
+        <svg viewBox="0 0 22 22" fill="none" width="22" height="22"><polyline points="4,11 9,16 18,6" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="success-title">저장 완료 · 提交成功</div>
+      <div class="success-sub">공정 기록이 저장되었습니다</div>
     </div>
-    <div style="background:#F5F3EF;min-height:calc(100vh - 48px);padding-bottom:32px;">
-      <div style="background:#fff;margin:16px;border-radius:2px;padding:24px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;border-bottom:3px solid #C9A84C;">
-        <div style="width:52px;height:52px;border-radius:50%;border:2px solid #C9A84C;display:flex;align-items:center;justify-content:center;">
-          <svg viewBox="0 0 22 22" fill="none" width="22" height="22"><polyline points="4,11 9,16 18,6" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div style="text-align:center;">
-          <div style="font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:3px;color:#2E2A24;line-height:1.2;">저장 완료 · 提交成功</div>
-          <div style="font-size:10px;color:#B0A898;letter-spacing:1px;margin-top:4px;">공정 기록이 저장되었습니다</div>
-        </div>
-      </div>
-      <div id="result-rows" style="padding:0 16px;display:flex;flex-direction:column;gap:6px;"></div>
-      <div style="padding:16px;display:flex;flex-direction:column;gap:8px;margin-top:8px;">
-        <button onclick="goToScan()" style="padding:15px;border:none;background:#3A3020;color:#E8D5B0;border-radius:2px;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-family:inherit;width:100%;">← NEW SCAN / 새 스캔</button>
-      </div>
+    <div class="result-wrap" id="result-rows"></div>
+    <div class="success-actions">
+      <button class="btn-next" onclick="showScreen('screen-info')">NEXT PROCESS / 다음 공정 →</button>
+      <button class="btn-rescan" onclick="goToScan()">← NEW SCAN / 새 스캔</button>
     </div>
   </div>
 
 </div>
-
 <!-- 로그 상세 모달 -->
 <div id="log-modal-ov" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:9999;justify-content:center;align-items:center" onclick="closeLogModal()">
   <div style="background:#fff;border-radius:16px;width:92%;max-width:420px;padding:20px;position:relative" onclick="event.stopPropagation()">
@@ -360,6 +344,7 @@ body{font-family:'Manrope','Noto Sans SC',-apple-system,BlinkMacSystemFont,'Ping
 </div>
 
 <script>
+
 var ACCOUNT = "jeramoda";
 var APP = "eom";
 var MO_REPORT = "All_MO";
@@ -401,17 +386,11 @@ function parsePlanNotes(planNotes) {
 function buildNotesTable(planNotes) {
   var rows = parsePlanNotes(planNotes);
   if (!rows.length) return '';
-  var h = '<div style="margin-top:10px;border-top:0.5px solid #E2E8F0;padding-top:10px">';
-  h += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;font-size:11px;font-weight:700;color:#94A3B8;padding:4px 0;border-bottom:0.5px solid #F1F5F9;margin-bottom:4px">';
-  h += '<span>颜色/Color</span><span style="text-align:center">尺码/Size</span><span style="text-align:right">数量/Qty</span></div>';
+  var h = '';
+  h += '<div class="notes-head"><span>颜色/Color</span><span>尺码/Size</span><span>数量/Qty</span></div>';
   rows.forEach(function(r) {
-    h += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;font-size:12px;padding:5px 0;border-bottom:0.5px solid #F8FAFC">';
-    h += '<span style="color:#374151">' + r.color + '</span>';
-    h += '<span style="text-align:center;color:#374151">' + r.size + '</span>';
-    h += '<span style="text-align:right;font-weight:600;color:#1E3A8A">' + r.qty + '</span>';
-    h += '</div>';
+    h += '<div class="notes-row"><span>' + r.color + '</span><span>' + r.size + '</span><span>' + r.qty + '</span></div>';
   });
-  h += '</div>';
   return h;
 }
 
@@ -423,9 +402,9 @@ function showScreen(id) {
 
 function goToScan() {
   moData = {}; moRecordId = ""; selectedProcess = ""; selectedProcessCN = "";
-  document.querySelectorAll('.proc-btn').forEach(function(b){ b.classList.remove('selected'); });
-  document.getElementById('log-section').style.display = 'none';
-  document.getElementById('log-list').innerHTML = '';
+  document.querySelectorAll('.proc-card').forEach(function(b){ b.classList.remove('selected'); });
+  var ls = document.getElementById('log-section'); if(ls) ls.style.display = 'none';
+  var ll = document.getElementById('log-list'); if(ll) ll.innerHTML = '';
   showScreen('screen-scan');
 }
 
@@ -624,10 +603,35 @@ function fetchMOData(moNumber, sku, factory) {
       document.getElementById('d-factory').textContent  = moData.factory;
       document.getElementById('d-qty').textContent      = moData.order_qty.toLocaleString() + ' 件';
       document.getElementById('d-status').textContent   = moData.current_status;
+      // 현재 공정 카드에 목前工程在此 배지 표시
+      document.querySelectorAll('.proc-card').forEach(function(card) {
+        var badge = card.querySelector('.current-badge');
+        if (badge) badge.remove();
+        card.classList.remove('current-proc');
+      });
+      var statusMap = {
+        'Cutting': 0, 'Sewing': 1, 'Packing': 2, 'Completed': 3, 'Shipped': 4
+      };
+      var currentKey = '';
+      Object.keys(statusMap).forEach(function(k) {
+        if (moData.current_status.indexOf(k) >= 0) currentKey = k;
+      });
+      if (currentKey) {
+        var cards = document.querySelectorAll('.proc-card');
+        var idx = statusMap[currentKey];
+        if (cards[idx]) {
+          cards[idx].classList.add('current-proc');
+          var badge = document.createElement('span');
+          badge.className = 'current-badge';
+          badge.textContent = '目前工程在此';
+          var right = cards[idx].querySelector('.proc-card-right');
+          if (right) right.insertBefore(badge, right.firstChild);
+        }
+      }
       var notesTable = buildNotesTable(moData.plan_notes);
-      var notesCard = document.getElementById('info-notes-card');
+      var notesCard = document.getElementById('info-notes-card') || document.getElementById('notes-card-wrap');
       if (notesTable) {
-        notesCard.innerHTML = '<div class="card-title">订单明细 / 주문내용</div>' + notesTable;
+        notesCard.innerHTML = '<div class="notes-card-title">订单明细 / 주문내용</div>' + notesTable;
         notesCard.style.display = 'block';
       } else {
         notesCard.style.display = 'none';
@@ -657,9 +661,8 @@ function formatDate(raw) {
 }
 
 function fetchLogs(moNumber) {
-  var section = document.getElementById('log-section');
-  var list    = document.getElementById('log-list');
-  section.style.display = 'block';
+  var section = document.getElementById('log-section'); if(section) section.style.display = 'block';
+  var list = document.getElementById('log-list'); if(!list) return;
   list.innerHTML = '<div class="log-loading"><div class="log-spinner"></div>加载中...</div>';
   ZOHO.CREATOR.API.getAllRecords({
     appName: APP,
@@ -695,7 +698,7 @@ function fetchLogs(moNumber) {
     }
     window._logData = logs;
     var h = '';
-    logs.forEach(function(r) {
+    logs.forEach(function(r, logIdx) {
       var process   = r['Process'] || '-';
       var completed = parseInt(r['Completed_Qty']) || 0;
       var defect    = parseInt(r['Defect_Qty']) || 0;
@@ -704,12 +707,12 @@ function fetchLogs(moNumber) {
       worker = String(worker).trim() || '未填写';
       var date = formatDate(r['Log_Date'] || r['Log_DateTime'] || r['Created_Time'] || '');
       var notes = r['Notes'] || '';
-      var logIdx = logs.indexOf(r);
-      h += '<div class="log-item" onclick="openLogModal(' + logIdx + ')" style="cursor:pointer">';
-      h += '<div><div class="log-process"><span class="log-dot"></span>' + process + '</div>';
-      h += '<div class="log-meta">负责人: ' + worker + (notes ? ' · ' + notes : '') + '</div></div>';
-      h += '<div><div class="log-qty">完成 ' + completed.toLocaleString() + '件';
-      h += '</div>';
+      var isLast = (logIdx === logs.length - 1);
+      h += '<div class="log-tl-item" onclick="openLogModal(' + logIdx + ')" style="cursor:pointer;">';
+      h += '<div class="log-dot"></div>';
+      h += '<div class="log-content"><div class="log-proc">' + process + '</div>';
+      h += '<div class="log-worker">' + worker + (notes ? ' · ' + notes : '') + '</div></div>';
+      h += '<div class="log-right"><div class="log-qty">' + completed.toLocaleString() + '件</div>';
       if (defect > 0) h += '<div class="log-defect">▲ 불량 ' + defect + '件</div>';
       h += '<div class="log-date">' + date + '</div></div>';
       h += '</div>';
@@ -721,7 +724,7 @@ function fetchLogs(moNumber) {
 }
 
 function selectProcess(el, process, processCN) {
-  document.querySelectorAll('.proc-btn').forEach(function(b){ b.classList.remove('selected'); });
+  document.querySelectorAll('.proc-card').forEach(function(b){ b.classList.remove('selected'); });
   el.classList.add('selected');
   selectedProcess = process;
   selectedProcessCN = processCN;
@@ -913,6 +916,7 @@ ZOHO.CREATOR.init().then(function() {
 }).catch(function(err) {
   console.log('ZOHO init:', err);
 });
+
 </script>
 </body>
 </html>
