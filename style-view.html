@@ -82,8 +82,9 @@ body{background:var(--bg);color:var(--text);padding:16px;min-height:100vh;
 .btn-primary:hover{background:var(--text-soft);transform:translateY(-1px)}
 .btn-primary svg{width:14px;height:14px}
 
-/* KPI Row — 3 month KPIs + 340px delay (4 columns) */
-.kpi-grid{display:grid;grid-template-columns:repeat(3, 1fr) 340px;gap:12px;margin-bottom:14px}
+/* KPI Row — 4 equal columns (3 recent months + delay) */
+.kpi-grid{display:grid;grid-template-columns:repeat(4, 1fr);gap:12px;margin-bottom:14px}
+.kpi-card-empty{visibility:hidden}
 .kpi-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;
   position:relative;overflow:hidden;transition:border-color .15s,box-shadow .15s;min-width:0}
 .kpi-card:hover{border-color:var(--border-hover);box-shadow:var(--shadow)}
@@ -295,12 +296,10 @@ body{background:var(--bg);color:var(--text);padding:16px;min-height:100vh;
 .kpi-pop-item .nm{font-size:10px;color:var(--text-mute);margin-top:2px}
 .kpi-pop-item .tags{font-size:9px;color:var(--text-mute);margin-top:2px;letter-spacing:.01em}
 
-@media (max-width:1280px){
-  .kpi-grid{grid-template-columns:repeat(3,1fr) 280px}
-}
 @media (max-width:900px){
   .kpi-grid{grid-template-columns:1fr 1fr}
   .kpi-grid .delay-card{grid-column:1/-1}
+  .kpi-card-empty{display:none}
   .hs-grid{height:auto;flex-wrap:wrap}
   .hs-col{flex:1 1 180px;min-height:120px}
 }
@@ -666,6 +665,26 @@ function parseShortYM(key){
   if(!m) return null;
   return { y: 2000 + parseInt(m[1]), m: parseInt(m[2]) };
 }
+// Numeric sort for month keys (handles "YY.MM" and "YYYY년 M월")
+function sortMonthKeys(keys){
+  return keys.slice().sort(function(a, b){
+    var pa = parseShortYM(a) || parseYM(a);
+    var pb = parseShortYM(b) || parseYM(b);
+    if(!pa && !pb) return a < b ? -1 : (a > b ? 1 : 0);
+    if(!pa) return 1;   // unparseable keys (e.g. "미지정") go last
+    if(!pb) return -1;
+    if(pa.y !== pb.y) return pa.y - pb.y;
+    return pa.m - pb.m;
+  });
+}
+
+/* Extended KPI ring palette — 12 pastel tones for future-proofing */
+var KPI_RING_COLORS = [
+  "#818CF8", "#F59E0B", "#34D399",
+  "#EC4899", "#38BDF8", "#A78BFA",
+  "#FB923C", "#4ADE80", "#F472B6",
+  "#60A5FA", "#FBBF24", "#2DD4BF"
+];
 
 /* ── Init — Zoho Widget SDK ── */
 ZOHO.CREATOR.init().then(function(){
@@ -729,16 +748,21 @@ function buildMonthGroups(){
   Object.keys(monthGroups).forEach(function(k){ monthFiltered[k] = monthGroups[k].slice(); });
 }
 
-/* ── KPI Row: 3 most recent months + delay + heatmap shell ── */
+/* ── KPI Row: 3 MOST RECENT months (chronological) + empty pads + delay ── */
 function renderMKPI(){
-  var keys = Object.keys(monthGroups).sort();
-  keys = keys.slice(-3);
-  var cycle = ["#CDB4DB", "#FAC775", "#9FE1CB"];
+  var allKeys = sortMonthKeys(Object.keys(monthGroups)).filter(function(k){ return k !== "미지정"; });
+  var recentKeys = allKeys.slice(-3);               // oldest-to-newest among recent
+  var emptySlots = 3 - recentKeys.length;           // 0, 1, 2, or 3
   var parts = [];
 
-  keys.forEach(function(key, i){
+  // Empty placeholders on the left to keep delay card in rightmost column
+  for(var ei = 0; ei < emptySlots; ei++){
+    parts.push('<div class="kpi-card-empty"></div>');
+  }
+
+  recentKeys.forEach(function(key, i){
     var items = monthGroups[key];
-    var c = cycle[i % cycle.length];
+    var c = KPI_RING_COLORS[i % KPI_RING_COLORS.length];
     var tot = items.length, sm = 0, ord = 0, nord = 0;
     items.forEach(function(r){
       var sku = g(r, "Style_SKU"); if(sku === "-") sku = g(r, "SKU");
@@ -881,7 +905,7 @@ function renderHeatmap(){
 
 /* ── Monthly sections — shell only; cards populated by renderMonthCards ── */
 function renderMonthlySections(){
-  var keys = Object.keys(monthGroups).sort();
+  var keys = sortMonthKeys(Object.keys(monthGroups));
   var parts = [];
 
   if(!keys.length){
