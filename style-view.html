@@ -18,6 +18,9 @@
   --text-soft:#44443F;
   --accent:#9B8A7A;
   --gold:#C9A86E;
+  --z-border:#EDE9E4;
+  --z-text-main:#1C1917;
+  --z-text-muted:#78716C;
 
   --p-pink:#FBEAF0;    --p-pink-txt:#72243E;
   --p-peach:#FAECE7;   --p-peach-txt:#712B13;
@@ -66,7 +69,7 @@ body{background:var(--bg);color:var(--text);padding:16px;min-height:100vh;
 .err-box p{color:var(--text-mute);font-size:11px;margin:0;word-break:break-all}
 
 /* Header */
-.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;gap:14px;flex-wrap:wrap}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:14px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:12px}
 .brand-mark{width:28px;height:28px;background:var(--gold);color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;
   font-weight:500;font-size:14px;letter-spacing:.02em;box-shadow:0 1px 3px rgba(201,168,110,.35)}
@@ -79,61 +82,90 @@ body{background:var(--bg);color:var(--text);padding:16px;min-height:100vh;
 .btn-primary:hover{background:var(--text-soft);transform:translateY(-1px)}
 .btn-primary svg{width:14px;height:14px}
 
-/* KPI Row — 4 months + 420px delay (Overview v15 pattern) */
-.kpi-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 420px;gap:12px;margin-bottom:20px}
-.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;
-  transition:border-color .15s,box-shadow .15s}
+/* KPI Row — 3 month KPIs + delay + heatmap (5 columns) */
+.kpi-grid{display:grid;grid-template-columns:repeat(3, 280px) 260px 1fr;gap:10px;margin-bottom:14px}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;
+  position:relative;overflow:hidden;transition:border-color .15s,box-shadow .15s;min-width:0}
 .kpi-card:hover{border-color:var(--border-hover);box-shadow:var(--shadow)}
-.kpi-head{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
-.kpi-month{font-size:15px;font-weight:500;color:var(--text);letter-spacing:.01em}
-.kpi-sub{font-size:10px;color:var(--text-mute);letter-spacing:.05em;text-transform:uppercase}
-.kpi-body{display:flex;align-items:center;gap:14px}
-.kpi-ring{flex:0 0 auto;position:relative;width:80px;height:80px}
-.kpi-ring .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500}
-.kpi-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1}
-.kpi-stat{padding:7px 8px;border-radius:7px;cursor:pointer;transition:transform .12s;text-align:left}
+.kpi-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px}
+.kpi-card:nth-child(1)::before{background:#CDB4DB}
+.kpi-card:nth-child(2)::before{background:#FAC775}
+.kpi-card:nth-child(3)::before{background:#9FE1CB}
+.kpi-head{display:flex;align-items:baseline;gap:6px;margin-bottom:10px}
+.kpi-month{font-size:12px;font-weight:500;color:var(--text);letter-spacing:.01em}
+.kpi-sub{font-size:9px;color:var(--text-mute);letter-spacing:.04em;text-transform:uppercase}
+.kpi-body{display:flex;align-items:center;gap:12px;padding:0}
+.kpi-ring{flex:0 0 auto;position:relative;width:48px;height:48px}
+.kpi-ring .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500}
+.kpi-stats{display:grid;grid-template-columns:1fr 1fr;gap:3px;flex:1;min-width:0}
+.kpi-stat{padding:3px 5px;border-radius:6px;cursor:pointer;transition:transform .12s;text-align:left;min-width:0}
 .kpi-stat:hover{transform:translateY(-1px)}
-.kpi-stat .num{font-size:20px;font-weight:500;line-height:1}
-.kpi-stat .lbl{font-size:10px;color:var(--text-mute);line-height:1.3;margin-top:4px;font-weight:400}
+.kpi-stat .num{font-size:13px;font-weight:500;line-height:1}
+.kpi-stat .lbl{font-size:8px;color:var(--text-mute);line-height:1.25;margin-top:2px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kpi-stat.all{background:var(--p-lav)}     .kpi-stat.all .num{color:var(--p-lav-txt)}
 .kpi-stat.sm {background:var(--p-butter)}  .kpi-stat.sm  .num{color:var(--p-butter-txt)}
 .kpi-stat.ord{background:var(--p-mint)}    .kpi-stat.ord .num{color:var(--p-mint-txt)}
 .kpi-stat.nord{background:var(--p-pink)}   .kpi-stat.nord .num{color:var(--p-pink-txt)}
 
-.delay-card{background:var(--card);border:1px solid #FECACA;border-radius:var(--radius);padding:14px 16px;display:flex;flex-direction:column;min-height:0}
-.delay-head{display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:11.5px;font-weight:500;color:var(--st-danger-txt)}
+.delay-card{background:var(--card);border:1px solid #FECACA;border-radius:10px;padding:12px;display:flex;flex-direction:column;min-width:0;position:relative;overflow:hidden}
+.delay-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:#FCA5A5}
+.delay-head{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:11px;font-weight:500;color:var(--st-danger-txt)}
 .delay-count{font-size:22px;font-weight:500;color:var(--st-danger-txt);text-align:center;line-height:1}
-.delay-unit{font-size:9px;color:var(--text-mute);text-align:center;margin-top:3px;margin-bottom:8px}
-.delay-list{flex:1;max-height:120px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;padding-right:4px}
-.delay-item{background:#FFF5F5;border:1px solid #FECACA;border-radius:6px;padding:5px 7px;cursor:pointer;text-align:center;transition:background .12s}
+.delay-unit{font-size:9px;color:var(--text-mute);text-align:center;margin-top:2px;margin-bottom:6px}
+.delay-list{flex:1;max-height:85px;overflow-y:auto;display:flex;flex-direction:column;gap:3px;padding-right:2px}
+.delay-item{background:#FFF5F5;border:1px solid #FECACA;border-radius:5px;padding:4px 7px;cursor:pointer;text-align:center;transition:background .12s}
 .delay-item:hover{background:#FFE5E5}
-.delay-item .sku{font-size:10px;font-weight:500;color:var(--st-danger-txt)}
+.delay-item .sku{font-size:10px;font-weight:500;color:var(--st-danger-txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .delay-item .nm{font-size:9px;color:var(--text-mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
-.delay-empty{text-align:center;padding:16px 4px;font-size:10px;color:var(--text-mute)}
-.delay-note{font-size:9px;color:var(--text-mute);text-align:center;padding-top:8px;margin-top:6px;border-top:1px dashed #FECACA;line-height:1.45}
+.delay-empty{text-align:center;padding:12px 4px;font-size:10px;color:var(--text-mute)}
+.delay-note{font-size:8.5px;color:var(--text-mute);text-align:center;padding-top:6px;margin-top:4px;border-top:1px dashed #FECACA;line-height:1.4}
 
-/* Filter bar — right-aligned, no wrapper background (Overview pattern) */
-.filter-bar{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.filter-input,.filter-select{font-family:inherit;font-size:12px;border:1px solid var(--border);background:#fff;color:var(--text);
-  border-radius:8px;padding:7px 10px;outline:none;transition:border-color .15s,box-shadow .15s}
-.filter-input{width:200px}
-.filter-input::placeholder{color:var(--text-mute);font-weight:400}
-.filter-select{cursor:pointer;min-width:130px}
-.filter-input:focus,.filter-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(155,138,122,.12)}
+/* Type Heatmap (5th KPI column) */
+.type-heatmap-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;
+  position:relative;overflow:hidden;min-width:0;display:flex;flex-direction:column}
+.type-heatmap-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;
+  background:linear-gradient(90deg,#CDB4DB,#9FE1CB,#FAC775,#F4C0D1)}
+.th-header{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.th-icon{font-size:14px}
+.th-title{font-size:12px;font-weight:500;color:var(--text)}
+.th-grid{display:flex;gap:3px;height:95px}
+.th-col{display:flex;flex-direction:column;gap:3px;min-width:0}
+.th-tile{border-radius:5px;padding:4px 8px;display:flex;flex-direction:column;justify-content:center;
+  overflow:hidden;cursor:pointer;transition:transform .15s ease;min-height:18px}
+.th-tile:hover{transform:scale(1.02)}
+.th-name{font-size:10px;font-weight:500;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.th-count{font-size:8px;opacity:.75;margin-top:2px}
 
-/* Monthly sections */
-.month-section{margin-bottom:28px}
-.month-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 2px}
+/* Monthly sections — month card with inline filter */
+.month-section{margin-bottom:14px}
+.month-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.month-header{padding:10px 14px;background:#FBFAF6;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;gap:8px}
 .month-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--text);letter-spacing:-.01em}
 .month-title .emoji{font-size:14px}
 .month-title .dim{color:var(--text-mute);font-weight:400;font-size:12px}
 .month-count{font-size:10px;color:var(--text-mute);background:var(--card);border:1px solid var(--border);
-  border-radius:999px;padding:3px 10px;font-weight:400}
+  border-radius:999px;padding:3px 10px;font-weight:400;flex-shrink:0;white-space:nowrap}
 
-.month-strip{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 14px;scroll-snap-type:x proximity}
-.month-strip::-webkit-scrollbar{height:6px}
+/* Per-month filter bar — STRICT SINGLE-ROW, NO WRAP */
+.month-filter{padding:10px 14px;background:#FDFCF9;border-bottom:1px solid var(--z-border);
+  display:flex;gap:6px;align-items:center;flex-wrap:nowrap;overflow-x:auto;white-space:nowrap}
+.month-filter::-webkit-scrollbar{height:4px}
+.month-filter input,
+.month-filter select{background:#FFF;border:1px solid var(--z-border);border-radius:5px;
+  padding:5px 10px;font-size:11px;font-family:inherit;outline:none;color:var(--text);
+  flex-shrink:0;transition:border-color .15s,box-shadow .15s}
+.month-filter input:focus,
+.month-filter select:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(155,138,122,.12)}
+.month-filter input.mf-search{width:240px;flex-shrink:0}
+.month-filter input.mf-search::placeholder{color:var(--text-mute)}
+.month-filter select{min-width:110px;cursor:pointer}
+.month-filter .mf-count{font-size:10px;color:#B4B2A9;margin-left:auto;flex-shrink:0;white-space:nowrap;padding-left:8px}
 
-/* Style card — 175px fixed */
+.table-scroll{overflow-x:auto;padding:14px}
+.cards-flex{display:flex;gap:10px;min-width:min-content}
+
+/* Style card — 175px fixed (PRESERVED) */
 .sc{flex:0 0 175px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-card);
   overflow:hidden;cursor:pointer;scroll-snap-align:start;display:flex;flex-direction:column;
   transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
@@ -183,15 +215,13 @@ body{background:var(--bg);color:var(--text);padding:16px;min-height:100vh;
 .sc-order.ok{background:var(--st-ok-bg);color:var(--st-ok-txt)}
 .sc-order.no{background:var(--st-danger-bg);color:var(--st-danger-txt)}
 
-/* Bottom split */
-.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
-.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px}
+/* AI Panel (full-width) */
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-top:18px}
 .panel-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);gap:10px}
 .panel-title{font-size:13px;font-weight:500;color:var(--text)}
 .panel-title .dim{color:var(--text-mute);font-weight:400}
 .panel-sub{font-size:9px;color:var(--text-mute);margin-top:3px;letter-spacing:.03em}
 
-/* AI Panel */
 .ai-sec{border-left:3px solid transparent;padding:10px 14px;margin-bottom:10px;border-radius:0 8px 8px 0}
 .ai-sec .t{font-size:10.5px;font-weight:500;margin-bottom:4px;display:flex;align-items:center;gap:6px;letter-spacing:.01em}
 .ai-sec .b{font-size:10.5px;color:var(--text-soft);line-height:1.55}
@@ -204,14 +234,7 @@ body{background:var(--bg);color:var(--text);padding:16px;min-height:100vh;
   border-radius:8px;font-size:11px;font-weight:400;cursor:pointer;font-family:inherit;transition:border-color .15s,color .15s,background .15s}
 .ai-ask:hover{border-color:var(--accent);color:var(--text);background:#FBFAF6}
 
-/* Chart panel */
-.chart-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
-.chart-label{min-width:180px;max-width:220px;font-size:10px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right;font-weight:400}
-.chart-bar-wrap{flex:1;height:18px;background:var(--bg);border-radius:5px;overflow:hidden}
-.chart-bar{height:100%;border-radius:5px;display:flex;align-items:center;padding-left:8px;color:#fff;font-size:9px;font-weight:500;transition:width .6s ease}
-.chart-num{min-width:24px;font-size:11px;font-weight:500;color:var(--text);text-align:right}
-
-/* Modal */
+/* Modal (PRESERVED) */
 .overlay{position:fixed;inset:0;background:rgba(20,19,17,.52);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
   z-index:3000;display:none;align-items:center;justify-content:center;padding:20px}
 .overlay.show{display:flex}
@@ -253,7 +276,7 @@ body{background:var(--bg);color:var(--text);padding:16px;min-height:100vh;
 .mimg:hover{border-color:var(--accent);box-shadow:var(--shadow)}
 .mimg-label{font-size:9px;color:var(--text-mute);margin-bottom:6px;letter-spacing:.02em;font-weight:400}
 
-/* Lightbox */
+/* Lightbox (PRESERVED) */
 .lb{position:fixed;inset:0;background:rgba(0,0,0,.9);backdrop-filter:blur(8px);z-index:5000;display:none;align-items:center;justify-content:center;cursor:pointer}
 .lb.show{display:flex}
 .lb img{max-width:92vw;max-height:92vh;object-fit:contain;border-radius:8px;box-shadow:0 20px 80px rgba(0,0,0,.5)}
@@ -261,7 +284,7 @@ body{background:var(--bg);color:var(--text);padding:16px;min-height:100vh;
   border-radius:50%;color:#fff;cursor:pointer;font-size:16px;font-family:inherit}
 .lb-close:hover{background:rgba(255,255,255,.22)}
 
-/* KPI popover */
+/* KPI popover (PRESERVED) */
 .kpi-pop-body{padding:16px 22px 22px;display:flex;flex-direction:column;gap:8px}
 .kpi-pop-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;
   border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:border-color .15s,background .15s}
@@ -270,18 +293,20 @@ body{background:var(--bg);color:var(--text);padding:16px;min-height:100vh;
 .kpi-pop-item .nm{font-size:10px;color:var(--text-mute);margin-top:2px}
 .kpi-pop-item .tags{font-size:9px;color:var(--text-mute);margin-top:2px;letter-spacing:.01em}
 
-@media (max-width:1400px){
-  .kpi-grid{grid-template-columns:1fr 1fr 1fr 360px}
+@media (max-width:1600px){
+  .kpi-grid{grid-template-columns:repeat(3,240px) 240px 1fr}
 }
-@media (max-width:1100px){
-  .kpi-grid{grid-template-columns:1fr 1fr 320px}
-  .bottom-grid{grid-template-columns:1fr}
+@media (max-width:1280px){
+  .kpi-grid{grid-template-columns:repeat(3,1fr) 240px;}
+  .kpi-grid .type-heatmap-card{grid-column:1/-1;margin-top:2px}
 }
-@media (max-width:820px){
+@media (max-width:900px){
   .kpi-grid{grid-template-columns:1fr 1fr}
-  .filter-bar{flex-wrap:wrap;justify-content:flex-start}
-  .filter-input{width:100%}
-  .filter-select{flex:1 1 140px;min-width:0}
+  .kpi-grid .delay-card{grid-column:1/-1}
+  .kpi-grid .type-heatmap-card{grid-column:1/-1}
+}
+@media (max-width:720px){
+  .kpi-grid{grid-template-columns:1fr}
   body{padding:12px}
   .mhead{flex-direction:column;align-items:stretch}
   .mbtns{justify-content:flex-start}
@@ -311,42 +336,22 @@ body{background:var(--bg);color:var(--text);padding:16px;min-height:100vh;
       </button>
     </div>
 
-    <!-- KPI Row -->
+    <!-- KPI Row: 3 KPI + Delay + Heatmap -->
     <div id="kpiRow" class="kpi-grid"></div>
 
-    <!-- Filter Bar -->
-    <div class="filter-bar">
-      <input id="searchBox" class="filter-input" placeholder="🔍  SKU · 스타일명 · 브랜드 검색 / 搜索"/>
-      <select id="filterCategory" class="filter-select"><option value="">전체 카테고리 / 全部分类</option></select>
-      <select id="filterGender"   class="filter-select"><option value="">전체 성별 / 全部性别</option></select>
-      <select id="filterSeason"   class="filter-select"><option value="">전체 시즌 / 全部季节</option></select>
-      <select id="filterStatus"   class="filter-select"><option value="">전체 상태 / 全部状态</option></select>
-    </div>
-
-    <!-- Monthly sections -->
+    <!-- Monthly sections (each contains its own inline filter) -->
     <div id="monthSections"></div>
 
-    <!-- Bottom 2-column grid -->
-    <div class="bottom-grid">
-      <div class="panel">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title">AI 분석<span class="dim"> / AI 分析</span></div>
-            <div class="panel-sub">스타일 현황 인사이트 / 款式现状洞察</div>
-          </div>
-          <span class="bg bg-lav" style="font-size:9px;letter-spacing:.08em">GEMINI</span>
+    <!-- AI Panel (full width) -->
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">AI 분석<span class="dim"> / AI 分析</span></div>
+          <div class="panel-sub">스타일 현황 인사이트 / 款式现状洞察</div>
         </div>
-        <div id="aiBody"></div>
+        <span class="bg bg-lav" style="font-size:9px;letter-spacing:.08em">GEMINI</span>
       </div>
-      <div class="panel">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title">스타일 유형 분포<span class="dim"> / 款式类型分布</span></div>
-            <div class="panel-sub">카테고리 · 디테일 조합 / 分类 · 款式组合</div>
-          </div>
-        </div>
-        <div id="barChart" style="max-height:460px;overflow-y:auto;padding-right:4px"></div>
-      </div>
+      <div id="aiBody"></div>
     </div>
   </div>
 
@@ -403,11 +408,13 @@ body{background:var(--bg);color:var(--text);padding:16px;min-height:100vh;
    Single-HTML Zoho Creator Widget
 ═══════════════════════════════════════════════ */
 var APP = "eom", REP = "All_Styles", MO_REP = "All_MO";
-var allRec = [], filtered = [], moSkus = new Set(), allMOs = [];
+var allRec = [], moSkus = new Set(), allMOs = [];
+var monthGroups = {};     // { "26.03": [...], ... }
+var monthFiltered = {};   // { "26.03": [...filtered...], ... }
 var today = new Date();
 var _currentRec = null;
 
-/* ── KR/CN field maps ── */
+/* ── KR/CN field maps (PRESERVED) ── */
 var MAP = {
   Gender:{"W":"여성 / 女","M":"남성 / 男","U":"남녀공용 / 男女通用"},
   Category:{"S":"세트 / 套装","I":"단품 / 单品"},
@@ -431,7 +438,7 @@ var SHORT = {
   Gender:{"W":"여","M":"남","U":"공용"}
 };
 
-/* ── Utilities ── */
+/* ── Utilities (PRESERVED) ── */
 function g(r, f){
   var v = r[f];
   if(v == null || v === "") return "-";
@@ -468,7 +475,7 @@ function getAllImgs(r, field){
 }
 function getImg1(r){ var imgs = getAllImgs(r, "Style_Image"); return imgs.length > 0 ? imgs[0] : null; }
 
-/* ── Safe image loader (Zoho Widget SDK) ── */
+/* ── Safe image loader (Zoho Widget SDK) — PRESERVED ── */
 var _safeQ = [], _safeBusy = false;
 function _runSafeQ(){
   if(_safeQ.length === 0){ _safeBusy = false; return; }
@@ -515,7 +522,7 @@ function loadTableImgs(){
   }
 }
 
-/* ── Navigation ── */
+/* ── Navigation (PRESERVED) ── */
 function goTo(url){ window.open(url, "_blank"); }
 function goNewStyle(){ goTo("https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_Styles"); }
 function editStyle(){ if(!_currentRec) return; goTo("https://creatorapp.zoho.com/jeramoda/eom/#Report:All_Styles"); }
@@ -532,7 +539,7 @@ function closeLb(){ document.getElementById("lb").classList.remove("show"); docu
 function closeModal(){ document.getElementById("modalOv").classList.remove("show"); _currentRec = null; }
 function closeKpiPop(){ document.getElementById("kpiPopOv").classList.remove("show"); }
 
-/* ── Delay logic ── */
+/* ── Delay logic (PRESERVED) ── */
 function isOrderDelayed(r){
   var sku = g(r, "Style_SKU"); if(sku === "-") sku = g(r, "SKU");
   if(moSkus.has(sku)) return false;
@@ -546,6 +553,12 @@ function parseYM(key){
   if(!m) return null;
   var y = parseInt(m[1]); if(y < 100) y += 2000;
   return { y: y, m: parseInt(m[2]) };
+}
+// For the new short key format "YY.MM"
+function parseShortYM(key){
+  var m = key.match(/^(\d{2})\.(\d{2})$/);
+  if(!m) return null;
+  return { y: 2000 + parseInt(m[1]), m: parseInt(m[2]) };
 }
 
 /* ── Init — Zoho Widget SDK ── */
@@ -568,11 +581,13 @@ function loadStyles(){
   ZOHO.CREATOR.API.getAllRecords({ appName: APP, reportName: REP, page: 1, pageSize: 200 }).then(function(r){
     if(r && r.code === 3000 && r.data){
       allRec = r.data;
-      filtered = allRec.slice();
+      buildMonthGroups();
       renderMKPI();
-      buildFilters();
+      renderHeatmap();
       renderMonthlySections();
-      renderChart();
+      Object.keys(monthGroups).forEach(populateMonthFilters);
+      Object.keys(monthGroups).forEach(function(k){ renderMonthCards(k, monthGroups[k]); });
+      bindMonthFilters();
       renderAIPanel();
       document.getElementById("loader").style.display = "none";
       document.getElementById("main").style.display = "block";
@@ -589,22 +604,34 @@ function showErr(m){
   document.getElementById("errMsg").textContent = m;
 }
 
-/* ── KPI Row ── */
-function renderMKPI(){
-  var groups = {};
-  filtered.forEach(function(r){
+/* ── Build month buckets (short key "YY.MM") ── */
+function buildMonthGroups(){
+  monthGroups = {};
+  monthFiltered = {};
+  allRec.forEach(function(r){
     var py = g(r, "Plan_Year"), pm = g(r, "Plan_Month");
-    var key = (py !== "-" && pm !== "-") ? (py + "년 " + pm + "월") : "미지정";
-    if(!groups[key]) groups[key] = [];
-    groups[key].push(r);
+    if(py === "-" || pm === "-") return;
+    var pyi = parseInt(py), pmi = parseInt(pm);
+    if(isNaN(pyi) || isNaN(pmi)) return;
+    var yy = (pyi < 100 ? pyi : pyi - 2000);
+    var mm = pmi < 10 ? "0"+pmi : String(pmi);
+    var yyS = yy < 10 ? "0"+yy : String(yy);
+    var key = yyS + "." + mm;
+    if(!monthGroups[key]) monthGroups[key] = [];
+    monthGroups[key].push(r);
   });
-  var keys = Object.keys(groups).filter(function(k){ return k !== "미지정"; }).sort();
-  keys = keys.slice(-4);
-  var cycle = ["#8D85C7", "#D9AB52", "#6BB09B", "#7AA8D6"];
+  Object.keys(monthGroups).forEach(function(k){ monthFiltered[k] = monthGroups[k].slice(); });
+}
+
+/* ── KPI Row: 3 most recent months + delay + heatmap shell ── */
+function renderMKPI(){
+  var keys = Object.keys(monthGroups).sort();
+  keys = keys.slice(-3);
+  var cycle = ["#CDB4DB", "#FAC775", "#9FE1CB"];
   var parts = [];
 
   keys.forEach(function(key, i){
-    var items = groups[key];
+    var items = monthGroups[key];
     var c = cycle[i % cycle.length];
     var tot = items.length, sm = 0, ord = 0, nord = 0;
     items.forEach(function(r){
@@ -614,24 +641,23 @@ function renderMKPI(){
       if(moSkus.has(sku)) ord++; else nord++;
     });
     var pct = tot > 0 ? Math.round((ord / tot) * 100) : 0;
-    var rr = 34, circ = 2 * Math.PI * rr, offset = circ - (pct/100) * circ;
-    var ke = encodeURIComponent(key), ym = parseYM(key);
-    var yy = ym ? ym.y.toString().slice(-2) : "", mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
+    var rr = 20, circ = 2 * Math.PI * rr, offset = circ - (pct/100) * circ;
+    var ke = encodeURIComponent(key);
 
     parts.push('<div class="kpi-card">');
-    parts.push('<div class="kpi-head"><div class="kpi-month">'+yy+'.'+mm+'</div><div class="kpi-sub">스타일 KPI / 款式 KPI</div></div>');
+    parts.push('<div class="kpi-head"><div class="kpi-month">'+escH(key)+'</div><div class="kpi-sub">KPI</div></div>');
     parts.push('<div class="kpi-body">');
-    parts.push('<div class="kpi-ring"><svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="'+rr+'" fill="none" stroke="#F3F0EA" stroke-width="5"/><circle cx="40" cy="40" r="'+rr+'" fill="none" stroke="'+c+'" stroke-width="5" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'" stroke-linecap="round" style="transform:rotate(-90deg);transform-origin:center;transition:stroke-dashoffset .6s ease"/></svg><div class="pct" style="color:'+c+'">'+pct+'%</div></div>');
+    parts.push('<div class="kpi-ring"><svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="'+rr+'" fill="none" stroke="#F3F0EA" stroke-width="4"/><circle cx="24" cy="24" r="'+rr+'" fill="none" stroke="'+c+'" stroke-width="4" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'" stroke-linecap="round" style="transform:rotate(-90deg);transform-origin:center;transition:stroke-dashoffset .6s ease"/></svg><div class="pct" style="color:'+c+'">'+pct+'%</div></div>');
     parts.push('<div class="kpi-stats">');
-    parts.push('<div class="kpi-stat all" onclick="openKpiPop(\''+ke+'\',\'all\')"><div class="num">'+tot+'</div><div class="lbl">총 스타일<br>总款式</div></div>');
-    parts.push('<div class="kpi-stat sm" onclick="openKpiPop(\''+ke+'\',\'sm\')"><div class="num">'+sm+'</div><div class="lbl">샘플 제작<br>样品制作</div></div>');
-    parts.push('<div class="kpi-stat ord" onclick="openKpiPop(\''+ke+'\',\'ord\')"><div class="num">'+ord+'</div><div class="lbl">오더완료<br>订单完成</div></div>');
-    parts.push('<div class="kpi-stat nord" onclick="openKpiPop(\''+ke+'\',\'nord\')"><div class="num">'+nord+'</div><div class="lbl">미오더<br>未下单</div></div>');
+    parts.push('<div class="kpi-stat all" onclick="openKpiPop(\''+ke+'\',\'all\')"><div class="num">'+tot+'</div><div class="lbl">총/总</div></div>');
+    parts.push('<div class="kpi-stat sm" onclick="openKpiPop(\''+ke+'\',\'sm\')"><div class="num">'+sm+'</div><div class="lbl">샘플/样品</div></div>');
+    parts.push('<div class="kpi-stat ord" onclick="openKpiPop(\''+ke+'\',\'ord\')"><div class="num">'+ord+'</div><div class="lbl">완료/完成</div></div>');
+    parts.push('<div class="kpi-stat nord" onclick="openKpiPop(\''+ke+'\',\'nord\')"><div class="num">'+nord+'</div><div class="lbl">미오더/未下单</div></div>');
     parts.push('</div></div></div>');
   });
 
   // Delay card
-  var da = filtered.filter(function(r){ return isOrderDelayed(r); });
+  var da = allRec.filter(function(r){ return isOrderDelayed(r); });
   parts.push('<div class="delay-card">');
   parts.push('<div class="delay-head">⚠️ 오더 지연 / 订单延误</div>');
   parts.push('<div class="delay-count">'+da.length+'</div>');
@@ -640,7 +666,7 @@ function renderMKPI(){
   if(!da.length){
     parts.push('<div class="delay-empty">지연 없음 / 无延误</div>');
   } else {
-    da.slice(0, 10).forEach(function(r){
+    da.slice(0, 8).forEach(function(r){
       var sku = g(r, "Style_SKU"); if(sku === "-") sku = g(r, "SKU");
       parts.push('<div class="delay-item" onclick="openModalById(\''+r.ID+'\')"><div class="sku">'+escH(sku)+'</div><div class="nm">'+escH(g(r,"Style_Name"))+'</div></div>');
     });
@@ -649,19 +675,19 @@ function renderMKPI(){
   parts.push('<div class="delay-note">당월 20일까지 미오더 시 지연<br>当月20日前未下单视为延误</div>');
   parts.push('</div>');
 
+  // Heatmap card shell (filled by renderHeatmap)
+  parts.push('<div class="type-heatmap-card">');
+  parts.push('<div class="th-header"><span class="th-icon">🧩</span><div class="th-title">스타일 유형 분포 / 款式类型分布</div></div>');
+  parts.push('<div class="th-grid" id="typeHeatmap"></div>');
+  parts.push('</div>');
+
   document.getElementById("kpiRow").innerHTML = parts.join("");
 }
 
+/* ── KPI popover (uses monthGroups by short key) ── */
 function openKpiPop(keyEnc, type){
   var key = decodeURIComponent(keyEnc);
-  var groups = {};
-  filtered.forEach(function(r){
-    var py = g(r, "Plan_Year"), pm = g(r, "Plan_Month");
-    var k = (py !== "-" && pm !== "-") ? (py + "년 " + pm + "월") : "미지정";
-    if(!groups[k]) groups[k] = [];
-    groups[k].push(r);
-  });
-  var items = groups[key] || [];
+  var items = monthGroups[key] || [];
   var tn = { all: "총 스타일 / 总款式", sm: "샘플 제작 중 / 样品制作中", ord: "오더완료 / 订单完成", nord: "미오더 / 未下单" };
   var popItems = items.filter(function(r){
     var sku = g(r, "Style_SKU"); if(sku === "-") sku = g(r, "SKU");
@@ -690,76 +716,111 @@ function openKpiPop(keyEnc, type){
   document.getElementById("kpiPopOv").classList.add("show");
 }
 
-/* ── Filters ── */
-function buildFilters(){
-  var cat = {}, gen = {}, se = {}, st = {};
+/* ── Heatmap ── */
+var HEATMAP_PALETTE = [
+  {bg:"#CDB4DB", tx:"#3C3489"},
+  {bg:"#F4C0D1", tx:"#72243E"},
+  {bg:"#FAC775", tx:"#633806"},
+  {bg:"#B5D4F4", tx:"#0C447C"},
+  {bg:"#9FE1CB", tx:"#085041"},
+  {bg:"#F5C4B3", tx:"#712B13"},
+  {bg:"#C0DD97", tx:"#173404"},
+  {bg:"#F7C1C1", tx:"#791F1F"},
+  {bg:"#CEE4E0", tx:"#1F4540"},
+  {bg:"#E6D3B3", tx:"#54431A"}
+];
+
+function renderHeatmap(){
+  var combos = {};
   allRec.forEach(function(r){
-    var c = g(r, "Category"); if(c !== "-") cat[c] = mv("Category", c);
-    var ge = g(r, "Gender"); if(ge !== "-") gen[ge] = mv("Gender", ge);
-    var s = g(r, "Season"); if(s !== "-") se[s] = 1;
-    var t = g(r, "Style_Status"); if(t !== "-") st[t] = 1;
+    var cat = sv("Category", g(r, "Category"));
+    var details = [];
+    var tn = sv("Top_Type", g(r, "Top_Type"));
+    if(tn) details.push(tn);
+    var bn = sv("Bottom_Type", g(r, "Bottom_Type"));
+    if(bn) details.push(bn);
+    if(!cat && details.length === 0) return;
+    var label = (cat ? "["+cat+"] " : "") + (details.length ? details.join("+") : "-");
+    if(!combos[label]) combos[label] = {label: label, count: 0};
+    combos[label].count++;
   });
-  var el;
-  el = document.getElementById("filterCategory"); Object.keys(cat).sort().forEach(function(k){ el.innerHTML += '<option value="'+escH(k)+'">'+escH(cat[k])+'</option>'; });
-  el = document.getElementById("filterGender");   Object.keys(gen).sort().forEach(function(k){ el.innerHTML += '<option value="'+escH(k)+'">'+escH(gen[k])+'</option>'; });
-  el = document.getElementById("filterSeason");   Object.keys(se ).sort().forEach(function(k){ el.innerHTML += '<option value="'+escH(k)+'">'+escH(k)+'</option>'; });
-  el = document.getElementById("filterStatus");   Object.keys(st ).sort().forEach(function(k){ el.innerHTML += '<option value="'+escH(k)+'">'+escH(k)+'</option>'; });
+  var arr = Object.keys(combos).map(function(k){ return combos[k]; }).sort(function(a,b){
+    return b.count - a.count;
+  });
+  var container = document.getElementById("typeHeatmap");
+  if(!container) return;
+  if(arr.length === 0){
+    container.innerHTML = '<div style="color:#B4B2A9;font-size:10px;text-align:center;width:100%;align-self:center;">데이터 없음 / 无数据</div>';
+    return;
+  }
+  // Column bucketing: 1 / 2 / 2 / 2 / 3 pattern
+  var cols = [];
+  if(arr.length >= 1) cols.push([arr[0]]);
+  if(arr.length >= 2) cols.push(arr.slice(1, 3));
+  if(arr.length >= 4) cols.push(arr.slice(3, 5));
+  if(arr.length >= 6) cols.push(arr.slice(5, 7));
+  if(arr.length >= 8) cols.push(arr.slice(7, 10));
+
+  var html = "";
+  var colorIdx = 0;
+  cols.forEach(function(col){
+    var colTotal = col.reduce(function(s,x){ return s + x.count; }, 0);
+    html += '<div class="th-col" style="flex:'+Math.max(1, colTotal/2)+';">';
+    col.forEach(function(item){
+      var pal = HEATMAP_PALETTE[colorIdx % HEATMAP_PALETTE.length];
+      colorIdx++;
+      html += '<div class="th-tile" style="background:'+pal.bg+';color:'+pal.tx+';flex:'+item.count+';" title="'+escH(item.label)+' ('+item.count+')">';
+      html += '<div class="th-name">'+escH(item.label)+'</div>';
+      html += '<div class="th-count">'+item.count+'개 스타일</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+  container.innerHTML = html;
 }
 
-// Static DOM filter bindings (safe — elements always exist)
-["searchBox","filterCategory","filterGender","filterSeason","filterStatus"].forEach(function(id){
-  document.getElementById(id).addEventListener(id === "searchBox" ? "input" : "change", applyFilter);
-});
-function applyFilter(){
-  var q  = document.getElementById("searchBox").value.toLowerCase().trim();
-  var fc = document.getElementById("filterCategory").value;
-  var fg = document.getElementById("filterGender").value;
-  var fs = document.getElementById("filterSeason").value;
-  var ft = document.getElementById("filterStatus").value;
-  filtered = allRec.filter(function(r){
-    if(q){ var h = (g(r,"Style_SKU")+" "+g(r,"Style_Name")+" "+g(r,"Business_Entity")).toLowerCase(); if(h.indexOf(q) < 0) return false; }
-    if(fc && g(r,"Category")     !== fc) return false;
-    if(fg && g(r,"Gender")       !== fg) return false;
-    if(fs && g(r,"Season")       !== fs) return false;
-    if(ft && g(r,"Style_Status") !== ft) return false;
-    return true;
-  });
-  renderMKPI();
-  renderMonthlySections();
-  renderAIPanel();
-  setTimeout(loadTableImgs, 300);
-}
-
-/* ── Monthly sections with horizontal 175px cards ── */
+/* ── Monthly sections — shell only; cards populated by renderMonthCards ── */
 function renderMonthlySections(){
-  var groups = {};
-  filtered.forEach(function(r){
-    var py = g(r, "Plan_Year"), pm = g(r, "Plan_Month");
-    var key = (py !== "-" && pm !== "-") ? (py + "년 " + pm + "월") : "미지정";
-    if(!groups[key]) groups[key] = [];
-    groups[key].push(r);
-  });
-  var keys = Object.keys(groups).sort();
+  var keys = Object.keys(monthGroups).sort();
   var parts = [];
 
   if(!keys.length){
-    parts.push('<div style="text-align:center;padding:60px 0;color:var(--text-mute);font-size:12px">조건에 맞는 스타일이 없습니다 / 无符合条件的款式</div>');
+    parts.push('<div style="text-align:center;padding:60px 0;color:var(--text-mute);font-size:12px">데이터가 없습니다 / 无数据</div>');
     document.getElementById("monthSections").innerHTML = parts.join("");
     return;
   }
 
   keys.forEach(function(key){
-    var items = groups[key];
-    var ym = parseYM(key);
-    var yy = ym ? ym.y.toString().slice(-2) : "";
-    var mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
-    var titleK = ym ? (yy + "." + mm + " 스타일 진행표") : "미지정 스타일";
+    var items = monthGroups[key];
+    var ym = parseShortYM(key);
+    var titleK = ym ? (key + " 스타일 진행표") : "미지정 스타일";
     var titleC = ym ? (ym.y + "年 " + ym.m + "月 款式表") : "未指定款式";
 
     parts.push('<div class="month-section">');
-    parts.push('<div class="month-head"><div class="month-title"><span class="emoji">📅</span>'+escH(titleK)+' <span class="dim">/ '+escH(titleC)+'</span></div><span class="month-count">'+items.length+' 건 / 款</span></div>');
-    parts.push('<div class="month-strip">');
-    items.forEach(function(r){ parts.push(buildCard(r)); });
+    parts.push('<div class="month-card">');
+    // header
+    parts.push('<div class="month-header">');
+    parts.push('<div class="month-title"><span class="emoji">📅</span>'+escH(titleK)+' <span class="dim">/ '+escH(titleC)+'</span></div>');
+    parts.push('<span class="month-count" data-month-count="'+escH(key)+'">'+items.length+' 건 / 款</span>');
+    parts.push('</div>');
+    // inline filter
+    parts.push('<div class="month-filter" data-month="'+escH(key)+'">');
+    parts.push('<input type="text" class="mf-search" placeholder="🔍 SKU · 스타일 · 브랜드 검색 / 搜索">');
+    parts.push('<select class="mf-category"><option value="">카테고리 / 分类</option></select>');
+    parts.push('<select class="mf-gender"><option value="">성별 / 性别</option></select>');
+    parts.push('<select class="mf-brand"><option value="">브랜드 / 品牌</option></select>');
+    parts.push('<select class="mf-material"><option value="">원단 / 面料</option></select>');
+    parts.push('<select class="mf-ordered">');
+    parts.push('<option value="">오더 여부 / 订单状态</option>');
+    parts.push('<option value="Y">오더완료 / 已下单</option>');
+    parts.push('<option value="N">미오더 / 未下单</option>');
+    parts.push('</select>');
+    parts.push('<span class="mf-count" data-mf-count="'+escH(key)+'">'+items.length+' / '+items.length+'</span>');
+    parts.push('</div>');
+    // cards wrapper
+    parts.push('<div class="table-scroll" data-month-scroll="'+escH(key)+'">');
+    parts.push('<div class="cards-flex"></div>');
+    parts.push('</div>');
     parts.push('</div>');
     parts.push('</div>');
   });
@@ -767,7 +828,97 @@ function renderMonthlySections(){
   document.getElementById("monthSections").innerHTML = parts.join("");
 }
 
-function buildCard(r){
+/* ── Populate per-month dropdowns from that month's data only ── */
+function populateMonthFilters(monthKey){
+  var sec = document.querySelector('.month-filter[data-month="'+monthKey+'"]');
+  if(!sec) return;
+  var items = monthGroups[monthKey] || [];
+  var cats={}, gens={}, brds={}, mats={};
+  items.forEach(function(r){
+    var c  = g(r, "Category");        if(c  !== "-") cats[c]  = mv("Category", c);
+    var ge = g(r, "Gender");          if(ge !== "-") gens[ge] = mv("Gender", ge);
+    var b  = g(r, "Business_Entity"); if(b  !== "-") brds[b]  = b;
+    var m  = g(r, "Material_Type");   if(m  !== "-") mats[m]  = mv("Material_Type", m);
+  });
+  function fill(cls, map, placeholder){
+    var el = sec.querySelector(cls);
+    if(!el) return;
+    var h = '<option value="">'+placeholder+'</option>';
+    Object.keys(map).sort().forEach(function(k){
+      h += '<option value="'+escH(k)+'">'+escH(map[k])+'</option>';
+    });
+    el.innerHTML = h;
+  }
+  fill('.mf-category', cats, '카테고리 / 分类');
+  fill('.mf-gender',   gens, '성별 / 性别');
+  fill('.mf-brand',    brds, '브랜드 / 品牌');
+  fill('.mf-material', mats, '원단 / 面料');
+}
+
+/* ── Per-month apply filter ── */
+function applyMonthFilter(monthKey){
+  var sec = document.querySelector('.month-filter[data-month="'+monthKey+'"]');
+  if(!sec) return;
+  var q  = sec.querySelector('.mf-search').value.toLowerCase().trim();
+  var fc = sec.querySelector('.mf-category').value;
+  var fg = sec.querySelector('.mf-gender').value;
+  var fb = sec.querySelector('.mf-brand').value;
+  var fm = sec.querySelector('.mf-material').value;
+  var fo = sec.querySelector('.mf-ordered').value;
+
+  var source = monthGroups[monthKey] || [];
+  var filtered = source.filter(function(r){
+    if(q){
+      var hay = (g(r,"Style_SKU")+" "+g(r,"SKU")+" "+g(r,"Style_Name")+" "+g(r,"Business_Entity")).toLowerCase();
+      if(hay.indexOf(q) < 0) return false;
+    }
+    if(fc && g(r,"Category")        !== fc) return false;
+    if(fg && g(r,"Gender")          !== fg) return false;
+    if(fb && g(r,"Business_Entity") !== fb) return false;
+    if(fm && g(r,"Material_Type")   !== fm) return false;
+    if(fo){
+      var sku = g(r,"Style_SKU"); if(sku === "-") sku = g(r,"SKU");
+      var ord = moSkus.has(sku);
+      if(fo === "Y" && !ord) return false;
+      if(fo === "N" &&  ord) return false;
+    }
+    return true;
+  });
+
+  monthFiltered[monthKey] = filtered;
+  renderMonthCards(monthKey, filtered);
+
+  var cntEl = document.querySelector('[data-mf-count="'+monthKey+'"]');
+  if(cntEl) cntEl.textContent = filtered.length + ' / ' + source.length;
+}
+
+/* ── Render cards into one month ── */
+function renderMonthCards(monthKey, items){
+  var wrap = document.querySelector('[data-month-scroll="'+monthKey+'"] .cards-flex');
+  if(!wrap) return;
+  var parts = [];
+  items.forEach(function(r){ parts.push(buildStyleCardHTML(r)); });
+  wrap.innerHTML = parts.join("");
+  setTimeout(loadTableImgs, 100);
+}
+
+/* ── Bind per-month filter events ── */
+function bindMonthFilters(){
+  document.querySelectorAll('.month-filter').forEach(function(mf){
+    var monthKey = mf.getAttribute('data-month');
+    var search = mf.querySelector('.mf-search');
+    if(search){
+      search.addEventListener('input', function(){ applyMonthFilter(monthKey); });
+    }
+    ['.mf-category','.mf-gender','.mf-brand','.mf-material','.mf-ordered'].forEach(function(sel){
+      var el = mf.querySelector(sel);
+      if(el) el.addEventListener('change', function(){ applyMonthFilter(monthKey); });
+    });
+  });
+}
+
+/* ── Style card template (PRESERVED output) ── */
+function buildStyleCardHTML(r){
   var sku = g(r, "Style_SKU"); if(sku === "-") sku = g(r, "SKU");
   var iu = getImg1(r);
   var ordered = moSkus.has(sku);
@@ -778,24 +929,19 @@ function buildCard(r){
 
   var p = [];
   p.push('<div class="sc'+notOrd+'" onclick="openModalById(\''+r.ID+'\')">');
-  // Image
   p.push('<div class="sc-img"'+imgAttr+'>');
   if(!iu) p.push('<span class="ph">◎</span>');
   p.push('</div>');
-  // Status badge row
   p.push('<div class="sc-badge-row">');
   p.push('<span class="'+tc(styleStatus)+'">'+escH(styleStatus)+'</span>');
   p.push('</div>');
-  // Body
   p.push('<div class="sc-body">');
-  // Main identity
   p.push('<div class="sc-main">');
   p.push('<div class="sc-lbl">SKU</div>');
   p.push('<div class="sc-val sku">'+escH(sku)+'</div>');
   p.push('<div class="sc-mini"><div class="sc-lbl">스타일 설명 / 款式说明</div><div class="sc-val">'+escH(g(r,"Style_Name"))+'</div></div>');
   p.push('<div class="sc-mini"><div class="sc-lbl">아이템명 / 品名</div><div class="sc-val">'+escH(g(r,"Style_Number"))+'</div></div>');
   p.push('</div>');
-  // Spec rows
   p.push('<div class="sc-rows">');
   p.push('<div class="sc-row"><span class="k">브랜드 / 品牌</span><span class="v">'+escH(g(r,"Business_Entity"))+'</span></div>');
   p.push('<div class="sc-row"><span class="k">성별 / 性别</span><span class="v">'+escH(mv("Gender",g(r,"Gender")))+'</span></div>');
@@ -803,10 +949,8 @@ function buildCard(r){
   p.push('<div class="sc-row"><span class="k">원단 / 面料</span><span class="v">'+escH(mv("Material_Type",g(r,"Material_Type")))+'</span></div>');
   p.push('<div class="sc-row"><span class="k">목표원가 / 成本</span><span class="v">'+escH(g(r,"Target_Cost"))+'</span></div>');
   p.push('</div>');
-  // Sample
   p.push('<div class="sc-sample"><span class="k">샘플상태 / 样品</span><span class="'+tc(sampleStatus)+'">'+escH(sampleStatus)+'</span></div>');
   p.push('</div>');
-  // Footer — ordered/not ordered
   p.push('<div class="sc-footer">');
   p.push('<div class="sc-order '+(ordered?'ok':'no')+'">'+(ordered?'✓ Ordered / 已下单':'✗ Not Ordered / 未下单')+'</div>');
   p.push('</div>');
@@ -814,7 +958,7 @@ function buildCard(r){
   return p.join("");
 }
 
-/* ── Detail Modal ── */
+/* ── Detail Modal (PRESERVED) ── */
 function openModal(rec){
   _currentRec = rec;
   var sku = g(rec, "Style_SKU"); if(sku === "-") sku = g(rec, "SKU");
@@ -842,7 +986,6 @@ function buildDetail(d){
   function dt(v){ return '<span class="'+tc(v)+'">'+escH(v)+'</span>'; }
   function it(l, v){ return '<div class="mitem"><div class="l">'+l+'</div><div class="v">'+v+'</div></div>'; }
 
-  // Images
   var si  = getAllImgs(d, "Style_Image").slice(0, 5);
   var tfs = getAllImgs(d, "Top_Flat_Sketch").slice(0, 5);
   var bfs = getAllImgs(d, "Bottom_Flat_Sketch").slice(0, 5);
@@ -854,7 +997,6 @@ function buildDetail(d){
     p.push('</div>');
   }
 
-  // Identity
   p.push('<div class="msec"><div class="msec-head"><span class="msec-title">📌 기본 정보<span class="dim"> / 基本信息</span></span></div><div class="msec-grid">');
   p.push(it("SKU", dv(g(d, "Style_SKU"))));
   p.push(it("스타일명 / 款式名", dv(g(d, "Style_Name"))));
@@ -867,7 +1009,6 @@ function buildDetail(d){
   p.push(it("오더 상태 / 订单状态", ordered ? '<span class="bg bg-ok">✓ Ordered / 已下单</span>' : '<span class="bg bg-danger">✗ Not Ordered / 未下单</span>'));
   p.push('</div></div>');
 
-  // Product definition
   p.push('<div class="msec"><div class="msec-head"><span class="msec-title">👕 제품 정의<span class="dim"> / 产品定义</span></span></div><div class="msec-grid">');
   p.push(it("성별 / 性别", dv(mv("Gender", g(d, "Gender")))));
   p.push(it("카테고리 / 分类", dv(mv("Category", g(d, "Category")))));
@@ -879,27 +1020,23 @@ function buildDetail(d){
   p.push(it("하의 길이 / 下衣长度", dv(mv("Bottom_Length", g(d, "Bottom_Length")))));
   p.push('</div></div>');
 
-  // Material
   p.push('<div class="msec"><div class="msec-head"><span class="msec-title">🧵 원단 정보<span class="dim"> / 面料</span></span></div><div class="msec-grid">');
   p.push(it("원단 / 面料", dv(mv("Material_Type", g(d, "Material_Type")))));
   p.push(it("혼방율 / 混纺率", dv(g(d, "blended_percentage"))));
   p.push(it("안감 / 内衬", dv(mv("Lining_Type", g(d, "Lining_Type")))));
   p.push('</div></div>');
 
-  // Variants
   p.push('<div class="msec"><div class="msec-head"><span class="msec-title">🎨 색상 & 사이즈<span class="dim"> / 颜色 & 尺寸</span></span></div><div class="msec-grid cols-2">');
   p.push(it("사이즈 / 尺寸", dv(g(d, "Available_Sizes"))));
   p.push(it("색상 / 颜色", dv(g(d, "Available_Colors"))));
   p.push('</div></div>');
 
-  // Sample
   p.push('<div class="msec"><div class="msec-head"><span class="msec-title">🧪 샘플 정보<span class="dim"> / 样品</span></span></div><div class="msec-grid">');
   p.push(it("샘플 상태 / 样品状态", dt(g(d, "Sample_Status"))));
   p.push(it("샘플 날짜 / 样品日期", dv(g(d, "Sample_Date"))));
   p.push(it("샘플 메모 / 样品备注", dv(g(d, "Sample_Notes"))));
   p.push('</div></div>');
 
-  // Cost
   p.push('<div class="msec"><div class="msec-head"><span class="msec-title">💰 원가 정보<span class="dim"> / 成本</span></span></div><div class="msec-grid">');
   p.push(it("목표 원가 / 目标成本", dv(g(d, "Target_Cost"))));
   p.push(it("확정 원가 / 确认成本", dv(g(d, "Final_Cost"))));
@@ -910,52 +1047,16 @@ function buildDetail(d){
   return p.join("");
 }
 
-/* ── Chart — style type distribution ── */
-var BARCOLORS = ["#8D85C7","#D9AB52","#6BB09B","#7AA8D6","#CE8C6C","#AAB06B","#B57B9E","#7B93B5","#B8906E","#7C9E91","#B5B58B","#9B7F6A"];
-function renderChart(){
-  var combos = {};
-  allRec.forEach(function(r){
-    var cat = g(r, "Category"), catN = sv("Category", cat), details = [];
-    var tn  = sv("Top_Type",       g(r, "Top_Type"));       if(tn)  details.push(tn);
-    var sln = sv("Sleeve",         g(r, "Sleeve"));         if(sln) details.push(sln);
-    var fn  = sv("Fit",            g(r, "Fit"));            if(fn)  details.push(fn);
-    var dn  = sv("Details",        g(r, "Details"));        if(dn)  details.push(dn);
-    var bn  = sv("Bottom_Type",    g(r, "Bottom_Type"));    if(bn)  details.push(bn);
-    var bln = sv("Bottom_Length",  g(r, "Bottom_Length"));  if(bln) details.push(bln);
-    if(!catN && !details.length) return;
-    var label = (catN ? "["+catN+"] " : "") + (details.length ? details.join("·") : "");
-    if(!combos[label]) combos[label] = { label: label, count: 0 };
-    combos[label].count++;
-  });
-  var arr = Object.keys(combos).map(function(k){ return combos[k]; }).sort(function(a,b){ return b.count - a.count; });
-  if(!arr.length){
-    document.getElementById("barChart").innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--text-mute);font-size:11px">데이터 없음 / 无数据</div>';
-    return;
-  }
-  var max = arr[0].count, parts = [];
-  arr.forEach(function(item, i){
-    var pct = Math.max(10, Math.round(item.count / max * 100));
-    var c = BARCOLORS[i % BARCOLORS.length];
-    parts.push('<div class="chart-row">');
-    parts.push('<div class="chart-label" title="'+escH(item.label)+'">'+escH(item.label)+'</div>');
-    parts.push('<div class="chart-bar-wrap"><div class="chart-bar" style="width:'+pct+'%;background:'+c+'">'+item.count+'</div></div>');
-    parts.push('<div class="chart-num">'+item.count+'</div>');
-    parts.push('</div>');
-  });
-  document.getElementById("barChart").innerHTML = parts.join("");
-}
-
-/* ── AI Analysis Panel (Gemini API 연결 예정) ── */
+/* ── AI Analysis Panel (uses allRec) ── */
 function renderAIPanel(){
-  var base = filtered.length ? filtered : allRec;
-  var tot = base.length;
+  var tot = allRec.length;
   if(!tot){
     document.getElementById("aiBody").innerHTML = '<div style="color:var(--text-mute);font-size:11px;text-align:center;padding:24px 0">데이터 없음 / 无数据</div>';
     return;
   }
   var ord = 0, sm = 0, delayN = 0;
   var catCount = {}, genCount = {}, seCount = {};
-  base.forEach(function(r){
+  allRec.forEach(function(r){
     var sku = g(r, "Style_SKU"); if(sku === "-") sku = g(r, "SKU");
     if(moSkus.has(sku)) ord++;
     var ss = (g(r, "Sample_Status") + " " + g(r, "Style_Status")).toLowerCase();
@@ -978,7 +1079,7 @@ function renderAIPanel(){
   document.getElementById("aiBody").innerHTML = pp.join("");
 }
 
-/* Gemini API 연결 예정 — 현재는 안내만 표시 */
+/* Gemini API 연결 예정 */
 function askAI(){
   alert("Gemini API 연결 예정 / Gemini API 待接入\n\n현재 화면의 요약 데이터를 기반으로 질의응답 기능이 추가될 예정입니다.");
 }
