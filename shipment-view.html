@@ -94,7 +94,7 @@ body{padding:16px;min-height:100vh}
 .route-map-header{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed var(--border)}
 .route-map-title{font-size:13px;font-weight:500;color:var(--text)}
 .route-map-sub{font-size:10px;color:var(--text-mute)}
-#routeMap{width:100%;height:260px;background:linear-gradient(180deg,#F7FAFC 0%,#EDF4F5 100%);border-radius:8px;position:relative;overflow:hidden;border:1px solid #E2E8E6}
+#routeMap{width:100%;height:320px;background:linear-gradient(180deg,#F7FAFC 0%,#EDF4F5 100%);border-radius:8px;position:relative;overflow:hidden;border:1px solid #E2E8E6}
 #routeMap svg{width:100%;height:100%}
 /* D3 map uses inline attrs, no class-based port styling needed */
 .route-path{fill:none;stroke:var(--ship-primary);stroke-width:.5;stroke-dasharray:1 .8;opacity:.6}
@@ -772,8 +772,10 @@ function renderRouteMap(){
 function drawRouteMap(container,world){
   container.innerHTML="";
   var width=container.clientWidth||680;
-  var height=260;
-  var projection=d3.geoEquirectangular().rotate([-150,0]).fitSize([width,height],{type:"Sphere"});
+  var height=320;
+  // Pacific corridor: west of Mexico Pacific coast to east of China Pacific coast
+  var pacificBounds={type:"Polygon",coordinates:[[[-120,10],[-120,45],[125,45],[125,10],[-120,10]]]};
+  var projection=d3.geoEquirectangular().rotate([-150,0]).fitExtent([[10,10],[width-10,height-10]],pacificBounds);
   var path=d3.geoPath(projection);
   var svg=d3.select(container).append("svg")
     .attr("width",width).attr("height",height)
@@ -783,6 +785,12 @@ function drawRouteMap(container,world){
   svg.append("g").selectAll("path").data(countries.features)
     .enter().append("path").attr("d",path)
     .attr("fill","#F1EFE8").attr("stroke","#D3D1C7").attr("stroke-width",0.4);
+  svg.append("text")
+    .attr("x",width/2).attr("y",height/2)
+    .attr("text-anchor","middle").attr("font-size","14px")
+    .attr("fill","#B4B2A9").attr("opacity",.35).attr("font-style","italic")
+    .attr("pointer-events","none")
+    .text("Pacific Ocean / 太平洋");
 
   var activeShipments=allShipments.filter(function(r){return getShipStage(r)!=="Complete"});
   var routeCounts={};
@@ -825,14 +833,14 @@ function drawRouteMap(container,world){
     var color=p.country==="cn"?"#E24B4A":(p.country==="mx"?"#1D9E75":"#888780");
     var labelColor=p.country==="cn"?"#A32D2D":(p.country==="mx"?"#085041":"#5F5E5A");
     var dot=portGroup.append("circle")
-      .attr("cx",coords[0]).attr("cy",coords[1]).attr("r",4.5)
-      .attr("fill",color).attr("stroke","#FFF").attr("stroke-width",1.5)
+      .attr("cx",coords[0]).attr("cy",coords[1]).attr("r",6)
+      .attr("fill",color).attr("stroke","#FFF").attr("stroke-width",1.8)
       .style("cursor","pointer");
     dot.append("title").text(p.name_kr+" / "+p.name_pinyin);
-    var labelY=p.country==="mx"?coords[1]+14:coords[1]-8;
+    var labelY=p.country==="mx"?coords[1]+16:coords[1]-10;
     portGroup.append("text")
       .attr("x",coords[0]).attr("y",labelY)
-      .attr("text-anchor","middle").attr("font-size","10px").attr("font-weight","500")
+      .attr("text-anchor","middle").attr("font-size","12px").attr("font-weight","500")
       .attr("fill",labelColor).attr("font-family","'Noto Sans KR',sans-serif")
       .attr("pointer-events","none").text(p.name_pinyin);
   });
@@ -868,7 +876,8 @@ function renderMiniMap(container,pFrom,pTo){
   }
   var width=container.clientWidth||220;
   var height=90;
-  var projection=d3.geoEquirectangular().rotate([-150,0]).fitSize([width,height],{type:"Sphere"});
+  var pacificBounds={type:"Polygon",coordinates:[[[-120,10],[-120,45],[125,45],[125,10],[-120,10]]]};
+  var projection=d3.geoEquirectangular().rotate([-150,0]).fitExtent([[5,5],[width-5,height-5]],pacificBounds);
   var path=d3.geoPath(projection);
   var svg=d3.select(container).append("svg")
     .attr("width",width).attr("height",height)
@@ -886,10 +895,10 @@ function renderMiniMap(container,pFrom,pTo){
   svg.append("path")
     .attr("d","M "+p1[0]+","+p1[1]+" Q "+mx+","+my+" "+p2[0]+","+p2[1])
     .attr("fill","none").attr("stroke","#C9A86E").attr("stroke-width",1.2).attr("stroke-dasharray","2 2");
-  svg.append("circle").attr("cx",p1[0]).attr("cy",p1[1]).attr("r",2.5)
-    .attr("fill","#E24B4A").attr("stroke","#FFF").attr("stroke-width",0.8);
-  svg.append("circle").attr("cx",p2[0]).attr("cy",p2[1]).attr("r",2.5)
-    .attr("fill","#1D9E75").attr("stroke","#FFF").attr("stroke-width",0.8);
+  svg.append("circle").attr("cx",p1[0]).attr("cy",p1[1]).attr("r",3)
+    .attr("fill","#E24B4A").attr("stroke","#FFF").attr("stroke-width",1);
+  svg.append("circle").attr("cx",p2[0]).attr("cy",p2[1]).attr("r",3)
+    .attr("fill","#1D9E75").attr("stroke","#FFF").attr("stroke-width",1);
   svg.append("text").attr("x",p1[0]).attr("y",p1[1]-5)
     .attr("text-anchor","middle").attr("font-size","8px")
     .attr("fill","#A32D2D").attr("font-weight","500").text(pFrom.name_pinyin);
