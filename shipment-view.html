@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JERA ERP — Shipment View v10 / 装箱出货</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css');
@@ -94,13 +96,7 @@ body{padding:16px;min-height:100vh}
 .route-map-sub{font-size:10px;color:var(--text-mute)}
 #routeMap{width:100%;height:260px;background:linear-gradient(180deg,#F7FAFC 0%,#EDF4F5 100%);border-radius:8px;position:relative;overflow:hidden;border:1px solid #E2E8E6}
 #routeMap svg{width:100%;height:100%}
-.port-dot{fill:var(--ship-primary);stroke:#FFF;stroke-width:.4;cursor:pointer;transition:r .15s}
-.port-dot.cn{fill:#E24B4A}
-.port-dot.mx{fill:#1D9E75}
-.port-dot.other{fill:var(--text-mute)}
-.port-label{fill:var(--text-soft);font-family:inherit;text-anchor:middle;pointer-events:none}
-.port-label-cn{fill:#A32D2D;font-weight:500}
-.port-label-mx{fill:#085041;font-weight:500}
+/* D3 map uses inline attrs, no class-based port styling needed */
 .route-path{fill:none;stroke:var(--ship-primary);stroke-width:.5;stroke-dasharray:1 .8;opacity:.6}
 .route-path.active{stroke:var(--gold);stroke-width:.8;opacity:.9;stroke-dasharray:none}
 .route-count-badge{fill:var(--gold);stroke:#FFF;stroke-width:.3}
@@ -726,16 +722,27 @@ function openUrgencyPop(type){
 
 /* ═══ TIER 2 — Route Map ═══ */
 var DEFAULT_PORTS=[
-  {code:"SHA",name_kr:"상해",name_cn:"上海",country:"cn",x:68,y:35},
-  {code:"SZX",name_kr:"심천",name_cn:"深圳",country:"cn",x:64,y:45},
-  {code:"NGB",name_kr:"영파",name_cn:"宁波",country:"cn",x:70,y:37},
-  {code:"TAO",name_kr:"청도",name_cn:"青岛",country:"cn",x:69,y:30},
-  {code:"ZLO",name_kr:"만사니요",name_cn:"曼萨尼约",country:"mx",x:18,y:48},
-  {code:"LZC",name_kr:"라사로",name_cn:"拉萨罗",country:"mx",x:19,y:50}
+  {code:"SHA",name_kr:"상하이",name_pinyin:"Shanghai",country:"cn",lon:121.47,lat:31.23},
+  {code:"SZX",name_kr:"선전",name_pinyin:"Shenzhen",country:"cn",lon:114.06,lat:22.54},
+  {code:"NGB",name_kr:"닝보",name_pinyin:"Ningbo",country:"cn",lon:121.55,lat:29.87},
+  {code:"TAO",name_kr:"칭다오",name_pinyin:"Qingdao",country:"cn",lon:120.38,lat:36.07},
+  {code:"ZLO",name_kr:"만사니요",name_pinyin:"Manzanillo",country:"mx",lon:-104.33,lat:19.05},
+  {code:"LZC",name_kr:"라사로",name_pinyin:"Lazaro Cardenas",country:"mx",lon:-102.18,lat:17.94}
 ];
 var customPorts=[];
 function loadCustomPorts(){
-  try{var saved=localStorage.getItem("jera_custom_ports");if(saved)customPorts=JSON.parse(saved)||[]}catch(e){customPorts=[]}
+  try{
+    var saved=localStorage.getItem("jera_custom_ports");
+    if(saved){
+      var parsed=JSON.parse(saved)||[];
+      var needsSave=false;
+      customPorts=parsed.map(function(p){
+        if(p.x!==undefined&&p.lon===undefined){needsSave=true;return null}
+        return p;
+      }).filter(function(p){return p!==null});
+      if(needsSave)saveCustomPorts();
+    }
+  }catch(e){customPorts=[]}
 }
 function saveCustomPorts(){try{localStorage.setItem("jera_custom_ports",JSON.stringify(customPorts))}catch(e){}}
 function getAllPorts(){return DEFAULT_PORTS.concat(customPorts)}
@@ -744,12 +751,39 @@ function findPort(codeOrName){
   var q=String(codeOrName).trim();
   var qLower=q.toLowerCase();
   return getAllPorts().find(function(p){
-    return p.code.toLowerCase()===qLower||p.name_kr===q||p.name_cn===q||p.name_kr.toLowerCase().indexOf(qLower)>=0||p.name_cn.indexOf(q)>=0;
+    return p.code.toLowerCase()===qLower||p.name_kr===q||p.name_pinyin===q||p.name_kr.toLowerCase().indexOf(qLower)>=0||(p.name_pinyin&&p.name_pinyin.toLowerCase().indexOf(qLower)>=0);
   });
 }
 
+var worldTopoJSON=null;
+
 function renderRouteMap(){
-  var ports=getAllPorts();
+  var container=document.getElementById("routeMap");
+  if(!container)return;
+  container.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-mute);font-size:11px">지도 로딩 중... / 加载中...</div>';
+  if(worldTopoJSON){drawRouteMap(container,worldTopoJSON);return}
+  d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
+    .then(function(world){worldTopoJSON=world;drawRouteMap(container,world)})
+    .catch(function(err){
+      container.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--st-danger-txt);font-size:11px;text-align:center">지도 로딩 실패 / 地图加载失败<br><span style="font-size:9px;color:var(--text-mute);margin-top:4px">네트워크 확인 / 检查网络</span></div>';
+    });
+}
+
+function drawRouteMap(container,world){
+  container.innerHTML="";
+  var width=container.clientWidth||680;
+  var height=260;
+  var projection=d3.geoEquirectangular().rotate([-150,0]).fitSize([width,height],{type:"Sphere"});
+  var path=d3.geoPath(projection);
+  var svg=d3.select(container).append("svg")
+    .attr("width",width).attr("height",height)
+    .attr("viewBox","0 0 "+width+" "+height);
+  svg.append("rect").attr("width",width).attr("height",height).attr("fill","#EDF4F5");
+  var countries=topojson.feature(world,world.objects.countries);
+  svg.append("g").selectAll("path").data(countries.features)
+    .enter().append("path").attr("d",path)
+    .attr("fill","#F1EFE8").attr("stroke","#D3D1C7").attr("stroke-width",0.4);
+
   var activeShipments=allShipments.filter(function(r){return getShipStage(r)!=="Complete"});
   var routeCounts={};
   activeShipments.forEach(function(r){
@@ -762,63 +796,144 @@ function renderRouteMap(){
     routeCounts[key].count++;
     routeCounts[key].ships.push(r);
   });
-  var svgParts=['<svg viewBox="0 0 100 70" preserveAspectRatio="xMidYMid meet">'];
-  // Simplified continent silhouettes
-  svgParts.push('<path d="M 60,25 Q 65,22 70,25 L 75,30 Q 78,35 75,42 L 72,48 Q 68,52 62,50 L 58,45 Q 56,38 58,32 Z" fill="#F1EFE8" stroke="#D3D1C7" stroke-width="0.3"/>');
-  svgParts.push('<path d="M 12,43 Q 15,41 20,42 L 25,45 Q 27,48 25,52 L 22,55 Q 18,56 15,53 L 13,48 Z" fill="#F1EFE8" stroke="#D3D1C7" stroke-width="0.3"/>');
-  svgParts.push('<path d="M 8,32 Q 15,30 25,33 L 30,38 Q 28,42 22,42 L 15,41 Q 10,40 8,38 Z" fill="#FAFAF7" stroke="#EDE9E4" stroke-width="0.25"/>');
-  svgParts.push('<text x="45" y="38" font-size="3" fill="#B4B2A9" text-anchor="middle">Pacific / 太平洋</text>');
+
+  var routeGroup=svg.append("g");
   Object.keys(routeCounts).forEach(function(key){
     var rc=routeCounts[key];
-    var x1=rc.from.x,y1=rc.from.y,x2=rc.to.x,y2=rc.to.y;
-    var cx=(x1+x2)/2,cy=Math.min(y1,y2)-18;
-    svgParts.push('<path d="M '+x1+','+y1+' Q '+cx+','+cy+' '+x2+','+y2+'" class="route-path active"/>');
-    var t=0.5;
-    var bx=(1-t)*(1-t)*x1+2*(1-t)*t*cx+t*t*x2;
-    var by=(1-t)*(1-t)*y1+2*(1-t)*t*cy+t*t*y2;
-    svgParts.push('<circle cx="'+bx+'" cy="'+by+'" r="2.5" class="route-count-badge"/>');
-    svgParts.push('<text x="'+bx+'" y="'+by+'" class="route-count-text" font-size="2.5">'+rc.count+'</text>');
+    var p1=projection([rc.from.lon,rc.from.lat]);
+    var p2=projection([rc.to.lon,rc.to.lat]);
+    if(!p1||!p2)return;
+    var mx=(p1[0]+p2[0])/2;
+    var my=Math.min(p1[1],p2[1])-50;
+    var d="M "+p1[0]+","+p1[1]+" Q "+mx+","+my+" "+p2[0]+","+p2[1];
+    routeGroup.append("path").attr("d",d)
+      .attr("fill","none").attr("stroke","#C9A86E").attr("stroke-width",2).attr("opacity",0.8);
+    var bx=mx*0.5+p1[0]*0.25+p2[0]*0.25;
+    var by=my*0.5+p1[1]*0.25+p2[1]*0.25;
+    routeGroup.append("circle").attr("cx",bx).attr("cy",by).attr("r",9)
+      .attr("fill","#C9A86E").attr("stroke","#FFF").attr("stroke-width",1.5);
+    routeGroup.append("text").attr("x",bx).attr("y",by)
+      .attr("text-anchor","middle").attr("dominant-baseline","central")
+      .attr("fill","#FFF").attr("font-size","10px").attr("font-weight","500")
+      .attr("font-family","'Noto Sans KR',sans-serif").text(rc.count);
   });
-  ports.forEach(function(p){
-    svgParts.push('<circle cx="'+p.x+'" cy="'+p.y+'" r="1.5" class="port-dot '+p.country+'"><title>'+escH(p.name_kr)+' / '+escH(p.name_cn)+'</title></circle>');
-    var labelY=p.country==="mx"?p.y+4:p.y-3;
-    svgParts.push('<text x="'+p.x+'" y="'+labelY+'" class="port-label port-label-'+p.country+'" font-size="2.5">'+escH(p.name_cn)+'</text>');
+
+  var portGroup=svg.append("g");
+  getAllPorts().forEach(function(p){
+    var coords=projection([p.lon,p.lat]);
+    if(!coords)return;
+    var color=p.country==="cn"?"#E24B4A":(p.country==="mx"?"#1D9E75":"#888780");
+    var labelColor=p.country==="cn"?"#A32D2D":(p.country==="mx"?"#085041":"#5F5E5A");
+    var dot=portGroup.append("circle")
+      .attr("cx",coords[0]).attr("cy",coords[1]).attr("r",4.5)
+      .attr("fill",color).attr("stroke","#FFF").attr("stroke-width",1.5)
+      .style("cursor","pointer");
+    dot.append("title").text(p.name_kr+" / "+p.name_pinyin);
+    var labelY=p.country==="mx"?coords[1]+14:coords[1]-8;
+    portGroup.append("text")
+      .attr("x",coords[0]).attr("y",labelY)
+      .attr("text-anchor","middle").attr("font-size","10px").attr("font-weight","500")
+      .attr("fill",labelColor).attr("font-family","'Noto Sans KR',sans-serif")
+      .attr("pointer-events","none").text(p.name_pinyin);
   });
-  svgParts.push('</svg>');
-  document.getElementById("routeMap").innerHTML=svgParts.join("");
-  var legendH='<span class="route-legend-item"><span class="route-legend-dot" style="background:#E24B4A"></span>중국 / 中国</span>';
-  legendH+='<span class="route-legend-item"><span class="route-legend-dot" style="background:#1D9E75"></span>멕시코 / 墨西哥</span>';
-  legendH+='<span class="route-legend-item"><span class="route-legend-dot" style="background:#888780"></span>기타 / 其他</span>';
+
+  updateRouteLegend(routeCounts,activeShipments);
+  setTimeout(renderAllMiniMaps,50);
+}
+
+function updateRouteLegend(routeCounts,activeShipments){
+  var legendH='<span class="route-legend-item"><span class="route-legend-dot" style="background:#E24B4A"></span>중국 / China</span>';
+  legendH+='<span class="route-legend-item"><span class="route-legend-dot" style="background:#1D9E75"></span>멕시코 / Mexico</span>';
+  legendH+='<span class="route-legend-item"><span class="route-legend-dot" style="background:#888780"></span>기타 / Other</span>';
   legendH+='<span class="route-legend-item">활성 루트 / 运行中: <b style="color:var(--gold)">'+Object.keys(routeCounts).length+'</b>개 · 컨테이너 / 集装箱: <b style="color:var(--gold)">'+activeShipments.length+'</b>개</span>';
   document.getElementById("routeLegend").innerHTML=legendH;
+}
+
+function renderAllMiniMaps(){
+  if(!worldTopoJSON)return;
+  document.querySelectorAll(".ship-card-map").forEach(function(el){
+    if(el.dataset.rendered==="true")return;
+    var from=el.dataset.from,to=el.dataset.to;
+    var pFrom=findPort(from),pTo=findPort(to);
+    renderMiniMap(el,pFrom,pTo);
+    el.dataset.rendered="true";
+  });
+}
+
+function renderMiniMap(container,pFrom,pTo){
+  container.innerHTML="";
+  if(!pFrom||!pTo){
+    container.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-mute);font-size:9px;text-align:center">루트 정보 없음<br>无航线信息</div>';
+    return;
+  }
+  var width=container.clientWidth||220;
+  var height=90;
+  var projection=d3.geoEquirectangular().rotate([-150,0]).fitSize([width,height],{type:"Sphere"});
+  var path=d3.geoPath(projection);
+  var svg=d3.select(container).append("svg")
+    .attr("width",width).attr("height",height)
+    .attr("viewBox","0 0 "+width+" "+height);
+  svg.append("rect").attr("width",width).attr("height",height).attr("fill","#EDF4F5");
+  var countries=topojson.feature(worldTopoJSON,worldTopoJSON.objects.countries);
+  svg.append("g").selectAll("path").data(countries.features)
+    .enter().append("path").attr("d",path)
+    .attr("fill","#F1EFE8").attr("stroke","#D3D1C7").attr("stroke-width",0.3);
+  var p1=projection([pFrom.lon,pFrom.lat]);
+  var p2=projection([pTo.lon,pTo.lat]);
+  if(!p1||!p2)return;
+  var mx=(p1[0]+p2[0])/2;
+  var my=Math.min(p1[1],p2[1])-18;
+  svg.append("path")
+    .attr("d","M "+p1[0]+","+p1[1]+" Q "+mx+","+my+" "+p2[0]+","+p2[1])
+    .attr("fill","none").attr("stroke","#C9A86E").attr("stroke-width",1.2).attr("stroke-dasharray","2 2");
+  svg.append("circle").attr("cx",p1[0]).attr("cy",p1[1]).attr("r",2.5)
+    .attr("fill","#E24B4A").attr("stroke","#FFF").attr("stroke-width",0.8);
+  svg.append("circle").attr("cx",p2[0]).attr("cy",p2[1]).attr("r",2.5)
+    .attr("fill","#1D9E75").attr("stroke","#FFF").attr("stroke-width",0.8);
+  svg.append("text").attr("x",p1[0]).attr("y",p1[1]-5)
+    .attr("text-anchor","middle").attr("font-size","8px")
+    .attr("fill","#A32D2D").attr("font-weight","500").text(pFrom.name_pinyin);
+  svg.append("text").attr("x",p2[0]).attr("y",p2[1]+10)
+    .attr("text-anchor","middle").attr("font-size","8px")
+    .attr("fill","#085041").attr("font-weight","500").text(pTo.name_pinyin);
+}
+
+function openPortInfo(code){
+  var p=findPort(code);
+  if(!p)return;
+  alert(p.name_kr+" / "+p.name_pinyin+" ("+p.code+")\n"+p.country.toUpperCase()+" · Lon: "+p.lon+", Lat: "+p.lat);
 }
 
 /* ── Port Manager ── */
 function openPortManager(){
   var ports=getAllPorts();
+  var inp='padding:5px;border:1px solid var(--border);border-radius:4px;font-size:10px;font-family:inherit';
   var body='<div class="pop-body">';
   body+='<div style="font-size:11px;color:var(--text-mute);margin-bottom:12px">항구 추가 / 관리 · 添加或管理港口</div>';
   body+='<div style="background:var(--p-lav);border-radius:8px;padding:10px;margin-bottom:12px">';
   body+='<div style="font-size:11px;font-weight:500;color:var(--p-lav-txt);margin-bottom:8px">➕ 새 항구 추가 / 添加新港口</div>';
-  body+='<div style="display:grid;grid-template-columns:80px 1fr 1fr 100px auto;gap:6px;font-size:11px">';
-  body+='<input id="newPortCode" placeholder="CODE" style="padding:5px;border:1px solid var(--border);border-radius:4px;font-size:10px;font-family:inherit">';
-  body+='<input id="newPortKR" placeholder="한국명" style="padding:5px;border:1px solid var(--border);border-radius:4px;font-size:10px;font-family:inherit">';
-  body+='<input id="newPortCN" placeholder="中文名" style="padding:5px;border:1px solid var(--border);border-radius:4px;font-size:10px;font-family:inherit">';
-  body+='<select id="newPortCountry" style="padding:5px;border:1px solid var(--border);border-radius:4px;font-size:10px;font-family:inherit">';
-  body+='<option value="cn">🇨🇳 China</option><option value="mx">🇲🇽 Mexico</option><option value="other">🌍 기타 / 其他</option>';
+  body+='<div style="display:grid;grid-template-columns:60px 80px 100px 80px 70px 70px auto;gap:5px;font-size:11px">';
+  body+='<input id="newPortCode" placeholder="CODE" style="'+inp+'">';
+  body+='<input id="newPortKR" placeholder="한국명" style="'+inp+'">';
+  body+='<input id="newPortPinyin" placeholder="Pinyin" style="'+inp+'">';
+  body+='<select id="newPortCountry" style="'+inp+'">';
+  body+='<option value="cn">🇨🇳 China</option><option value="mx">🇲🇽 Mexico</option><option value="other">🌍 기타</option>';
   body+='</select>';
+  body+='<input id="newPortLon" placeholder="Lon 경도" type="number" step="0.01" style="'+inp+'">';
+  body+='<input id="newPortLat" placeholder="Lat 위도" type="number" step="0.01" style="'+inp+'">';
   body+='<button onclick="addCustomPort()" style="padding:5px 12px;background:var(--ship-primary);color:#FFF;border:0;border-radius:4px;font-size:10px;cursor:pointer;font-family:inherit;font-weight:500">추가 / 添加</button>';
   body+='</div>';
-  body+='<div style="font-size:9px;color:var(--text-mute);margin-top:6px">좌표 자동 설정 (국가별) · 정확한 위치는 코드 수정 필요 / 坐标按国家自动设置</div>';
+  body+='<div style="font-size:9px;color:var(--text-mute);margin-top:6px;line-height:1.5">경도/위도 찾기: Google Maps에서 항구 우클릭 → 좌표 복사 (경도 먼저, 위도 나중) / 经纬度查询: Google Maps 右键港口 → 复制坐标 (先经后纬)</div>';
   body+='</div>';
   body+='<div style="display:flex;flex-direction:column;gap:4px">';
   ports.forEach(function(p){
     var isCustom=customPorts.some(function(cp){return cp.code===p.code});
-    body+='<div style="display:grid;grid-template-columns:60px 1fr 1fr 60px auto;gap:8px;padding:6px 10px;background:#FFF;border:1px solid var(--border);border-radius:6px;font-size:11px;align-items:center">';
+    body+='<div style="display:grid;grid-template-columns:60px 1fr 1fr 60px 140px auto;gap:8px;padding:6px 10px;background:#FFF;border:1px solid var(--border);border-radius:6px;font-size:11px;align-items:center">';
     body+='<span style="font-weight:500;color:var(--ship-primary)">'+escH(p.code)+'</span>';
     body+='<span>'+escH(p.name_kr)+'</span>';
-    body+='<span>'+escH(p.name_cn)+'</span>';
+    body+='<span>'+escH(p.name_pinyin||"")+'</span>';
     body+='<span style="font-size:9px;color:var(--text-mute)">'+p.country.toUpperCase()+'</span>';
+    body+='<span style="font-size:9px;color:var(--text-mute);font-variant-numeric:tabular-nums">'+p.lon.toFixed(2)+", "+p.lat.toFixed(2)+'</span>';
     body+=isCustom
       ?'<button onclick="removeCustomPort(\''+p.code+'\')" style="padding:3px 8px;background:var(--st-danger-bg);color:var(--st-danger-txt);border:1px solid #F7C1C1;border-radius:3px;font-size:9px;cursor:pointer;font-family:inherit">삭제 / 删除</button>'
       :'<span style="font-size:9px;color:var(--text-mute)">기본 / 默认</span>';
@@ -831,12 +946,13 @@ function openPortManager(){
 function addCustomPort(){
   var code=document.getElementById("newPortCode").value.trim().toUpperCase();
   var nameKR=document.getElementById("newPortKR").value.trim();
-  var nameCN=document.getElementById("newPortCN").value.trim();
+  var namePinyin=document.getElementById("newPortPinyin").value.trim();
   var country=document.getElementById("newPortCountry").value;
-  if(!code||!nameKR||!nameCN){alert("CODE, 한국명, 中文名 모두 입력 / 全部填写");return}
+  var lon=parseFloat(document.getElementById("newPortLon").value);
+  var lat=parseFloat(document.getElementById("newPortLat").value);
+  if(!code||!nameKR||!namePinyin||isNaN(lon)||isNaN(lat)){alert("모든 필드 입력 (경도/위도 포함) / 全部填写 (含经纬度)");return}
   if(getAllPorts().some(function(p){return p.code===code})){alert("이미 존재하는 CODE / CODE已存在");return}
-  var defaultCoords={cn:{x:70,y:35},mx:{x:18,y:48},other:{x:50,y:30}};
-  customPorts.push({code:code,name_kr:nameKR,name_cn:nameCN,country:country,x:defaultCoords[country].x,y:defaultCoords[country].y});
+  customPorts.push({code:code,name_kr:nameKR,name_pinyin:namePinyin,country:country,lon:lon,lat:lat});
   saveCustomPorts();
   openPortManager();
   renderRouteMap();
@@ -1022,7 +1138,7 @@ function buildShipCardHTML(r){
   }
   var p=[];
   p.push('<div class="ship-card'+(dl?' delayed':'')+'" onclick="openShipmentModal(\''+r["ID"]+'\')">');
-  p.push('<div class="ship-card-map">'+buildMiniMapSVG(pFrom,pTo)+'</div>');
+  p.push('<div class="ship-card-map" data-from="'+(pFrom?pFrom.code:"")+'" data-to="'+(pTo?pTo.code:"")+'"></div>');
   p.push('<div class="ship-stage-badge '+stageCls+'">'+escH(stageLbl)+'</div>');
   p.push('<div class="ship-card-body">');
   p.push('<div class="ship-card-identity">');
@@ -1030,9 +1146,9 @@ function buildShipCardHTML(r){
   p.push('<div class="ship-card-value container-id">'+escH(cid)+'</div>');
   p.push('<div class="ship-card-label">루트 / 航线</div>');
   p.push('<div class="ship-card-value route">');
-  p.push('<span>'+(pFrom?escH(pFrom.name_cn):escH(fromPort))+'</span>');
+  p.push('<span>'+(pFrom?escH(pFrom.name_pinyin):escH(fromPort))+'</span>');
   p.push('<span class="ship-card-route-arrow">→</span>');
-  p.push('<span>'+(pTo?escH(pTo.name_cn):escH(toPort))+'</span></div></div>');
+  p.push('<span>'+(pTo?escH(pTo.name_pinyin):escH(toPort))+'</span></div></div>');
   p.push('<div class="ship-card-dates">');
   p.push('<div class="ship-date-row"><span class="lbl">ETD / 预计出港</span><span class="val">'+escH(etd)+'</span></div>');
   p.push('<div class="ship-date-row '+(atd&&atd!=="-"?"actual":"")+'"><span class="lbl">ATD / 实际出港</span><span class="val">'+escH(atd)+'</span></div>');
@@ -1048,19 +1164,7 @@ function buildShipCardHTML(r){
   return p.join("");
 }
 
-function buildMiniMapSVG(pFrom,pTo){
-  if(!pFrom||!pTo)return '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-mute);font-size:9px;text-align:center">루트 정보 없음<br>无航线信息</div>';
-  var x1=pFrom.x,y1=pFrom.y,x2=pTo.x,y2=pTo.y;
-  var cx=(x1+x2)/2,cy=Math.min(y1,y2)-15;
-  var h='<svg viewBox="0 0 100 70" preserveAspectRatio="xMidYMid meet">';
-  h+='<path d="M '+x1+','+y1+' Q '+cx+','+cy+' '+x2+','+y2+'" fill="none" stroke="#C9A86E" stroke-width="1" stroke-dasharray="2 2"/>';
-  h+='<circle cx="'+x1+'" cy="'+y1+'" r="2" fill="#E24B4A" stroke="#FFF" stroke-width="0.5"/>';
-  h+='<circle cx="'+x2+'" cy="'+y2+'" r="2" fill="#1D9E75" stroke="#FFF" stroke-width="0.5"/>';
-  h+='<text x="'+x1+'" y="'+(y1-2)+'" font-size="2.5" text-anchor="middle" fill="#A32D2D" font-weight="500">'+escH(pFrom.name_cn)+'</text>';
-  h+='<text x="'+x2+'" y="'+(y2+4)+'" font-size="2.5" text-anchor="middle" fill="#085041" font-weight="500">'+escH(pTo.name_cn)+'</text>';
-  h+='</svg>';
-  return h;
-}
+/* buildMiniMapSVG — removed; replaced by renderAllMiniMaps/renderMiniMap (D3) */
 
 /* Pipeline */
 function renderShipPipeline(idx,items){
@@ -1142,6 +1246,7 @@ function applyMonthFilter(mi){
   if(mcEl)mcEl.textContent=filtered.length+' 컨테이너 / 集装箱';
   window['visible_ship_'+mi]=filtered;
   renderShipPipeline(mi,filtered);
+  setTimeout(renderAllMiniMaps,50);
 }
 
 /* Timeline (3-segment Gantt) */
