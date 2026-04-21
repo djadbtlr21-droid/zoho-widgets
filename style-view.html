@@ -82,26 +82,26 @@ body{background:var(--bg);color:var(--text);padding:16px;min-height:100vh;
 .btn-primary:hover{background:var(--text-soft);transform:translateY(-1px)}
 .btn-primary svg{width:14px;height:14px}
 
-/* KPI Row — 3 month KPIs + delay + heatmap (5 columns) */
-.kpi-grid{display:grid;grid-template-columns:repeat(3, 280px) 260px 1fr;gap:10px;margin-bottom:14px}
-.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;
+/* KPI Row — 3 month KPIs + 340px delay (4 columns) */
+.kpi-grid{display:grid;grid-template-columns:repeat(3, 1fr) 340px;gap:12px;margin-bottom:14px}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;
   position:relative;overflow:hidden;transition:border-color .15s,box-shadow .15s;min-width:0}
 .kpi-card:hover{border-color:var(--border-hover);box-shadow:var(--shadow)}
 .kpi-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px}
 .kpi-card:nth-child(1)::before{background:#CDB4DB}
 .kpi-card:nth-child(2)::before{background:#FAC775}
 .kpi-card:nth-child(3)::before{background:#9FE1CB}
-.kpi-head{display:flex;align-items:baseline;gap:6px;margin-bottom:10px}
-.kpi-month{font-size:12px;font-weight:500;color:var(--text);letter-spacing:.01em}
-.kpi-sub{font-size:9px;color:var(--text-mute);letter-spacing:.04em;text-transform:uppercase}
-.kpi-body{display:flex;align-items:center;gap:12px;padding:0}
-.kpi-ring{flex:0 0 auto;position:relative;width:48px;height:48px}
-.kpi-ring .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500}
-.kpi-stats{display:grid;grid-template-columns:1fr 1fr;gap:3px;flex:1;min-width:0}
-.kpi-stat{padding:3px 5px;border-radius:6px;cursor:pointer;transition:transform .12s;text-align:left;min-width:0}
+.kpi-head{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
+.kpi-month{font-size:13px;font-weight:500;color:var(--text);letter-spacing:.01em}
+.kpi-sub{font-size:10px;color:var(--text-mute);letter-spacing:.04em;text-transform:uppercase}
+.kpi-body{display:flex;align-items:center;gap:14px;padding:0}
+.kpi-ring{flex:0 0 auto;position:relative;width:64px;height:64px}
+.kpi-ring .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500}
+.kpi-stats{display:grid;grid-template-columns:1fr 1fr;gap:5px;flex:1;min-width:0}
+.kpi-stat{padding:5px 7px;border-radius:7px;cursor:pointer;transition:transform .12s;text-align:left;min-width:0}
 .kpi-stat:hover{transform:translateY(-1px)}
-.kpi-stat .num{font-size:13px;font-weight:500;line-height:1}
-.kpi-stat .lbl{font-size:8px;color:var(--text-mute);line-height:1.25;margin-top:2px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi-stat .num{font-size:16px;font-weight:500;line-height:1}
+.kpi-stat .lbl{font-size:9px;color:var(--text-mute);line-height:1.25;margin-top:3px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kpi-stat.all{background:var(--p-lav)}     .kpi-stat.all .num{color:var(--p-lav-txt)}
 .kpi-stat.sm {background:var(--p-butter)}  .kpi-stat.sm  .num{color:var(--p-butter-txt)}
 .kpi-stat.ord{background:var(--p-mint)}    .kpi-stat.ord .num{color:var(--p-mint-txt)}
@@ -120,21 +120,23 @@ body{background:var(--bg);color:var(--text);padding:16px;min-height:100vh;
 .delay-empty{text-align:center;padding:12px 4px;font-size:10px;color:var(--text-mute)}
 .delay-note{font-size:8.5px;color:var(--text-mute);text-align:center;padding-top:6px;margin-top:4px;border-top:1px dashed #FECACA;line-height:1.4}
 
-/* Type Heatmap (5th KPI column) */
-.type-heatmap-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;
-  position:relative;overflow:hidden;min-width:0;display:flex;flex-direction:column}
-.type-heatmap-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;
-  background:linear-gradient(90deg,#CDB4DB,#9FE1CB,#FAC775,#F4C0D1)}
-.th-header{display:flex;align-items:center;gap:6px;margin-bottom:8px}
-.th-icon{font-size:14px}
-.th-title{font-size:12px;font-weight:500;color:var(--text)}
-.th-grid{display:flex;gap:3px;height:95px}
-.th-col{display:flex;flex-direction:column;gap:3px;min-width:0}
-.th-tile{border-radius:5px;padding:4px 8px;display:flex;flex-direction:column;justify-content:center;
-  overflow:hidden;cursor:pointer;transition:transform .15s ease;min-height:18px}
-.th-tile:hover{transform:scale(1.02)}
-.th-name{font-size:10px;font-weight:500;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.th-count{font-size:8px;opacity:.75;margin-top:2px}
+/* Heatmap section (full-width, bottom of page) */
+.heatmap-section{background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:18px 20px;margin-top:20px;margin-bottom:20px;position:relative;overflow:hidden}
+.heatmap-section::before{content:'';position:absolute;left:0;top:0;width:100%;height:4px;
+  background:linear-gradient(90deg,#CDB4DB,#9FE1CB,#FAC775,#F4C0D1,#B5D4F4);border-radius:12px 12px 0 0}
+.hs-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;
+  border-bottom:1px solid var(--border)}
+.hs-icon{font-size:20px}
+.hs-title{font-size:14px;font-weight:500;color:var(--text)}
+.hs-sub{font-size:11px;color:var(--text-mute);margin-top:2px}
+.hs-grid{display:flex;gap:4px;height:180px}
+.hs-col{display:flex;flex-direction:column;gap:4px;min-width:0}
+.hs-tile{border-radius:6px;padding:10px 14px;display:flex;flex-direction:column;justify-content:center;
+  overflow:hidden;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+.hs-tile:hover{transform:scale(1.02);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.hs-name{font-size:13px;font-weight:500;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hs-count{font-size:11px;opacity:.78;margin-top:4px}
 
 /* Monthly sections — month card with inline filter */
 .month-section{margin-bottom:14px}
@@ -293,24 +295,76 @@ body{background:var(--bg);color:var(--text);padding:16px;min-height:100vh;
 .kpi-pop-item .nm{font-size:10px;color:var(--text-mute);margin-top:2px}
 .kpi-pop-item .tags{font-size:9px;color:var(--text-mute);margin-top:2px;letter-spacing:.01em}
 
-@media (max-width:1600px){
-  .kpi-grid{grid-template-columns:repeat(3,240px) 240px 1fr}
-}
 @media (max-width:1280px){
-  .kpi-grid{grid-template-columns:repeat(3,1fr) 240px;}
-  .kpi-grid .type-heatmap-card{grid-column:1/-1;margin-top:2px}
+  .kpi-grid{grid-template-columns:repeat(3,1fr) 280px}
 }
 @media (max-width:900px){
   .kpi-grid{grid-template-columns:1fr 1fr}
   .kpi-grid .delay-card{grid-column:1/-1}
-  .kpi-grid .type-heatmap-card{grid-column:1/-1}
+  .hs-grid{height:auto;flex-wrap:wrap}
+  .hs-col{flex:1 1 180px;min-height:120px}
 }
 @media (max-width:720px){
   .kpi-grid{grid-template-columns:1fr}
   body{padding:12px}
   .mhead{flex-direction:column;align-items:stretch}
   .mbtns{justify-content:flex-start}
+  .gemini-chat-win{width:calc(100vw - 24px);right:12px;bottom:80px}
+  .gemini-fab{bottom:16px;right:16px}
 }
+
+/* Gemini floating chat — FAB + window */
+.gemini-fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;
+  background:linear-gradient(135deg,#C9A86E,#9B8A7A);color:#FFF;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 4px 20px rgba(201,168,110,.35);z-index:9998;
+  transition:transform .2s ease,box-shadow .2s ease;flex-direction:column;gap:0}
+.gemini-fab:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(201,168,110,.5)}
+.gemini-fab-label{font-size:8px;font-weight:500;letter-spacing:.5px;margin-top:1px}
+.gemini-fab svg{margin-bottom:-2px}
+
+.gemini-chat-win{position:fixed;bottom:92px;right:24px;width:380px;height:560px;
+  background:#FFF;border:1px solid var(--border);border-radius:14px;
+  box-shadow:0 10px 40px rgba(0,0,0,.15);z-index:9999;
+  display:flex;flex-direction:column;overflow:hidden;
+  animation:gcwSlideIn .25s ease-out}
+@keyframes gcwSlideIn{
+  from{opacity:0;transform:translateY(16px) scale(.96)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+
+.gcw-header{padding:14px 16px;background:linear-gradient(135deg,#FAFAF7,#F1EFE8);
+  border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.gcw-header-left{display:flex;align-items:center;gap:10px}
+.gcw-avatar{width:36px;height:36px;background:linear-gradient(135deg,#CDB4DB,#AFA9EC);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
+.gcw-title{font-size:13px;font-weight:500;color:var(--text)}
+.gcw-sub{font-size:10px;color:var(--text-mute);margin-top:1px}
+.gcw-close{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-mute);font-size:14px;transition:background .15s}
+.gcw-close:hover{background:#FCEBEB;color:#A32D2D}
+
+.gcw-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#FDFCF9}
+.gcw-msg{display:flex;gap:8px;animation:msgFade .3s ease-out}
+@keyframes msgFade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.gcw-msg-user{flex-direction:row-reverse}
+.gcw-msg-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;background:linear-gradient(135deg,#CDB4DB,#AFA9EC)}
+.gcw-msg-user .gcw-msg-avatar{background:linear-gradient(135deg,#C9A86E,#9B8A7A);color:#FFF}
+.gcw-msg-bubble{max-width:78%;padding:10px 12px;border-radius:12px;font-size:12px;line-height:1.5;
+  color:var(--text);word-break:break-word}
+.gcw-msg-bot .gcw-msg-bubble{background:#FFF;border:1px solid var(--border);border-top-left-radius:4px}
+.gcw-msg-user .gcw-msg-bubble{background:#C9A86E;color:#FFF;border-top-right-radius:4px}
+.gcw-msg-typing .gcw-msg-bubble{background:#FFF;border:1px solid var(--border);color:var(--text-mute);font-style:italic}
+
+.gcw-input-row{padding:12px;border-top:1px solid var(--border);display:flex;gap:8px;background:#FFF}
+.gcw-input{flex:1;background:#FAFAF7;border:1px solid var(--border);border-radius:8px;
+  padding:8px 12px;font-size:12px;font-family:inherit;outline:none;transition:border-color .15s}
+.gcw-input:focus{border-color:#C9A86E;background:#FFF}
+.gcw-send{background:#1C1917;color:#FFF;border:none;border-radius:8px;padding:8px 16px;
+  font-size:11px;font-weight:500;cursor:pointer;transition:background .15s;font-family:inherit}
+.gcw-send:hover{background:#44443F}
+.gcw-send:disabled{background:#B4B2A9;cursor:not-allowed}
 </style>
 </head>
 <body>
@@ -336,11 +390,23 @@ body{background:var(--bg);color:var(--text);padding:16px;min-height:100vh;
       </button>
     </div>
 
-    <!-- KPI Row: 3 KPI + Delay + Heatmap -->
+    <!-- KPI Row: 3 KPI + Delay (4 columns) -->
     <div id="kpiRow" class="kpi-grid"></div>
 
     <!-- Monthly sections (each contains its own inline filter) -->
     <div id="monthSections"></div>
+
+    <!-- Heatmap: Style Type Distribution (full-width, bottom) -->
+    <div class="heatmap-section">
+      <div class="hs-header">
+        <span class="hs-icon">🧩</span>
+        <div>
+          <div class="hs-title">스타일 유형 분포 / 款式类型分布</div>
+          <div class="hs-sub">카테고리 × 상의/하의 조합별 스타일 수 / 按类别组合统计</div>
+        </div>
+      </div>
+      <div class="hs-grid" id="typeHeatmap"></div>
+    </div>
 
     <!-- AI Panel (full width) -->
     <div class="panel">
@@ -400,6 +466,46 @@ body{background:var(--bg);color:var(--text);padding:16px;min-height:100vh;
 <div class="lb" id="lb" onclick="closeLb()">
   <button class="lb-close" onclick="closeLb()">✕</button>
   <img id="lbImg" alt="" onclick="event.stopPropagation()"/>
+</div>
+
+<!-- Gemini Floating Chat Button -->
+<div id="geminiFabBtn" class="gemini-fab" onclick="toggleGeminiChat()" title="AI 분석 / AI 分析">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+  <span class="gemini-fab-label">AI</span>
+</div>
+
+<!-- Gemini Chat Window -->
+<div id="geminiChatWin" class="gemini-chat-win" style="display:none;">
+  <div class="gcw-header">
+    <div class="gcw-header-left">
+      <div class="gcw-avatar">✨</div>
+      <div>
+        <div class="gcw-title">Gemini 분석 / AI 分析</div>
+        <div class="gcw-sub">시니어 애널리스트 / 高级分析师</div>
+      </div>
+    </div>
+    <div class="gcw-close" onclick="toggleGeminiChat()">✕</div>
+  </div>
+  <div class="gcw-messages" id="gcwMessages">
+    <div class="gcw-msg gcw-msg-bot">
+      <div class="gcw-msg-avatar">✨</div>
+      <div class="gcw-msg-bubble">
+        안녕하세요! 👋<br>
+        스타일 데이터를 분석해드립니다.<br><br>
+        <b style="font-weight:500;">예시 질문:</b><br>
+        • 샘플 전환율이 가장 높은 월은?<br>
+        • 미오더 스타일의 공통점은?<br>
+        • 다음 달 예상 오더 트렌드는?<br><br>
+        <span style="color:#B4B2A9;font-size:10px;">您好！请问今天需要什么分析？</span>
+      </div>
+    </div>
+  </div>
+  <div class="gcw-input-row">
+    <input type="text" id="gcwInput" class="gcw-input" placeholder="메시지 입력 / 输入消息..." onkeypress="if(event.key==='Enter') sendGeminiMessage()">
+    <button class="gcw-send" onclick="sendGeminiMessage()">전송</button>
+  </div>
 </div>
 
 <script>
@@ -641,17 +747,17 @@ function renderMKPI(){
       if(moSkus.has(sku)) ord++; else nord++;
     });
     var pct = tot > 0 ? Math.round((ord / tot) * 100) : 0;
-    var rr = 20, circ = 2 * Math.PI * rr, offset = circ - (pct/100) * circ;
+    var rr = 26, circ = 2 * Math.PI * rr, offset = circ - (pct/100) * circ;
     var ke = encodeURIComponent(key);
 
     parts.push('<div class="kpi-card">');
-    parts.push('<div class="kpi-head"><div class="kpi-month">'+escH(key)+'</div><div class="kpi-sub">KPI</div></div>');
+    parts.push('<div class="kpi-head"><div class="kpi-month">'+escH(key)+'</div><div class="kpi-sub">스타일 KPI / 款式 KPI</div></div>');
     parts.push('<div class="kpi-body">');
-    parts.push('<div class="kpi-ring"><svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="'+rr+'" fill="none" stroke="#F3F0EA" stroke-width="4"/><circle cx="24" cy="24" r="'+rr+'" fill="none" stroke="'+c+'" stroke-width="4" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'" stroke-linecap="round" style="transform:rotate(-90deg);transform-origin:center;transition:stroke-dashoffset .6s ease"/></svg><div class="pct" style="color:'+c+'">'+pct+'%</div></div>');
+    parts.push('<div class="kpi-ring"><svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="'+rr+'" fill="none" stroke="#F3F0EA" stroke-width="5"/><circle cx="32" cy="32" r="'+rr+'" fill="none" stroke="'+c+'" stroke-width="5" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'" stroke-linecap="round" style="transform:rotate(-90deg);transform-origin:center;transition:stroke-dashoffset .6s ease"/></svg><div class="pct" style="color:'+c+'">'+pct+'%</div></div>');
     parts.push('<div class="kpi-stats">');
-    parts.push('<div class="kpi-stat all" onclick="openKpiPop(\''+ke+'\',\'all\')"><div class="num">'+tot+'</div><div class="lbl">총/总</div></div>');
+    parts.push('<div class="kpi-stat all" onclick="openKpiPop(\''+ke+'\',\'all\')"><div class="num">'+tot+'</div><div class="lbl">총 스타일/总款式</div></div>');
     parts.push('<div class="kpi-stat sm" onclick="openKpiPop(\''+ke+'\',\'sm\')"><div class="num">'+sm+'</div><div class="lbl">샘플/样品</div></div>');
-    parts.push('<div class="kpi-stat ord" onclick="openKpiPop(\''+ke+'\',\'ord\')"><div class="num">'+ord+'</div><div class="lbl">완료/完成</div></div>');
+    parts.push('<div class="kpi-stat ord" onclick="openKpiPop(\''+ke+'\',\'ord\')"><div class="num">'+ord+'</div><div class="lbl">오더완료/已下单</div></div>');
     parts.push('<div class="kpi-stat nord" onclick="openKpiPop(\''+ke+'\',\'nord\')"><div class="num">'+nord+'</div><div class="lbl">미오더/未下单</div></div>');
     parts.push('</div></div></div>');
   });
@@ -673,12 +779,6 @@ function renderMKPI(){
   }
   parts.push('</div>');
   parts.push('<div class="delay-note">당월 20일까지 미오더 시 지연<br>当月20日前未下单视为延误</div>');
-  parts.push('</div>');
-
-  // Heatmap card shell (filled by renderHeatmap)
-  parts.push('<div class="type-heatmap-card">');
-  parts.push('<div class="th-header"><span class="th-icon">🧩</span><div class="th-title">스타일 유형 분포 / 款式类型分布</div></div>');
-  parts.push('<div class="th-grid" id="typeHeatmap"></div>');
   parts.push('</div>');
 
   document.getElementById("kpiRow").innerHTML = parts.join("");
@@ -765,13 +865,13 @@ function renderHeatmap(){
   var colorIdx = 0;
   cols.forEach(function(col){
     var colTotal = col.reduce(function(s,x){ return s + x.count; }, 0);
-    html += '<div class="th-col" style="flex:'+Math.max(1, colTotal/2)+';">';
+    html += '<div class="hs-col" style="flex:'+Math.max(1, colTotal/2)+';">';
     col.forEach(function(item){
       var pal = HEATMAP_PALETTE[colorIdx % HEATMAP_PALETTE.length];
       colorIdx++;
-      html += '<div class="th-tile" style="background:'+pal.bg+';color:'+pal.tx+';flex:'+item.count+';" title="'+escH(item.label)+' ('+item.count+')">';
-      html += '<div class="th-name">'+escH(item.label)+'</div>';
-      html += '<div class="th-count">'+item.count+'개 스타일</div>';
+      html += '<div class="hs-tile" style="background:'+pal.bg+';color:'+pal.tx+';flex:'+item.count+';" title="'+escH(item.label)+' ('+item.count+')">';
+      html += '<div class="hs-name">'+escH(item.label)+'</div>';
+      html += '<div class="hs-count">'+item.count+'개 스타일 / '+item.count+'款</div>';
       html += '</div>';
     });
     html += '</div>';
@@ -1079,9 +1179,82 @@ function renderAIPanel(){
   document.getElementById("aiBody").innerHTML = pp.join("");
 }
 
-/* Gemini API 연결 예정 */
-function askAI(){
-  alert("Gemini API 연결 예정 / Gemini API 待接入\n\n현재 화면의 요약 데이터를 기반으로 질의응답 기능이 추가될 예정입니다.");
+/* AI 분석 패널의 "더 자세히 물어보기" 버튼 — 채팅 윈도우로 연결 */
+function askAI(){ toggleGeminiChat(); }
+
+/* ── Gemini Floating Chat ── */
+function toggleGeminiChat(){
+  var win = document.getElementById("geminiChatWin");
+  if(!win) return;
+  if(win.style.display === "none" || !win.style.display){
+    win.style.display = "flex";
+    setTimeout(function(){
+      var inp = document.getElementById("gcwInput");
+      if(inp) inp.focus();
+    }, 100);
+  } else {
+    win.style.display = "none";
+  }
+}
+
+function appendGeminiMsg(text, isUser, isTyping){
+  var box = document.getElementById("gcwMessages");
+  if(!box) return null;
+  var cls = "gcw-msg " + (isUser ? "gcw-msg-user" : "gcw-msg-bot") + (isTyping ? " gcw-msg-typing" : "");
+  var avatar = isUser ? "👤" : "✨";
+  var div = document.createElement("div");
+  div.className = cls;
+  div.innerHTML = '<div class="gcw-msg-avatar">'+avatar+'</div><div class="gcw-msg-bubble">'+text+'</div>';
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  return div;
+}
+
+function sendGeminiMessage(){
+  var inp = document.getElementById("gcwInput");
+  if(!inp) return;
+  var text = inp.value.trim();
+  if(!text) return;
+  appendGeminiMsg(escH(text), true, false);
+  inp.value = "";
+  var typing = appendGeminiMsg("분석 중... / 分析中...", false, true);
+  // Placeholder: actual Gemini API integration pending
+  // Current behavior: simulate response using local data summary
+  setTimeout(function(){
+    if(typing && typing.parentNode) typing.parentNode.removeChild(typing);
+    var reply = generateLocalReply(text);
+    appendGeminiMsg(reply, false, false);
+  }, 900);
+}
+
+function generateLocalReply(userText){
+  var q = userText.toLowerCase();
+  var total = allRec.length;
+  var ordered = 0, sampling = 0, delayed = 0;
+  allRec.forEach(function(r){
+    var sku = g(r,"Style_SKU"); if(sku === "-") sku = g(r,"SKU");
+    if(moSkus.has(sku)) ordered++;
+    var ss = g(r,"Sample_Status").toLowerCase();
+    if(ss.indexOf("sampling") >= 0 || ss.indexOf("샘플") >= 0) sampling++;
+    if(isOrderDelayed(r)) delayed++;
+  });
+  var reply = "";
+  if(q.indexOf("샘플") >= 0 || q.indexOf("sample") >= 0 || q.indexOf("样") >= 0){
+    reply = "현재 샘플 제작 중 스타일: <b>"+sampling+"건</b> / 总款式中样品制作中：<b>"+sampling+"款</b><br><br>전체 "+total+"건 중 "+Math.round(sampling/Math.max(1,total)*100)+"%";
+  } else if(q.indexOf("지연") >= 0 || q.indexOf("delay") >= 0 || q.indexOf("延误") >= 0){
+    reply = "⚠️ 현재 지연 스타일: <b>"+delayed+"건</b> / 当前延误款式：<b>"+delayed+"款</b><br><br>당월 20일까지 오더가 안 들어간 건수입니다.";
+  } else if(q.indexOf("오더") >= 0 || q.indexOf("order") >= 0 || q.indexOf("订单") >= 0){
+    var rate = Math.round(ordered/Math.max(1,total)*100);
+    reply = "✅ 오더 완료: <b>"+ordered+"건</b> (<b>"+rate+"%</b>) / 已下单：<b>"+ordered+"款</b> ("+rate+"%)<br><br>전체 "+total+"건 대비 완료율입니다.";
+  } else {
+    reply = "현재 스타일 현황 요약 / 当前款式汇总:<br><br>";
+    reply += "• 총 스타일 / 总款: <b>"+total+"</b><br>";
+    reply += "• 오더 완료 / 已下单: <b>"+ordered+"</b><br>";
+    reply += "• 샘플 제작중 / 样品中: <b>"+sampling+"</b><br>";
+    reply += "• 지연 / 延误: <b>"+delayed+"</b><br><br>";
+    reply += "<span style='color:#B4B2A9;font-size:10px;'>* Gemini API 연동 예정 (현재는 로컬 집계 기반 답변)</span>";
+  }
+  return reply;
 }
 
 /* ── Global handlers (static DOM only) ── */
@@ -1092,6 +1265,8 @@ document.addEventListener("keydown", function(e){
   if(document.getElementById("lb").classList.contains("show")){ closeLb(); return; }
   if(document.getElementById("kpiPopOv").classList.contains("show")){ closeKpiPop(); return; }
   if(document.getElementById("modalOv").classList.contains("show")){ closeModal(); return; }
+  var chatWin = document.getElementById("geminiChatWin");
+  if(chatWin && chatWin.style.display === "flex"){ chatWin.style.display = "none"; return; }
 });
 </script>
 </body>
