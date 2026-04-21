@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JERA ERP — 스타일 현황표 / 款式现况表</title>
+<script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
+<style>
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css');
+
+:root{
+  --bg:#FAFAF7;
+  --card:#FFFFFF;
+  --border:#EDE9E4;
+  --border-hover:#D3D1C7;
+  --text:#1C1917;
+  --text-mute:#78716C;
+  --text-soft:#44443F;
+  --accent:#9B8A7A;
+  --gold:#C9A86E;
+
+  --p-pink:#FBEAF0;    --p-pink-txt:#72243E;
+  --p-peach:#FAECE7;   --p-peach-txt:#712B13;
+  --p-butter:#FAEEDA;  --p-butter-txt:#633806;
+  --p-mint:#E1F5EE;    --p-mint-txt:#085041;
+  --p-sky:#E6F1FB;     --p-sky-txt:#0C447C;
+  --p-lav:#EEEDFE;     --p-lav-txt:#3C3489;
+  --p-sage:#EAF3DE;    --p-sage-txt:#27500A;
+
+  --st-ok-bg:#D1FAE5;     --st-ok-txt:#065F46;
+  --st-warn-bg:#FEF3C7;   --st-warn-txt:#854F0B;
+  --st-danger-bg:#FCEBEB; --st-danger-txt:#A32D2D;
+  --st-draft-bg:#F1EFE8;  --st-draft-txt:#5F5E5A;
+
+  --radius:12px;
+  --radius-card:10px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.04);
+  --shadow:0 2px 8px rgba(0,0,0,.06);
+  --shadow-md:0 4px 16px rgba(0,0,0,.08);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+  font-family:'Pretendard Variable','Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  font-size:12px;-webkit-font-smoothing:antialiased;letter-spacing:-.008em}
+
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--border-hover)}
+
+.app{max-width:1440px;margin:0 auto;padding:20px 24px 48px}
+
+/* Loader / error */
+.loader{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:14px}
+.spinner{width:32px;height:32px;border:2.5px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+.spinner-sm{width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes modalIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.fade-in{animation:fadeIn .3s ease-out}
+
+.err-box{max-width:420px;margin:60px auto;padding:24px;background:#FFF5F5;border:1px solid #FECACA;border-radius:12px;text-align:center}
+.err-box h3{color:var(--st-danger-txt);margin:0 0 8px;font-size:14px;font-weight:500}
+.err-box p{color:var(--text-mute);font-size:11px;margin:0;word-break:break-all}
+
+/* Header */
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:28px;height:28px;background:var(--gold);color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-weight:500;font-size:14px;letter-spacing:.02em;box-shadow:0 1px 3px rgba(201,168,110,.35)}
+.page-title{font-size:17px;font-weight:500;color:var(--text);letter-spacing:-.02em;margin:0;line-height:1.2}
+.page-title .dim{color:var(--text-mute);font-weight:400;font-size:14px;margin-left:4px}
+.page-sub{font-size:10px;color:var(--text-mute);margin-top:3px;letter-spacing:.04em}
+
+.btn-primary{background:var(--text);color:#fff;padding:8px 14px;border-radius:8px;border:0;font-size:12px;font-weight:500;
+  cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit;transition:transform .15s,background .15s}
+.btn-primary:hover{background:var(--text-soft);transform:translateY(-1px)}
+.btn-primary svg{width:14px;height:14px}
+
+/* KPI Row — 5 columns (4 months + delay) */
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;
+  transition:border-color .15s,box-shadow .15s}
+.kpi-card:hover{border-color:var(--border-hover);box-shadow:var(--shadow)}
+.kpi-head{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
+.kpi-month{font-size:13px;font-weight:500;color:var(--text);letter-spacing:.01em}
+.kpi-sub{font-size:9px;color:var(--text-mute);letter-spacing:.05em;text-transform:uppercase}
+.kpi-body{display:flex;align-items:center;gap:12px}
+.kpi-ring{flex:0 0 auto;position:relative;width:64px;height:64px}
+.kpi-ring .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500}
+.kpi-stats{display:grid;grid-template-columns:1fr 1fr;gap:5px;flex:1}
+.kpi-stat{padding:6px 7px;border-radius:7px;cursor:pointer;transition:transform .12s;text-align:left}
+.kpi-stat:hover{transform:translateY(-1px)}
+.kpi-stat .num{font-size:15px;font-weight:500;line-height:1}
+.kpi-stat .lbl{font-size:9px;color:var(--text-mute);line-height:1.3;margin-top:3px;font-weight:400}
+.kpi-stat.all{background:var(--p-lav)}     .kpi-stat.all .num{color:var(--p-lav-txt)}
+.kpi-stat.sm {background:var(--p-butter)}  .kpi-stat.sm  .num{color:var(--p-butter-txt)}
+.kpi-stat.ord{background:var(--p-mint)}    .kpi-stat.ord .num{color:var(--p-mint-txt)}
+.kpi-stat.nord{background:var(--p-pink)}   .kpi-stat.nord .num{color:var(--p-pink-txt)}
+
+.delay-card{background:var(--card);border:1px solid #FECACA;border-radius:var(--radius);padding:14px 16px;display:flex;flex-direction:column;min-height:0}
+.delay-head{display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:11.5px;font-weight:500;color:var(--st-danger-txt)}
+.delay-count{font-size:22px;font-weight:500;color:var(--st-danger-txt);text-align:center;line-height:1}
+.delay-unit{font-size:9px;color:var(--text-mute);text-align:center;margin-top:3px;margin-bottom:8px}
+.delay-list{flex:1;max-height:120px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;padding-right:4px}
+.delay-item{background:#FFF5F5;border:1px solid #FECACA;border-radius:6px;padding:5px 7px;cursor:pointer;text-align:center;transition:background .12s}
+.delay-item:hover{background:#FFE5E5}
+.delay-item .sku{font-size:10px;font-weight:500;color:var(--st-danger-txt)}
+.delay-item .nm{font-size:9px;color:var(--text-mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.delay-empty{text-align:center;padding:16px 4px;font-size:10px;color:var(--text-mute)}
+.delay-note{font-size:9px;color:var(--text-mute);text-align:center;padding-top:8px;margin-top:6px;border-top:1px dashed #FECACA;line-height:1.45}
+
+/* Filter bar */
+.filter-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:10px;margin-bottom:22px;display:flex;gap:8px;flex-wrap:wrap}
+.filter-input,.filter-select{font-family:inherit;font-size:12px;border:1px solid var(--border);background:#fff;color:var(--text);
+  border-radius:8px;padding:8px 10px;outline:none;transition:border-color .15s,box-shadow .15s}
+.filter-input{flex:1;min-width:220px}
+.filter-input::placeholder{color:var(--text-mute);font-weight:400}
+.filter-select{cursor:pointer;min-width:130px}
+.filter-input:focus,.filter-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(155,138,122,.12)}
+
+/* Monthly sections */
+.month-section{margin-bottom:28px}
+.month-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 2px}
+.month-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--text);letter-spacing:-.01em}
+.month-title .emoji{font-size:14px}
+.month-title .dim{color:var(--text-mute);font-weight:400;font-size:12px}
+.month-count{font-size:10px;color:var(--text-mute);background:var(--card);border:1px solid var(--border);
+  border-radius:999px;padding:3px 10px;font-weight:400}
+
+.month-strip{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 14px;scroll-snap-type:x proximity}
+.month-strip::-webkit-scrollbar{height:6px}
+
+/* Style card — 175px fixed */
+.sc{flex:0 0 175px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-card);
+  overflow:hidden;cursor:pointer;scroll-snap-align:start;display:flex;flex-direction:column;
+  transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
+.sc:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--border-hover)}
+.sc.not-ord{background:#FFF5F5;border-color:#FECACA}
+
+.sc-img{aspect-ratio:1/1;background:var(--p-sky);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.sc-img .ph{color:#BCD1E6;font-size:26px;font-weight:300;letter-spacing:.05em}
+.sc.not-ord .sc-img{background:#FBE5E5}
+.sc.not-ord .sc-img .ph{color:#E6B9B9}
+
+.sc-badge-row{padding:7px 10px 0;display:flex;gap:4px;flex-wrap:wrap}
+
+.bg{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:9px;font-weight:500;line-height:1.45;letter-spacing:.01em;white-space:nowrap}
+.bg-ok{background:var(--st-ok-bg);color:var(--st-ok-txt)}
+.bg-warn{background:var(--st-warn-bg);color:var(--st-warn-txt)}
+.bg-danger{background:var(--st-danger-bg);color:var(--st-danger-txt)}
+.bg-draft{background:var(--st-draft-bg);color:var(--st-draft-txt)}
+.bg-lav{background:var(--p-lav);color:var(--p-lav-txt)}
+.bg-sky{background:var(--p-sky);color:var(--p-sky-txt)}
+.bg-mint{background:var(--p-mint);color:var(--p-mint-txt)}
+.bg-peach{background:var(--p-peach);color:var(--p-peach-txt)}
+.bg-butter{background:var(--p-butter);color:var(--p-butter-txt)}
+.bg-pink{background:var(--p-pink);color:var(--p-pink-txt)}
+.bg-sage{background:var(--p-sage);color:var(--p-sage-txt)}
+
+.sc-body{padding:8px 10px 4px;font-size:10px;flex:1}
+.sc-main{border-bottom:1px dashed var(--border);padding-bottom:7px;margin-bottom:5px}
+.sc-lbl{font-size:9px;color:var(--text-mute);font-weight:400;letter-spacing:.02em;line-height:1.2}
+.sc-val{font-size:11px;color:var(--text);font-weight:500;line-height:1.35;word-break:break-all;margin-top:2px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sc-val.sku{font-size:11.5px;letter-spacing:-.01em}
+.sc-mini{margin-top:6px}
+.sc-mini .sc-val{font-size:10px}
+
+.sc-rows{display:flex;flex-direction:column;gap:3px;padding:5px 0;border-bottom:1px dashed var(--border)}
+.sc-row{display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
+.sc-row .k{font-size:9px;color:var(--text-mute);white-space:nowrap;flex-shrink:0;font-weight:400}
+.sc-row .v{font-size:10px;color:var(--text);font-weight:500;text-align:right;line-height:1.3;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:92px}
+
+.sc-sample{padding:6px 0 4px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.sc-sample .k{font-size:9px;color:var(--text-mute);font-weight:400}
+
+.sc-footer{padding:4px 10px 10px;display:flex;justify-content:center}
+.sc-order{width:100%;text-align:center;padding:5px 0;border-radius:6px;font-size:10px;font-weight:500;letter-spacing:.02em}
+.sc-order.ok{background:var(--st-ok-bg);color:var(--st-ok-txt)}
+.sc-order.no{background:var(--st-danger-bg);color:var(--st-danger-txt)}
+
+/* Bottom split */
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px}
+.panel-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);gap:10px}
+.panel-title{font-size:13px;font-weight:500;color:var(--text)}
+.panel-title .dim{color:var(--text-mute);font-weight:400}
+.panel-sub{font-size:9px;color:var(--text-mute);margin-top:3px;letter-spacing:.03em}
+
+/* AI Panel */
+.ai-sec{border-left:3px solid transparent;padding:10px 14px;margin-bottom:10px;border-radius:0 8px 8px 0}
+.ai-sec .t{font-size:10.5px;font-weight:500;margin-bottom:4px;display:flex;align-items:center;gap:6px;letter-spacing:.01em}
+.ai-sec .b{font-size:10.5px;color:var(--text-soft);line-height:1.55}
+.ai-sec .b b{font-weight:500;color:var(--text)}
+.ai-sec.concl{border-left-color:#8D85C7;background:var(--p-lav)}   .ai-sec.concl .t{color:var(--p-lav-txt)}
+.ai-sec.insi{border-left-color:#6BB09B;background:var(--p-mint)}    .ai-sec.insi  .t{color:var(--p-mint-txt)}
+.ai-sec.warn{border-left-color:#D9AB52;background:var(--p-butter)}  .ai-sec.warn  .t{color:var(--p-butter-txt)}
+.ai-sec.reco{border-left-color:#CE8C6C;background:var(--p-peach)}   .ai-sec.reco  .t{color:var(--p-peach-txt)}
+.ai-ask{margin-top:10px;width:100%;padding:10px 12px;border:1px dashed var(--border-hover);background:transparent;color:var(--text-mute);
+  border-radius:8px;font-size:11px;font-weight:400;cursor:pointer;font-family:inherit;transition:border-color .15s,color .15s,background .15s}
+.ai-ask:hover{border-color:var(--accent);color:var(--text);background:#FBFAF6}
+
+/* Chart panel */
+.chart-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.chart-label{min-width:180px;max-width:220px;font-size:10px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right;font-weight:400}
+.chart-bar-wrap{flex:1;height:18px;background:var(--bg);border-radius:5px;overflow:hidden}
+.chart-bar{height:100%;border-radius:5px;display:flex;align-items:center;padding-left:8px;color:#fff;font-size:9px;font-weight:500;transition:width .6s ease}
+.chart-num{min-width:24px;font-size:11px;font-weight:500;color:var(--text);text-align:right}
+
+/* Modal */
+.overlay{position:fixed;inset:0;background:rgba(20,19,17,.52);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  z-index:3000;display:none;align-items:center;justify-content:center;padding:20px}
+.overlay.show{display:flex}
+.modal{background:var(--card);border-radius:14px;width:100%;max-width:820px;max-height:90vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.22);animation:modalIn .22s ease-out}
+
+.mhead{display:flex;align-items:flex-start;justify-content:space-between;padding:18px 22px;
+  border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;z-index:5;gap:14px;flex-wrap:wrap}
+.mhead-left{display:flex;align-items:center;gap:14px}
+.mthumb{width:54px;height:54px;background:var(--p-sky);border-radius:10px;overflow:hidden;position:relative;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mtitle{font-size:18px;font-weight:500;letter-spacing:-.02em;color:var(--text);line-height:1.2;margin:0}
+.msub{font-size:11px;color:var(--text-mute);margin-top:3px;font-weight:400}
+
+.mbtns{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.mbtn{padding:7px 11px;border:0;border-radius:7px;font-family:inherit;font-size:11px;font-weight:500;cursor:pointer;
+  display:inline-flex;align-items:center;gap:4px;transition:transform .12s,opacity .15s,filter .15s}
+.mbtn:hover{transform:translateY(-1px);filter:brightness(.97)}
+.mbtn.tp{background:var(--p-lav);color:var(--p-lav-txt)}
+.mbtn.ed{background:var(--p-sky);color:var(--p-sky-txt)}
+.mbtn.mo{background:var(--st-ok-bg);color:var(--st-ok-txt)}
+.mbtn.cl{background:var(--st-draft-bg);color:var(--st-draft-txt);width:28px;height:28px;justify-content:center;padding:0;font-size:12px}
+
+.mbody{padding:20px 22px 24px}
+.msec{margin-bottom:18px}
+.msec-head{padding-bottom:8px;margin-bottom:10px;border-bottom:1.5px solid var(--border)}
+.msec-title{font-size:11.5px;font-weight:500;color:var(--text);letter-spacing:.01em}
+.msec-title .dim{color:var(--text-mute);font-weight:400}
+.msec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.msec-grid.cols-2{grid-template-columns:repeat(2,1fr)}
+.mitem{background:#FBFAF6;border:1px solid var(--border);border-radius:8px;padding:8px 10px}
+.mitem .l{font-size:9px;color:var(--text-mute);font-weight:400;margin-bottom:3px;letter-spacing:.02em}
+.mitem .v{font-size:12px;color:var(--text);font-weight:500;line-height:1.35;word-break:break-all}
+.mitem .v.empty{color:#C4C1B9;font-style:italic;font-weight:400;font-size:11px}
+
+.mimg-grid{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.mimg{width:108px;height:108px;background:var(--p-sky);border:1px solid var(--border);border-radius:10px;overflow:hidden;
+  position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.mimg:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+.mimg-label{font-size:9px;color:var(--text-mute);margin-bottom:6px;letter-spacing:.02em;font-weight:400}
+
+/* Lightbox */
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.9);backdrop-filter:blur(8px);z-index:5000;display:none;align-items:center;justify-content:center;cursor:pointer}
+.lb.show{display:flex}
+.lb img{max-width:92vw;max-height:92vh;object-fit:contain;border-radius:8px;box-shadow:0 20px 80px rgba(0,0,0,.5)}
+.lb-close{position:absolute;top:24px;right:24px;width:38px;height:38px;background:rgba(255,255,255,.14);border:0;
+  border-radius:50%;color:#fff;cursor:pointer;font-size:16px;font-family:inherit}
+.lb-close:hover{background:rgba(255,255,255,.22)}
+
+/* KPI popover */
+.kpi-pop-body{padding:16px 22px 22px;display:flex;flex-direction:column;gap:8px}
+.kpi-pop-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;
+  border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:border-color .15s,background .15s}
+.kpi-pop-item:hover{background:var(--bg);border-color:var(--border-hover)}
+.kpi-pop-item .sku{font-size:12px;font-weight:500;color:var(--text)}
+.kpi-pop-item .nm{font-size:10px;color:var(--text-mute);margin-top:2px}
+.kpi-pop-item .tags{font-size:9px;color:var(--text-mute);margin-top:2px;letter-spacing:.01em}
+
+@media (max-width:1200px){
+  .kpi-grid{grid-template-columns:repeat(3,1fr)}
+  .bottom-grid{grid-template-columns:1fr}
+}
+@media (max-width:720px){
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .filter-bar{flex-direction:column}
+  .filter-input,.filter-select{width:100%;min-width:0}
+  .app{padding:14px 14px 30px}
+  .mhead{flex-direction:column;align-items:stretch}
+  .mbtns{justify-content:flex-start}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div id="loader" class="loader">
+    <div class="spinner"></div>
+    <div style="font-size:11px;color:var(--text-mute);letter-spacing:.02em">데이터를 불러오는 중 / 正在加载数据</div>
+  </div>
+
+  <div id="main" style="display:none" class="fade-in">
+    <!-- Header -->
+    <div class="page-header">
+      <div class="brand">
+        <div class="brand-mark">S</div>
+        <div>
+          <div class="page-title">스타일 현황표<span class="dim">/ 款式现况表</span></div>
+          <div class="page-sub">JERA ERP · 스타일 관리 / 款式管理</div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="goNewStyle()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        신규 스타일 / 新款
+      </button>
+    </div>
+
+    <!-- KPI Row -->
+    <div id="kpiRow" class="kpi-grid"></div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <input id="searchBox" class="filter-input" placeholder="🔍  SKU · 스타일명 · 브랜드 검색 / 搜索"/>
+      <select id="filterCategory" class="filter-select"><option value="">전체 카테고리 / 全部分类</option></select>
+      <select id="filterGender"   class="filter-select"><option value="">전체 성별 / 全部性别</option></select>
+      <select id="filterSeason"   class="filter-select"><option value="">전체 시즌 / 全部季节</option></select>
+      <select id="filterStatus"   class="filter-select"><option value="">전체 상태 / 全部状态</option></select>
+    </div>
+
+    <!-- Monthly sections -->
+    <div id="monthSections"></div>
+
+    <!-- Bottom 2-column grid -->
+    <div class="bottom-grid">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">AI 분석<span class="dim"> / AI 分析</span></div>
+            <div class="panel-sub">스타일 현황 인사이트 / 款式现状洞察</div>
+          </div>
+          <span class="bg bg-lav" style="font-size:9px;letter-spacing:.08em">GEMINI</span>
+        </div>
+        <div id="aiBody"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">스타일 유형 분포<span class="dim"> / 款式类型分布</span></div>
+            <div class="panel-sub">카테고리 · 디테일 조합 / 分类 · 款式组合</div>
+          </div>
+        </div>
+        <div id="barChart" style="max-height:460px;overflow-y:auto;padding-right:4px"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="errScreen" style="display:none">
+    <div class="err-box"><h3>데이터 로딩 실패 / 加载失败</h3><p id="errMsg"></p></div>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="overlay" id="modalOv">
+  <div class="modal">
+    <div class="mhead">
+      <div class="mhead-left">
+        <div class="mthumb" id="mThumb"><div class="spinner-sm"></div></div>
+        <div>
+          <h2 class="mtitle" id="mTitle">-</h2>
+          <div class="msub" id="mSub">-</div>
+        </div>
+      </div>
+      <div class="mbtns">
+        <button class="mbtn tp" onclick="openTechPack()">📋 Tech Pack</button>
+        <button class="mbtn ed" onclick="editStyle()">✏️ 수정 / 修改</button>
+        <button class="mbtn mo" onclick="newMO()">＋ 신규 오더 / 新订单</button>
+        <button class="mbtn cl" onclick="closeModal()">✕</button>
+      </div>
+    </div>
+    <div class="mbody" id="mBody"></div>
+  </div>
+</div>
+
+<!-- KPI Popover -->
+<div class="overlay" id="kpiPopOv">
+  <div class="modal" style="max-width:580px">
+    <div class="mhead">
+      <div>
+        <h2 class="mtitle" id="kpiPopT" style="font-size:15px">-</h2>
+        <div class="msub" id="kpiPopS">-</div>
+      </div>
+      <button class="mbtn cl" onclick="closeKpiPop()">✕</button>
+    </div>
+    <div class="kpi-pop-body" id="kpiPopBody"></div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lb" id="lb" onclick="closeLb()">
+  <button class="lb-close" onclick="closeLb()">✕</button>
+  <img id="lbImg" alt="" onclick="event.stopPropagation()"/>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════
+   JERA ERP — Style View v2
+   Single-HTML Zoho Creator Widget
+═══════════════════════════════════════════════ */
+var APP = "eom", REP = "All_Styles", MO_REP = "All_MO";
+var allRec = [], filtered = [], moSkus = new Set(), allMOs = [];
+var today = new Date();
+var _currentRec = null;
+
+/* ── KR/CN field maps ── */
+var MAP = {
+  Gender:{"W":"여성 / 女","M":"남성 / 男","U":"남녀공용 / 男女通用"},
+  Category:{"S":"세트 / 套装","I":"단품 / 单品"},
+  Top_Type:{"B":"브라탑 / 运动内衣","C":"크롭 / 露脐装","T":"탱크 / 背心"},
+  Sleeve:{"L":"긴팔 / 长袖","S":"반팔 / 短袖","N":"민소매 / 无袖"},
+  Fit:{"O":"루즈핏 / 宽松版","R":"레귤러핏 / 标准版","S":"슬림핏 / 修身版"},
+  Details:{"Z":"짚업 / 全开拉链","H":"반짚업 / 半拉链","N":"라운드넥 / 圆领","C":"끈나시 / 吊带","W":"와이드 / 宽肩带","D":"후드 / 连帽"},
+  Bottom_Type:{"L":"레깅스 / 紧身裤","W":"와이드 / 宽腿裤","J":"조거 / 束脚裤","F":"나팔 / 喇叭裤","P":"플리츠 / 褶皱","A":"A라인 / A字版","B":"반바지 / 短裤"},
+  Bottom_Length:{"3":"3부 / 三分","5":"5부 / 五分","7":"7부 / 七分","9":"9부 / 九分"},
+  Material_Type:{"P":"폴리에스터 / 涤纶","N":"나일론 / 尼龙","D":"폴리아미드 / 仿锦纶","C":"코튼 / 棉","H":"메쉬 / 网布","M":"모달 / 莫代尔","L":"라이크라 / 莱卡","PS":"폴리+스판 / 涤纶+氨纶","NS":"나일론+스판 / 尼龙+氨纶","DS":"폴리아미드+스판 / 仿锦纶+氨纶","CS":"코튼+스판 / 棉+氨纶"},
+  Lining_Type:{"B":"기모 / 磨毛","F":"퍼 / 毛皮","N":"없음 / 无"}
+};
+var SHORT = {
+  Category:{"S":"세트","I":"단품"},
+  Top_Type:{"B":"브라탑","C":"크롭","T":"탱크"},
+  Sleeve:{"L":"긴팔","S":"반팔","N":"민소매"},
+  Fit:{"O":"루즈","R":"레귤러","S":"슬림"},
+  Details:{"Z":"짚업","H":"반짚업","N":"라운드","C":"끈나시","W":"와이드","D":"후드"},
+  Bottom_Type:{"L":"레깅스","W":"와이드","J":"조거","F":"나팔","P":"플리츠","A":"A라인","B":"반바지"},
+  Bottom_Length:{"3":"3부","5":"5부","7":"7부","9":"9부"},
+  Gender:{"W":"여","M":"남","U":"공용"}
+};
+
+/* ── Utilities ── */
+function g(r, f){
+  var v = r[f];
+  if(v == null || v === "") return "-";
+  if(typeof v === "object" && v.display_value) return v.display_value;
+  return String(v);
+}
+function mv(f, v){
+  if(!v || v === "-") return "-";
+  var parts = Array.isArray(v) ? v : String(v).split(",");
+  return parts.map(function(p){p=p.trim();return(MAP[f]&&MAP[f][p])?MAP[f][p]:p}).join(", ");
+}
+function sv(f, v){
+  if(!v || v === "-") return null;
+  return (SHORT[f] && SHORT[f][v]) ? SHORT[f][v] : v;
+}
+function escH(s){ var d = document.createElement("div"); d.textContent = String(s==null?"":s); return d.innerHTML; }
+function tc(s){
+  s = (s || "").toLowerCase();
+  if(s.indexOf("active")>=0 || s.indexOf("approved")>=0 || s.indexOf("완성")>=0 || s.indexOf("승인")>=0 || s.indexOf("완료")>=0) return "bg bg-ok";
+  if(s.indexOf("progress")>=0 || s.indexOf("sampling")>=0 || s.indexOf("샘플")>=0 || s.indexOf("진행")>=0 || s.indexOf("대기")>=0) return "bg bg-warn";
+  if(s.indexOf("rejected")>=0 || s.indexOf("cancel")>=0 || s.indexOf("반려")>=0 || s.indexOf("취소")>=0) return "bg bg-danger";
+  return "bg bg-draft";
+}
+function getAllImgs(r, field){
+  var v = r[field]; if(!v) return [];
+  var arr = Array.isArray(v) ? v : [v], res = [];
+  arr.forEach(function(it){
+    if(!it) return;
+    if(typeof it === "string" && it.length > 5) res.push(it);
+    else if(typeof it === "object" && it.url) res.push(it.url);
+    else if(typeof it === "object" && it.display_value) res.push(it.display_value);
+  });
+  return res;
+}
+function getImg1(r){ var imgs = getAllImgs(r, "Style_Image"); return imgs.length > 0 ? imgs[0] : null; }
+
+/* ── Safe image loader (Zoho Widget SDK) ── */
+var _safeQ = [], _safeBusy = false;
+function _runSafeQ(){
+  if(_safeQ.length === 0){ _safeBusy = false; return; }
+  _safeBusy = true;
+  var task = _safeQ.shift();
+  var el = task.id ? document.getElementById(task.id) : task.el;
+  if(!el){ setTimeout(_runSafeQ, 50); return; }
+  var img = document.createElement("img");
+  img.style.cssText = task.css || "width:100%;height:100%;object-fit:cover;position:absolute;inset:0";
+  if(task.click){ img.style.cursor = "pointer"; img.onclick = function(e){ e.stopPropagation(); openLb(img.src); }; }
+  var done = false;
+  function next(){ if(done) return; done = true; setTimeout(_runSafeQ, 80); }
+  try{
+    ZOHO.CREATOR.UTIL.setImageData(img, task.url, function(){ el.innerHTML = ""; el.appendChild(img); next(); });
+    setTimeout(next, 3000);
+  }catch(e){ next(); }
+}
+function qImg(elOrId, url, click){
+  var u = Array.isArray(url) ? url[0] : url;
+  if(typeof u === "object" && u !== null) u = u.url || u.display_value || "";
+  if(!u || u === "-") return;
+  var task = { url: u, click: !!click };
+  if(typeof elOrId === "string") task.id = elOrId; else task.el = elOrId;
+  _safeQ.push(task);
+  if(!_safeBusy) _runSafeQ();
+}
+function renderZohoImage(elId, url, click){ qImg(elId, url, click); }
+function loadTableImgs(){
+  var els = document.querySelectorAll("[data-img]");
+  if(!els.length) return;
+  if("IntersectionObserver" in window){
+    var obs = new IntersectionObserver(function(entries, o){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var el = e.target, u = el.getAttribute("data-img");
+          if(u && u !== "null" && u !== "undefined" && u.length > 10){ qImg(el, u, false); el.removeAttribute("data-img"); }
+          o.unobserve(el);
+        }
+      });
+    }, { rootMargin: "300px" });
+    els.forEach(function(el){ obs.observe(el); });
+  } else {
+    els.forEach(function(el){ var u = el.getAttribute("data-img"); if(u) qImg(el, u, false); el.removeAttribute("data-img"); });
+  }
+}
+
+/* ── Navigation ── */
+function goTo(url){ window.open(url, "_blank"); }
+function goNewStyle(){ goTo("https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_Styles"); }
+function editStyle(){ if(!_currentRec) return; goTo("https://creatorapp.zoho.com/jeramoda/eom/#Report:All_Styles"); }
+function newMO(){ goTo("https://creatorapp.zoho.com/jeramoda/eom/#Form:Add_MO"); }
+function openTechPack(){
+  if(!_currentRec) return;
+  var id = _currentRec["ID"] || _currentRec["id"] || "";
+  if(!id){ alert("레코드 ID를 찾을 수 없습니다 / 未找到记录 ID"); return; }
+  goTo("https://creatorapp.zoho.com/jeramoda/eom/record-print/Tech_Pack/" + id + "/");
+}
+function openModalById(id){ var r = allRec.find(function(x){ return String(x.ID) === String(id); }); if(r) openModal(r); }
+function openLb(src){ document.getElementById("lbImg").src = src; document.getElementById("lb").classList.add("show"); }
+function closeLb(){ document.getElementById("lb").classList.remove("show"); document.getElementById("lbImg").src = ""; }
+function closeModal(){ document.getElementById("modalOv").classList.remove("show"); _currentRec = null; }
+function closeKpiPop(){ document.getElementById("kpiPopOv").classList.remove("show"); }
+
+/* ── Delay logic ── */
+function isOrderDelayed(r){
+  var sku = g(r, "Style_SKU"); if(sku === "-") sku = g(r, "SKU");
+  if(moSkus.has(sku)) return false;
+  var py = parseInt(g(r, "Plan_Year")), pm = parseInt(g(r, "Plan_Month"));
+  if(isNaN(py) || isNaN(pm)) return false;
+  if(py < 100) py += 2000;
+  return new Date(today.getFullYear(), today.getMonth(), today.getDate()) > new Date(py, pm-1, 20);
+}
+function parseYM(key){
+  var m = key.match(/(\d+)년\s*(\d+)월/);
+  if(!m) return null;
+  var y = parseInt(m[1]); if(y < 100) y += 2000;
+  return { y: y, m: parseInt(m[2]) };
+}
+
+/* ── Init — Zoho Widget SDK ── */
+ZOHO.CREATOR.init().then(function(){
+  ZOHO.CREATOR.API.getAllRecords({ appName: APP, reportName: MO_REP, page: 1, pageSize: 200 }).then(function(r){
+    if(r && r.code === 3000 && r.data){
+      allMOs = r.data;
+      r.data.forEach(function(m){
+        var s = g(m, "Style_SKU"); if(s === "-") s = g(m, "SKU");
+        if(s !== "-") moSkus.add(s);
+      });
+    }
+    loadStyles();
+  }).catch(function(){ loadStyles(); });
+}).catch(function(e){
+  showErr("ZOHO 초기화 실패 / ZOHO 初始化失败: " + JSON.stringify(e));
+});
+
+function loadStyles(){
+  ZOHO.CREATOR.API.getAllRecords({ appName: APP, reportName: REP, page: 1, pageSize: 200 }).then(function(r){
+    if(r && r.code === 3000 && r.data){
+      allRec = r.data;
+      filtered = allRec.slice();
+      renderMKPI();
+      buildFilters();
+      renderMonthlySections();
+      renderChart();
+      renderAIPanel();
+      document.getElementById("loader").style.display = "none";
+      document.getElementById("main").style.display = "block";
+      setTimeout(loadTableImgs, 500);
+    } else {
+      showErr("데이터를 불러올 수 없습니다 / 无法加载数据");
+    }
+  }).catch(function(e){ showErr("데이터 파싱 에러: " + (e.message || JSON.stringify(e))); });
+}
+
+function showErr(m){
+  document.getElementById("loader").style.display = "none";
+  document.getElementById("errScreen").style.display = "block";
+  document.getElementById("errMsg").textContent = m;
+}
+
+/* ── KPI Row ── */
+function renderMKPI(){
+  var groups = {};
+  filtered.forEach(function(r){
+    var py = g(r, "Plan_Year"), pm = g(r, "Plan_Month");
+    var key = (py !== "-" && pm !== "-") ? (py + "년 " + pm + "월") : "미지정";
+    if(!groups[key]) groups[key] = [];
+    groups[key].push(r);
+  });
+  var keys = Object.keys(groups).filter(function(k){ return k !== "미지정"; }).sort();
+  keys = keys.slice(-4);
+  var cycle = ["#8D85C7", "#D9AB52", "#6BB09B", "#7AA8D6"];
+  var parts = [];
+
+  keys.forEach(function(key, i){
+    var items = groups[key];
+    var c = cycle[i % cycle.length];
+    var tot = items.length, sm = 0, ord = 0, nord = 0;
+    items.forEach(function(r){
+      var sku = g(r, "Style_SKU"); if(sku === "-") sku = g(r, "SKU");
+      var ss = (g(r, "Sample_Status") + " " + g(r, "Style_Status")).toLowerCase();
+      if(ss.indexOf("sampling") >= 0 || ss.indexOf("샘플") >= 0) sm++;
+      if(moSkus.has(sku)) ord++; else nord++;
+    });
+    var pct = tot > 0 ? Math.round((ord / tot) * 100) : 0;
+    var rr = 26, circ = 2 * Math.PI * rr, offset = circ - (pct/100) * circ;
+    var ke = encodeURIComponent(key), ym = parseYM(key);
+    var yy = ym ? ym.y.toString().slice(-2) : "", mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
+
+    parts.push('<div class="kpi-card">');
+    parts.push('<div class="kpi-head"><div class="kpi-month">'+yy+'.'+mm+'</div><div class="kpi-sub">스타일 KPI / 款式 KPI</div></div>');
+    parts.push('<div class="kpi-body">');
+    parts.push('<div class="kpi-ring"><svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="'+rr+'" fill="none" stroke="#F3F0EA" stroke-width="4"/><circle cx="32" cy="32" r="'+rr+'" fill="none" stroke="'+c+'" stroke-width="4" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'" stroke-linecap="round" style="transform:rotate(-90deg);transform-origin:center;transition:stroke-dashoffset .6s ease"/></svg><div class="pct" style="color:'+c+'">'+pct+'%</div></div>');
+    parts.push('<div class="kpi-stats">');
+    parts.push('<div class="kpi-stat all" onclick="openKpiPop(\''+ke+'\',\'all\')"><div class="num">'+tot+'</div><div class="lbl">총 스타일<br>总款式</div></div>');
+    parts.push('<div class="kpi-stat sm" onclick="openKpiPop(\''+ke+'\',\'sm\')"><div class="num">'+sm+'</div><div class="lbl">샘플 제작<br>样品制作</div></div>');
+    parts.push('<div class="kpi-stat ord" onclick="openKpiPop(\''+ke+'\',\'ord\')"><div class="num">'+ord+'</div><div class="lbl">오더완료<br>订单完成</div></div>');
+    parts.push('<div class="kpi-stat nord" onclick="openKpiPop(\''+ke+'\',\'nord\')"><div class="num">'+nord+'</div><div class="lbl">미오더<br>未下单</div></div>');
+    parts.push('</div></div></div>');
+  });
+
+  // Delay card
+  var da = filtered.filter(function(r){ return isOrderDelayed(r); });
+  parts.push('<div class="delay-card">');
+  parts.push('<div class="delay-head">⚠️ 오더 지연 / 订单延误</div>');
+  parts.push('<div class="delay-count">'+da.length+'</div>');
+  parts.push('<div class="delay-unit">건 / 件</div>');
+  parts.push('<div class="delay-list">');
+  if(!da.length){
+    parts.push('<div class="delay-empty">지연 없음 / 无延误</div>');
+  } else {
+    da.slice(0, 10).forEach(function(r){
+      var sku = g(r, "Style_SKU"); if(sku === "-") sku = g(r, "SKU");
+      parts.push('<div class="delay-item" onclick="openModalById(\''+r.ID+'\')"><div class="sku">'+escH(sku)+'</div><div class="nm">'+escH(g(r,"Style_Name"))+'</div></div>');
+    });
+  }
+  parts.push('</div>');
+  parts.push('<div class="delay-note">당월 20일까지 미오더 시 지연<br>当月20日前未下单视为延误</div>');
+  parts.push('</div>');
+
+  document.getElementById("kpiRow").innerHTML = parts.join("");
+}
+
+function openKpiPop(keyEnc, type){
+  var key = decodeURIComponent(keyEnc);
+  var groups = {};
+  filtered.forEach(function(r){
+    var py = g(r, "Plan_Year"), pm = g(r, "Plan_Month");
+    var k = (py !== "-" && pm !== "-") ? (py + "년 " + pm + "월") : "미지정";
+    if(!groups[k]) groups[k] = [];
+    groups[k].push(r);
+  });
+  var items = groups[key] || [];
+  var tn = { all: "총 스타일 / 总款式", sm: "샘플 제작 중 / 样品制作中", ord: "오더완료 / 订单完成", nord: "미오더 / 未下单" };
+  var popItems = items.filter(function(r){
+    var sku = g(r, "Style_SKU"); if(sku === "-") sku = g(r, "SKU");
+    var ss = (g(r, "Sample_Status") + " " + g(r, "Style_Status")).toLowerCase();
+    if(type === "all") return true;
+    if(type === "sm") return ss.indexOf("sampling") >= 0 || ss.indexOf("샘플") >= 0;
+    if(type === "ord") return moSkus.has(sku);
+    if(type === "nord") return !moSkus.has(sku);
+    return true;
+  });
+  document.getElementById("kpiPopT").textContent = key + " — " + tn[type];
+  document.getElementById("kpiPopS").textContent = "총 " + popItems.length + "건 / 共 " + popItems.length + " 件";
+  var parts = [];
+  if(!popItems.length){
+    parts.push('<div style="text-align:center;padding:40px 0;color:var(--text-mute);font-size:11px">해당 스타일이 없습니다 / 无相关款式</div>');
+  } else {
+    popItems.forEach(function(r){
+      var sku = g(r, "Style_SKU"); if(sku === "-") sku = g(r, "SKU");
+      parts.push('<div class="kpi-pop-item" onclick="closeKpiPop();openModalById(\''+r.ID+'\')">');
+      parts.push('<div><div class="sku">'+escH(sku)+'</div><div class="nm">'+escH(g(r,"Style_Name"))+'</div><div class="tags">'+escH(mv("Category",g(r,"Category")))+' · '+escH(mv("Gender",g(r,"Gender")))+'</div></div>');
+      parts.push('<span class="'+tc(g(r,"Style_Status"))+'">'+escH(g(r,"Style_Status"))+'</span>');
+      parts.push('</div>');
+    });
+  }
+  document.getElementById("kpiPopBody").innerHTML = parts.join("");
+  document.getElementById("kpiPopOv").classList.add("show");
+}
+
+/* ── Filters ── */
+function buildFilters(){
+  var cat = {}, gen = {}, se = {}, st = {};
+  allRec.forEach(function(r){
+    var c = g(r, "Category"); if(c !== "-") cat[c] = mv("Category", c);
+    var ge = g(r, "Gender"); if(ge !== "-") gen[ge] = mv("Gender", ge);
+    var s = g(r, "Season"); if(s !== "-") se[s] = 1;
+    var t = g(r, "Style_Status"); if(t !== "-") st[t] = 1;
+  });
+  var el;
+  el = document.getElementById("filterCategory"); Object.keys(cat).sort().forEach(function(k){ el.innerHTML += '<option value="'+escH(k)+'">'+escH(cat[k])+'</option>'; });
+  el = document.getElementById("filterGender");   Object.keys(gen).sort().forEach(function(k){ el.innerHTML += '<option value="'+escH(k)+'">'+escH(gen[k])+'</option>'; });
+  el = document.getElementById("filterSeason");   Object.keys(se ).sort().forEach(function(k){ el.innerHTML += '<option value="'+escH(k)+'">'+escH(k)+'</option>'; });
+  el = document.getElementById("filterStatus");   Object.keys(st ).sort().forEach(function(k){ el.innerHTML += '<option value="'+escH(k)+'">'+escH(k)+'</option>'; });
+}
+
+// Static DOM filter bindings (safe — elements always exist)
+["searchBox","filterCategory","filterGender","filterSeason","filterStatus"].forEach(function(id){
+  document.getElementById(id).addEventListener(id === "searchBox" ? "input" : "change", applyFilter);
+});
+function applyFilter(){
+  var q  = document.getElementById("searchBox").value.toLowerCase().trim();
+  var fc = document.getElementById("filterCategory").value;
+  var fg = document.getElementById("filterGender").value;
+  var fs = document.getElementById("filterSeason").value;
+  var ft = document.getElementById("filterStatus").value;
+  filtered = allRec.filter(function(r){
+    if(q){ var h = (g(r,"Style_SKU")+" "+g(r,"Style_Name")+" "+g(r,"Business_Entity")).toLowerCase(); if(h.indexOf(q) < 0) return false; }
+    if(fc && g(r,"Category")     !== fc) return false;
+    if(fg && g(r,"Gender")       !== fg) return false;
+    if(fs && g(r,"Season")       !== fs) return false;
+    if(ft && g(r,"Style_Status") !== ft) return false;
+    return true;
+  });
+  renderMKPI();
+  renderMonthlySections();
+  renderAIPanel();
+  setTimeout(loadTableImgs, 300);
+}
+
+/* ── Monthly sections with horizontal 175px cards ── */
+function renderMonthlySections(){
+  var groups = {};
+  filtered.forEach(function(r){
+    var py = g(r, "Plan_Year"), pm = g(r, "Plan_Month");
+    var key = (py !== "-" && pm !== "-") ? (py + "년 " + pm + "월") : "미지정";
+    if(!groups[key]) groups[key] = [];
+    groups[key].push(r);
+  });
+  var keys = Object.keys(groups).sort();
+  var parts = [];
+
+  if(!keys.length){
+    parts.push('<div style="text-align:center;padding:60px 0;color:var(--text-mute);font-size:12px">조건에 맞는 스타일이 없습니다 / 无符合条件的款式</div>');
+    document.getElementById("monthSections").innerHTML = parts.join("");
+    return;
+  }
+
+  keys.forEach(function(key){
+    var items = groups[key];
+    var ym = parseYM(key);
+    var yy = ym ? ym.y.toString().slice(-2) : "";
+    var mm = ym ? (ym.m < 10 ? "0"+ym.m : ym.m) : "";
+    var titleK = ym ? (yy + "." + mm + " 스타일 진행표") : "미지정 스타일";
+    var titleC = ym ? (ym.y + "年 " + ym.m + "月 款式表") : "未指定款式";
+
+    parts.push('<div class="month-section">');
+    parts.push('<div class="month-head"><div class="month-title"><span class="emoji">📅</span>'+escH(titleK)+' <span class="dim">/ '+escH(titleC)+'</span></div><span class="month-count">'+items.length+' 건 / 款</span></div>');
+    parts.push('<div class="month-strip">');
+    items.forEach(function(r){ parts.push(buildCard(r)); });
+    parts.push('</div>');
+    parts.push('</div>');
+  });
+
+  document.getElementById("monthSections").innerHTML = parts.join("");
+}
+
+function buildCard(r){
+  var sku = g(r, "Style_SKU"); if(sku === "-") sku = g(r, "SKU");
+  var iu = getImg1(r);
+  var ordered = moSkus.has(sku);
+  var notOrd = !ordered ? " not-ord" : "";
+  var imgAttr = iu ? ' data-img="'+escH(iu)+'"' : '';
+  var styleStatus = g(r, "Style_Status");
+  var sampleStatus = g(r, "Sample_Status");
+
+  var p = [];
+  p.push('<div class="sc'+notOrd+'" onclick="openModalById(\''+r.ID+'\')">');
+  // Image
+  p.push('<div class="sc-img"'+imgAttr+'>');
+  if(!iu) p.push('<span class="ph">◎</span>');
+  p.push('</div>');
+  // Status badge row
+  p.push('<div class="sc-badge-row">');
+  p.push('<span class="'+tc(styleStatus)+'">'+escH(styleStatus)+'</span>');
+  p.push('</div>');
+  // Body
+  p.push('<div class="sc-body">');
+  // Main identity
+  p.push('<div class="sc-main">');
+  p.push('<div class="sc-lbl">SKU</div>');
+  p.push('<div class="sc-val sku">'+escH(sku)+'</div>');
+  p.push('<div class="sc-mini"><div class="sc-lbl">스타일 설명 / 款式说明</div><div class="sc-val">'+escH(g(r,"Style_Name"))+'</div></div>');
+  p.push('<div class="sc-mini"><div class="sc-lbl">아이템명 / 品名</div><div class="sc-val">'+escH(g(r,"Style_Number"))+'</div></div>');
+  p.push('</div>');
+  // Spec rows
+  p.push('<div class="sc-rows">');
+  p.push('<div class="sc-row"><span class="k">브랜드 / 品牌</span><span class="v">'+escH(g(r,"Business_Entity"))+'</span></div>');
+  p.push('<div class="sc-row"><span class="k">성별 / 性别</span><span class="v">'+escH(mv("Gender",g(r,"Gender")))+'</span></div>');
+  p.push('<div class="sc-row"><span class="k">카테고리 / 分类</span><span class="v">'+escH(mv("Category",g(r,"Category")))+'</span></div>');
+  p.push('<div class="sc-row"><span class="k">원단 / 面料</span><span class="v">'+escH(mv("Material_Type",g(r,"Material_Type")))+'</span></div>');
+  p.push('<div class="sc-row"><span class="k">목표원가 / 成本</span><span class="v">'+escH(g(r,"Target_Cost"))+'</span></div>');
+  p.push('</div>');
+  // Sample
+  p.push('<div class="sc-sample"><span class="k">샘플상태 / 样品</span><span class="'+tc(sampleStatus)+'">'+escH(sampleStatus)+'</span></div>');
+  p.push('</div>');
+  // Footer — ordered/not ordered
+  p.push('<div class="sc-footer">');
+  p.push('<div class="sc-order '+(ordered?'ok':'no')+'">'+(ordered?'✓ Ordered / 已订':'✗ Not Ordered / 未订')+'</div>');
+  p.push('</div>');
+  p.push('</div>');
+  return p.join("");
+}
+
+/* ── Detail Modal ── */
+function openModal(rec){
+  _currentRec = rec;
+  var sku = g(rec, "Style_SKU"); if(sku === "-") sku = g(rec, "SKU");
+  document.getElementById("mTitle").textContent = sku;
+  document.getElementById("mSub").textContent = g(rec, "Style_Name");
+  document.getElementById("mThumb").innerHTML = '<div class="spinner-sm"></div>';
+  document.getElementById("mBody").innerHTML = buildDetail(rec);
+  document.getElementById("modalOv").classList.add("show");
+  setTimeout(function(){ loadModalImgs(rec); }, 50);
+}
+function loadModalImgs(rec){
+  var iu = getImg1(rec);
+  if(iu) renderZohoImage("mThumb", iu, false);
+  var si  = getAllImgs(rec, "Style_Image").slice(0, 5);
+  var tfs = getAllImgs(rec, "Top_Flat_Sketch").slice(0, 5);
+  var bfs = getAllImgs(rec, "Bottom_Flat_Sketch").slice(0, 5);
+  si.forEach(function(u, i){ renderZohoImage("mdl_si_"+i, u, true); });
+  tfs.forEach(function(u, i){ renderZohoImage("mdl_tfs_"+i, u, true); });
+  bfs.forEach(function(u, i){ renderZohoImage("mdl_bfs_"+i, u, true); });
+}
+function buildDetail(d){
+  var p = [];
+  var ordered = moSkus.has(g(d, "Style_SKU"));
+  function dv(v){ return v === "-" ? '<span class="v empty">미입력 / 未填写</span>' : escH(v); }
+  function dt(v){ return '<span class="'+tc(v)+'">'+escH(v)+'</span>'; }
+  function it(l, v){ return '<div class="mitem"><div class="l">'+l+'</div><div class="v">'+v+'</div></div>'; }
+
+  // Images
+  var si  = getAllImgs(d, "Style_Image").slice(0, 5);
+  var tfs = getAllImgs(d, "Top_Flat_Sketch").slice(0, 5);
+  var bfs = getAllImgs(d, "Bottom_Flat_Sketch").slice(0, 5);
+  if(si.length || tfs.length || bfs.length){
+    p.push('<div class="msec"><div class="msec-head"><span class="msec-title">🖼️ 스타일 이미지 & 도식화<span class="dim"> / 款式图片 & 平面图</span></span></div>');
+    if(si.length){  p.push('<div class="mimg-label">스타일 이미지 / 款式图</div><div class="mimg-grid">'); si.forEach(function(u,i){ p.push('<div class="mimg" id="mdl_si_'+i+'"><div class="spinner-sm"></div></div>'); }); p.push('</div>'); }
+    if(tfs.length){ p.push('<div class="mimg-label">상의 도식화 / 上衣平面图</div><div class="mimg-grid">'); tfs.forEach(function(u,i){ p.push('<div class="mimg" id="mdl_tfs_'+i+'"><div class="spinner-sm"></div></div>'); }); p.push('</div>'); }
+    if(bfs.length){ p.push('<div class="mimg-label">하의 도식화 / 下衣平面图</div><div class="mimg-grid">'); bfs.forEach(function(u,i){ p.push('<div class="mimg" id="mdl_bfs_'+i+'"><div class="spinner-sm"></div></div>'); }); p.push('</div>'); }
+    p.push('</div>');
+  }
+
+  // Identity
+  p.push('<div class="msec"><div class="msec-head"><span class="msec-title">📌 기본 정보<span class="dim"> / 基本信息</span></span></div><div class="msec-grid">');
+  p.push(it("SKU", dv(g(d, "Style_SKU"))));
+  p.push(it("스타일명 / 款式名", dv(g(d, "Style_Name"))));
+  p.push(it("아이템번호 / 品号", dv(g(d, "Style_Number"))));
+  p.push(it("시즌 / 季节", dv(g(d, "Season"))));
+  p.push(it("계획 연도 / 计划年", dv(g(d, "Plan_Year"))));
+  p.push(it("계획 월 / 计划月", dv(g(d, "Plan_Month"))));
+  p.push(it("브랜드 / 品牌", dv(g(d, "Business_Entity"))));
+  p.push(it("스타일 상태 / 款式状态", dt(g(d, "Style_Status"))));
+  p.push(it("오더 상태 / 订单状态", ordered ? '<span class="bg bg-ok">✓ Ordered / 已订</span>' : '<span class="bg bg-danger">✗ Not Ordered / 未订</span>'));
+  p.push('</div></div>');
+
+  // Product definition
+  p.push('<div class="msec"><div class="msec-head"><span class="msec-title">👕 제품 정의<span class="dim"> / 产品定义</span></span></div><div class="msec-grid">');
+  p.push(it("성별 / 性别", dv(mv("Gender", g(d, "Gender")))));
+  p.push(it("카테고리 / 分类", dv(mv("Category", g(d, "Category")))));
+  p.push(it("상의 타입 / 上衣类型", dv(mv("Top_Type", g(d, "Top_Type")))));
+  p.push(it("소매 / 袖子", dv(mv("Sleeve", g(d, "Sleeve")))));
+  p.push(it("핏 / 版型", dv(mv("Fit", g(d, "Fit")))));
+  p.push(it("디테일 / 细节", dv(mv("Details", g(d, "Details")))));
+  p.push(it("하의 타입 / 下衣类型", dv(mv("Bottom_Type", g(d, "Bottom_Type")))));
+  p.push(it("하의 길이 / 下衣长度", dv(mv("Bottom_Length", g(d, "Bottom_Length")))));
+  p.push('</div></div>');
+
+  // Material
+  p.push('<div class="msec"><div class="msec-head"><span class="msec-title">🧵 원단 정보<span class="dim"> / 面料</span></span></div><div class="msec-grid">');
+  p.push(it("원단 / 面料", dv(mv("Material_Type", g(d, "Material_Type")))));
+  p.push(it("혼방율 / 混纺率", dv(g(d, "blended_percentage"))));
+  p.push(it("안감 / 内衬", dv(mv("Lining_Type", g(d, "Lining_Type")))));
+  p.push('</div></div>');
+
+  // Variants
+  p.push('<div class="msec"><div class="msec-head"><span class="msec-title">🎨 색상 & 사이즈<span class="dim"> / 颜色 & 尺寸</span></span></div><div class="msec-grid cols-2">');
+  p.push(it("사이즈 / 尺寸", dv(g(d, "Available_Sizes"))));
+  p.push(it("색상 / 颜色", dv(g(d, "Available_Colors"))));
+  p.push('</div></div>');
+
+  // Sample
+  p.push('<div class="msec"><div class="msec-head"><span class="msec-title">🧪 샘플 정보<span class="dim"> / 样品</span></span></div><div class="msec-grid">');
+  p.push(it("샘플 상태 / 样品状态", dt(g(d, "Sample_Status"))));
+  p.push(it("샘플 날짜 / 样品日期", dv(g(d, "Sample_Date"))));
+  p.push(it("샘플 메모 / 样品备注", dv(g(d, "Sample_Notes"))));
+  p.push('</div></div>');
+
+  // Cost
+  p.push('<div class="msec"><div class="msec-head"><span class="msec-title">💰 원가 정보<span class="dim"> / 成本</span></span></div><div class="msec-grid">');
+  p.push(it("목표 원가 / 目标成本", dv(g(d, "Target_Cost"))));
+  p.push(it("확정 원가 / 确认成本", dv(g(d, "Final_Cost"))));
+  p.push(it("BOM 총원가 / BOM 总成本", dv(g(d, "Total_BOM_Cost"))));
+  p.push(it("원가 메모 / 成本备注", dv(g(d, "Cost_Notes"))));
+  p.push('</div></div>');
+
+  return p.join("");
+}
+
+/* ── Chart — style type distribution ── */
+var BARCOLORS = ["#8D85C7","#D9AB52","#6BB09B","#7AA8D6","#CE8C6C","#AAB06B","#B57B9E","#7B93B5","#B8906E","#7C9E91","#B5B58B","#9B7F6A"];
+function renderChart(){
+  var combos = {};
+  allRec.forEach(function(r){
+    var cat = g(r, "Category"), catN = sv("Category", cat), details = [];
+    var tn  = sv("Top_Type",       g(r, "Top_Type"));       if(tn)  details.push(tn);
+    var sln = sv("Sleeve",         g(r, "Sleeve"));         if(sln) details.push(sln);
+    var fn  = sv("Fit",            g(r, "Fit"));            if(fn)  details.push(fn);
+    var dn  = sv("Details",        g(r, "Details"));        if(dn)  details.push(dn);
+    var bn  = sv("Bottom_Type",    g(r, "Bottom_Type"));    if(bn)  details.push(bn);
+    var bln = sv("Bottom_Length",  g(r, "Bottom_Length"));  if(bln) details.push(bln);
+    if(!catN && !details.length) return;
+    var label = (catN ? "["+catN+"] " : "") + (details.length ? details.join("·") : "");
+    if(!combos[label]) combos[label] = { label: label, count: 0 };
+    combos[label].count++;
+  });
+  var arr = Object.keys(combos).map(function(k){ return combos[k]; }).sort(function(a,b){ return b.count - a.count; });
+  if(!arr.length){
+    document.getElementById("barChart").innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--text-mute);font-size:11px">데이터 없음 / 无数据</div>';
+    return;
+  }
+  var max = arr[0].count, parts = [];
+  arr.forEach(function(item, i){
+    var pct = Math.max(10, Math.round(item.count / max * 100));
+    var c = BARCOLORS[i % BARCOLORS.length];
+    parts.push('<div class="chart-row">');
+    parts.push('<div class="chart-label" title="'+escH(item.label)+'">'+escH(item.label)+'</div>');
+    parts.push('<div class="chart-bar-wrap"><div class="chart-bar" style="width:'+pct+'%;background:'+c+'">'+item.count+'</div></div>');
+    parts.push('<div class="chart-num">'+item.count+'</div>');
+    parts.push('</div>');
+  });
+  document.getElementById("barChart").innerHTML = parts.join("");
+}
+
+/* ── AI Analysis Panel (Gemini API 연결 예정) ── */
+function renderAIPanel(){
+  var base = filtered.length ? filtered : allRec;
+  var tot = base.length;
+  if(!tot){
+    document.getElementById("aiBody").innerHTML = '<div style="color:var(--text-mute);font-size:11px;text-align:center;padding:24px 0">데이터 없음 / 无数据</div>';
+    return;
+  }
+  var ord = 0, sm = 0, delayN = 0;
+  var catCount = {}, genCount = {}, seCount = {};
+  base.forEach(function(r){
+    var sku = g(r, "Style_SKU"); if(sku === "-") sku = g(r, "SKU");
+    if(moSkus.has(sku)) ord++;
+    var ss = (g(r, "Sample_Status") + " " + g(r, "Style_Status")).toLowerCase();
+    if(ss.indexOf("sampling") >= 0 || ss.indexOf("샘플") >= 0) sm++;
+    if(isOrderDelayed(r)) delayN++;
+    var c = mv("Category", g(r, "Category")); if(c !== "-") catCount[c] = (catCount[c]||0) + 1;
+    var ge = mv("Gender", g(r, "Gender"));    if(ge !== "-") genCount[ge] = (genCount[ge]||0) + 1;
+    var s = g(r, "Season");                   if(s !== "-") seCount[s] = (seCount[s]||0) + 1;
+  });
+  var pct = tot > 0 ? Math.round(ord / tot * 100) : 0;
+  function top(obj){ var e = Object.keys(obj).map(function(k){ return { k: k, v: obj[k] }; }).sort(function(a,b){ return b.v - a.v; }); return e[0] || { k: "-", v: 0 }; }
+  var topCat = top(catCount), topGen = top(genCount), topSe = top(seCount);
+
+  var pp = [];
+  pp.push('<div class="ai-sec concl"><div class="t">📊 결론 / 结论</div><div class="b">총 <b>'+tot+'</b>개 스타일 중 <b>'+ord+'</b>개 오더 완료 (<b>'+pct+'%</b>). 진행 현황을 종합할 때 평균 이상 수준으로 운영되고 있습니다.<br>共 <b>'+tot+'</b> 款式中 <b>'+ord+'</b> 款已下订单 (<b>'+pct+'%</b>)，整体进度良好。</div></div>');
+  pp.push('<div class="ai-sec insi"><div class="t">💡 인사이트 / 洞察</div><div class="b">최다 카테고리: <b>'+escH(topCat.k)+'</b> ('+topCat.v+'건). 주력 성별: <b>'+escH(topGen.k)+'</b> ('+topGen.v+'건). 시즌 집중도: <b>'+escH(topSe.k)+'</b> ('+topSe.v+'건).<br>主要分类：<b>'+escH(topCat.k)+'</b>，主要性别：<b>'+escH(topGen.k)+'</b>，主要季节：<b>'+escH(topSe.k)+'</b>。</div></div>');
+  pp.push('<div class="ai-sec warn"><div class="t">⚠️ 경고 / 警告</div><div class="b">오더 지연 <b>'+delayN+'</b>건 발생. 당월 20일 기준을 초과한 미오더 스타일이므로 즉시 확인이 필요합니다.<br>订单延误 <b>'+delayN+'</b> 件（以当月20日为基准），需立即跟进。</div></div>');
+  pp.push('<div class="ai-sec reco"><div class="t">🎯 추천 / 推荐</div><div class="b">샘플 제작 중 <b>'+sm+'</b>건의 완료 일정 점검과, 미오더 스타일의 원단·원가 재검토를 권장합니다.<br>建议复核 <b>'+sm+'</b> 件样品进度，并重新审查未下订单款式的面料与成本。</div></div>');
+  pp.push('<button class="ai-ask" onclick="askAI()">💬 더 자세히 물어보기 / 询问更多</button>');
+  document.getElementById("aiBody").innerHTML = pp.join("");
+}
+
+/* Gemini API 연결 예정 — 현재는 안내만 표시 */
+function askAI(){
+  alert("Gemini API 연결 예정 / Gemini API 待接入\n\n현재 화면의 요약 데이터를 기반으로 질의응답 기능이 추가될 예정입니다.");
+}
+
+/* ── Global handlers (static DOM only) ── */
+document.getElementById("modalOv").addEventListener("click", function(e){ if(e.target === this) closeModal(); });
+document.getElementById("kpiPopOv").addEventListener("click", function(e){ if(e.target === this) closeKpiPop(); });
+document.addEventListener("keydown", function(e){
+  if(e.key !== "Escape") return;
+  if(document.getElementById("lb").classList.contains("show")){ closeLb(); return; }
+  if(document.getElementById("kpiPopOv").classList.contains("show")){ closeKpiPop(); return; }
+  if(document.getElementById("modalOv").classList.contains("show")){ closeModal(); return; }
+});
+</script>
+</body>
+</html>
