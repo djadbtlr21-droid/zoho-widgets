@@ -198,17 +198,74 @@ body{padding:16px;min-height:100vh}
 .order-badge.delayed  {background:var(--st-danger-bg);color:var(--st-danger-txt);border-color:#F7C1C1}
 .order-badge.draft    {background:var(--st-draft-bg);color:var(--st-draft-txt);border-color:#D3D1C7}
 
-/* Pipeline */
-.pipe-card{background:#FAFAF7;border-top:1px solid var(--border);padding:16px 20px}
-.pipe-title{font-size:11px;font-weight:500;color:var(--text-soft);margin-bottom:10px;display:flex;align-items:center;gap:6px;letter-spacing:.02em}
-.pipe-row{display:flex;align-items:center;gap:4px;overflow-x:auto}
-.pipe-step{flex:1;text-align:center;min-width:90px;padding:10px 6px;border-radius:8px;cursor:pointer;transition:transform .12s,box-shadow .12s}
-.pipe-step:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm);background:#FFF}
-.pipe-n{font-size:22px;font-weight:500;line-height:1}
-.pipe-lb{font-size:10px;font-weight:500;margin-top:5px;line-height:1.3;display:flex;align-items:center;justify-content:center}
-.pipe-emoji{font-size:1.2em;margin-right:3px}
-.pipe-bar{height:4px;border-radius:2px;margin-top:6px}
-.pipe-arr{color:#B4B2A9;font-size:11px;flex-shrink:0}
+/* Pipeline — elegant glass card w/ gold accent */
+.pipe-card{background:linear-gradient(180deg,#FFFFFF 0%,#FDFCF9 100%);border:1px solid var(--border);border-radius:14px;
+  padding:22px 24px;margin-top:0;position:relative;overflow:hidden;border-top:none}
+.pipe-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent 0%,var(--gold) 30%,var(--gold) 70%,transparent 100%);opacity:.4}
+.pipe-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;
+  padding-bottom:12px;border-bottom:1px dashed var(--border)}
+.pipe-title{font-size:12px;font-weight:500;color:var(--text-soft);display:flex;align-items:center;gap:8px;letter-spacing:.3px}
+.pipe-title-icon{width:22px;height:22px;background:linear-gradient(135deg,var(--gold),#B8956A);border-radius:5px;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;
+  box-shadow:0 2px 6px rgba(201,168,110,.25)}
+.pipe-summary{font-size:10px;color:var(--text-mute);font-weight:400}
+.pipe-row{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding:4px 0}
+.pipe-step{flex:1;min-width:105px;background:#FFFFFF;border:1px solid var(--border);border-radius:10px;
+  padding:14px 10px 12px;cursor:pointer;transition:all .2s ease;text-align:center;position:relative;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.pipe-step::after{content:'';position:absolute;left:8px;right:8px;bottom:0;height:3px;border-radius:0 0 8px 8px;transition:opacity .2s}
+.pipe-step:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,.06);border-color:var(--gold)}
+.pipe-step.empty{opacity:.45;background:#FAFAF7}
+.pipe-step.active{box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.pipe-n{font-size:24px;font-weight:500;line-height:1;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.pipe-lb{font-size:10px;font-weight:500;color:var(--text-soft);display:flex;align-items:center;gap:4px;margin-top:2px}
+.pipe-emoji{font-size:1.1em}
+.pipe-sublabel{font-size:8px;color:var(--text-mute);margin-top:1px;letter-spacing:.3px}
+.pipe-step[data-stage="Not Started"]::after{background:var(--stage-notstart-txt)}
+.pipe-step[data-stage="Fabric"]::after    {background:var(--stage-fabric-txt)}
+.pipe-step[data-stage="Cutting"]::after   {background:var(--stage-cutting-txt)}
+.pipe-step[data-stage="Sewing"]::after    {background:var(--stage-sewing-txt)}
+.pipe-step[data-stage="Packing"]::after   {background:var(--stage-packing-txt)}
+.pipe-step[data-stage="Done"]::after      {background:var(--stage-done-txt)}
+.pipe-step[data-stage="Shipped"]::after   {background:var(--stage-shipped-txt)}
+.pipe-step.empty::after{opacity:.3}
+.pipe-connector{display:flex;align-items:center;justify-content:center;flex:0 0 24px;color:var(--border-hover);font-size:8px;position:relative}
+.pipe-connector::before{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:var(--border)}
+.pipe-connector-diamond{width:6px;height:6px;background:#FFFFFF;border:1px solid var(--border-hover);transform:rotate(45deg);position:relative;z-index:1}
+
+/* Color × Size × Price Matrix */
+.csm-section{margin-bottom:28px}
+.csm-tabs{display:flex;gap:6px;margin-bottom:10px;border-bottom:1px solid var(--border)}
+.csm-tab{padding:8px 16px;font-size:11px;font-weight:500;cursor:pointer;border:0;background:transparent;
+  color:var(--text-mute);border-bottom:2px solid transparent;margin-bottom:-1px;font-family:inherit;
+  transition:color .15s,border-color .15s}
+.csm-tab:hover{color:var(--text)}
+.csm-tab.active.plan{color:var(--plan-txt);border-bottom-color:var(--plan-border)}
+.csm-tab.active.actual{color:var(--actual-txt);border-bottom-color:var(--actual-border)}
+.csm-pane{display:none}
+.csm-pane.active{display:block}
+.csm-tbl{width:100%;border-collapse:collapse;font-size:11px;background:#FFF;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.csm-tbl th{padding:10px 8px;font-weight:500;font-size:10px;background:#FAFAF7;color:var(--text-mute);
+  text-align:center;border-bottom:1px solid var(--border);letter-spacing:.3px}
+.csm-tbl .csm-th-color{text-align:left;padding-left:14px;width:18%}
+.csm-tbl .csm-th-size{width:7%}
+.csm-tbl .csm-th-total{width:10%;background:var(--p-lav);color:var(--p-lav-txt)}
+.csm-tbl .csm-th-price{width:10%}
+.csm-tbl .csm-th-amount{width:12%;background:var(--p-sage);color:var(--p-sage-txt)}
+.csm-tbl td{padding:8px;border-bottom:1px solid #F1EFE8;text-align:center;color:var(--text);font-size:11px}
+.csm-tbl .csm-td-color{text-align:left;padding-left:14px;font-weight:500;color:var(--text-soft);
+  display:flex;align-items:center;gap:6px}
+.csm-color-dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#B8956A);
+  display:inline-block;flex-shrink:0}
+.csm-tbl .csm-td-qty{font-variant-numeric:tabular-nums}
+.csm-tbl .csm-td-total{font-weight:500;color:var(--p-lav-txt);background:#FAFAFD}
+.csm-tbl .csm-td-price{font-weight:400;color:var(--text-mute);font-size:10px}
+.csm-tbl .csm-td-amount{font-weight:500;color:var(--p-sage-txt);background:#FAFDF7}
+.csm-zero{color:#CDC9C0}
+.csm-tbl tr.csm-grand td{background:#FDFCF9 !important;border-top:2px solid var(--border);padding-top:10px;padding-bottom:10px;font-size:12px}
+.csm-tbl tr.csm-grand .csm-td-color{color:var(--text)}
+.csm-empty{text-align:center;padding:20px;color:#B4B2A9;font-size:11px;background:#FAFAF7;border-radius:8px;border:1px dashed var(--border)}
 
 /* Timeline */
 .tl-card{background:var(--card);border-top:1px solid var(--border);padding:14px 20px}
@@ -223,11 +280,19 @@ body{padding:16px;min-height:100vh}
 .tl-tbl th,.tl-tbl td{border:1px solid #EEF2F6}
 .tl-tbl th{background:#F8F8F5;color:var(--text-mute);font-weight:500;padding:6px 0;text-align:center}
 .tl-tbl th.wk{background:#FEF8F8;color:#E87979}
-.tl-tbl th.today{background:var(--st-danger-bg);color:var(--st-danger-txt);font-weight:500;position:relative}
+.tl-tbl th.today{background:#FFF;color:#DC2626;font-weight:500;position:relative}
+.tl-tbl th.today::before{content:'';position:absolute;left:50%;top:0;width:2px;height:100%;
+  background:#DC2626;transform:translateX(-50%);z-index:3}
+.tl-tbl th.today::after{content:'▼';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);
+  font-size:8px;color:#DC2626;z-index:4}
 .tl-tbl .info-cell{width:200px;min-width:200px;text-align:left;background:#FAFAF7;padding:6px 10px;position:sticky;left:0;z-index:2;
   border-right:2px solid var(--border)}
 .tl-tbl td{padding:0;vertical-align:middle;height:24px;background:#FEFEFC}
-.tl-tbl td.today-col{background:#FEF2F2 !important;position:relative}
+.tl-tbl td.today-col{background:#FEFEFC;position:relative}
+.tl-tbl td.today-col::before{content:'';position:absolute;left:50%;top:0;width:2px;height:100%;
+  background:rgba(220,38,38,.55);transform:translateX(-50%);z-index:1;pointer-events:none}
+.tl-tbl tr.mo-gap td.today-col::before{background:rgba(220,38,38,.35)}
+.tl-tbl td.today-col .tl-bar{position:relative;z-index:2}
 .tl-tbl tr.mo-gap td{height:20px;background:#F8F8F5 !important;border-top:2px solid #E2E8F0}
 .tl-tbl tr.mo-gap .info-cell{background:#F8F8F5 !important}
 .tl-bar{height:100%;border-radius:3px;display:flex;align-items:center;justify-content:center;
@@ -623,6 +688,116 @@ function getSubformLines(r, fieldName){
   return [];
 }
 
+/* ── Color × Size × Price Matrix ── */
+function buildColorSizePriceMatrix(r, prefix){
+  var linesField = prefix + (prefix === "Plan_" ? "MO_Lines" : "Order_Lines");
+  var notesField = prefix + "Notes";
+  var lines = getSubformLines(r, linesField);
+  var matrix = {}, colors = [], sizeSet = {};
+
+  function addToMatrix(color, size, qty, price){
+    color = (color==null ? "-" : color).toString().trim() || "-";
+    size = (size==null ? "-" : size).toString().trim().toUpperCase() || "-";
+    qty = parseInt(qty) || 0;
+    price = parseFloat(price) || 0;
+    if(!matrix[color]){
+      matrix[color] = { sizes:{}, price:price, total:0, amount:0 };
+      colors.push(color);
+    }
+    if(price > 0 && matrix[color].price === 0) matrix[color].price = price;
+    if(!matrix[color].sizes[size]) matrix[color].sizes[size] = 0;
+    matrix[color].sizes[size] += qty;
+    matrix[color].total += qty;
+    matrix[color].amount += qty * price;
+    sizeSet[size] = true;
+  }
+
+  if(lines && lines.length > 0){
+    lines.forEach(function(line){
+      var c = line[prefix+'Color']   || line['Color']      || line['pColor'] || line['aColor'];
+      var s = line[prefix+'Sizes']   || line['Sizes']      || line['pSizes'] || line['aSizes'];
+      var q = line[prefix+'Quantity']|| line['Quantity'];
+      var p = line[prefix+'Unit_Price'] || line['Unit_Price'];
+      if(c || s || q) addToMatrix(c, s, q, p);
+    });
+  }
+
+  if(colors.length === 0){
+    var notes = g(r, notesField);
+    if(notes && notes !== "-"){
+      notes.split(/\n+/).forEach(function(line){
+        var m = line.match(/Color:\s*([^|]+)\|\s*Size:\s*([^|]+)\|\s*Qty:\s*(\d+)(?:\s*\|\s*Unit Price:\s*\$?([\d.]+))?/i);
+        if(m) addToMatrix(m[1], m[2], m[3], m[4]);
+      });
+    }
+  }
+
+  var sizeOrder = ["XS","S","M","L","XL","XXL","XXXL","FREE","F"];
+  var sizes = Object.keys(sizeSet).sort(function(a,b){
+    var ia = sizeOrder.indexOf(a), ib = sizeOrder.indexOf(b);
+    if(ia < 0) ia = 99;
+    if(ib < 0) ib = 99;
+    if(ia !== ib) return ia - ib;
+    return a < b ? -1 : (a > b ? 1 : 0);
+  });
+
+  return { colors:colors, sizes:sizes, matrix:matrix };
+}
+
+function renderColorSizeMatrix(r, prefix){
+  var data = buildColorSizePriceMatrix(r, prefix);
+  if(data.colors.length === 0){
+    return '<div class="csm-empty">입력된 내역이 없습니다 / 暂无数据</div>';
+  }
+
+  var grandQty = 0, grandAmount = 0, sizeTotals = {};
+  data.sizes.forEach(function(s){ sizeTotals[s] = 0; });
+
+  var h = '<table class="csm-tbl"><thead><tr>';
+  h += '<th class="csm-th-color">Color / 색상 / 颜色</th>';
+  data.sizes.forEach(function(s){ h += '<th class="csm-th-size">'+escH(s)+'</th>'; });
+  h += '<th class="csm-th-total">Qty / 수량 / 数量</th>';
+  h += '<th class="csm-th-price">Unit Price / 단가 / 单价</th>';
+  h += '<th class="csm-th-amount">Amount / 금액 / 金额</th>';
+  h += '</tr></thead><tbody>';
+
+  data.colors.forEach(function(color){
+    var row = data.matrix[color];
+    h += '<tr>';
+    h += '<td class="csm-td-color"><span class="csm-color-dot"></span>'+escH(color)+'</td>';
+    data.sizes.forEach(function(s){
+      var q = row.sizes[s] || 0;
+      sizeTotals[s] += q;
+      h += '<td class="csm-td-qty">'+(q > 0 ? q.toLocaleString() : '<span class="csm-zero">-</span>')+'</td>';
+    });
+    h += '<td class="csm-td-total">'+row.total.toLocaleString()+'</td>';
+    h += '<td class="csm-td-price">'+(row.price > 0 ? '$'+row.price.toFixed(2) : '-')+'</td>';
+    h += '<td class="csm-td-amount">'+(row.amount > 0 ? '$'+row.amount.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) : '-')+'</td>';
+    h += '</tr>';
+    grandQty += row.total;
+    grandAmount += row.amount;
+  });
+
+  h += '<tr class="csm-grand"><td class="csm-td-color"><b>TOTAL / 합계 / 合计</b></td>';
+  data.sizes.forEach(function(s){ h += '<td class="csm-td-qty"><b>'+sizeTotals[s].toLocaleString()+'</b></td>'; });
+  h += '<td class="csm-td-total"><b>'+grandQty.toLocaleString()+'</b></td>';
+  h += '<td class="csm-td-price">-</td>';
+  h += '<td class="csm-td-amount"><b>$'+grandAmount.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+'</b></td>';
+  h += '</tr>';
+  h += '</tbody></table>';
+  return h;
+}
+
+function switchCsmTab(btn, which){
+  var parent = btn.parentElement.parentElement;
+  parent.querySelectorAll('.csm-tab').forEach(function(t){ t.classList.remove('active'); });
+  btn.classList.add('active');
+  parent.querySelectorAll('.csm-pane').forEach(function(p){ p.classList.remove('active'); });
+  var paneClass = which === 'plan' ? '.csm-pane.plan' : '.csm-pane.actual';
+  var pane = parent.querySelector(paneClass);
+  if(pane) pane.classList.add('active');
+}
+
 /* ── Stage + order status helpers (new) ── */
 function stageClass(stage){
   var map = {
@@ -883,25 +1058,47 @@ function openModalFromPop(id){
   if(r){ document.getElementById("kpiPopOv").classList.remove("active"); openModal(r); }
 }
 
-/* ── Pipeline (PRESERVED from v28, restyled via CSS) ── */
+/* ── Pipeline (elegant redesign) ── */
 function renderLocalPipeline(idx, items){
-  var st = ["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
+  var stages = ["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
   var emojis = ["⏳","🧵","✂️","🪡","📦","✅","🚚"];
-  var co = ["#94A3B8","#A78BFA","#FDBA74","#7DD3FC","#34D399","#10B981","#3B82F6"];
-  var lb2 = ["미시작 / 未开始","원단 / 面料","재단 / 裁剪","봉제 / 车缝","포장 / 包装","완료 / 完成","출고 / 出货"];
-  var cn = [0,0,0,0,0,0,0];
-  items.forEach(function(r){ var i = st.indexOf(getProdStage(r)); if(i>=0) cn[i]++; });
+  var colors = {
+    "Not Started":"var(--stage-notstart-txt)",
+    "Fabric":"var(--stage-fabric-txt)",
+    "Cutting":"var(--stage-cutting-txt)",
+    "Sewing":"var(--stage-sewing-txt)",
+    "Packing":"var(--stage-packing-txt)",
+    "Done":"var(--stage-done-txt)",
+    "Shipped":"var(--stage-shipped-txt)"
+  };
+  var labelsKR = ["미시작","원단","재단","봉제","포장","완료","출고"];
+  var labelsCN = ["未开始","面料","裁剪","车缝","包装","完成","出货"];
+  var counts = [0,0,0,0,0,0,0];
+  items.forEach(function(r){ var i = stages.indexOf(getProdStage(r)); if(i>=0) counts[i]++; });
+  var total = counts.reduce(function(s,n){ return s+n; }, 0);
+
   var h = "";
-  st.forEach(function(s, i){
-    if(i>0) h += '<div class="pipe-arr">▶</div>';
-    h += '<div class="pipe-step" onclick="openPipePop(\''+s+'\','+idx+')">';
-    h += '<div class="pipe-n" style="color:'+co[i]+'">'+cn[i]+'</div>';
-    h += '<div class="pipe-lb" style="color:'+co[i]+'"><span class="pipe-emoji">'+emojis[i]+'</span>'+lb2[i]+'</div>';
-    h += '<div class="pipe-bar" style="background:'+co[i]+'"></div>';
+  stages.forEach(function(s, i){
+    if(i>0){
+      h += '<div class="pipe-connector"><div class="pipe-connector-diamond"></div></div>';
+    }
+    var isEmpty = counts[i] === 0;
+    var stateClass = isEmpty ? "empty" : "active";
+    h += '<div class="pipe-step '+stateClass+'" data-stage="'+s+'" onclick="openPipePop(\''+s+'\','+idx+')">';
+    h += '<div class="pipe-n" style="color:'+colors[s]+'">'+counts[i]+'</div>';
+    h += '<div class="pipe-lb"><span class="pipe-emoji">'+emojis[i]+'</span>'+labelsKR[i]+'</div>';
+    h += '<div class="pipe-sublabel">'+labelsCN[i]+'</div>';
     h += '</div>';
   });
+
   var el = document.getElementById("pipeRow_"+idx);
   if(el) el.innerHTML = h;
+
+  var summaryEl = document.querySelector('[data-pipe-summary="'+idx+'"]');
+  if(summaryEl){
+    var activeStages = counts.filter(function(n){ return n > 0; }).length;
+    summaryEl.textContent = '총 '+total+'건 · '+activeStages+'개 단계 진행 / 共 '+total+'件 · '+activeStages+'个阶段';
+  }
 }
 
 function openPipePop(stage, idx){
@@ -991,7 +1188,10 @@ function renderMonthly(){
 
     // Pipeline
     html += '<div class="pipe-card">';
-    html += '<div class="pipe-title">🏭 생산 파이프라인 / 生产流水表</div>';
+    html += '<div class="pipe-header">';
+    html += '<div class="pipe-title"><span class="pipe-title-icon">⚙</span>생산 파이프라인 / 生产流水表</div>';
+    html += '<div class="pipe-summary" data-pipe-summary="'+idx+'">-</div>';
+    html += '</div>';
     html += '<div class="pipe-row" id="pipeRow_'+idx+'"></div>';
     html += '</div>';
 
@@ -1331,6 +1531,17 @@ function openModal(r){
   h += it("하의 유형 / 下装类型", dv(mv("Bottom_Type", g(r,"Bottom_Type"))));
   h += it("하의 기장 / 下装长短", dv(mv("Bottom_Length", g(r,"Bottom_Length"))));
   h += '</div></div>';
+
+  // 2.5 Color × Size × Price Matrix
+  h += '<div class="m-sec csm-section">';
+  h += '<div class="m-sec-t">🎨 색상 × 사이즈 × 단가 / 颜色 × 尺码 × 单价</div>';
+  h += '<div class="csm-tabs">';
+  h += '<button class="csm-tab plan active" onclick="switchCsmTab(this,\'plan\')">📋 PLAN / 주문 / 订单</button>';
+  h += '<button class="csm-tab actual" onclick="switchCsmTab(this,\'actual\')">✅ ACTUAL / 실출고 / 实际出货</button>';
+  h += '</div>';
+  h += '<div class="csm-pane plan active">' + renderColorSizeMatrix(r, "Plan_") + '</div>';
+  h += '<div class="csm-pane actual">' + renderColorSizeMatrix(r, "Acture_") + '</div>';
+  h += '</div>';
 
   // 3. Fabric
   h += '<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料信息</div><div class="d-grid">';
