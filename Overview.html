@@ -52,11 +52,15 @@ body{padding:16px;min-height:100vh}
 ::-webkit-scrollbar-thumb:hover{background:var(--border-hover)}
 
 /* Header */
-.hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.hdr{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;margin-bottom:16px}
 .hdr h1{font-size:15px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:10px;letter-spacing:-.01em}
 .hdr h1 .ic{width:28px;height:28px;background:linear-gradient(135deg,var(--ov-accent-from),var(--ov-accent-to));
   border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:500;letter-spacing:.5px;
   box-shadow:0 1px 3px rgba(201,168,110,.3)}
+.hdr-info{font-size:10px;color:var(--p-lav-txt);line-height:1.6;background:var(--p-lav);padding:8px 14px;
+  border-radius:8px;border-left:3px solid #C4B5FD;max-width:600px;justify-self:start}
+.hdr-btns{display:flex;gap:8px;align-items:center}
+@media(max-width:1100px){.hdr{grid-template-columns:1fr;gap:10px}.hdr-info{max-width:none}}
 
 /* TIER 1 — Urgency cards */
 .tier1-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
@@ -95,8 +99,14 @@ body{padding:16px;min-height:100vh}
 .chart-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;
   background:linear-gradient(90deg,var(--gold),#B8956A);border-radius:10px 10px 0 0;opacity:.6}
 .chart-header{margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed var(--border)}
+.chart-title-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
 .chart-title{font-size:12px;font-weight:500;color:var(--text);margin-bottom:3px}
 .chart-sub{font-size:10px;color:var(--text-mute)}
+.chart-month-tabs{display:flex;gap:4px;flex-wrap:wrap}
+.chart-month-tab{padding:4px 10px;font-size:10px;font-weight:500;border:1px solid var(--border);background:#FFF;
+  color:var(--text-mute);border-radius:5px;cursor:pointer;font-family:inherit;transition:all .15s}
+.chart-month-tab:hover{border-color:var(--gold)}
+.chart-month-tab.active{background:var(--gold);color:#FFF;border-color:var(--gold)}
 .chart-body{min-height:160px;display:flex;align-items:center;justify-content:center}
 .pa-chart{display:flex;align-items:flex-end;gap:18px;width:100%;height:140px;padding:0 10px}
 .pa-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
@@ -109,7 +119,8 @@ body{padding:16px;min-height:100vh}
 .pa-legend{display:flex;gap:14px;justify-content:center;margin-top:8px;font-size:9px;color:var(--text-mute)}
 .pa-legend-dot{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:4px}
 .fc-chart{width:100%;display:flex;flex-direction:column;gap:6px;padding:4px 0}
-.fc-row{display:flex;align-items:center;gap:8px;font-size:10px}
+.fc-row{display:flex;align-items:center;gap:8px;font-size:10px;cursor:pointer;padding:3px 4px;border-radius:4px;transition:background .12s}
+.fc-row:hover{background:var(--p-lav)}
 .fc-label{width:60px;color:var(--text-soft);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fc-bar-track{flex:1;height:16px;background:#F1EFE8;border-radius:4px;overflow:hidden}
 .fc-bar-fill{height:100%;border-radius:4px;transition:width .4s ease}
@@ -142,7 +153,7 @@ body{padding:16px;min-height:100vh}
 .btn-mo-new:hover{background:#C8F0E0;transform:translateY(-1px)}
 
 /* Style KPI row */
-.skpi-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.skpi-grid{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:14px}
 .skpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-card);padding:14px;
   position:relative;overflow:hidden;min-width:0;transition:border-color .15s,box-shadow .15s}
 .skpi-card:hover{border-color:var(--border-hover);box-shadow:var(--shadow)}
@@ -234,7 +245,7 @@ body{padding:16px;min-height:100vh}
 .bg-draft{background:var(--st-draft-bg);color:var(--st-draft-txt)}
 
 /* MO KPI row */
-.mkpi-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.mkpi-grid{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:14px}
 .mkpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-card);padding:14px;
   position:relative;overflow:hidden;min-width:0;transition:border-color .15s,box-shadow .15s}
 .mkpi-card:hover{border-color:var(--border-hover);box-shadow:var(--shadow)}
@@ -564,7 +575,6 @@ body{padding:16px;min-height:100vh}
   .tier1-row{grid-template-columns:repeat(2,1fr)}
   .tier2-charts-row{grid-template-columns:1fr 1fr}
   .tier2-charts-row .chart-card:nth-child(3){grid-column:1/-1}
-  .skpi-grid,.mkpi-grid{grid-template-columns:1fr 1fr}
 }
 @media(max-width:900px){
   .tier2-charts-row{grid-template-columns:1fr}
@@ -587,6 +597,11 @@ body{padding:16px;min-height:100vh}
 <div id="mainContent" style="display:none">
   <div class="hdr">
     <h1><span class="ic">OV</span> 전체 현황 / 总览</h1>
+    <div class="hdr-info">
+      ℹ️ 당월 진행되는 데이터만 표시됩니다. 자세한 내용은 각 페이지에 진입하여 주세요.<br>
+      本页仅显示当月进行中的数据。详细内容请进入各页面查看。
+    </div>
+    <div class="hdr-btns"></div>
   </div>
 
   <!-- TIER 1 -->
@@ -624,15 +639,25 @@ body{padding:16px;min-height:100vh}
     </div>
     <div class="chart-card">
       <div class="chart-header">
-        <div class="chart-title">🏭 공장별 생산량 / 工厂产量</div>
-        <div class="chart-sub">누적 Plan 수량 / 累计订单数量</div>
+        <div class="chart-title-row">
+          <div>
+            <div class="chart-title">🏭 공장별 오더량 / 工厂订单量</div>
+            <div class="chart-sub">월별 Plan 수량 / 月度订单数量</div>
+          </div>
+          <div class="chart-month-tabs" id="factoryMonthTabs"></div>
+        </div>
       </div>
       <div id="factoryChart" class="chart-body"></div>
     </div>
     <div class="chart-card">
       <div class="chart-header">
-        <div class="chart-title">🎯 오더 건전성 / 订单健康度</div>
-        <div class="chart-sub">전체 MO 상태 분포 / MO状态分布</div>
+        <div class="chart-title-row">
+          <div>
+            <div class="chart-title">🎯 오더 건전성 / 订单健康度</div>
+            <div class="chart-sub">MO 상태 분포 / MO状态分布</div>
+          </div>
+          <div class="chart-month-tabs" id="healthMonthTabs"></div>
+        </div>
       </div>
       <div id="healthChart" class="chart-body chart-donut-wrap"></div>
     </div>
@@ -819,6 +844,16 @@ function getTopTwoDataMonths(groups){
   var keys=sortMonthKeys(Object.keys(groups)).filter(function(k){return k!=="미지정"&&groups[k]&&groups[k].length>0});
   return keys.slice(-2);
 }
+function getTopOneDataMonth(groups){
+  var keys=sortMonthKeys(Object.keys(groups)).filter(function(k){return k!=="미지정"&&groups[k]&&groups[k].length>0});
+  return keys.slice(-1);
+}
+function getTopThreeDataMonths(groups){
+  var keys=sortMonthKeys(Object.keys(groups)).filter(function(k){return k!=="미지정"&&groups[k]&&groups[k].length>0});
+  return keys.slice(-3);
+}
+var factoryActiveMonth=null;
+var healthActiveMonth=null;
 
 /* ── Image queue ── */
 var _safeQ=[],_safeBusy=false;
@@ -1047,27 +1082,89 @@ function renderPlanActualChart(){
 }
 
 function renderFactoryChart(){
+  var months=getTopThreeDataMonths(moGroupsByMonth);
+  if(months.length===0){
+    document.getElementById("factoryChart").innerHTML='<div style="color:#B4B2A9;font-size:11px">데이터 없음 / 无数据</div>';
+    document.getElementById("factoryMonthTabs").innerHTML="";
+    return;
+  }
+  if(!factoryActiveMonth||months.indexOf(factoryActiveMonth)<0){factoryActiveMonth=months[months.length-1]}
+  var tabsHtml="";
+  months.forEach(function(key){
+    var ym=parseYM(key);
+    var label=ym?(ym.y.toString().slice(-2)+"."+(ym.m<10?"0"+ym.m:ym.m)):key;
+    var cls=(key===factoryActiveMonth)?"active":"";
+    tabsHtml+='<button class="chart-month-tab '+cls+'" onclick="switchFactoryMonth(\''+encodeURIComponent(key)+'\')">'+label+'</button>';
+  });
+  document.getElementById("factoryMonthTabs").innerHTML=tabsHtml;
+
   var facMap={};
-  allMO.forEach(function(r){var f=cleanFactory(g(r,"Factory"));if(f==="-")return;var qty=parseInt(g(r,"Plan_Total_Quantity"))||0;facMap[f]=(facMap[f]||0)+qty});
+  (moGroupsByMonth[factoryActiveMonth]||[]).forEach(function(r){
+    var f=cleanFactory(g(r,"Factory"));if(f==="-")return;
+    var qty=parseInt(g(r,"Plan_Total_Quantity"))||0;facMap[f]=(facMap[f]||0)+qty;
+  });
   var arr=Object.keys(facMap).map(function(k){return{name:k,qty:facMap[k]}}).sort(function(a,b){return b.qty-a.qty}).slice(0,6);
-  if(arr.length===0){document.getElementById("factoryChart").innerHTML='<div style="color:#B4B2A9;font-size:11px">데이터 없음 / 无数据</div>';return}
+  if(arr.length===0){document.getElementById("factoryChart").innerHTML='<div style="color:#B4B2A9;font-size:11px">이 월에 데이터 없음 / 本月无数据</div>';return}
   var max=arr[0].qty||1;
   var palette=["#AFA9EC","#FAC775","#9FE1CB","#F5C4B3","#B5D4F4","#F4C0D1"];
   var h='<div class="fc-chart">';
   arr.forEach(function(f,i){
     var pct=Math.max(5,Math.round((f.qty/max)*100));
     var color=palette[i%palette.length];
-    h+='<div class="fc-row"><div class="fc-label" title="'+escH(f.name)+'">'+escH(f.name)+'</div>';
+    h+='<div class="fc-row" onclick="openFactoryDetail(\''+encodeURIComponent(f.name)+'\',\''+encodeURIComponent(factoryActiveMonth)+'\')">';
+    h+='<div class="fc-label" title="'+escH(f.name)+'">'+escH(f.name)+'</div>';
     h+='<div class="fc-bar-track"><div class="fc-bar-fill" style="width:'+pct+'%;background:'+color+'"></div></div>';
     h+='<div class="fc-value">'+(f.qty>=1000?(f.qty/1000).toFixed(1)+'k':f.qty.toLocaleString())+'</div></div>';
   });
   h+='</div>';
   document.getElementById("factoryChart").innerHTML=h;
 }
+function switchFactoryMonth(encodedKey){factoryActiveMonth=decodeURIComponent(encodedKey);renderFactoryChart()}
+function openFactoryDetail(encFactory,encMonth){
+  var factory=decodeURIComponent(encFactory);
+  var month=decodeURIComponent(encMonth);
+  var items=(moGroupsByMonth[month]||[]).filter(function(r){return cleanFactory(g(r,"Factory"))===factory});
+  var ym=parseYM(month);
+  var monthLabel=ym?(ym.y.toString().slice(-2)+"."+(ym.m<10?"0"+ym.m:ym.m)):month;
+  document.getElementById("urgPopTitle").textContent="🏭 "+factory+" · "+monthLabel;
+  var totalQty=items.reduce(function(s,r){return s+(parseInt(g(r,"Plan_Total_Quantity"))||0)},0);
+  document.getElementById("urgPopSub").textContent=items.length+"개 MO / "+items.length+"个订单 · 총 / 共 "+totalQty.toLocaleString()+" pcs";
+  var body="";
+  if(items.length===0){body='<div class="pop-empty">해당 MO 없음 / 无相关订单</div>'}
+  else{
+    items.forEach(function(r){
+      body+='<div class="pop-item" onclick="document.getElementById(\'urgencyPopOv\').classList.remove(\'active\');openModalById(\''+r["ID"]+'\')">';
+      body+='<div class="pop-item-left">';
+      body+='<div class="pi-mo">'+escH(g(r,"MO_Number"))+'</div>';
+      body+='<div class="pi-name">'+escH(g(r,"Style_Name"))+'</div>';
+      body+='<div class="pi-meta">Plan: '+(parseInt(g(r,"Plan_Total_Quantity"))||0).toLocaleString()+' pcs</div></div>';
+      body+='<span class="tag t-bl">'+escH(getProdStage(r))+'</span></div>';
+    });
+  }
+  document.getElementById("urgPopBody").innerHTML=body;
+  document.getElementById("urgencyPopOv").classList.add("active");
+}
 
 function renderHealthChart(){
+  var months=getTopThreeDataMonths(moGroupsByMonth);
+  if(months.length===0){
+    document.getElementById("healthChart").innerHTML='<div style="color:#B4B2A9;font-size:11px">데이터 없음 / 无数据</div>';
+    document.getElementById("healthMonthTabs").innerHTML="";
+    return;
+  }
+  if(!healthActiveMonth||months.indexOf(healthActiveMonth)<0){healthActiveMonth=months[months.length-1]}
+  var tabsHtml="";
+  months.forEach(function(key){
+    var ym=parseYM(key);
+    var label=ym?(ym.y.toString().slice(-2)+"."+(ym.m<10?"0"+ym.m:ym.m)):key;
+    var cls=(key===healthActiveMonth)?"active":"";
+    tabsHtml+='<button class="chart-month-tab '+cls+'" onclick="switchHealthMonth(\''+encodeURIComponent(key)+'\')">'+label+'</button>';
+  });
+  document.getElementById("healthMonthTabs").innerHTML=tabsHtml;
+
+  var items=moGroupsByMonth[healthActiveMonth]||[];
   var counts={notStarted:0,inProgress:0,complete:0,delayed:0};
-  allMO.forEach(function(r){
+  items.forEach(function(r){
     if(isDelayed(r)){counts.delayed++;return}
     var stage=getProdStage(r);
     if(stage==="Not Started")counts.notStarted++;
@@ -1075,7 +1172,7 @@ function renderHealthChart(){
     else counts.inProgress++;
   });
   var total=counts.notStarted+counts.inProgress+counts.complete+counts.delayed;
-  if(total===0){document.getElementById("healthChart").innerHTML='<div style="color:#B4B2A9;font-size:11px">데이터 없음 / 无数据</div>';return}
+  if(total===0){document.getElementById("healthChart").innerHTML='<div style="color:#B4B2A9;font-size:11px">이 월에 데이터 없음 / 本月无数据</div>';return}
   var segs=[
     {label:"완료 / 完成",key:"complete",color:"#9FE1CB"},
     {label:"진행 / 进行中",key:"inProgress",color:"#B5D4F4"},
@@ -1099,6 +1196,7 @@ function renderHealthChart(){
   lg+='</div>';
   document.getElementById("healthChart").innerHTML=sv+lg;
 }
+function switchHealthMonth(encodedKey){healthActiveMonth=decodeURIComponent(encodedKey);renderHealthChart()}
 
 /* ═══ TIER 3 — Style Section ═══ */
 function isStyleOrderDelayed(s){
@@ -1111,10 +1209,10 @@ function isStyleOrderDelayed(s){
 }
 
 function renderStyleKpiRow(){
-  var months=getTopTwoDataMonths(styleGroupsByMonth);
+  var months=getTopOneDataMonth(styleGroupsByMonth);
   var h='<div class="skpi-grid">';
-  months.forEach(function(key,i){h+=buildStyleKpiCard(key,styleGroupsByMonth[key],i)});
-  for(var i=months.length;i<2;i++){h+='<div class="skpi-card skpi-card-empty"></div>'}
+  if(months.length===0){h+='<div class="skpi-card skpi-card-empty"></div>'}
+  else{months.forEach(function(key,i){h+=buildStyleKpiCard(key,styleGroupsByMonth[key],i)})}
   h+=buildStyleDelayCard();
   h+='</div>';
   document.getElementById("styleKpiRow").innerHTML=h;
@@ -1202,7 +1300,7 @@ function closeSkpiPop(){document.getElementById("styleKpiPopOv").classList.remov
 function openStyleModalById(id){var r=allStyles.find(function(x){return String(x["ID"])===String(id)});if(r)openStyleModal(r)}
 
 function renderStyleMonthlyContent(){
-  var months=getTopTwoDataMonths(styleGroupsByMonth);
+  var months=getTopOneDataMonth(styleGroupsByMonth);
   if(months.length===0){document.getElementById("styleMonthlyContent").innerHTML=buildEmptyState("스타일");return}
   var html="";
   months.forEach(function(key,idx){html+=buildStyleMonthSection(key,styleGroupsByMonth[key],idx)});
@@ -1330,10 +1428,10 @@ function applyStyleMonthFilter(si){
 
 /* ═══ TIER 4 — MO Section ═══ */
 function renderMoKpiRow(){
-  var months=getTopTwoDataMonths(moGroupsByMonth);
+  var months=getTopOneDataMonth(moGroupsByMonth);
   var h='<div class="mkpi-grid">';
-  months.forEach(function(key,i){h+=buildMoKpiCard(key,moGroupsByMonth[key],i)});
-  for(var i=months.length;i<2;i++){h+='<div class="mkpi-card mkpi-card-empty"></div>'}
+  if(months.length===0){h+='<div class="mkpi-card mkpi-card-empty"></div>'}
+  else{months.forEach(function(key,i){h+=buildMoKpiCard(key,moGroupsByMonth[key],i)})}
   h+=buildMoDelayCard();
   h+='</div>';
   document.getElementById("moKpiRow").innerHTML=h;
@@ -1422,7 +1520,7 @@ function openMoKpiPop(keyEnc,type){
 function closeMkpiPop(){document.getElementById("moKpiPopOv").classList.remove("active")}
 
 function renderMoMonthlyContent(){
-  var months=getTopTwoDataMonths(moGroupsByMonth);
+  var months=getTopOneDataMonth(moGroupsByMonth);
   if(months.length===0){document.getElementById("moMonthlyContent").innerHTML=buildEmptyState("생산 MO");return}
   var html="";
   months.forEach(function(key,idx){html+=buildMoMonthSection(key,moGroupsByMonth[key],idx)});
