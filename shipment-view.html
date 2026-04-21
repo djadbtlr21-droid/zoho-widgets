@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JERA ERP — Shipment View v10 / 装箱出货</title>
+<script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
+<style>
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css');
+
+:root{
+  --bg:#FAFAF7; --card:#FFFFFF; --border:#EDE9E4; --border-hover:#D3D1C7;
+  --text:#1C1917; --text-mute:#78716C; --text-soft:#44443F; --accent:#9B8A7A; --gold:#C9A86E;
+  --ship-primary:#0F6E56; --ship-accent-from:#1D9E75; --ship-accent-to:#0F6E56;
+  --mo-primary:#3E5795;
+  --p-pink:#FBEAF0; --p-pink-txt:#72243E;
+  --p-peach:#FAECE7; --p-peach-txt:#712B13;
+  --p-butter:#FAEEDA; --p-butter-txt:#633806;
+  --p-mint:#E1F5EE; --p-mint-txt:#085041;
+  --p-sky:#E6F1FB; --p-sky-txt:#0C447C;
+  --p-lav:#EEEDFE; --p-lav-txt:#3C3489;
+  --p-sage:#EAF3DE; --p-sage-txt:#173404;
+  --p-blue:#DBEAFE; --p-blue-txt:#1E3A8A;
+  --st-ok-bg:#D1FAE5; --st-ok-txt:#065F46;
+  --st-warn-bg:#FEF3C7; --st-warn-txt:#854F0B;
+  --st-danger-bg:#FCEBEB; --st-danger-txt:#A32D2D;
+  --st-draft-bg:#F1EFE8; --st-draft-txt:#5F5E5A;
+  --st-info-bg:#DBEAFE; --st-info-txt:#1E40AF;
+  --stage-booking-bg:#F1EFE8; --stage-booking-txt:#5F5E5A;
+  --stage-loading-bg:#EEEDFE; --stage-loading-txt:#3C3489;
+  --stage-shipping-bg:#E6F1FB; --stage-shipping-txt:#0C447C;
+  --stage-transit-bg:#FAEEDA; --stage-transit-txt:#633806;
+  --stage-customs-bg:#FBEAF0; --stage-customs-txt:#72243E;
+  --stage-complete-bg:#D1FAE5; --stage-complete-txt:#065F46;
+  --plan-bg:#EEEDFE; --plan-txt:#3C3489; --plan-border:#C4B5FD;
+  --actual-bg:#D1FAE5; --actual-txt:#065F46; --actual-border:#6EE7B7;
+  --radius:12px; --radius-card:10px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.04);
+  --shadow:0 2px 8px rgba(0,0,0,.06);
+  --shadow-md:0 4px 16px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);font-family:'Pretendard Variable','Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif;font-size:12px;-webkit-font-smoothing:antialiased;letter-spacing:-.008em}
+body{padding:16px;min-height:100vh}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--border-hover)}
+
+.hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.hdr h1{font-size:15px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:10px}
+.hdr h1 .ic{width:28px;height:28px;background:linear-gradient(135deg,var(--ship-accent-from),var(--ship-accent-to));border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:500;letter-spacing:.5px;box-shadow:0 1px 3px rgba(15,110,86,.25)}
+.hdr-btns{display:flex;gap:8px}
+.btn-primary{background:var(--ship-primary);color:#fff;border:0;padding:7px 16px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;transition:background .15s,transform .15s}
+.btn-primary:hover{background:#0C5844;transform:translateY(-1px)}
+.btn-port{background:#FFF;color:var(--ship-primary);border:1px solid var(--p-mint);padding:7px 14px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit}
+.btn-port:hover{background:var(--p-mint)}
+
+/* TIER 1 — Urgency */
+.tier1-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.urgency-card{border-radius:10px;padding:14px 16px;cursor:pointer;transition:transform .15s,box-shadow .15s;text-align:center;border:1px solid;position:relative;overflow:hidden}
+.urgency-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;border-radius:10px 10px 0 0}
+.urgency-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.urgency-card.danger{background:#FCEBEB;border-color:#F7C1C1} .urgency-card.danger::before{background:#F09595}
+.urgency-card.warning{background:#FAEEDA;border-color:#FAC775} .urgency-card.warning::before{background:#EF9F27}
+.urgency-card.pink{background:#FBEAF0;border-color:#F4C0D1} .urgency-card.pink::before{background:#E08AA8}
+.urgency-card.lav{background:#EEEDFE;border-color:#C4B5FD} .urgency-card.lav::before{background:#AFA9EC}
+.urgency-label{font-size:11px;font-weight:500;margin-bottom:6px;letter-spacing:.3px}
+.urgency-card.danger .urgency-label{color:#791F1F}
+.urgency-card.warning .urgency-label{color:#633806}
+.urgency-card.pink .urgency-label{color:#72243E}
+.urgency-card.lav .urgency-label{color:#3C3489}
+.urgency-num{font-size:28px;font-weight:500;line-height:1;margin-bottom:4px;font-variant-numeric:tabular-nums}
+.urgency-card.danger .urgency-num{color:#A32D2D}
+.urgency-card.warning .urgency-num{color:#854F0B}
+.urgency-card.pink .urgency-num{color:#9C2E58}
+.urgency-card.lav .urgency-num{color:#6D28D9}
+.urgency-breakdown{font-size:9px;color:var(--text-mute);border-top:1px dashed;padding-top:4px;margin-top:4px;line-height:1.4}
+.urgency-card.danger .urgency-breakdown{border-color:#F7C1C1}
+.urgency-card.warning .urgency-breakdown{border-color:#FAC775}
+.urgency-card.pink .urgency-breakdown{border-color:#F4C0D1}
+.urgency-card.lav .urgency-breakdown{border-color:#C4B5FD}
+.urgency-breakdown b{font-weight:500}
+.urgency-card.danger .urgency-breakdown b{color:#A32D2D}
+.urgency-card.warning .urgency-breakdown b{color:#854F0B}
+.urgency-card.pink .urgency-breakdown b{color:#9C2E58}
+.urgency-card.lav .urgency-breakdown b{color:#6D28D9}
+
+/* TIER 2 — Route Map */
+.route-map-card{background:#FFFFFF;border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:14px;position:relative;overflow:hidden}
+.route-map-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:linear-gradient(90deg,var(--ship-accent-from),var(--ship-accent-to));opacity:.6}
+.route-map-header{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed var(--border)}
+.route-map-title{font-size:13px;font-weight:500;color:var(--text)}
+.route-map-sub{font-size:10px;color:var(--text-mute)}
+#routeMap{width:100%;height:260px;background:linear-gradient(180deg,#F7FAFC 0%,#EDF4F5 100%);border-radius:8px;position:relative;overflow:hidden;border:1px solid #E2E8E6}
+#routeMap svg{width:100%;height:100%}
+.port-dot{fill:var(--ship-primary);stroke:#FFF;stroke-width:.4;cursor:pointer;transition:r .15s}
+.port-dot.cn{fill:#E24B4A}
+.port-dot.mx{fill:#1D9E75}
+.port-dot.other{fill:var(--text-mute)}
+.port-label{fill:var(--text-soft);font-family:inherit;text-anchor:middle;pointer-events:none}
+.port-label-cn{fill:#A32D2D;font-weight:500}
+.port-label-mx{fill:#085041;font-weight:500}
+.route-path{fill:none;stroke:var(--ship-primary);stroke-width:.5;stroke-dasharray:1 .8;opacity:.6}
+.route-path.active{stroke:var(--gold);stroke-width:.8;opacity:.9;stroke-dasharray:none}
+.route-count-badge{fill:var(--gold);stroke:#FFF;stroke-width:.3}
+.route-count-text{fill:#FFF;font-weight:500;text-anchor:middle;dominant-baseline:middle;pointer-events:none}
+.route-legend{display:flex;gap:16px;justify-content:center;margin-top:10px;font-size:10px;color:var(--text-mute);flex-wrap:wrap}
+.route-legend-item{display:flex;align-items:center;gap:5px}
+.route-legend-dot{width:8px;height:8px;border-radius:50%}
+
+/* TIER 3 — Monthly KPI */
+.skpi-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.skpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-card);padding:14px;position:relative;overflow:hidden;min-width:0;transition:border-color .15s,box-shadow .15s}
+.skpi-card:hover{border-color:var(--border-hover);box-shadow:var(--shadow)}
+.skpi-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:var(--stripe,#CDB4DB);border-radius:10px 10px 0 0}
+.skpi-card-empty{visibility:hidden}
+.skpi-head{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
+.skpi-month{font-size:13px;font-weight:500;color:var(--text)}
+.skpi-sub{font-size:10px;color:var(--text-mute);letter-spacing:.04em;text-transform:uppercase}
+.skpi-body{display:flex;align-items:center;gap:14px}
+.skpi-ring{position:relative;width:64px;height:64px;flex-shrink:0}
+.skpi-ring svg{transform:rotate(-90deg)}
+.skpi-ring-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500}
+.skpi-stats{display:grid;grid-template-columns:1fr 1fr;gap:5px;flex:1;min-width:0}
+.skpi-stat{padding:5px 7px;border-radius:7px;cursor:pointer;transition:transform .12s;text-align:left;min-width:0}
+.skpi-stat:hover{transform:translateY(-1px)}
+.skpi-stat .num{font-size:16px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums}
+.skpi-stat .lbl{font-size:9px;color:var(--text-mute);line-height:1.25;margin-top:3px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.skpi-stat.all{background:var(--p-lav)} .skpi-stat.all .num{color:var(--p-lav-txt)}
+.skpi-stat.dv{background:var(--p-mint)} .skpi-stat.dv .num{color:var(--p-mint-txt)}
+.skpi-stat.tr{background:var(--p-sky)} .skpi-stat.tr .num{color:var(--p-sky-txt)}
+.skpi-stat.dl{background:var(--p-pink)} .skpi-stat.dl .num{color:var(--p-pink-txt)}
+.skpi-footer{margin-top:10px;padding-top:8px;border-top:1px solid #F1EFE8;font-size:10px;color:var(--text-mute);display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.skpi-footer .qty-badge{font-size:8px;font-weight:500;padding:1px 5px;border-radius:3px;letter-spacing:.3px}
+.skpi-footer .qty-badge.qty{background:var(--p-sage);color:var(--p-sage-txt)}
+.skpi-footer .qty-badge.amt{background:var(--p-butter);color:var(--p-butter-txt)}
+.skpi-footer b{font-size:11px;color:var(--text);font-weight:500}
+.mdelay-card{background:var(--st-danger-bg);border:1px solid #F7C1C1;border-radius:var(--radius-card);padding:14px;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.mdelay-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:#F09595;border-radius:10px 10px 0 0}
+.mdelay-card-title{font-size:12px;font-weight:500;color:var(--st-danger-txt);margin-bottom:4px;line-height:1.3}
+.mdelay-total{font-size:22px;font-weight:500;color:var(--st-danger-txt);text-align:center;margin-bottom:8px;line-height:1}
+.mdelay-total span{font-size:10px;font-weight:400;color:#A32D2D;display:block;margin-top:2px}
+.mdelay-list{display:flex;flex-direction:column;gap:5px;flex:1;overflow-y:auto;max-height:110px}
+.mdelay-item{background:#FFF;border:1px solid #F7C1C1;border-radius:5px;padding:5px 8px;cursor:pointer;transition:background .12s;text-align:center}
+.mdelay-item:hover{background:var(--p-pink)}
+.mdelay-mo{font-size:10px;font-weight:500;color:var(--st-danger-txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mdelay-style{font-size:8px;color:var(--text-mute);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* TIER 4+5 — Monthly sections */
+.mt-sec{margin-bottom:18px}
+.mt-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.mt-hd{padding:10px 14px;background:#FAFAF7;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.mt-title{font-size:13px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:6px}
+.mt-cnt{font-size:11px;color:var(--text-mute);background:#F1EFE8;padding:2px 10px;border-radius:10px;flex-shrink:0;font-weight:400;white-space:nowrap}
+.mf-bar{padding:10px 14px;background:#FDFCF9;border-bottom:1px solid var(--border);display:flex;gap:6px;align-items:center;flex-wrap:nowrap;overflow-x:auto;white-space:nowrap}
+.mf-bar::-webkit-scrollbar{height:4px}
+.mf-bar input,.mf-bar select{background:#FFF;border:1px solid var(--border);border-radius:5px;padding:5px 10px;font-size:11px;font-family:inherit;outline:none;color:var(--text);flex-shrink:0;transition:border-color .15s,box-shadow .15s}
+.mf-bar input:focus,.mf-bar select:focus{border-color:var(--ship-primary);box-shadow:0 0 0 2px rgba(15,110,86,.12)}
+.mf-bar input.mf-search{width:220px;flex-shrink:0}
+.mf-bar input.mf-search::placeholder{color:var(--text-mute)}
+.mf-bar select{min-width:110px;cursor:pointer}
+.mf-count{font-size:10px;color:#B4B2A9;margin-left:auto;flex-shrink:0;white-space:nowrap;padding-left:8px}
+.card-scroll{padding:14px;overflow-x:auto}
+.cards-flex{display:flex;gap:10px;min-width:min-content}
+
+/* Container card — 240px */
+.ship-card{flex:0 0 240px;background:#FFF;border:1px solid var(--border);border-radius:var(--radius-card);overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s;display:flex;flex-direction:column}
+.ship-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--border-hover)}
+.ship-card.delayed{background:#FFF5F5;border-color:#FECACA}
+.ship-card-map{height:90px;background:linear-gradient(180deg,#F7FAFC 0%,#EDF4F5 100%);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.ship-card-map svg{width:100%;height:100%}
+.ship-stage-badge{padding:6px 10px;border-bottom:1px solid var(--border);text-align:center;font-size:10px;font-weight:500;letter-spacing:.01em}
+.stage-booking{background:var(--stage-booking-bg);color:var(--stage-booking-txt)}
+.stage-loading{background:var(--stage-loading-bg);color:var(--stage-loading-txt)}
+.stage-shipping{background:var(--stage-shipping-bg);color:var(--stage-shipping-txt)}
+.stage-transit{background:var(--stage-transit-bg);color:var(--stage-transit-txt)}
+.stage-customs{background:var(--stage-customs-bg);color:var(--stage-customs-txt)}
+.stage-complete{background:var(--stage-complete-bg);color:var(--stage-complete-txt)}
+.ship-card-body{padding:10px}
+.ship-card-identity{padding-bottom:8px;border-bottom:1px dashed var(--border);margin-bottom:8px}
+.ship-card-label{font-size:9px;color:var(--text-mute);margin-top:6px;letter-spacing:.02em;font-weight:400}
+.ship-card-label:first-child{margin-top:0}
+.ship-card-value{font-size:11px;color:var(--text-soft);margin-top:1px;font-weight:500;line-height:1.3}
+.ship-card-value.container-id{font-size:14px;font-weight:500;color:var(--ship-primary);letter-spacing:-.01em}
+.ship-card-value.route{font-size:10px;display:flex;align-items:center;gap:4px}
+.ship-card-route-arrow{color:var(--text-mute)}
+.ship-card-dates{background:#FAFAF7;border-radius:6px;padding:8px;display:flex;flex-direction:column;gap:3px;font-size:10px;margin-bottom:8px}
+.ship-date-row{display:flex;justify-content:space-between;gap:6px}
+.ship-date-row .lbl{color:var(--text-mute);white-space:nowrap;font-size:9px}
+.ship-date-row .val{color:var(--text);text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ship-date-row.actual .val{color:var(--ship-primary);font-weight:500}
+.ship-date-row.delayed .val{color:#C66B6B;font-weight:500}
+.ship-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:10px;margin-bottom:8px}
+.ship-stat-box{padding:4px 6px;border-radius:5px;text-align:center}
+.ship-stat-box.mo-count{background:var(--p-lav)}
+.ship-stat-box.mo-count .lbl{color:var(--p-lav-txt);font-size:9px}
+.ship-stat-box.mo-count .val{color:#26215C;font-weight:500;font-size:13px}
+.ship-stat-box.qty{background:var(--p-sage)}
+.ship-stat-box.qty .lbl{color:var(--p-sage-txt);font-size:9px}
+.ship-stat-box.qty .val{color:#173404;font-weight:500;font-size:13px}
+.ship-amount-row{display:flex;justify-content:space-between;padding:6px 8px;background:var(--p-butter);border-radius:5px;font-size:10px;margin-bottom:8px}
+.ship-amount-row .lbl{color:var(--p-butter-txt)}
+.ship-amount-row .val{color:#412402;font-weight:500}
+.ship-invoice-btn{width:100%;padding:6px;border:1px solid var(--border);background:#FFF;border-radius:5px;font-size:10px;cursor:pointer;color:var(--text);font-family:inherit;font-weight:400;transition:background .15s,border-color .15s,color .15s}
+.ship-invoice-btn:hover{background:var(--p-sky);border-color:#93C5FD;color:var(--p-sky-txt)}
+
+/* Pipeline (elegant, shared w/ MO) */
+.pipe-card{background:linear-gradient(180deg,#FFFFFF 0%,#FDFCF9 100%);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-top:0;position:relative;overflow:hidden;border-top:none}
+.pipe-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 0%,var(--gold) 30%,var(--gold) 70%,transparent 100%);opacity:.4}
+.pipe-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:12px;border-bottom:1px dashed var(--border)}
+.pipe-title{font-size:12px;font-weight:500;color:var(--text-soft);display:flex;align-items:center;gap:8px;letter-spacing:.3px}
+.pipe-title-icon{width:22px;height:22px;background:linear-gradient(135deg,var(--gold),#B8956A);border-radius:5px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;box-shadow:0 2px 6px rgba(201,168,110,.25)}
+.pipe-summary{font-size:10px;color:var(--text-mute);font-weight:400}
+.pipe-row{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding:4px 0}
+.pipe-step{flex:1;min-width:105px;background:#FFFFFF;border:1px solid var(--border);border-radius:10px;padding:14px 10px 12px;cursor:pointer;transition:all .2s ease;text-align:center;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.pipe-step::after{content:'';position:absolute;left:8px;right:8px;bottom:0;height:3px;border-radius:0 0 8px 8px;transition:opacity .2s}
+.pipe-step:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,.06);border-color:var(--gold)}
+.pipe-step.empty{opacity:.45;background:#FAFAF7}
+.pipe-step.active{box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.pipe-n{font-size:24px;font-weight:500;line-height:1;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.pipe-lb{font-size:10px;font-weight:500;color:var(--text-soft);display:flex;align-items:center;gap:4px;margin-top:2px}
+.pipe-emoji{font-size:1.1em}
+.pipe-sublabel{font-size:8px;color:var(--text-mute);margin-top:1px;letter-spacing:.3px}
+.pipe-step[data-stage="Booking"]::after{background:var(--stage-booking-txt)}
+.pipe-step[data-stage="Loading"]::after{background:var(--stage-loading-txt)}
+.pipe-step[data-stage="Shipping"]::after{background:var(--stage-shipping-txt)}
+.pipe-step[data-stage="Transit"]::after{background:var(--stage-transit-txt)}
+.pipe-step[data-stage="Customs"]::after{background:var(--stage-customs-txt)}
+.pipe-step[data-stage="Complete"]::after{background:var(--stage-complete-txt)}
+.pipe-step.empty::after{opacity:.3}
+.pipe-connector{display:flex;align-items:center;justify-content:center;flex:0 0 24px;color:var(--border-hover);font-size:8px;position:relative}
+.pipe-connector::before{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:var(--border)}
+.pipe-connector-diamond{width:6px;height:6px;background:#FFFFFF;border:1px solid var(--border-hover);transform:rotate(45deg);position:relative;z-index:1}
+
+/* Timeline */
+.tl-card{background:var(--card);border-top:1px solid var(--border);padding:14px 20px}
+.tl-hd{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tl-title{font-size:11px;font-weight:500;color:var(--text-soft);letter-spacing:.02em}
+.tl-legend{display:flex;gap:8px;font-size:9px;color:var(--text-mute);align-items:center;flex-wrap:wrap}
+.tl-legend span{display:flex;align-items:center;gap:3px}
+.tl-type-badge{padding:2px 6px;border-radius:3px;font-size:8px;font-weight:500}
+.tl-dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+.tl-scroll{overflow-x:auto}
+.tl-tbl{width:100%;border-collapse:collapse;font-size:10px;table-layout:fixed;min-width:1000px}
+.tl-tbl th,.tl-tbl td{border:1px solid #EEF2F6}
+.tl-tbl th{background:#F8F8F5;color:var(--text-mute);font-weight:500;padding:6px 0;text-align:center}
+.tl-tbl th.wk{background:#FEF8F8;color:#E87979}
+.tl-tbl th.today{background:#FFF;color:#DC2626;font-weight:500;position:relative}
+.tl-tbl th.today::before{content:'';position:absolute;left:50%;top:0;width:2px;height:100%;background:#DC2626;transform:translateX(-50%);z-index:3}
+.tl-tbl th.today::after{content:'▼';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);font-size:8px;color:#DC2626;z-index:4}
+.tl-tbl .info-cell{width:200px;min-width:200px;text-align:left;background:#FAFAF7;padding:6px 10px;position:sticky;left:0;z-index:2;border-right:2px solid var(--border)}
+.tl-tbl td{padding:0;vertical-align:middle;height:24px;background:#FEFEFC}
+.tl-tbl td.today-col{background:#FEFEFC;position:relative}
+.tl-tbl td.today-col::before{content:'';position:absolute;left:50%;top:0;width:2px;height:100%;background:rgba(220,38,38,.55);transform:translateX(-50%);z-index:1;pointer-events:none}
+.tl-tbl tr.mo-gap td.today-col::before{background:rgba(220,38,38,.35)}
+.tl-tbl td.today-col .tl-bar{position:relative;z-index:2}
+.tl-tbl tr.mo-gap td{height:20px;background:#F8F8F5 !important;border-top:2px solid #E2E8F0}
+.tl-tbl tr.mo-gap .info-cell{background:#F8F8F5 !important}
+.tl-bar{height:100%;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:500;white-space:nowrap;overflow:hidden;min-height:16px}
+.gantt-bar-wait{background:repeating-linear-gradient(45deg,var(--p-butter),var(--p-butter) 4px,transparent 4px,transparent 8px);border:1px dashed #FAC775;color:var(--p-butter-txt)}
+.gantt-bar-transit{background:var(--p-sky);color:var(--p-sky-txt)}
+.gantt-bar-arrived{background:var(--p-mint);color:var(--p-mint-txt)}
+.tl-mo-info{cursor:pointer}
+.tl-mo-info:hover{background:var(--p-mint) !important}
+.tl-mo-wrap{display:flex;align-items:center;gap:8px}
+.tl-mo-thumb{width:36px;height:36px;background:var(--p-mint);border:1px solid var(--border);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-mute);flex-shrink:0}
+.tl-mo-num{font-size:11px;font-weight:500;color:var(--ship-primary)}
+.tl-mo-name{font-size:9px;color:var(--text-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.tl-mo-meta{font-size:8px;color:var(--text-mute);margin-top:1px}
+
+/* Popovers & Modals */
+.pop-ov{display:none;position:fixed;inset:0;background:rgba(20,19,17,.45);z-index:2000;justify-content:center;align-items:center;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:20px}
+.pop-ov.active{display:flex}
+.pop-box{background:#fff;border-radius:var(--radius);width:100%;max-width:700px;max-height:82vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .2s ease-out}
+@keyframes mIn{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.pop-hd{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:10}
+.pop-title{font-size:14px;font-weight:500;color:var(--ship-primary);letter-spacing:-.01em}
+.pop-sub{font-size:11px;color:var(--text-mute);margin-top:2px;font-weight:400}
+.pop-close{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:#FAFAF7;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--text-mute);transition:background .15s,color .15s}
+.pop-close:hover{background:var(--st-danger-bg);color:var(--st-danger-txt)}
+.pop-body{padding:16px 20px}
+.pop-item{padding:10px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;transition:background .15s,border-color .15s}
+.pop-item:hover{background:var(--p-mint);border-color:#6EE7B7}
+.pop-item-left .pi-mo{font-size:12px;font-weight:500;color:var(--ship-primary)}
+.pop-item-left .pi-name{font-size:10px;color:var(--text-mute);margin-top:2px}
+.pop-item-left .pi-meta{font-size:9px;color:#94A3B8;margin-top:2px}
+.pop-empty{text-align:center;padding:30px;color:var(--text-mute);font-size:13px}
+.dly-badge{display:inline-block;font-size:7px;font-weight:500;padding:1px 5px;border-radius:3px;background:#FEE2E2;color:#DC2626;margin-left:5px}
+
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(20,19,17,.52);z-index:3000;justify-content:center;align-items:center;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:20px}
+.modal-ov.active{display:flex}
+.modal-box{background:#fff;border-radius:var(--radius);width:100%;max-width:1050px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.22);animation:mIn .25s ease-out}
+.m-hd{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:#fff;z-index:10;gap:14px;flex-wrap:wrap}
+.m-title{font-size:18px;font-weight:500;color:var(--ship-primary);letter-spacing:-.02em}
+.m-sub{font-size:12px;color:var(--text-mute);margin-top:2px;font-weight:400}
+.m-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:#FAFAF7;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--text-mute)}
+.m-close:hover{background:var(--st-danger-bg);color:var(--st-danger-txt)}
+.m-body{padding:20px 24px 24px}
+.m-sec{margin-bottom:24px}
+.m-sec-t{font-size:12px;font-weight:500;color:var(--ship-primary);margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid var(--p-mint);display:flex;align-items:center;gap:8px}
+.d-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.d-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.d-item{display:flex;flex-direction:column;gap:3px;padding:8px 10px;background:#FAFAF7;border-radius:6px;border:1px solid var(--border)}
+.d-label{font-size:9px;font-weight:500;color:var(--text-mute);letter-spacing:.02em}
+.d-val{font-size:12px;font-weight:400;color:var(--text);word-break:break-all;line-height:1.35}
+.d-val.empty{color:#B4B2A9;font-style:italic}
+.m-hd-btn{background:var(--p-butter);color:var(--p-butter-txt);border:1px solid #FAC775;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;transition:transform .12s,filter .15s}
+.m-hd-btn:hover{transform:translateY(-1px);filter:brightness(.97)}
+.m-hd-btn.mo{background:var(--p-lav);color:var(--p-lav-txt);border-color:#C4B5FD}
+
+.mo-lines-tbl{width:100%;border-collapse:collapse;font-size:10px;margin-top:8px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.mo-lines-tbl th{padding:8px 10px;font-weight:500;font-size:10px;background:#FAFAF7;color:var(--text-mute);text-align:left;border-bottom:1px solid var(--border)}
+.mo-lines-tbl td{padding:8px 10px;border-bottom:1px solid #F1EFE8;color:var(--text)}
+.mo-lines-tbl tr{cursor:pointer;transition:background .12s}
+.mo-lines-tbl tr:hover td{background:var(--p-mint)}
+.mo-lines-tbl tr:last-child td{border-bottom:0}
+.mo-lines-tbl .mo-num-cell{font-weight:500;color:var(--mo-primary)}
+
+.schedule-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.schedule-col{background:#FAFAF7;border-radius:8px;padding:14px;border:1px solid var(--border)}
+.schedule-col-title{font-size:12px;font-weight:500;margin-bottom:12px;padding-bottom:8px;border-bottom:2px dashed var(--border)}
+.schedule-col-title.plan{color:#7C3AED}
+.schedule-col-title.actual{color:#059669}
+.sch-item{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #F1EFE8}
+.sch-item:last-child{border-bottom:none}
+.sch-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#fff;flex-shrink:0}
+.sch-dot.done{background:#86EFAC;color:#065F46}
+.sch-dot.curr{background:#93C5FD;color:#1E40AF}
+.sch-dot.wait{background:#E2E8F0;color:var(--text-mute)}
+.sch-info{flex:1}
+.sch-label{font-size:11px;font-weight:500;color:var(--text)}
+.sch-date{font-size:10px;color:var(--text-mute);margin-top:1px}
+
+.tag{padding:3px 8px;border-radius:4px;font-size:9px;font-weight:500;display:inline-flex;align-items:center;white-space:nowrap;border:1px solid}
+.t-ok{background:var(--st-ok-bg);color:var(--st-ok-txt);border-color:#A7F3D0}
+.t-wn{background:var(--st-warn-bg);color:var(--st-warn-txt);border-color:#FAC775}
+.t-dg{background:var(--st-danger-bg);color:var(--st-danger-txt);border-color:#F7C1C1}
+.t-dr{background:var(--st-draft-bg);color:var(--st-draft-txt);border-color:#D3D1C7}
+.t-bl{background:var(--st-info-bg);color:var(--st-info-txt);border-color:#93C5FD}
+
+#lightboxOv{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:5000;justify-content:center;align-items:center;cursor:pointer}
+#lightboxOv.active{display:flex}
+#lightboxOv img{max-width:90%;max-height:90%;object-fit:contain;border-radius:8px}
+#lightboxOv .lb-close{position:absolute;top:20px;right:24px;color:#fff;font-size:18px;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.15);border-radius:50%;border:0;font-family:inherit}
+
+.spinner{width:40px;height:40px;border:4px solid var(--border);border-top-color:var(--ship-primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
+.spinner-sm{width:18px;height:18px;border:3px solid var(--border);border-top-color:var(--ship-primary);border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;gap:12px;color:var(--text-mute);font-size:13px}
+.err-box{background:var(--st-danger-bg);border:1px solid #F7C1C1;border-radius:8px;padding:20px;text-align:center;color:var(--st-danger-txt);max-width:420px;margin:60px auto}
+.err-box .t{font-weight:500;font-size:14px;margin-bottom:8px}
+.err-box .m{font-size:11px;word-break:break-all}
+.empty-state{background:#FAFAF7;border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center}
+.empty-icon{font-size:32px;margin-bottom:8px;opacity:.5}
+.empty-title{font-size:12px;font-weight:500;color:var(--text-soft);margin-bottom:4px}
+.empty-sub{font-size:10px;color:var(--text-mute);line-height:1.5}
+
+@media(max-width:1400px){
+  .tier1-row{grid-template-columns:repeat(2,1fr)}
+  .skpi-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:900px){
+  .skpi-grid{grid-template-columns:1fr}
+  .d-grid{grid-template-columns:1fr 1fr}
+  .schedule-compare{grid-template-columns:1fr}
+  #routeMap{height:220px}
+}
+@media(max-width:600px){
+  .tier1-row{grid-template-columns:1fr}
+  .d-grid{grid-template-columns:1fr}
+  body{padding:12px}
+}
+</style>
+</head>
+<body>
+
+<div id="loadingScreen" class="loading"><div class="spinner"></div>선적 데이터를 불러오는 중 / 正在加载装运数据</div>
+
+<div id="mainContent" style="display:none">
+  <div class="hdr">
+    <h1><span class="ic">SH</span> Shipment View / 선적 관리표 / 装箱出货</h1>
+    <div class="hdr-btns">
+      <button class="btn-port" onclick="openPortManager()">⚓ 항구 관리 / 港口管理</button>
+      <button class="btn-primary" onclick="goToForm('Add_Shipment')">＋ 신규 선적 / 新装箱</button>
+    </div>
+  </div>
+
+  <!-- TIER 1 -->
+  <div class="tier1-row">
+    <div class="urgency-card danger" onclick="openUrgencyPop('customsDelay')">
+      <div class="urgency-label">🚨 통관 지연 / 清关延误</div>
+      <div class="urgency-num" id="urgCustomsTotal">0</div>
+      <div class="urgency-breakdown" id="urgCustomsBreakdown">-</div>
+    </div>
+    <div class="urgency-card warning" onclick="openUrgencyPop('shipSoon')">
+      <div class="urgency-label">⏰ 선적 임박 / 临近装运</div>
+      <div class="urgency-num" id="urgShipSoonTotal">0</div>
+      <div class="urgency-breakdown" id="urgShipSoonBreakdown">-</div>
+    </div>
+    <div class="urgency-card pink" onclick="openUrgencyPop('noInvoice')">
+      <div class="urgency-label">📄 인보이스 미발행 / 发票未开</div>
+      <div class="urgency-num" id="urgInvoiceTotal">0</div>
+      <div class="urgency-breakdown" id="urgInvoiceBreakdown">-</div>
+    </div>
+    <div class="urgency-card lav" onclick="openUrgencyPop('transit')">
+      <div class="urgency-label">🌊 운송 중 / 运输中</div>
+      <div class="urgency-num" id="urgTransitTotal">0</div>
+      <div class="urgency-breakdown" id="urgTransitBreakdown">-</div>
+    </div>
+  </div>
+
+  <!-- TIER 2 -->
+  <div class="route-map-card">
+    <div class="route-map-header">
+      <div class="route-map-title">🗺️ 선적 라우트 / 装运航线</div>
+      <div class="route-map-sub">활성 루트 · 运输中的航线</div>
+    </div>
+    <div id="routeMap"></div>
+    <div class="route-legend" id="routeLegend"></div>
+  </div>
+
+  <!-- TIER 3 -->
+  <div id="shipmentKpiRow"></div>
+
+  <!-- TIER 4+5 -->
+  <div id="monthlyContent"></div>
+</div>
+
+<div id="errorScreen" style="display:none">
+  <div class="err-box"><div class="t">데이터를 불러올 수 없습니다 / 加载失败</div><div class="m" id="errorMsg"></div></div>
+</div>
+
+<!-- Popovers -->
+<div class="pop-ov" id="urgencyPopOv"><div class="pop-box"><div class="pop-hd"><div><div class="pop-title" id="urgPopTitle">-</div><div class="pop-sub" id="urgPopSub">-</div></div><div class="pop-close" id="urgPopClose">✕</div></div><div class="pop-body" id="urgPopBody"></div></div></div>
+<div class="pop-ov" id="kpiPopOv"><div class="pop-box"><div class="pop-hd"><div><div class="pop-title" id="kpiPopTitle">-</div><div class="pop-sub" id="kpiPopSub">-</div></div><div class="pop-close" id="kpiPopClose">✕</div></div><div class="pop-body" id="kpiPopBody"></div></div></div>
+<div class="pop-ov" id="pipePopOv"><div class="pop-box"><div class="pop-hd"><div><div class="pop-title" id="pipePopTitle">-</div><div class="pop-sub" id="pipePopSub">-</div></div><div class="pop-close" id="pipePopClose">✕</div></div><div class="pop-body" id="pipePopBody"></div></div></div>
+<div class="pop-ov" id="portManagerOv"><div class="pop-box" style="max-width:820px"><div class="pop-hd"><div><div class="pop-title">⚓ 항구 관리 / 港口管理</div><div class="pop-sub">기본 항구 + 사용자 추가 항구 / 默认港口 + 自定义</div></div><div class="pop-close" id="portManagerClose">✕</div></div><div id="portManagerBody"></div></div></div>
+
+<!-- Shipment Detail Modal -->
+<div class="modal-ov" id="modalOv">
+  <div class="modal-box">
+    <div class="m-hd">
+      <div>
+        <div class="m-title" id="mTitle">-</div>
+        <div class="m-sub" id="mSub">-</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+        <button class="m-hd-btn" onclick="openInvoiceFromModal()">📄 Invoice / 发票</button>
+        <button class="m-hd-btn mo" onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Report:All_Shipment','_blank')">✏️ Edit / 修改</button>
+        <div class="m-close" id="mClose">✕</div>
+      </div>
+    </div>
+    <div class="m-body" id="mBody"></div>
+  </div>
+</div>
+
+<!-- Nested MO Detail Modal -->
+<div class="modal-ov" id="moModalOv">
+  <div class="modal-box">
+    <div class="m-hd">
+      <div>
+        <div class="m-title" id="moMTitle" style="color:var(--mo-primary)">-</div>
+        <div class="m-sub" id="moMSub">-</div>
+      </div>
+      <div class="m-close" id="moMClose">✕</div>
+    </div>
+    <div class="m-body" id="moMBody"></div>
+  </div>
+</div>
+
+<div id="lightboxOv" onclick="closeLightbox()">
+  <img id="lightboxImg" alt="">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+</div>
+
+<script>
+/* ═══ JERA ERP — Shipment View v10 ═══ */
+var APP="eom",REP_SHIP="All_Shipment",REP_MO="All_MO";
+var allShipments=[],allMO=[];
+var shipmentGroupsByMonth={};
+var today=new Date(),todayStr=today.toISOString().split("T")[0];
+var currentShipment=null;
+
+var KPI_RING_COLORS=["#1D9E75","#818CF8","#F59E0B","#EC4899","#A78BFA","#FB923C"];
+var KPI_STRIPES=["#9FE1CB","#CDB4DB","#FAC775","#F4C0D1"];
+
+var SHIP_STAGES=["Booking","Loading","Shipping","Transit","Customs","Complete"];
+var STAGE_EMOJIS=["📋","📦","⚓","🚢","🛃","✅"];
+var STAGE_LABELS_KR=["예약","적재","선적","운송","통관","완료"];
+var STAGE_LABELS_CN=["预订","装载","装船","运输","清关","完成"];
+
+/* ── Utilities ── */
+function g(r,f){var v=r[f];if(v==null||v==="")return"-";if(typeof v==="object"&&v.display_value)return v.display_value;return String(v)}
+function escH(s){var d=document.createElement("div");d.textContent=String(s==null?"":s);return d.innerHTML}
+function pd(v){
+  if(!v||v==="-")return null;
+  if(/^\d{4}-\d{2}-\d{2}/.test(v))return v.substring(0,10);
+  var m=v.match(/^(\d{1,2})-([A-Za-z]+)-(\d{4})/);
+  if(m){var mo={Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};return m[3]+"-"+(mo[m[2]]||"01")+"-"+(m[1].length===1?"0"+m[1]:m[1])}
+  return null;
+}
+function getModDate(r){
+  var v=r["Modified_Time"]||r["Modified_Time_field"]||"";
+  if(!v||v==="-")return"알 수 없음";
+  var m=v.match(/^(\d{1,2})-([A-Za-z]+)-(\d{4})/);
+  if(m){var mo={Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};var day=m[1].length===1?"0"+m[1]:m[1];return m[3]+"-"+(mo[m[2]]||"01")+"-"+day}
+  return v.split(" ")[0];
+}
+function getSubformLines(r,fn){var v=r[fn];if(!v)return[];if(Array.isArray(v))return v;if(typeof v==="object")return Object.values(v);return[]}
+function getAllImgs(r,field){
+  var i=r[field];if(!i)return[];
+  if(Array.isArray(i))return i.filter(function(x){return x&&typeof x==="string"&&x.length>5});
+  if(typeof i==="object"&&!Array.isArray(i)){var u=[];Object.keys(i).forEach(function(k){var v=i[k];if(v&&typeof v==="string"&&v.length>5)u.push(v)});return u}
+  if(typeof i==="string"&&i.length>5)return[i];
+  return[];
+}
+function tc(s){
+  var l=(s||"").toLowerCase();
+  if(l.indexOf("complete")>=0||l.indexOf("done")>=0||l.indexOf("delivered")>=0)return"t-ok";
+  if(l.indexOf("transit")>=0||l.indexOf("shipping")>=0||l.indexOf("loading")>=0)return"t-bl";
+  if(l.indexOf("customs")>=0||l.indexOf("booking")>=0)return"t-wn";
+  if(l.indexOf("delay")>=0||l.indexOf("cancel")>=0)return"t-dg";
+  return"t-dr";
+}
+function parseYM(key){var m=key.match(/(\d+)년\s*(\d+)월/);if(!m)return null;var y=parseInt(m[1]);if(y<100)y+=2000;return{y:y,m:parseInt(m[2])}}
+function sortMonthKeys(keys){
+  return keys.slice().sort(function(a,b){
+    var pa=parseYM(a),pb=parseYM(b);
+    if(!pa&&!pb)return a<b?-1:(a>b?1:0);
+    if(!pa)return 1;if(!pb)return -1;
+    if(pa.y!==pb.y)return pa.y-pb.y;
+    return pa.m-pb.m;
+  });
+}
+function getTopTwoDataMonths(groups){
+  var keys=sortMonthKeys(Object.keys(groups)).filter(function(k){return k!=="미지정"&&groups[k]&&groups[k].length>0});
+  return keys.slice(-2);
+}
+
+/* ── Shipment stage helpers ── */
+function shipStageClass(stage){
+  var map={"Booking":"stage-booking","Loading":"stage-loading","Shipping":"stage-shipping","Transit":"stage-transit","Customs":"stage-customs","Complete":"stage-complete"};
+  return map[stage]||"stage-booking";
+}
+function shipStageLabel(stage){
+  var idx=SHIP_STAGES.indexOf(stage);
+  if(idx<0)return stage;
+  return STAGE_EMOJIS[idx]+" "+STAGE_LABELS_KR[idx]+" / "+STAGE_LABELS_CN[idx];
+}
+function getShipStage(r){
+  var s=g(r,"Shipment_Status");
+  if(s==="-")s=g(r,"Stage");
+  if(s==="-")s=g(r,"Container_Status");
+  if(SHIP_STAGES.indexOf(s)>=0)return s;
+  var etd=pd(g(r,"ETD")),atd=pd(g(r,"ATD")),eta=pd(g(r,"ETA")),ata=pd(g(r,"ATA"));
+  if(ata)return"Complete";
+  if(atd&&eta&&today>new Date(eta))return"Customs";
+  if(atd)return"Transit";
+  if(etd&&today>=new Date(etd))return"Shipping";
+  return"Booking";
+}
+function isCustomsDelayed(r){
+  if(getShipStage(r)==="Complete")return false;
+  var eta=pd(g(r,"ETA"));
+  if(!eta)return false;
+  return today>new Date(eta);
+}
+function shipMonthKey(r){
+  var etd=pd(g(r,"ETD"));
+  if(!etd)return"미지정";
+  var d=new Date(etd);
+  return d.getFullYear()+"년 "+(d.getMonth()+1)+"월";
+}
+function buildShipmentGroupsByMonth(){
+  shipmentGroupsByMonth={};
+  allShipments.forEach(function(r){
+    var k=shipMonthKey(r);
+    if(!shipmentGroupsByMonth[k])shipmentGroupsByMonth[k]=[];
+    shipmentGroupsByMonth[k].push(r);
+  });
+}
+
+/* ── Image queue ── */
+var _safeQ=[],_safeBusy=false;
+function _runSafeQ(){
+  if(_safeQ.length===0){_safeBusy=false;return}
+  _safeBusy=true;var task=_safeQ.shift();
+  var el=task.id?document.getElementById(task.id):task.el;
+  if(!el){setTimeout(_runSafeQ,50);return}
+  var img=document.createElement("img");
+  img.style.cssText=task.css||"width:100%;height:100%;object-fit:cover";
+  if(task.clk)img.onclick=function(e){e.stopPropagation();openLightbox(this.src)};
+  var done=false;function next(){if(done)return;done=true;setTimeout(_runSafeQ,100)}
+  try{ZOHO.CREATOR.UTIL.setImageData(img,task.url,function(){el.innerHTML="";el.appendChild(img);next()});setTimeout(next,4000)}catch(e){next()}
+}
+function qImg(elOrId,url,css,clk){
+  _safeQ.push({id:typeof elOrId==="string"?elOrId:null,el:typeof elOrId==="object"?elOrId:null,url:url,css:css,clk:!!clk});
+  if(!_safeBusy)_runSafeQ();
+}
+function openLightbox(src){if(!src)return;document.getElementById("lightboxImg").src=src;document.getElementById("lightboxOv").classList.add("active")}
+function closeLightbox(){document.getElementById("lightboxOv").classList.remove("active");document.getElementById("lightboxImg").src=""}
+function goToForm(f){window.open("https://creatorapp.zoho.com/jeramoda/eom/#Form:"+f,"_blank")}
+function show(i){document.getElementById(i).style.display="block"}
+function hide(i){document.getElementById(i).style.display="none"}
+function showErr(m){hide("loadingScreen");show("errorScreen");document.getElementById("errorMsg").textContent=m}
+function buildEmptyState(type){
+  return '<div class="empty-state"><div class="empty-icon">📭</div>'+
+    '<div class="empty-title">'+type+' 데이터 없음 / 无'+type+'数据</div>'+
+    '<div class="empty-sub">Zoho에 데이터를 추가하면 자동으로 표시됩니다<br>添加数据后将自动显示</div></div>';
+}
+function cleanFactory(v){if(!v||v==="-")return"-";return v.replace(/^[_\s]*\d+[_\s]*/,"")}
+
+/* ── Init ── */
+ZOHO.CREATOR.init().then(function(){
+  Promise.all([
+    ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:REP_SHIP,page:1,pageSize:200}),
+    ZOHO.CREATOR.API.getAllRecords({appName:APP,reportName:REP_MO,page:1,pageSize:200})
+  ]).then(function(results){
+    if(results[0]&&results[0].code===3000&&results[0].data)allShipments=results[0].data;
+    if(results[1]&&results[1].code===3000&&results[1].data)allMO=results[1].data;
+    buildShipmentGroupsByMonth();
+    loadCustomPorts();
+    renderTier1Urgency();
+    renderRouteMap();
+    renderShipmentKpiRow();
+    renderMonthlyContent();
+    hide("loadingScreen");show("mainContent");
+  }).catch(function(e){showErr(JSON.stringify(e))});
+}).catch(function(e){showErr("ZOHO init failed: "+JSON.stringify(e))});
+
+/* ═══ TIER 1 — Urgency ═══ */
+function computeUrgencyByMonth(){
+  var result={
+    customsDelay:{total:0,byMonth:{},items:[]},
+    shipSoon:{total:0,byMonth:{},items:[]},
+    noInvoice:{total:0,byMonth:{},items:[]},
+    transit:{total:0,byMonth:{},items:[]}
+  };
+  allShipments.forEach(function(r){
+    var key=shipMonthKey(r);
+    var stage=getShipStage(r);
+    var atd=pd(g(r,"ATD"));
+    var etd=pd(g(r,"ETD"));
+    var eta=pd(g(r,"ETA"));
+    if(isCustomsDelayed(r)){
+      result.customsDelay.total++;
+      result.customsDelay.byMonth[key]=(result.customsDelay.byMonth[key]||0)+1;
+      result.customsDelay.items.push(r);
+    }
+    if(etd&&(stage==="Booking"||stage==="Loading")){
+      var diff=(new Date(etd)-today)/86400000;
+      if(diff>=0&&diff<=7){
+        result.shipSoon.total++;
+        result.shipSoon.byMonth[key]=(result.shipSoon.byMonth[key]||0)+1;
+        result.shipSoon.items.push(r);
+      }
+    }
+    if(atd){
+      var inv=g(r,"Invoice_Status");
+      if(inv==="-"||inv===""||inv.toLowerCase().indexOf("issued")<0&&inv.toLowerCase().indexOf("발행")<0&&inv.toLowerCase().indexOf("已开")<0){
+        result.noInvoice.total++;
+        result.noInvoice.byMonth[key]=(result.noInvoice.byMonth[key]||0)+1;
+        result.noInvoice.items.push(r);
+      }
+    }
+    if(atd&&eta&&new Date(eta)>=today&&stage==="Transit"){
+      result.transit.total++;
+      result.transit.byMonth[key]=(result.transit.byMonth[key]||0)+1;
+      result.transit.items.push(r);
+    }
+  });
+  return result;
+}
+function formatMonthBreakdown(byMonth){
+  var keys=sortMonthKeys(Object.keys(byMonth)).filter(function(k){return k!=="미지정"});
+  if(keys.length===0){
+    if(byMonth["미지정"])return "<b>"+byMonth["미지정"]+"</b> (미지정 / 未指定)";
+    return "없음 / 无";
+  }
+  var parts=keys.map(function(k){
+    var ym=parseYM(k);
+    var label=ym?(ym.y.toString().slice(-2)+"."+(ym.m<10?"0"+ym.m:ym.m)):k;
+    return label+": <b>"+byMonth[k]+"</b>";
+  });
+  if(byMonth["미지정"])parts.push("미지정: <b>"+byMonth["미지정"]+"</b>");
+  return parts.join(" · ");
+}
+function renderTier1Urgency(){
+  var u=computeUrgencyByMonth();
+  window._urgency=u;
+  document.getElementById("urgCustomsTotal").textContent=u.customsDelay.total;
+  document.getElementById("urgCustomsBreakdown").innerHTML=formatMonthBreakdown(u.customsDelay.byMonth);
+  document.getElementById("urgShipSoonTotal").textContent=u.shipSoon.total;
+  document.getElementById("urgShipSoonBreakdown").innerHTML=formatMonthBreakdown(u.shipSoon.byMonth);
+  document.getElementById("urgInvoiceTotal").textContent=u.noInvoice.total;
+  document.getElementById("urgInvoiceBreakdown").innerHTML=formatMonthBreakdown(u.noInvoice.byMonth);
+  document.getElementById("urgTransitTotal").textContent=u.transit.total;
+  document.getElementById("urgTransitBreakdown").innerHTML=formatMonthBreakdown(u.transit.byMonth);
+}
+function openUrgencyPop(type){
+  var titles={customsDelay:"🚨 통관 지연 / 清关延误",shipSoon:"⏰ 선적 임박 / 临近装运",noInvoice:"📄 인보이스 미발행 / 发票未开",transit:"🌊 운송 중 / 运输中"};
+  var bucket=(window._urgency||{})[type]||{items:[]};
+  var items=bucket.items||[];
+  document.getElementById("urgPopTitle").textContent=titles[type];
+  document.getElementById("urgPopSub").textContent="총 "+items.length+"건 / 共 "+items.length+" 件";
+  var h="";
+  if(items.length===0){h='<div class="pop-empty">해당 항목 없음 ✓ / 无相关项目</div>'}
+  else{
+    items.forEach(function(r){
+      var cid=g(r,"Container_ID");
+      if(cid==="-")cid=g(r,"PI_Number");
+      var from=g(r,"Origin_Port"),to=g(r,"Destination_Port");
+      var stage=getShipStage(r);
+      h+='<div class="pop-item" onclick="document.getElementById(\'urgencyPopOv\').classList.remove(\'active\');openShipmentModal(\''+r["ID"]+'\')">';
+      h+='<div class="pop-item-left">';
+      h+='<div class="pi-mo">'+escH(cid)+'</div>';
+      h+='<div class="pi-name">'+escH(from)+' → '+escH(to)+'</div>';
+      h+='<div class="pi-meta">ETD: '+escH(g(r,"ETD"))+' · ETA: '+escH(g(r,"ETA"))+'</div></div>';
+      h+='<span class="tag '+tc(stage)+'">'+escH(stage)+'</span></div>';
+    });
+  }
+  document.getElementById("urgPopBody").innerHTML=h;
+  document.getElementById("urgencyPopOv").classList.add("active");
+}
+
+/* ═══ TIER 2 — Route Map ═══ */
+var DEFAULT_PORTS=[
+  {code:"SHA",name_kr:"상해",name_cn:"上海",country:"cn",x:68,y:35},
+  {code:"SZX",name_kr:"심천",name_cn:"深圳",country:"cn",x:64,y:45},
+  {code:"NGB",name_kr:"영파",name_cn:"宁波",country:"cn",x:70,y:37},
+  {code:"TAO",name_kr:"청도",name_cn:"青岛",country:"cn",x:69,y:30},
+  {code:"ZLO",name_kr:"만사니요",name_cn:"曼萨尼约",country:"mx",x:18,y:48},
+  {code:"LZC",name_kr:"라사로",name_cn:"拉萨罗",country:"mx",x:19,y:50}
+];
+var customPorts=[];
+function loadCustomPorts(){
+  try{var saved=localStorage.getItem("jera_custom_ports");if(saved)customPorts=JSON.parse(saved)||[]}catch(e){customPorts=[]}
+}
+function saveCustomPorts(){try{localStorage.setItem("jera_custom_ports",JSON.stringify(customPorts))}catch(e){}}
+function getAllPorts(){return DEFAULT_PORTS.concat(customPorts)}
+function findPort(codeOrName){
+  if(!codeOrName||codeOrName==="-")return null;
+  var q=String(codeOrName).trim();
+  var qLower=q.toLowerCase();
+  return getAllPorts().find(function(p){
+    return p.code.toLowerCase()===qLower||p.name_kr===q||p.name_cn===q||p.name_kr.toLowerCase().indexOf(qLower)>=0||p.name_cn.indexOf(q)>=0;
+  });
+}
+
+function renderRouteMap(){
+  var ports=getAllPorts();
+  var activeShipments=allShipments.filter(function(r){return getShipStage(r)!=="Complete"});
+  var routeCounts={};
+  activeShipments.forEach(function(r){
+    var from=g(r,"Origin_Port");if(from==="-")from=g(r,"Port_Of_Loading");
+    var to=g(r,"Destination_Port");if(to==="-")to=g(r,"Port_Of_Discharge");
+    var pFrom=findPort(from),pTo=findPort(to);
+    if(!pFrom||!pTo)return;
+    var key=pFrom.code+"→"+pTo.code;
+    if(!routeCounts[key])routeCounts[key]={count:0,from:pFrom,to:pTo,ships:[]};
+    routeCounts[key].count++;
+    routeCounts[key].ships.push(r);
+  });
+  var svgParts=['<svg viewBox="0 0 100 70" preserveAspectRatio="xMidYMid meet">'];
+  // Simplified continent silhouettes
+  svgParts.push('<path d="M 60,25 Q 65,22 70,25 L 75,30 Q 78,35 75,42 L 72,48 Q 68,52 62,50 L 58,45 Q 56,38 58,32 Z" fill="#F1EFE8" stroke="#D3D1C7" stroke-width="0.3"/>');
+  svgParts.push('<path d="M 12,43 Q 15,41 20,42 L 25,45 Q 27,48 25,52 L 22,55 Q 18,56 15,53 L 13,48 Z" fill="#F1EFE8" stroke="#D3D1C7" stroke-width="0.3"/>');
+  svgParts.push('<path d="M 8,32 Q 15,30 25,33 L 30,38 Q 28,42 22,42 L 15,41 Q 10,40 8,38 Z" fill="#FAFAF7" stroke="#EDE9E4" stroke-width="0.25"/>');
+  svgParts.push('<text x="45" y="38" font-size="3" fill="#B4B2A9" text-anchor="middle">Pacific / 太平洋</text>');
+  Object.keys(routeCounts).forEach(function(key){
+    var rc=routeCounts[key];
+    var x1=rc.from.x,y1=rc.from.y,x2=rc.to.x,y2=rc.to.y;
+    var cx=(x1+x2)/2,cy=Math.min(y1,y2)-18;
+    svgParts.push('<path d="M '+x1+','+y1+' Q '+cx+','+cy+' '+x2+','+y2+'" class="route-path active"/>');
+    var t=0.5;
+    var bx=(1-t)*(1-t)*x1+2*(1-t)*t*cx+t*t*x2;
+    var by=(1-t)*(1-t)*y1+2*(1-t)*t*cy+t*t*y2;
+    svgParts.push('<circle cx="'+bx+'" cy="'+by+'" r="2.5" class="route-count-badge"/>');
+    svgParts.push('<text x="'+bx+'" y="'+by+'" class="route-count-text" font-size="2.5">'+rc.count+'</text>');
+  });
+  ports.forEach(function(p){
+    svgParts.push('<circle cx="'+p.x+'" cy="'+p.y+'" r="1.5" class="port-dot '+p.country+'"><title>'+escH(p.name_kr)+' / '+escH(p.name_cn)+'</title></circle>');
+    var labelY=p.country==="mx"?p.y+4:p.y-3;
+    svgParts.push('<text x="'+p.x+'" y="'+labelY+'" class="port-label port-label-'+p.country+'" font-size="2.5">'+escH(p.name_cn)+'</text>');
+  });
+  svgParts.push('</svg>');
+  document.getElementById("routeMap").innerHTML=svgParts.join("");
+  var legendH='<span class="route-legend-item"><span class="route-legend-dot" style="background:#E24B4A"></span>중국 / 中国</span>';
+  legendH+='<span class="route-legend-item"><span class="route-legend-dot" style="background:#1D9E75"></span>멕시코 / 墨西哥</span>';
+  legendH+='<span class="route-legend-item"><span class="route-legend-dot" style="background:#888780"></span>기타 / 其他</span>';
+  legendH+='<span class="route-legend-item">활성 루트 / 运行中: <b style="color:var(--gold)">'+Object.keys(routeCounts).length+'</b>개 · 컨테이너 / 集装箱: <b style="color:var(--gold)">'+activeShipments.length+'</b>개</span>';
+  document.getElementById("routeLegend").innerHTML=legendH;
+}
+
+/* ── Port Manager ── */
+function openPortManager(){
+  var ports=getAllPorts();
+  var body='<div class="pop-body">';
+  body+='<div style="font-size:11px;color:var(--text-mute);margin-bottom:12px">항구 추가 / 관리 · 添加或管理港口</div>';
+  body+='<div style="background:var(--p-lav);border-radius:8px;padding:10px;margin-bottom:12px">';
+  body+='<div style="font-size:11px;font-weight:500;color:var(--p-lav-txt);margin-bottom:8px">➕ 새 항구 추가 / 添加新港口</div>';
+  body+='<div style="display:grid;grid-template-columns:80px 1fr 1fr 100px auto;gap:6px;font-size:11px">';
+  body+='<input id="newPortCode" placeholder="CODE" style="padding:5px;border:1px solid var(--border);border-radius:4px;font-size:10px;font-family:inherit">';
+  body+='<input id="newPortKR" placeholder="한국명" style="padding:5px;border:1px solid var(--border);border-radius:4px;font-size:10px;font-family:inherit">';
+  body+='<input id="newPortCN" placeholder="中文名" style="padding:5px;border:1px solid var(--border);border-radius:4px;font-size:10px;font-family:inherit">';
+  body+='<select id="newPortCountry" style="padding:5px;border:1px solid var(--border);border-radius:4px;font-size:10px;font-family:inherit">';
+  body+='<option value="cn">🇨🇳 China</option><option value="mx">🇲🇽 Mexico</option><option value="other">🌍 기타 / 其他</option>';
+  body+='</select>';
+  body+='<button onclick="addCustomPort()" style="padding:5px 12px;background:var(--ship-primary);color:#FFF;border:0;border-radius:4px;font-size:10px;cursor:pointer;font-family:inherit;font-weight:500">추가 / 添加</button>';
+  body+='</div>';
+  body+='<div style="font-size:9px;color:var(--text-mute);margin-top:6px">좌표 자동 설정 (국가별) · 정확한 위치는 코드 수정 필요 / 坐标按国家自动设置</div>';
+  body+='</div>';
+  body+='<div style="display:flex;flex-direction:column;gap:4px">';
+  ports.forEach(function(p){
+    var isCustom=customPorts.some(function(cp){return cp.code===p.code});
+    body+='<div style="display:grid;grid-template-columns:60px 1fr 1fr 60px auto;gap:8px;padding:6px 10px;background:#FFF;border:1px solid var(--border);border-radius:6px;font-size:11px;align-items:center">';
+    body+='<span style="font-weight:500;color:var(--ship-primary)">'+escH(p.code)+'</span>';
+    body+='<span>'+escH(p.name_kr)+'</span>';
+    body+='<span>'+escH(p.name_cn)+'</span>';
+    body+='<span style="font-size:9px;color:var(--text-mute)">'+p.country.toUpperCase()+'</span>';
+    body+=isCustom
+      ?'<button onclick="removeCustomPort(\''+p.code+'\')" style="padding:3px 8px;background:var(--st-danger-bg);color:var(--st-danger-txt);border:1px solid #F7C1C1;border-radius:3px;font-size:9px;cursor:pointer;font-family:inherit">삭제 / 删除</button>'
+      :'<span style="font-size:9px;color:var(--text-mute)">기본 / 默认</span>';
+    body+='</div>';
+  });
+  body+='</div></div>';
+  document.getElementById("portManagerBody").innerHTML=body;
+  document.getElementById("portManagerOv").classList.add("active");
+}
+function addCustomPort(){
+  var code=document.getElementById("newPortCode").value.trim().toUpperCase();
+  var nameKR=document.getElementById("newPortKR").value.trim();
+  var nameCN=document.getElementById("newPortCN").value.trim();
+  var country=document.getElementById("newPortCountry").value;
+  if(!code||!nameKR||!nameCN){alert("CODE, 한국명, 中文名 모두 입력 / 全部填写");return}
+  if(getAllPorts().some(function(p){return p.code===code})){alert("이미 존재하는 CODE / CODE已存在");return}
+  var defaultCoords={cn:{x:70,y:35},mx:{x:18,y:48},other:{x:50,y:30}};
+  customPorts.push({code:code,name_kr:nameKR,name_cn:nameCN,country:country,x:defaultCoords[country].x,y:defaultCoords[country].y});
+  saveCustomPorts();
+  openPortManager();
+  renderRouteMap();
+}
+function removeCustomPort(code){
+  if(!confirm("이 항구를 삭제하시겠습니까? / 确定删除此港口?"))return;
+  customPorts=customPorts.filter(function(p){return p.code!==code});
+  saveCustomPorts();
+  openPortManager();
+  renderRouteMap();
+}
+
+/* ═══ TIER 3 — Monthly KPI ═══ */
+function renderShipmentKpiRow(){
+  var months=getTopTwoDataMonths(shipmentGroupsByMonth);
+  var h='<div class="skpi-grid">';
+  months.forEach(function(key,i){h+=buildShipKpiCard(key,shipmentGroupsByMonth[key],i)});
+  for(var i=months.length;i<2;i++){h+='<div class="skpi-card skpi-card-empty"></div>'}
+  h+=buildShipDelayCard();
+  h+='</div>';
+  document.getElementById("shipmentKpiRow").innerHTML=h;
+}
+function buildShipKpiCard(key,items,idx){
+  var ym=parseYM(key);
+  var yy=ym?ym.y.toString().slice(-2):"";
+  var mm=ym?(ym.m<10?"0"+ym.m:ym.m):"";
+  var title=ym?(yy+"."+mm+" 선적 KPI / "+yy+"年 "+ym.m+"月 装运 KPI"):"선적 KPI";
+  var tot=items.length,complete=0,transit=0,delayed=0,totalQty=0,totalAmount=0;
+  items.forEach(function(r){
+    var stage=getShipStage(r);
+    if(stage==="Complete")complete++;
+    else if(stage==="Transit"||stage==="Shipping")transit++;
+    if(isCustomsDelayed(r))delayed++;
+    var lines=getSubformLines(r,"Container_Lines");
+    if(lines.length>0){
+      lines.forEach(function(ln){
+        totalQty+=parseInt(ln["Quantity"])||0;
+        totalAmount+=parseFloat(ln["Amount"])||0;
+      });
+    }else{
+      totalQty+=parseInt(g(r,"Total_Quantity"))||0;
+      totalAmount+=parseFloat(g(r,"Total_Amount_USD"))||0;
+    }
+  });
+  var pct=tot>0?Math.round((complete/tot)*100):0;
+  var color=KPI_RING_COLORS[idx%KPI_RING_COLORS.length];
+  var stripe=KPI_STRIPES[idx%KPI_STRIPES.length];
+  var rr=26,circ=2*Math.PI*rr,off=circ-(pct/100)*circ;
+  var ke=encodeURIComponent(key);
+  var h='<div class="skpi-card" style="--stripe:'+stripe+'">';
+  h+='<div class="skpi-head"><div class="skpi-month">📅 '+escH(title)+'</div></div>';
+  h+='<div class="skpi-body"><div class="skpi-ring"><svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="'+rr+'" fill="none" stroke="#F1EFE8" stroke-width="5"/><circle cx="32" cy="32" r="'+rr+'" fill="none" stroke="'+color+'" stroke-width="5" stroke-dasharray="'+circ+'" stroke-dashoffset="'+off+'" stroke-linecap="round"/></svg><div class="skpi-ring-pct" style="color:'+color+'">'+pct+'%</div></div>';
+  h+='<div class="skpi-stats">';
+  h+='<div class="skpi-stat all" onclick="openShipKpiPop(\''+ke+'\',\'all\')"><div class="num">'+tot+'</div><div class="lbl">총 컨테이너/总集装箱</div></div>';
+  h+='<div class="skpi-stat dv" onclick="openShipKpiPop(\''+ke+'\',\'complete\')"><div class="num">'+complete+'</div><div class="lbl">완료/已完成</div></div>';
+  h+='<div class="skpi-stat tr" onclick="openShipKpiPop(\''+ke+'\',\'transit\')"><div class="num">'+transit+'</div><div class="lbl">운송중/运输中</div></div>';
+  h+='<div class="skpi-stat dl" onclick="openShipKpiPop(\''+ke+'\',\'delayed\')"><div class="num">'+delayed+'</div><div class="lbl">지연/延误</div></div>';
+  h+='</div></div>';
+  h+='<div class="skpi-footer">';
+  h+='<div><span class="qty-badge qty">QTY</span> 수량 <b>'+totalQty.toLocaleString()+' pcs</b></div>';
+  h+='<div><span class="qty-badge amt">AMT</span> 금액 <b>$'+totalAmount.toLocaleString(undefined,{maximumFractionDigits:0})+'</b></div>';
+  h+='</div></div>';
+  return h;
+}
+function buildShipDelayCard(){
+  var da=allShipments.filter(function(r){return isCustomsDelayed(r)});
+  var h='<div class="mdelay-card">';
+  h+='<div class="mdelay-card-title">⚠️ 통관 지연 현황 / 清关延误现况</div>';
+  h+='<div class="mdelay-total">'+da.length+'<span>건 지연 / 件延误</span></div>';
+  h+='<div class="mdelay-list">';
+  if(da.length===0){h+='<div style="text-align:center;padding:14px 4px;font-size:10px;color:var(--text-mute)">지연 없음 / 无延误 ✓</div>'}
+  else{
+    da.slice(0,6).forEach(function(r){
+      var cid=g(r,"Container_ID");if(cid==="-")cid=g(r,"PI_Number");
+      h+='<div class="mdelay-item" onclick="openShipmentModal(\''+r["ID"]+'\')"><div class="mdelay-mo">'+escH(cid)+'</div><div class="mdelay-style">'+escH(g(r,"Origin_Port"))+' → '+escH(g(r,"Destination_Port"))+'</div></div>';
+    });
+  }
+  h+='</div></div>';
+  return h;
+}
+function openShipKpiPop(keyEnc,type){
+  var key=decodeURIComponent(keyEnc);
+  var items=shipmentGroupsByMonth[key]||[];
+  var tn={all:"총 컨테이너 / 总集装箱",complete:"완료 / 已完成",transit:"운송 중 / 运输中",delayed:"지연 / 延误"};
+  var filtered=items.filter(function(r){
+    var stage=getShipStage(r);
+    if(type==="all")return true;
+    if(type==="complete")return stage==="Complete";
+    if(type==="transit")return stage==="Transit"||stage==="Shipping";
+    if(type==="delayed")return isCustomsDelayed(r);
+    return true;
+  });
+  document.getElementById("kpiPopTitle").textContent=key+" — "+tn[type];
+  document.getElementById("kpiPopSub").textContent="총 "+filtered.length+"건 / 共 "+filtered.length+" 件";
+  var h="";
+  if(filtered.length===0){h='<div class="pop-empty">해당 컨테이너 없음 / 无相关集装箱</div>'}
+  else{
+    filtered.forEach(function(r){
+      var cid=g(r,"Container_ID");if(cid==="-")cid=g(r,"PI_Number");
+      var stage=getShipStage(r);
+      h+='<div class="pop-item" onclick="document.getElementById(\'kpiPopOv\').classList.remove(\'active\');openShipmentModal(\''+r["ID"]+'\')">';
+      h+='<div class="pop-item-left">';
+      h+='<div class="pi-mo">'+escH(cid)+'</div>';
+      h+='<div class="pi-name">'+escH(g(r,"Origin_Port"))+' → '+escH(g(r,"Destination_Port"))+'</div>';
+      h+='<div class="pi-meta">ETD: '+escH(g(r,"ETD"))+' · ETA: '+escH(g(r,"ETA"))+'</div></div>';
+      h+='<span class="tag '+tc(stage)+'">'+escH(stage)+'</span></div>';
+    });
+  }
+  document.getElementById("kpiPopBody").innerHTML=h;
+  document.getElementById("kpiPopOv").classList.add("active");
+}
+
+/* ═══ TIER 4 + 5 — Monthly Sections ═══ */
+function renderMonthlyContent(){
+  var months=getTopTwoDataMonths(shipmentGroupsByMonth);
+  if(months.length===0){document.getElementById("monthlyContent").innerHTML=buildEmptyState("선적");return}
+  var html="";
+  months.forEach(function(key,idx){html+=buildShipMonthSection(key,shipmentGroupsByMonth[key],idx)});
+  document.getElementById("monthlyContent").innerHTML=html;
+  months.forEach(function(key,idx){
+    window['visible_ship_'+idx]=shipmentGroupsByMonth[key];
+    renderShipPipeline(idx,shipmentGroupsByMonth[key]);
+  });
+  bindMonthFilters();
+}
+
+function buildShipMonthSection(key,items,idx){
+  var ym=parseYM(key);
+  var yy=ym?ym.y.toString().slice(-2):"";
+  var mm=ym?(ym.m<10?"0"+ym.m:ym.m):"";
+  var title=ym?(yy+"."+mm+" 선적 스케줄 / "+yy+"年 "+ym.m+"月 装运安排"):key;
+  var mFrom={},mTo={},mStage={};
+  items.forEach(function(r){
+    var f=g(r,"Origin_Port");if(f!=="-")mFrom[f]=f;
+    var t=g(r,"Destination_Port");if(t!=="-")mTo[t]=t;
+    var s=getShipStage(r);if(s)mStage[s]=s;
+  });
+  var h='<div class="mt-sec" id="ms'+idx+'" data-month="'+escH(key)+'"><div class="mt-card">';
+  h+='<div class="mt-hd"><div class="mt-title">📅 '+escH(title)+'</div>';
+  h+='<span class="mt-cnt" id="mc'+idx+'">'+items.length+' 컨테이너 / 集装箱</span></div>';
+  h+='<div class="mf-bar" data-m="'+idx+'">';
+  h+='<input type="text" class="mf-search" placeholder="🔍 컨테이너 · PI · 항구 / 搜索">';
+  h+='<select class="mf-from"><option value="">출발항 / 出发港</option>';
+  Object.keys(mFrom).sort().forEach(function(k){h+='<option value="'+escH(k)+'">'+escH(k)+'</option>'});
+  h+='</select>';
+  h+='<select class="mf-to"><option value="">도착항 / 到达港</option>';
+  Object.keys(mTo).sort().forEach(function(k){h+='<option value="'+escH(k)+'">'+escH(k)+'</option>'});
+  h+='</select>';
+  h+='<select class="mf-stage"><option value="">단계 / 阶段</option>';
+  Object.keys(mStage).sort().forEach(function(k){h+='<option value="'+escH(k)+'">'+escH(k)+'</option>'});
+  h+='</select>';
+  h+='<span class="mf-count" data-mf-count="'+idx+'">'+items.length+' / '+items.length+'</span>';
+  h+='</div>';
+  h+='<div class="card-scroll" data-month-scroll="'+idx+'"><div class="cards-flex" data-cards-m="'+idx+'">';
+  if(items.length===0){h+='<div style="padding:30px;color:#B4B2A9;font-size:11px;flex:1;text-align:center">컨테이너 없음 / 无集装箱</div>'}
+  else{items.forEach(function(r){h+=buildShipCardHTML(r)})}
+  h+='</div></div>';
+  h+='<div class="pipe-card"><div class="pipe-header">';
+  h+='<div class="pipe-title"><span class="pipe-title-icon">⚙</span>선적 파이프라인 / 装运流水表</div>';
+  h+='<div class="pipe-summary" data-pipe-summary="'+idx+'">-</div></div>';
+  h+='<div class="pipe-row" id="pipeRow_'+idx+'"></div></div>';
+  if(ym&&items.length>0)h+=buildShipTimeline(items,ym.y,ym.m,key,idx);
+  h+='</div></div>';
+  return h;
+}
+
+function buildShipCardHTML(r){
+  var cid=g(r,"Container_ID");if(cid==="-")cid=g(r,"PI_Number");
+  var fromPort=g(r,"Origin_Port");if(fromPort==="-")fromPort=g(r,"Port_Of_Loading");
+  var toPort=g(r,"Destination_Port");if(toPort==="-")toPort=g(r,"Port_Of_Discharge");
+  var pFrom=findPort(fromPort),pTo=findPort(toPort);
+  var stage=getShipStage(r);
+  var stageCls=shipStageClass(stage),stageLbl=shipStageLabel(stage);
+  var dl=isCustomsDelayed(r);
+  var etd=g(r,"ETD"),atd=g(r,"ATD"),eta=g(r,"ETA");
+  var lines=getSubformLines(r,"Container_Lines");
+  var moCount=lines.length,totalQty=0,totalAmount=0;
+  lines.forEach(function(ln){totalQty+=parseInt(ln["Quantity"])||0;totalAmount+=parseFloat(ln["Amount"])||0});
+  if(moCount===0){
+    moCount=parseInt(g(r,"MO_Count"))||0;
+    totalQty=parseInt(g(r,"Total_Quantity"))||0;
+    totalAmount=parseFloat(g(r,"Total_Amount_USD"))||0;
+  }
+  var p=[];
+  p.push('<div class="ship-card'+(dl?' delayed':'')+'" onclick="openShipmentModal(\''+r["ID"]+'\')">');
+  p.push('<div class="ship-card-map">'+buildMiniMapSVG(pFrom,pTo)+'</div>');
+  p.push('<div class="ship-stage-badge '+stageCls+'">'+escH(stageLbl)+'</div>');
+  p.push('<div class="ship-card-body">');
+  p.push('<div class="ship-card-identity">');
+  p.push('<div class="ship-card-label">컨테이너 / 柜号</div>');
+  p.push('<div class="ship-card-value container-id">'+escH(cid)+'</div>');
+  p.push('<div class="ship-card-label">루트 / 航线</div>');
+  p.push('<div class="ship-card-value route">');
+  p.push('<span>'+(pFrom?escH(pFrom.name_cn):escH(fromPort))+'</span>');
+  p.push('<span class="ship-card-route-arrow">→</span>');
+  p.push('<span>'+(pTo?escH(pTo.name_cn):escH(toPort))+'</span></div></div>');
+  p.push('<div class="ship-card-dates">');
+  p.push('<div class="ship-date-row"><span class="lbl">ETD / 预计出港</span><span class="val">'+escH(etd)+'</span></div>');
+  p.push('<div class="ship-date-row '+(atd&&atd!=="-"?"actual":"")+'"><span class="lbl">ATD / 实际出港</span><span class="val">'+escH(atd)+'</span></div>');
+  p.push('<div class="ship-date-row '+(dl?"delayed":"")+'"><span class="lbl">ETA / 预计到港</span><span class="val">'+escH(eta)+(dl?' ⚠':'')+'</span></div>');
+  p.push('</div>');
+  p.push('<div class="ship-stats-grid">');
+  p.push('<div class="ship-stat-box mo-count"><div class="lbl">MOs</div><div class="val">'+moCount+'건</div></div>');
+  p.push('<div class="ship-stat-box qty"><div class="lbl">수량 / 数量</div><div class="val">'+(totalQty>=1000?(totalQty/1000).toFixed(1)+"k":totalQty.toLocaleString())+'</div></div>');
+  p.push('</div>');
+  p.push('<div class="ship-amount-row"><span class="lbl">총 금액 / 总金额</span><span class="val">$'+totalAmount.toLocaleString(undefined,{maximumFractionDigits:0})+'</span></div>');
+  p.push('<button class="ship-invoice-btn" onclick="event.stopPropagation();openInvoice(\''+r["ID"]+'\')">📄 Invoice 보기 / 查看发票</button>');
+  p.push('</div></div>');
+  return p.join("");
+}
+
+function buildMiniMapSVG(pFrom,pTo){
+  if(!pFrom||!pTo)return '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-mute);font-size:9px;text-align:center">루트 정보 없음<br>无航线信息</div>';
+  var x1=pFrom.x,y1=pFrom.y,x2=pTo.x,y2=pTo.y;
+  var cx=(x1+x2)/2,cy=Math.min(y1,y2)-15;
+  var h='<svg viewBox="0 0 100 70" preserveAspectRatio="xMidYMid meet">';
+  h+='<path d="M '+x1+','+y1+' Q '+cx+','+cy+' '+x2+','+y2+'" fill="none" stroke="#C9A86E" stroke-width="1" stroke-dasharray="2 2"/>';
+  h+='<circle cx="'+x1+'" cy="'+y1+'" r="2" fill="#E24B4A" stroke="#FFF" stroke-width="0.5"/>';
+  h+='<circle cx="'+x2+'" cy="'+y2+'" r="2" fill="#1D9E75" stroke="#FFF" stroke-width="0.5"/>';
+  h+='<text x="'+x1+'" y="'+(y1-2)+'" font-size="2.5" text-anchor="middle" fill="#A32D2D" font-weight="500">'+escH(pFrom.name_cn)+'</text>';
+  h+='<text x="'+x2+'" y="'+(y2+4)+'" font-size="2.5" text-anchor="middle" fill="#085041" font-weight="500">'+escH(pTo.name_cn)+'</text>';
+  h+='</svg>';
+  return h;
+}
+
+/* Pipeline */
+function renderShipPipeline(idx,items){
+  var colors={"Booking":"var(--stage-booking-txt)","Loading":"var(--stage-loading-txt)","Shipping":"var(--stage-shipping-txt)","Transit":"var(--stage-transit-txt)","Customs":"var(--stage-customs-txt)","Complete":"var(--stage-complete-txt)"};
+  var counts=[0,0,0,0,0,0];
+  items.forEach(function(r){var i=SHIP_STAGES.indexOf(getShipStage(r));if(i>=0)counts[i]++});
+  var total=counts.reduce(function(s,n){return s+n},0);
+  var h="";
+  SHIP_STAGES.forEach(function(s,i){
+    if(i>0)h+='<div class="pipe-connector"><div class="pipe-connector-diamond"></div></div>';
+    var isEmpty=counts[i]===0;
+    h+='<div class="pipe-step '+(isEmpty?"empty":"active")+'" data-stage="'+s+'" onclick="openShipPipePop(\''+s+'\','+idx+')">';
+    h+='<div class="pipe-n" style="color:'+colors[s]+'">'+counts[i]+'</div>';
+    h+='<div class="pipe-lb"><span class="pipe-emoji">'+STAGE_EMOJIS[i]+'</span>'+STAGE_LABELS_KR[i]+'</div>';
+    h+='<div class="pipe-sublabel">'+STAGE_LABELS_CN[i]+'</div></div>';
+  });
+  var el=document.getElementById("pipeRow_"+idx);
+  if(el)el.innerHTML=h;
+  var summaryEl=document.querySelector('[data-pipe-summary="'+idx+'"]');
+  if(summaryEl){var active=counts.filter(function(n){return n>0}).length;summaryEl.textContent='총 '+total+'건 · '+active+'개 단계 / 共 '+total+'件 · '+active+'个阶段'}
+}
+function openShipPipePop(stage,idx){
+  var base=window['visible_ship_'+idx]||[];
+  var items=base.filter(function(r){return getShipStage(r)===stage});
+  var stageNames={};SHIP_STAGES.forEach(function(s,i){stageNames[s]=STAGE_EMOJIS[i]+" "+STAGE_LABELS_KR[i]+" / "+STAGE_LABELS_CN[i]});
+  document.getElementById("pipePopTitle").textContent=stageNames[stage]||stage;
+  document.getElementById("pipePopSub").textContent="총 "+items.length+"건 / 共 "+items.length+" 件";
+  var h="";
+  if(items.length===0){h='<div class="pop-empty">해당 단계의 컨테이너 없음 / 此阶段无集装箱</div>'}
+  else{
+    items.forEach(function(r){
+      var cid=g(r,"Container_ID");if(cid==="-")cid=g(r,"PI_Number");
+      h+='<div class="pop-item" onclick="document.getElementById(\'pipePopOv\').classList.remove(\'active\');openShipmentModal(\''+r["ID"]+'\')">';
+      h+='<div class="pop-item-left"><div class="pi-mo">'+escH(cid)+'</div>';
+      h+='<div class="pi-name">'+escH(g(r,"Origin_Port"))+' → '+escH(g(r,"Destination_Port"))+'</div>';
+      h+='<div class="pi-meta">ETD: '+escH(g(r,"ETD"))+' · ETA: '+escH(g(r,"ETA"))+'</div></div>';
+      h+='<span class="tag '+tc(stage)+'">'+escH(stage)+'</span></div>';
+    });
+  }
+  document.getElementById("pipePopBody").innerHTML=h;
+  document.getElementById("pipePopOv").classList.add("active");
+}
+
+/* Per-month filter */
+function bindMonthFilters(){
+  document.querySelectorAll('.mf-bar').forEach(function(bar){
+    var mi=bar.getAttribute('data-m');
+    var search=bar.querySelector('.mf-search');
+    if(search)search.addEventListener('input',function(){applyMonthFilter(mi)});
+    ['.mf-from','.mf-to','.mf-stage'].forEach(function(sel){
+      var el=bar.querySelector(sel);
+      if(el)el.addEventListener('change',function(){applyMonthFilter(mi)});
+    });
+  });
+}
+function applyMonthFilter(mi){
+  var bar=document.querySelector('.mf-bar[data-m="'+mi+'"]');
+  if(!bar)return;
+  var q=bar.querySelector('.mf-search').value.toLowerCase().trim();
+  var fFrom=bar.querySelector('.mf-from').value;
+  var fTo=bar.querySelector('.mf-to').value;
+  var fStage=bar.querySelector('.mf-stage').value;
+  var sec=document.getElementById('ms'+mi);
+  var monthKey=sec?sec.getAttribute('data-month'):null;
+  if(!monthKey)return;
+  var source=shipmentGroupsByMonth[monthKey]||[];
+  var filtered=source.filter(function(r){
+    if(q){var hay=(g(r,"Container_ID")+" "+g(r,"PI_Number")+" "+g(r,"Origin_Port")+" "+g(r,"Destination_Port")+" "+g(r,"Vessel_Name")).toLowerCase();if(hay.indexOf(q)<0)return false}
+    if(fFrom&&g(r,"Origin_Port")!==fFrom)return false;
+    if(fTo&&g(r,"Destination_Port")!==fTo)return false;
+    if(fStage&&getShipStage(r)!==fStage)return false;
+    return true;
+  });
+  var wrap=document.querySelector('[data-cards-m="'+mi+'"]');
+  if(wrap){var html="";filtered.forEach(function(r){html+=buildShipCardHTML(r)});wrap.innerHTML=html||'<div style="padding:30px;color:#B4B2A9;font-size:11px;flex:1;text-align:center">조건에 맞는 컨테이너 없음 / 无匹配集装箱</div>'}
+  var cntEl=document.querySelector('[data-mf-count="'+mi+'"]');
+  if(cntEl)cntEl.textContent=filtered.length+' / '+source.length;
+  var mcEl=document.getElementById('mc'+mi);
+  if(mcEl)mcEl.textContent=filtered.length+' 컨테이너 / 集装箱';
+  window['visible_ship_'+mi]=filtered;
+  renderShipPipeline(mi,filtered);
+}
+
+/* Timeline (3-segment Gantt) */
+function buildShipTimeline(items,yr,mo,label,idx){
+  var daysInMonth=new Date(yr,mo,0).getDate();
+  var todayD=(today.getFullYear()===yr&&today.getMonth()+1===mo)?today.getDate():0;
+  var yy=yr.toString().slice(-2);
+  var mm=mo<10?"0"+mo:mo;
+  var title=yy+"."+mm+" 선적 타임라인 / "+yy+"年 "+mo+"月 装运排期";
+  var h='<div class="tl-card"><div class="tl-hd"><div class="tl-title">📊 '+escH(title)+'</div>';
+  h+='<div class="tl-legend">';
+  h+='<span><span class="tl-dot" style="background:#FAEEDA;border:1px solid #FAC775"></span>대기 / 等待</span>';
+  h+='<span><span class="tl-dot" style="background:#E6F1FB"></span>운송 / 运输</span>';
+  h+='<span><span class="tl-dot" style="background:#E1F5EE"></span>도착 / 已到达</span>';
+  h+='</div></div>';
+  h+='<div class="tl-scroll"><table class="tl-tbl"><thead><tr><th class="info-cell">컨테이너 / 集装箱</th>';
+  for(var d=1;d<=daysInMonth;d++){
+    var dt=new Date(yr,mo-1,d),dow=dt.getDay();
+    var cls=(dow===0||dow===6)?"wk":"";
+    if(d===todayD)cls="today";
+    h+='<th class="'+cls+'">'+d+'</th>';
+  }
+  h+='</tr></thead><tbody>';
+  var hasAny=false;
+  items.forEach(function(r){
+    var etd=pd(g(r,"ETD")),atd=pd(g(r,"ATD")),eta=pd(g(r,"ETA")),ata=pd(g(r,"ATA"));
+    if(!etd&&!atd&&!eta&&!ata)return;
+    hasAny=true;
+    var cid=g(r,"Container_ID");if(cid==="-")cid=g(r,"PI_Number");
+    var attr=' data-id="'+r["ID"]+'"';
+    h+='<tr'+attr+'><td class="info-cell tl-mo-info" data-id="'+r["ID"]+'">';
+    h+='<div class="tl-mo-wrap"><div class="tl-mo-thumb">📦</div>';
+    h+='<div><div class="tl-mo-num">'+escH(cid)+'</div>';
+    h+='<div class="tl-mo-name">'+escH(g(r,"Origin_Port"))+' → '+escH(g(r,"Destination_Port"))+'</div>';
+    h+='<div class="tl-mo-meta">'+escH(g(r,"Vessel_Name"))+'</div>';
+    h+='</div></div></td>';
+    h+=buildShipBarRow(daysInMonth,todayD,yr,mo,etd,atd,eta,ata)+'</tr>';
+  });
+  if(!hasAny)h+='<tr><td class="info-cell" colspan="'+(daysInMonth+1)+'" style="text-align:center;padding:16px;color:#94A3B8;font-size:10px">이 달에 일정 없음 / 本月暂无日程</td></tr>';
+  h+='</tbody></table></div></div>';
+  return h;
+}
+function buildShipBarRow(days,todayD,yr,mo,etd,atd,eta,ata){
+  var monthStart=new Date(yr,mo-1,1);
+  var monthEnd=new Date(yr,mo,0);
+  var h="";
+  for(var d=1;d<=days;d++){
+    var cellDate=new Date(yr,mo-1,d);
+    var cls="",label="";
+    if(etd&&atd){
+      var dEtd=new Date(etd),dAtd=new Date(atd);
+      if(cellDate>=dEtd&&cellDate<dAtd){cls="gantt-bar-wait";label="대기"}
+    }else if(etd&&!atd&&cellDate.toISOString().split("T")[0]===etd){
+      cls="gantt-bar-wait";label="ETD";
+    }
+    if(!cls&&atd&&eta){
+      var dAtd2=new Date(atd),dEta2=new Date(eta);
+      if(cellDate>=dAtd2&&cellDate<dEta2){cls="gantt-bar-transit";label="운송"}
+    }
+    if(!cls&&eta&&ata){
+      var dEta3=new Date(eta),dAta3=new Date(ata);
+      if(cellDate>=dEta3&&cellDate<=dAta3){cls="gantt-bar-arrived";label="도착"}
+    }
+    if(!cls&&eta&&!ata&&cellDate.toISOString().split("T")[0]===eta){
+      cls="gantt-bar-arrived";label="ETA";
+    }
+    var todayClass=(d===todayD)?' class="today-col"':'';
+    h+='<td'+todayClass+'>';
+    if(cls)h+='<div class="tl-bar '+cls+'">'+label+'</div>';
+    h+='</td>';
+  }
+  return h;
+}
+
+/* ═══ Shipment Detail Modal ═══ */
+function openShipmentModal(id){
+  var r=allShipments.find(function(x){return String(x["ID"])===String(id)});
+  if(!r)return;
+  currentShipment=r;
+  var cid=g(r,"Container_ID");if(cid==="-")cid=g(r,"PI_Number");
+  var modDt=getModDate(r);
+  document.getElementById("mTitle").textContent=cid;
+  document.getElementById("mSub").textContent=g(r,"Origin_Port")+" → "+g(r,"Destination_Port")+" · "+getShipStage(r);
+  var h='';
+  function dv(v){return v==="-"?'<span class="d-val empty">미입력 / 未填写</span>':escH(v)}
+  function it(l,v){return'<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'}
+
+  // 1. Basic info
+  h+='<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 基本信息</div><div class="d-grid">';
+  h+=it("컨테이너 ID / 柜号",dv(g(r,"Container_ID")));
+  h+=it("PI Number / 形式发票号",dv(g(r,"PI_Number")));
+  h+=it("BL Number / 提单号",dv(g(r,"BL_Number")));
+  h+=it("Vessel / 船名",dv(g(r,"Vessel_Name")));
+  h+=it("Voyage / 航次",dv(g(r,"Voyage_Number")));
+  h+=it("Container Type / 柜型",dv(g(r,"Container_Type")));
+  h+=it("출발항 / 出发港",dv(g(r,"Origin_Port")));
+  h+=it("도착항 / 到达港",dv(g(r,"Destination_Port")));
+  h+=it("Mode / 运输方式",dv(g(r,"Shipment_Mode")));
+  h+=it("Stage / 단계 / 阶段",'<span class="tag '+tc(getShipStage(r))+'">'+escH(getShipStage(r))+'</span>');
+  h+=it("최종수정일 / 最后修改",dv(modDt));
+  h+=it("Invoice / 发票",dv(g(r,"Invoice_Status")));
+  h+='</div></div>';
+
+  // 2. Pipeline (current stage highlighted)
+  h+='<div class="m-sec"><div class="m-sec-t">🏭 6단계 진행 / 6阶段进度</div>';
+  var curStage=getShipStage(r);
+  h+='<div class="pipe-card" style="margin:0;border-radius:10px"><div class="pipe-row" style="overflow-x:auto">';
+  SHIP_STAGES.forEach(function(s,i){
+    if(i>0)h+='<div class="pipe-connector"><div class="pipe-connector-diamond"></div></div>';
+    var isActive=SHIP_STAGES.indexOf(curStage)>=i;
+    var isCurrent=curStage===s;
+    var cls=isActive?"active":"empty";
+    h+='<div class="pipe-step '+cls+'" data-stage="'+s+'"'+(isCurrent?' style="border-color:var(--gold);box-shadow:0 4px 14px rgba(201,168,110,.3)"':'')+'>';
+    h+='<div class="pipe-n" style="color:var(--stage-'+s.toLowerCase()+'-txt)">'+(i+1)+'</div>';
+    h+='<div class="pipe-lb"><span class="pipe-emoji">'+STAGE_EMOJIS[i]+'</span>'+STAGE_LABELS_KR[i]+'</div>';
+    h+='<div class="pipe-sublabel">'+STAGE_LABELS_CN[i]+'</div></div>';
+  });
+  h+='</div></div></div>';
+
+  // 3. Date table
+  h+='<div class="m-sec"><div class="m-sec-t">📅 일정 / 日期</div><div class="schedule-compare">';
+  h+='<div class="schedule-col"><div class="schedule-col-title plan">📋 계획 / 计划</div>';
+  [{l:"ETD / 예정출항 / 预计出港",k:"ETD"},{l:"ETA / 예정도착 / 预计到港",k:"ETA"}].forEach(function(t,i){
+    var v=g(r,t.k),p=pd(v),cls="wait";
+    if(p){cls=p<=todayStr?"done":"curr"}
+    h+='<div class="sch-item"><div class="sch-dot '+cls+'">'+(i+1)+'</div><div class="sch-info"><div class="sch-label">'+escH(t.l)+'</div><div class="sch-date">'+escH(v)+'</div></div></div>';
+  });
+  h+='</div><div class="schedule-col"><div class="schedule-col-title actual">✅ 실적 / 实际</div>';
+  [{l:"ATD / 실제출항 / 实际出港",k:"ATD"},{l:"ATA / 실제도착 / 实际到港",k:"ATA"},{l:"CCD / 통관완료 / 清关完成",k:"CCD"}].forEach(function(t,i){
+    var v=g(r,t.k),p=pd(v),cls="wait";
+    if(p){cls=p<=todayStr?"done":"curr"}
+    h+='<div class="sch-item"><div class="sch-dot '+cls+'">'+(i+1)+'</div><div class="sch-info"><div class="sch-label">'+escH(t.l)+'</div><div class="sch-date">'+escH(v)+'</div></div></div>';
+  });
+  h+='</div></div></div>';
+
+  // 4. Container Lines (MO list)
+  var lines=getSubformLines(r,"Container_Lines");
+  h+='<div class="m-sec"><div class="m-sec-t">📦 컨테이너 내용 / 集装箱明细 ('+lines.length+'개 MO)</div>';
+  if(lines.length===0){h+='<div class="subform-empty">입력된 MO 없음 / 暂无MO明细</div>'}
+  else{
+    h+='<table class="mo-lines-tbl"><thead><tr>';
+    h+='<th>MO#</th><th>스타일 / 款式</th><th style="text-align:right">수량 / 数量</th><th style="text-align:right">금액 / 金额 (USD)</th>';
+    h+='</tr></thead><tbody>';
+    lines.forEach(function(ln){
+      var moRefRaw=ln["Manufacturing_Order"]||ln["MO"]||ln["Manufacturing_Order_display_value"];
+      var moRef=(moRefRaw&&typeof moRefRaw==="object")?(moRefRaw.display_value||moRefRaw.ID||"-"):(moRefRaw||"-");
+      var moId=(moRefRaw&&typeof moRefRaw==="object")?(moRefRaw.ID||""):"";
+      var style=ln["Style_Name"]||ln["Style"]||"-";
+      var qty=parseInt(ln["Quantity"])||0;
+      var amount=parseFloat(ln["Amount"])||0;
+      h+='<tr onclick="openNestedMO(\''+moId+'\',\''+escH(String(moRef))+'\')">';
+      h+='<td class="mo-num-cell">'+escH(String(moRef))+'</td>';
+      h+='<td>'+escH(String(style))+'</td>';
+      h+='<td style="text-align:right;font-weight:500">'+qty.toLocaleString()+'</td>';
+      h+='<td style="text-align:right;font-weight:500">$'+amount.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+'</td>';
+      h+='</tr>';
+    });
+    h+='</tbody></table>';
+  }
+  h+='</div>';
+
+  // 5. Cost breakdown
+  h+='<div class="m-sec"><div class="m-sec-t">💰 원가 / 成本</div><div class="d-grid">';
+  h+=it("Freight / 운임 (USD)",dv(g(r,"Freight_Cost")));
+  h+=it("Customs / 통관비 (MXN)",dv(g(r,"Customs_Fee_MXN")));
+  h+=it("Local logistics (MXN)",dv(g(r,"Local_Logistics_MXN")));
+  h+=it("총 USD 환산 / 总USD",dv(g(r,"Total_Amount_USD")));
+  h+=it("Insurance / 보험",dv(g(r,"Insurance_Cost")));
+  h+=it("Other / 기타",dv(g(r,"Other_Cost")));
+  h+='</div></div>';
+
+  // 6. Notes
+  h+='<div class="m-sec"><div class="m-sec-t">📝 메모 / 备注</div>';
+  h+='<div class="d-item"><span class="d-label">선적 메모 / 装运备注</span><span class="d-val">'+(g(r,"Shipment_Notes")!=="-"?escH(g(r,"Shipment_Notes")):'<span class="empty">미입력 / 未填写</span>')+'</span></div>';
+  h+='</div>';
+
+  document.getElementById("mBody").innerHTML=h;
+  document.getElementById("modalOv").classList.add("active");
+}
+function openInvoice(id){window.open("https://creatorapp.zoho.com/jeramoda/eom/record-print/All_Shipment/"+id+"/","_blank")}
+function openInvoiceFromModal(){if(currentShipment)openInvoice(currentShipment["ID"])}
+
+/* ═══ Nested MO Modal (lite) ═══ */
+function openNestedMO(moId,moRef){
+  var r=null;
+  if(moId)r=allMO.find(function(x){return String(x["ID"])===String(moId)});
+  if(!r&&moRef)r=allMO.find(function(x){return g(x,"MO_Number")===moRef||g(x,"ID")===moRef});
+  if(!r){alert("연결된 MO 정보를 찾을 수 없습니다 / 未找到对应MO: "+moRef);return}
+  document.getElementById("moMTitle").textContent=g(r,"MO_Number");
+  document.getElementById("moMSub").textContent=g(r,"Style_Name")+" — "+g(r,"Style_SKU");
+  var h='';
+  function dv(v){return v==="-"?'<span class="d-val empty">미입력 / 未填写</span>':escH(v)}
+  function it(l,v){return'<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'}
+  h+='<div class="m-sec"><div class="m-sec-t">📌 MO 기본 정보 / MO基本信息</div><div class="d-grid">';
+  h+=it("MO 번호 / 订单号",dv(g(r,"MO_Number")));
+  h+=it("스타일 SKU / 款式SKU",dv(g(r,"Style_SKU")));
+  h+=it("스타일명 / 款式名",dv(g(r,"Style_Name")));
+  h+=it("공장 / 工厂",dv(cleanFactory(g(r,"Factory"))));
+  h+=it("주문상태 / 订单状态",dv(g(r,"Order_Status")));
+  h+=it("생산상태 / 生产状态",dv(g(r,"Production_Status")));
+  h+=it("Plan 수량 / 订单数量",dv(g(r,"Plan_Total_Quantity")));
+  h+=it("Actual 수량 / 实际数量",dv(g(r,"Acture_Total_Quantity")));
+  h+=it("예상납기 / 预计交货",dv(g(r,"Expected_Delivery")));
+  h+='</div></div>';
+  h+='<div style="text-align:center;margin-top:12px">';
+  h+='<button onclick="window.open(\'https://creatorapp.zoho.com/jeramoda/eom/#Report:All_MO\',\'_blank\')" class="m-hd-btn mo">✏️ MO View에서 열기 / 在MO View打开</button>';
+  h+='</div>';
+  document.getElementById("moMBody").innerHTML=h;
+  document.getElementById("moModalOv").classList.add("active");
+}
+
+/* ═══ Event bindings ═══ */
+document.getElementById("urgPopClose").addEventListener("click",function(){document.getElementById("urgencyPopOv").classList.remove("active")});
+document.getElementById("urgencyPopOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
+document.getElementById("kpiPopClose").addEventListener("click",function(){document.getElementById("kpiPopOv").classList.remove("active")});
+document.getElementById("kpiPopOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
+document.getElementById("pipePopClose").addEventListener("click",function(){document.getElementById("pipePopOv").classList.remove("active")});
+document.getElementById("pipePopOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
+document.getElementById("portManagerClose").addEventListener("click",function(){document.getElementById("portManagerOv").classList.remove("active")});
+document.getElementById("portManagerOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
+document.getElementById("mClose").addEventListener("click",function(){document.getElementById("modalOv").classList.remove("active");currentShipment=null});
+document.getElementById("modalOv").addEventListener("click",function(e){if(e.target===this){this.classList.remove("active");currentShipment=null}});
+document.getElementById("moMClose").addEventListener("click",function(){document.getElementById("moModalOv").classList.remove("active")});
+document.getElementById("moModalOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
+document.addEventListener("keydown",function(e){
+  if(e.key!=="Escape")return;
+  if(document.getElementById("lightboxOv").classList.contains("active")){closeLightbox();return}
+  if(document.getElementById("moModalOv").classList.contains("active")){document.getElementById("moModalOv").classList.remove("active");return}
+  if(document.getElementById("portManagerOv").classList.contains("active")){document.getElementById("portManagerOv").classList.remove("active");return}
+  if(document.getElementById("urgencyPopOv").classList.contains("active")){document.getElementById("urgencyPopOv").classList.remove("active");return}
+  if(document.getElementById("kpiPopOv").classList.contains("active")){document.getElementById("kpiPopOv").classList.remove("active");return}
+  if(document.getElementById("pipePopOv").classList.contains("active")){document.getElementById("pipePopOv").classList.remove("active");return}
+  if(document.getElementById("modalOv").classList.contains("active")){document.getElementById("modalOv").classList.remove("active");currentShipment=null}
+});
+</script>
+</body>
+</html>
