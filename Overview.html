@@ -150,7 +150,7 @@ body{padding:16px;min-height:100vh}
 .btn-mo-new:hover{background:#C8F0E0;transform:translateY(-1px)}
 
 /* Style KPI row */
-.skpi-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.skpi-grid{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:14px}
 .skpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-card);padding:14px;
   position:relative;overflow:hidden;min-width:0;transition:border-color .15s,box-shadow .15s}
 .skpi-card:hover{border-color:var(--border-hover);box-shadow:var(--shadow)}
@@ -171,7 +171,7 @@ body{padding:16px;min-height:100vh}
 .skpi-stat .lbl{font-size:9px;color:var(--text-mute);line-height:1.25;margin-top:3px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .skpi-stat.all{background:var(--p-lav)} .skpi-stat.all .num{color:var(--p-lav-txt)}
 .skpi-stat.sm{background:var(--p-butter)} .skpi-stat.sm .num{color:var(--p-butter-txt)}
-.skpi-stat.ord{background:var(--p-mint)} .skpi-stat.ord .num{color:var(--p-mint-txt)}
+.skpi-stat.ord{background:var(--p-sage)} .skpi-stat.ord .num{color:var(--p-sage-txt)}
 .skpi-stat.nord{background:var(--p-pink)} .skpi-stat.nord .num{color:var(--p-pink-txt)}
 .sdelay-card{background:var(--card);border:1px solid #FECACA;border-radius:var(--radius-card);padding:14px;display:flex;flex-direction:column;min-width:0;position:relative;overflow:hidden}
 .sdelay-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:#FCA5A5;border-radius:10px 10px 0 0}
@@ -1179,27 +1179,16 @@ function renderStyleKpiRow(){
   var h='<div class="skpi-grid">';
   if(months.length===0){h+='<div class="skpi-card skpi-card-empty"></div>'}
   else{months.forEach(function(key,i){h+=buildStyleKpiCard(key,styleGroupsByMonth[key],i)})}
-  h+=buildStyleNoOrderCard();
   h+=buildStyleDelayCard();
   h+='</div>';
   document.getElementById("styleKpiRow").innerHTML=h;
-}
-
-function buildStyleNoOrderCard(){
-  var u=(window._urgency&&window._urgency.unordered)||{total:0,byMonth:{},items:[]};
-  var h='<div class="urgency-card warning" style="cursor:pointer" onclick="openUrgencyPop(\'unordered\')">';
-  h+='<div class="urgency-label">⏳ 오더 미진행 / 订单未处理</div>';
-  h+='<div class="urgency-num">'+u.total+'</div>';
-  h+='<div class="urgency-breakdown">'+formatMonthBreakdown(u.byMonth)+'</div>';
-  h+='</div>';
-  return h;
 }
 
 function buildStyleKpiCard(key,items,idx){
   var ym=parseYM(key);
   var yy=ym?ym.y.toString().slice(-2):"";
   var mm=ym?(ym.m<10?"0"+ym.m:ym.m):"";
-  var title=ym?(yy+"."+mm):key;
+  var title=ym?(yy+"."+mm+" 스타일 KPI / "+yy+"年 "+ym.m+"月 款式 KPI"):"스타일 KPI / 款式 KPI";
   var tot=items.length,sm=0,ord=0,nord=0;
   items.forEach(function(r){
     var sku=g(r,"Style_SKU");if(sku==="-")sku=g(r,"SKU");
@@ -1213,13 +1202,13 @@ function buildStyleKpiCard(key,items,idx){
   var rr=26,circ=2*Math.PI*rr,off=circ-(pct/100)*circ;
   var ke=encodeURIComponent(key);
   var h='<div class="skpi-card" style="--stripe:'+stripe+'">';
-  h+='<div class="skpi-head"><div class="skpi-month">📅 '+escH(title)+'</div><div class="skpi-sub">스타일 KPI / 款式 KPI</div></div>';
+  h+='<div class="skpi-head" style="margin-bottom:10px"><div class="skpi-month" style="font-size:13px">📅 '+escH(title)+'</div></div>';
   h+='<div class="skpi-body"><div class="skpi-ring"><svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="'+rr+'" fill="none" stroke="#F3F0EA" stroke-width="5"/><circle cx="32" cy="32" r="'+rr+'" fill="none" stroke="'+color+'" stroke-width="5" stroke-dasharray="'+circ+'" stroke-dashoffset="'+off+'" stroke-linecap="round"/></svg><div class="skpi-ring-pct" style="color:'+color+'">'+pct+'%</div></div>';
   h+='<div class="skpi-stats">';
-  h+='<div class="skpi-stat all" onclick="openStyleKpiPop(\''+ke+'\',\'all\')"><div class="num">'+tot+'</div><div class="lbl">총 스타일/总款式</div></div>';
-  h+='<div class="skpi-stat sm" onclick="openStyleKpiPop(\''+ke+'\',\'sm\')"><div class="num">'+sm+'</div><div class="lbl">샘플/样品</div></div>';
-  h+='<div class="skpi-stat ord" onclick="openStyleKpiPop(\''+ke+'\',\'ord\')"><div class="num">'+ord+'</div><div class="lbl">오더완료/已下单</div></div>';
-  h+='<div class="skpi-stat nord" onclick="openStyleKpiPop(\''+ke+'\',\'nord\')"><div class="num">'+nord+'</div><div class="lbl">미오더/未下单</div></div>';
+  h+='<div class="skpi-stat all" onclick="openStyleKpiPop(\''+ke+'\',\'all\')"><div class="num">'+tot+'</div><div class="lbl">총 스타일 / 总款式</div></div>';
+  h+='<div class="skpi-stat sm" onclick="openStyleKpiPop(\''+ke+'\',\'sm\')"><div class="num">'+sm+'</div><div class="lbl">샘플 / 样品</div></div>';
+  h+='<div class="skpi-stat ord" onclick="openStyleKpiPop(\''+ke+'\',\'ord\')"><div class="num">'+ord+'</div><div class="lbl">오더완료 / 已下单</div></div>';
+  h+='<div class="skpi-stat nord" onclick="openStyleKpiPop(\''+ke+'\',\'nord\')"><div class="num">'+nord+'</div><div class="lbl">미오더 / 未下单</div></div>';
   h+='</div></div></div>';
   return h;
 }
