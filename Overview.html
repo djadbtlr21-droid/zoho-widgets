@@ -52,18 +52,15 @@ body{padding:16px;min-height:100vh}
 ::-webkit-scrollbar-thumb:hover{background:var(--border-hover)}
 
 /* Header */
-.hdr{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;margin-bottom:16px}
+.hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:8px}
 .hdr h1{font-size:15px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:10px;letter-spacing:-.01em}
 .hdr h1 .ic{width:28px;height:28px;background:linear-gradient(135deg,var(--ov-accent-from),var(--ov-accent-to));
   border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:500;letter-spacing:.5px;
   box-shadow:0 1px 3px rgba(201,168,110,.3)}
-.hdr-info{font-size:10px;color:var(--p-lav-txt);line-height:1.6;background:var(--p-lav);padding:8px 14px;
-  border-radius:8px;border-left:3px solid #C4B5FD;max-width:600px;justify-self:start}
 .hdr-btns{display:flex;gap:8px;align-items:center}
-@media(max-width:1100px){.hdr{grid-template-columns:1fr;gap:10px}.hdr-info{max-width:none}}
+.info-text{font-size:11px;color:var(--text);padding:4px 2px 10px 2px;margin-bottom:6px;line-height:1.6}
 
-/* TIER 1 — Urgency cards */
-.tier1-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+/* Urgency cards (relocated to Style/MO sections in v19) */
 .urgency-card{border-radius:10px;padding:14px 16px;cursor:pointer;transition:transform .15s,box-shadow .15s;
   text-align:center;border:1px solid;position:relative;overflow:hidden}
 .urgency-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;border-radius:10px 10px 0 0}
@@ -153,7 +150,7 @@ body{padding:16px;min-height:100vh}
 .btn-mo-new:hover{background:#C8F0E0;transform:translateY(-1px)}
 
 /* Style KPI row */
-.skpi-grid{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:14px}
+.skpi-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin-bottom:14px}
 .skpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-card);padding:14px;
   position:relative;overflow:hidden;min-width:0;transition:border-color .15s,box-shadow .15s}
 .skpi-card:hover{border-color:var(--border-hover);box-shadow:var(--shadow)}
@@ -572,7 +569,6 @@ body{padding:16px;min-height:100vh}
 .empty-sub{font-size:10px;color:var(--text-mute);line-height:1.5}
 
 @media(max-width:1400px){
-  .tier1-row{grid-template-columns:repeat(2,1fr)}
   .tier2-charts-row{grid-template-columns:1fr 1fr}
   .tier2-charts-row .chart-card:nth-child(3){grid-column:1/-1}
 }
@@ -584,9 +580,11 @@ body{padding:16px;min-height:100vh}
   .pa-compare{grid-template-columns:1fr}
 }
 @media(max-width:600px){
-  .tier1-row{grid-template-columns:1fr}
   .d-grid{grid-template-columns:1fr}
   body{padding:12px}
+}
+@media(max-width:1100px){
+  .skpi-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -597,46 +595,14 @@ body{padding:16px;min-height:100vh}
 <div id="mainContent" style="display:none">
   <div class="hdr">
     <h1><span class="ic">OV</span> 전체 현황 / 总览</h1>
-    <div class="hdr-info">
-      ℹ️ 당월 진행되는 데이터만 표시됩니다. 자세한 내용은 각 페이지에 진입하여 주세요.<br>
-      本页仅显示当月进行中的数据。详细内容请进入各页面查看。
-    </div>
     <div class="hdr-btns"></div>
   </div>
-
-  <!-- TIER 1 -->
-  <div class="tier1-row">
-    <div class="urgency-card danger" onclick="openUrgencyPop('delay')">
-      <div class="urgency-label">⚠️ 생산 지연 / 生产延误</div>
-      <div class="urgency-num" id="urgDelayTotal">0</div>
-      <div class="urgency-breakdown" id="urgDelayBreakdown">-</div>
-    </div>
-    <div class="urgency-card warning" onclick="openUrgencyPop('unordered')">
-      <div class="urgency-label">⏳ 오더 미진행 / 订单未处理</div>
-      <div class="urgency-num" id="urgUnorderedTotal">0</div>
-      <div class="urgency-breakdown" id="urgUnorderedBreakdown">-</div>
-    </div>
-    <div class="urgency-card pink" onclick="openUrgencyPop('sample')">
-      <div class="urgency-label">📋 샘플 보류 / 样品搁置</div>
-      <div class="urgency-num" id="urgSampleTotal">0</div>
-      <div class="urgency-breakdown" id="urgSampleBreakdown">-</div>
-    </div>
-    <div class="urgency-card lav" onclick="openUrgencyPop('ship')">
-      <div class="urgency-label">🚢 선적 임박 / 临近装运</div>
-      <div class="urgency-num" id="urgShipTotal">0</div>
-      <div class="urgency-breakdown" id="urgShipBreakdown">-</div>
-    </div>
+  <div class="info-text">
+    ℹ️ 당월 진행되는 데이터만 표시됩니다. 자세한 내용은 각 페이지에 진입하여 주세요. 本页仅显示当月进行中的数据。详细内容请进入各页面查看。
   </div>
 
-  <!-- TIER 2 — Charts -->
+  <!-- TIER 1 — Charts (공장별 오더량 → 오더 건전성 → Plan vs Actual) -->
   <div class="tier2-charts-row">
-    <div class="chart-card">
-      <div class="chart-header">
-        <div class="chart-title">📈 Plan vs Actual / 订单 vs 实际</div>
-        <div class="chart-sub">월별 출고 달성률 / 月度出货达成率</div>
-      </div>
-      <div id="planActualChart" class="chart-body"></div>
-    </div>
     <div class="chart-card">
       <div class="chart-header">
         <div class="chart-title-row">
@@ -660,6 +626,13 @@ body{padding:16px;min-height:100vh}
         </div>
       </div>
       <div id="healthChart" class="chart-body chart-donut-wrap"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">📈 Plan vs Actual / 订单 vs 实际</div>
+        <div class="chart-sub">월별 출고 달성률 / 月度出货达成率</div>
+      </div>
+      <div id="planActualChart" class="chart-body"></div>
     </div>
   </div>
 
@@ -997,16 +970,9 @@ function formatMonthBreakdown(byMonth){
 }
 
 function renderTier1(){
-  var u=computeUrgencyByMonth();
-  window._urgency=u;
-  document.getElementById("urgDelayTotal").textContent=u.delay.total;
-  document.getElementById("urgDelayBreakdown").innerHTML=formatMonthBreakdown(u.delay.byMonth);
-  document.getElementById("urgUnorderedTotal").textContent=u.unordered.total;
-  document.getElementById("urgUnorderedBreakdown").innerHTML=formatMonthBreakdown(u.unordered.byMonth);
-  document.getElementById("urgSampleTotal").textContent=u.sample.total;
-  document.getElementById("urgSampleBreakdown").innerHTML=formatMonthBreakdown(u.sample.byMonth);
-  document.getElementById("urgShipTotal").textContent=u.ship.total;
-  document.getElementById("urgShipBreakdown").innerHTML=formatMonthBreakdown(u.ship.byMonth);
+  // Top urgency card row removed in v19; data still computed for
+  // relocated 오더 미진행 (Style section) and 생산 지연 (MO section).
+  window._urgency=computeUrgencyByMonth();
 }
 
 function openUrgencyPop(type){
@@ -1213,9 +1179,20 @@ function renderStyleKpiRow(){
   var h='<div class="skpi-grid">';
   if(months.length===0){h+='<div class="skpi-card skpi-card-empty"></div>'}
   else{months.forEach(function(key,i){h+=buildStyleKpiCard(key,styleGroupsByMonth[key],i)})}
+  h+=buildStyleNoOrderCard();
   h+=buildStyleDelayCard();
   h+='</div>';
   document.getElementById("styleKpiRow").innerHTML=h;
+}
+
+function buildStyleNoOrderCard(){
+  var u=(window._urgency&&window._urgency.unordered)||{total:0,byMonth:{},items:[]};
+  var h='<div class="urgency-card warning" style="cursor:pointer" onclick="openUrgencyPop(\'unordered\')">';
+  h+='<div class="urgency-label">⏳ 오더 미진행 / 订单未处理</div>';
+  h+='<div class="urgency-num">'+u.total+'</div>';
+  h+='<div class="urgency-breakdown">'+formatMonthBreakdown(u.byMonth)+'</div>';
+  h+='</div>';
+  return h;
 }
 
 function buildStyleKpiCard(key,items,idx){
