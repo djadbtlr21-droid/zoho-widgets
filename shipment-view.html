@@ -887,12 +887,12 @@ function drawRouteMap(container,world){
       .style("cursor","pointer")
       .on("click",function(){openPortInfo(p.code)});
     dot.append("title").text(p.name_kr+" / "+p.name_pinyin);
-    var initY=p.country==="mx"?coords[1]+14:coords[1]-9;
+    var initY=p.country==="mx"?coords[1]+15:coords[1]-9;
     labelData.push({
       port:p,dotX:coords[0],dotY:coords[1],
       labelX:coords[0],labelY:initY,
-      width:Math.max(40,p.name_pinyin.length*6.5),
-      height:13,
+      width:Math.max(40,p.name_pinyin.length*4.2),
+      height:9,
       labelColor:cc.label
     });
   });
@@ -925,12 +925,12 @@ function drawRouteMap(container,world){
     if(Math.abs(dy)>14){
       portGroup.append("line")
         .attr("x1",ld.dotX).attr("y1",ld.dotY)
-        .attr("x2",ld.labelX).attr("y2",ld.labelY-(dy>0?5:-5))
+        .attr("x2",ld.labelX).attr("y2",ld.labelY-(dy>0?4:-4))
         .attr("stroke",ld.labelColor).attr("stroke-width",0.5).attr("opacity",0.45);
     }
     portGroup.append("text")
       .attr("x",ld.labelX).attr("y",ld.labelY)
-      .attr("text-anchor","middle").attr("font-size","11px").attr("font-weight","500")
+      .attr("text-anchor","middle").attr("font-size","7px").attr("font-weight","700")
       .attr("fill",ld.labelColor).attr("font-family","'Noto Sans KR',sans-serif")
       .attr("pointer-events","none").text(ld.port.name_pinyin);
   });
@@ -945,13 +945,20 @@ function drawRouteMap(container,world){
   window._mapZoom=zoom;
   window._mapSvg=svg;
 
+  // initialScale: adjust 1.6–2.2 for corridor tightness
+  var initialScale=1.8;
+  var cx=width/2,cy=height/2;
+  var initialTransform=d3.zoomIdentity.translate(cx-cx*initialScale,cy-cy*initialScale).scale(initialScale);
+  window._mapInitialTransform=initialTransform;
+  svg.call(zoom.transform,initialTransform);
+
   updateRouteLegend(routeCounts,activeShipments);
   setTimeout(renderAllMiniMaps,50);
 }
 
 function mapZoomIn(){if(window._mapSvg&&window._mapZoom)window._mapSvg.transition().duration(300).call(window._mapZoom.scaleBy,1.5)}
 function mapZoomOut(){if(window._mapSvg&&window._mapZoom)window._mapSvg.transition().duration(300).call(window._mapZoom.scaleBy,1/1.5)}
-function mapZoomReset(){if(window._mapSvg&&window._mapZoom)window._mapSvg.transition().duration(400).call(window._mapZoom.transform,d3.zoomIdentity)}
+function mapZoomReset(){if(window._mapSvg&&window._mapZoom&&window._mapInitialTransform)window._mapSvg.transition().duration(400).call(window._mapZoom.transform,window._mapInitialTransform)}
 
 function updateRouteLegend(routeCounts,activeShipments){
   var legendH='<span class="route-legend-item"><span class="route-legend-dot" style="background:#D4537E"></span>중국 / China</span>';
