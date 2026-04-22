@@ -60,6 +60,39 @@ body{padding:16px;min-height:100vh}
 
 /* TIER 1 — Urgency */
 .tier1-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.tier1-row-3{grid-template-columns:repeat(3,1fr)}
+.urgency-card.tracking{background:var(--p-lav);border-color:#C4B5FD}
+.urgency-card.tracking::before{background:#AFA9EC}
+.urgency-card.tracking .urgency-label{color:var(--p-lav-txt)}
+.urgency-card.tracking .urgency-num{color:#26215C}
+.urgency-card.tracking .urgency-breakdown{border-color:#C4B5FD;color:#534AB7}
+.urgency-card.tracking .urgency-breakdown b{color:#26215C}
+
+/* Map + KPI 40/60 split */
+.map-kpi-row{display:grid;grid-template-columns:40fr 60fr;gap:10px;margin-bottom:14px}
+.route-map-card.compact{margin-bottom:0;padding:12px 14px}
+.kpi-column{display:flex;flex-direction:column;gap:8px}
+.kpi-column #shipmentKpiRow{display:flex;flex-direction:column;gap:8px}
+.kpi-delay{padding:12px 14px;margin-bottom:0}
+.kpi-delay .urgency-num{font-size:22px}
+.kpi-delay .urgency-breakdown{line-height:1.4}
+
+/* Compact KPI card (stacked in right column) */
+.mkpi-card-compact{background:var(--p-lav);border-radius:8px;padding:10px 12px;display:grid;grid-template-columns:70px 1fr 60px;align-items:center;gap:10px;cursor:pointer;transition:transform .12s,box-shadow .12s;border:1px solid #DDD7FA}
+.mkpi-card-compact:hover{transform:translateX(2px);box-shadow:var(--shadow-sm)}
+.mkpi-card-compact.empty{visibility:hidden}
+.mkpi-month-tag{font-size:11px;font-weight:500;color:var(--p-lav-txt);letter-spacing:-.01em}
+.mkpi-stats-row{display:flex;gap:10px;font-size:10px;color:var(--text-mute);flex-wrap:wrap}
+.mkpi-stats-row .s b{color:#26215C;font-weight:500;margin-right:2px}
+.mkpi-stats-row .s.dv b{color:var(--p-mint-txt)}
+.mkpi-stats-row .s.dl b{color:var(--st-danger-txt)}
+.mkpi-stats-row .s.qty b{color:var(--p-sage-txt)}
+.mkpi-percent{font-size:16px;font-weight:500;color:#26215C;text-align:right;font-variant-numeric:tabular-nums}
+
+/* Map zoom controls */
+.map-controls{position:absolute;right:22px;top:58px;display:flex;flex-direction:column;gap:4px;background:rgba(255,255,255,.92);border:1px solid var(--border);border-radius:6px;padding:3px;z-index:10;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.map-controls button{width:26px;height:26px;border:0;background:transparent;font-size:14px;cursor:pointer;border-radius:4px;color:var(--text-soft);font-family:inherit;line-height:1;padding:0;display:flex;align-items:center;justify-content:center}
+.map-controls button:hover{background:var(--p-lav);color:var(--p-lav-txt)}
 .urgency-card{border-radius:10px;padding:14px 16px;cursor:pointer;transition:transform .15s,box-shadow .15s;text-align:center;border:1px solid;position:relative;overflow:hidden}
 .urgency-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;border-radius:10px 10px 0 0}
 .urgency-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08)}
@@ -94,7 +127,8 @@ body{padding:16px;min-height:100vh}
 .route-map-header{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed var(--border)}
 .route-map-title{font-size:13px;font-weight:500;color:var(--text)}
 .route-map-sub{font-size:10px;color:var(--text-mute)}
-#routeMap{width:100%;height:320px;background:linear-gradient(180deg,#F7FAFC 0%,#EDF4F5 100%);border-radius:8px;position:relative;overflow:hidden;border:1px solid #E2E8E6}
+#routeMap{width:100%;height:220px;background:linear-gradient(180deg,#F7FAFC 0%,#E8F4F8 100%);border-radius:8px;position:relative;overflow:hidden;border:1px solid #E2E8E6;cursor:grab}
+#routeMap:active{cursor:grabbing}
 #routeMap svg{width:100%;height:100%}
 /* D3 map uses inline attrs, no class-based port styling needed */
 .route-path{fill:none;stroke:var(--ship-primary);stroke-width:.5;stroke-dasharray:1 .8;opacity:.6}
@@ -354,13 +388,18 @@ body{padding:16px;min-height:100vh}
 
 @media(max-width:1400px){
   .tier1-row{grid-template-columns:repeat(2,1fr)}
+  .tier1-row-3{grid-template-columns:repeat(3,1fr)}
   .skpi-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:1100px){
+  .map-kpi-row{grid-template-columns:1fr}
 }
 @media(max-width:900px){
   .skpi-grid{grid-template-columns:1fr}
+  .tier1-row-3{grid-template-columns:1fr}
   .d-grid{grid-template-columns:1fr 1fr}
   .schedule-compare{grid-template-columns:1fr}
-  #routeMap{height:220px}
+  #routeMap{height:200px}
 }
 @media(max-width:600px){
   .tier1-row{grid-template-columns:1fr}
@@ -382,42 +421,49 @@ body{padding:16px;min-height:100vh}
     </div>
   </div>
 
-  <!-- TIER 1 -->
-  <div class="tier1-row">
-    <div class="urgency-card danger" onclick="openUrgencyPop('customsDelay')">
-      <div class="urgency-label">🚨 통관 지연 / 清关延误</div>
-      <div class="urgency-num" id="urgCustomsTotal">0</div>
-      <div class="urgency-breakdown" id="urgCustomsBreakdown">-</div>
-    </div>
+  <!-- TIER 1 — 3 urgency cards -->
+  <div class="tier1-row tier1-row-3">
     <div class="urgency-card warning" onclick="openUrgencyPop('shipSoon')">
       <div class="urgency-label">⏰ 선적 임박 / 临近装运</div>
       <div class="urgency-num" id="urgShipSoonTotal">0</div>
-      <div class="urgency-breakdown" id="urgShipSoonBreakdown">-</div>
-    </div>
-    <div class="urgency-card pink" onclick="openUrgencyPop('noInvoice')">
-      <div class="urgency-label">📄 인보이스 미발행 / 发票未开</div>
-      <div class="urgency-num" id="urgInvoiceTotal">0</div>
-      <div class="urgency-breakdown" id="urgInvoiceBreakdown">-</div>
+      <div class="urgency-breakdown" id="urgShipSoonBreakdown">ETD 7일 이내 / 7天内</div>
     </div>
     <div class="urgency-card lav" onclick="openUrgencyPop('transit')">
       <div class="urgency-label">🌊 운송 중 / 运输中</div>
       <div class="urgency-num" id="urgTransitTotal">0</div>
-      <div class="urgency-breakdown" id="urgTransitBreakdown">-</div>
+      <div class="urgency-breakdown" id="urgTransitBreakdown">ATD 등록됨 / ATD已记录</div>
+    </div>
+    <div class="urgency-card tracking" onclick="openUrgencyPop('tracking')">
+      <div class="urgency-label">📡 온라인 추적 / 在线追踪</div>
+      <div class="urgency-num" id="urgTrackingTotal">0</div>
+      <div class="urgency-breakdown" id="urgTrackingBreakdown">Vessel 등록됨 / 已注册</div>
     </div>
   </div>
 
-  <!-- TIER 2 -->
-  <div class="route-map-card">
-    <div class="route-map-header">
-      <div class="route-map-title">🗺️ 선적 라우트 / 装运航线</div>
-      <div class="route-map-sub">활성 루트 · 运输中的航线</div>
+  <!-- TIER 2+3 — Map (40%) + KPI column (60%) -->
+  <div class="map-kpi-row">
+    <div class="route-map-card compact">
+      <div class="route-map-header">
+        <div class="route-map-title">🗺️ 선적 라우트 / 装运航线</div>
+        <div class="route-map-sub" id="routeMapSub">-</div>
+      </div>
+      <div id="routeMap"></div>
+      <div class="map-controls">
+        <button onclick="mapZoomIn()" title="확대 / 放大">＋</button>
+        <button onclick="mapZoomReset()" title="초기화 / 重置">⟲</button>
+        <button onclick="mapZoomOut()" title="축소 / 缩小">−</button>
+      </div>
+      <div class="route-legend" id="routeLegend"></div>
     </div>
-    <div id="routeMap"></div>
-    <div class="route-legend" id="routeLegend"></div>
+    <div class="kpi-column">
+      <div id="shipmentKpiRow"></div>
+      <div class="urgency-card danger kpi-delay" onclick="openUrgencyPop('customsDelay')">
+        <div class="urgency-label">🚨 통관 지연 / 清关延误</div>
+        <div class="urgency-num" id="urgCustomsTotal">0</div>
+        <div class="urgency-breakdown" id="urgCustomsBreakdown">ETA 경과 + 미완료 / ETA已过 + 未完成</div>
+      </div>
+    </div>
   </div>
-
-  <!-- TIER 3 -->
-  <div id="shipmentKpiRow"></div>
 
   <!-- TIER 4+5 -->
   <div id="monthlyContent"></div>
@@ -617,6 +663,7 @@ ZOHO.CREATOR.init().then(function(){
     if(results[1]&&results[1].code===3000&&results[1].data)allMO=results[1].data;
     buildShipmentGroupsByMonth();
     loadCustomPorts();
+    loadHiddenPorts();
     renderTier1Urgency();
     renderRouteMap();
     renderShipmentKpiRow();
@@ -629,8 +676,8 @@ ZOHO.CREATOR.init().then(function(){
 function computeUrgencyByMonth(){
   var result={
     customsDelay:{total:0,byMonth:{},items:[]},
+    tracking:{total:0,byMonth:{},items:[]},
     shipSoon:{total:0,byMonth:{},items:[]},
-    noInvoice:{total:0,byMonth:{},items:[]},
     transit:{total:0,byMonth:{},items:[]}
   };
   allShipments.forEach(function(r){
@@ -652,18 +699,16 @@ function computeUrgencyByMonth(){
         result.shipSoon.items.push(r);
       }
     }
-    if(atd){
-      var inv=g(r,"Invoice_Status");
-      if(inv==="-"||inv===""||inv.toLowerCase().indexOf("issued")<0&&inv.toLowerCase().indexOf("발행")<0&&inv.toLowerCase().indexOf("已开")<0){
-        result.noInvoice.total++;
-        result.noInvoice.byMonth[key]=(result.noInvoice.byMonth[key]||0)+1;
-        result.noInvoice.items.push(r);
-      }
-    }
-    if(atd&&eta&&new Date(eta)>=today&&stage==="Transit"){
+    if(atd&&stage!=="Complete"){
       result.transit.total++;
       result.transit.byMonth[key]=(result.transit.byMonth[key]||0)+1;
       result.transit.items.push(r);
+    }
+    var vessel=g(r,"Vessel_Name");
+    if(vessel&&vessel!=="-"&&vessel!==""&&stage!=="Complete"){
+      result.tracking.total++;
+      result.tracking.byMonth[key]=(result.tracking.byMonth[key]||0)+1;
+      result.tracking.items.push(r);
     }
   });
   return result;
@@ -689,13 +734,13 @@ function renderTier1Urgency(){
   document.getElementById("urgCustomsBreakdown").innerHTML=formatMonthBreakdown(u.customsDelay.byMonth);
   document.getElementById("urgShipSoonTotal").textContent=u.shipSoon.total;
   document.getElementById("urgShipSoonBreakdown").innerHTML=formatMonthBreakdown(u.shipSoon.byMonth);
-  document.getElementById("urgInvoiceTotal").textContent=u.noInvoice.total;
-  document.getElementById("urgInvoiceBreakdown").innerHTML=formatMonthBreakdown(u.noInvoice.byMonth);
   document.getElementById("urgTransitTotal").textContent=u.transit.total;
   document.getElementById("urgTransitBreakdown").innerHTML=formatMonthBreakdown(u.transit.byMonth);
+  document.getElementById("urgTrackingTotal").textContent=u.tracking.total;
+  document.getElementById("urgTrackingBreakdown").innerHTML=formatMonthBreakdown(u.tracking.byMonth);
 }
 function openUrgencyPop(type){
-  var titles={customsDelay:"🚨 통관 지연 / 清关延误",shipSoon:"⏰ 선적 임박 / 临近装运",noInvoice:"📄 인보이스 미발행 / 发票未开",transit:"🌊 운송 중 / 运输中"};
+  var titles={customsDelay:"🚨 통관 지연 / 清关延误",shipSoon:"⏰ 선적 임박 / 临近装运",tracking:"📡 온라인 추적 / 在线追踪",transit:"🌊 운송 중 / 运输中"};
   var bucket=(window._urgency||{})[type]||{items:[]};
   var items=bucket.items||[];
   document.getElementById("urgPopTitle").textContent=titles[type];
@@ -746,6 +791,17 @@ function loadCustomPorts(){
 }
 function saveCustomPorts(){try{localStorage.setItem("jera_custom_ports",JSON.stringify(customPorts))}catch(e){}}
 function getAllPorts(){return DEFAULT_PORTS.concat(customPorts)}
+function getVisiblePorts(){return getAllPorts().filter(function(p){return hiddenPorts.indexOf(p.code)<0})}
+var hiddenPorts=[];
+function loadHiddenPorts(){try{var s=localStorage.getItem("jera_hidden_ports");if(s)hiddenPorts=JSON.parse(s)||[]}catch(e){hiddenPorts=[]}}
+function saveHiddenPorts(){try{localStorage.setItem("jera_hidden_ports",JSON.stringify(hiddenPorts))}catch(e){}}
+function togglePortVisibility(code){
+  var idx=hiddenPorts.indexOf(code);
+  if(idx>=0)hiddenPorts.splice(idx,1);else hiddenPorts.push(code);
+  saveHiddenPorts();
+  openPortManager();
+  renderRouteMap();
+}
 function findPort(codeOrName){
   if(!codeOrName||codeOrName==="-")return null;
   var q=String(codeOrName).trim();
@@ -772,7 +828,7 @@ function renderRouteMap(){
 function drawRouteMap(container,world){
   container.innerHTML="";
   var width=container.clientWidth||680;
-  var height=320;
+  var height=220;
   // Pacific corridor: west of Mexico Pacific coast to east of China Pacific coast
   var pacificBounds={type:"Polygon",coordinates:[[[-120,10],[-120,45],[125,45],[125,10],[-120,10]]]};
   var projection=d3.geoEquirectangular().rotate([-150,0]).fitExtent([[10,10],[width-10,height-10]],pacificBounds);
@@ -780,17 +836,32 @@ function drawRouteMap(container,world){
   var svg=d3.select(container).append("svg")
     .attr("width",width).attr("height",height)
     .attr("viewBox","0 0 "+width+" "+height);
-  svg.append("rect").attr("width",width).attr("height",height).attr("fill","#EDF4F5");
+  svg.append("rect").attr("width",width).attr("height",height).attr("fill","#E8F4F8");
+
+  // Single group for all drawings — enables zoom/pan
+  var mapGroup=svg.append("g").attr("class","map-main-group");
+
   var countries=topojson.feature(world,world.objects.countries);
-  svg.append("g").selectAll("path").data(countries.features)
+  mapGroup.append("g").attr("class","countries-layer").selectAll("path").data(countries.features)
     .enter().append("path").attr("d",path)
-    .attr("fill","#F1EFE8").attr("stroke","#D3D1C7").attr("stroke-width",0.4);
-  svg.append("text")
-    .attr("x",width/2).attr("y",height/2)
-    .attr("text-anchor","middle").attr("font-size","14px")
-    .attr("fill","#B4B2A9").attr("opacity",.35).attr("font-style","italic")
+    .attr("fill",function(d){
+      var name=d.properties&&d.properties.name;
+      if(name==="China")return "#FBEAF0";
+      if(name==="Mexico")return "#E1F5EE";
+      return "#FBF5E9";
+    })
+    .attr("stroke","#E8D9C4").attr("stroke-width",0.4);
+
+  mapGroup.append("text")
+    .attr("x",width/2).attr("y",height/2+20)
+    .attr("text-anchor","middle").attr("font-size","13px")
+    .attr("fill","#A8C5D4").attr("opacity",.5).attr("font-style","italic")
     .attr("pointer-events","none")
+    .attr("font-family","'Noto Sans KR',sans-serif")
     .text("Pacific Ocean / 太平洋");
+
+  var visiblePortCodes={};
+  getVisiblePorts().forEach(function(p){visiblePortCodes[p.code]=true});
 
   var activeShipments=allShipments.filter(function(r){return getShipStage(r)!=="Complete"});
   var routeCounts={};
@@ -805,49 +876,64 @@ function drawRouteMap(container,world){
     routeCounts[key].ships.push(r);
   });
 
-  var routeGroup=svg.append("g");
+  var routeGroup=mapGroup.append("g").attr("class","routes-layer");
   Object.keys(routeCounts).forEach(function(key){
     var rc=routeCounts[key];
+    if(!visiblePortCodes[rc.from.code]||!visiblePortCodes[rc.to.code])return;
     var p1=projection([rc.from.lon,rc.from.lat]);
     var p2=projection([rc.to.lon,rc.to.lat]);
     if(!p1||!p2)return;
     var mx=(p1[0]+p2[0])/2;
-    var my=Math.min(p1[1],p2[1])-50;
+    var my=Math.min(p1[1],p2[1])-40;
     var d="M "+p1[0]+","+p1[1]+" Q "+mx+","+my+" "+p2[0]+","+p2[1];
     routeGroup.append("path").attr("d",d)
-      .attr("fill","none").attr("stroke","#C9A86E").attr("stroke-width",2).attr("opacity",0.8);
+      .attr("fill","none").attr("stroke","#D4537E").attr("stroke-width",1.8).attr("opacity",.85);
     var bx=mx*0.5+p1[0]*0.25+p2[0]*0.25;
     var by=my*0.5+p1[1]*0.25+p2[1]*0.25;
-    routeGroup.append("circle").attr("cx",bx).attr("cy",by).attr("r",9)
-      .attr("fill","#C9A86E").attr("stroke","#FFF").attr("stroke-width",1.5);
+    routeGroup.append("circle").attr("cx",bx).attr("cy",by).attr("r",8)
+      .attr("fill","#F5C4B3").attr("stroke","#FFF").attr("stroke-width",1.3);
     routeGroup.append("text").attr("x",bx).attr("y",by)
       .attr("text-anchor","middle").attr("dominant-baseline","central")
-      .attr("fill","#FFF").attr("font-size","10px").attr("font-weight","500")
+      .attr("fill","#712B13").attr("font-size","10px").attr("font-weight","500")
       .attr("font-family","'Noto Sans KR',sans-serif").text(rc.count);
   });
 
-  var portGroup=svg.append("g");
-  getAllPorts().forEach(function(p){
+  var portGroup=mapGroup.append("g").attr("class","ports-layer");
+  getVisiblePorts().forEach(function(p){
     var coords=projection([p.lon,p.lat]);
     if(!coords)return;
-    var color=p.country==="cn"?"#E24B4A":(p.country==="mx"?"#1D9E75":"#888780");
-    var labelColor=p.country==="cn"?"#A32D2D":(p.country==="mx"?"#085041":"#5F5E5A");
+    var color=p.country==="cn"?"#D4537E":(p.country==="mx"?"#5DCAA5":"#888780");
+    var labelColor=p.country==="cn"?"#993556":(p.country==="mx"?"#0F6E56":"#5F5E5A");
     var dot=portGroup.append("circle")
-      .attr("cx",coords[0]).attr("cy",coords[1]).attr("r",6)
-      .attr("fill",color).attr("stroke","#FFF").attr("stroke-width",1.8)
+      .attr("cx",coords[0]).attr("cy",coords[1]).attr("r",5.5)
+      .attr("fill",color).attr("stroke","#FFF").attr("stroke-width",1.6)
       .style("cursor","pointer");
     dot.append("title").text(p.name_kr+" / "+p.name_pinyin);
-    var labelY=p.country==="mx"?coords[1]+16:coords[1]-10;
+    var labelY=p.country==="mx"?coords[1]+14:coords[1]-9;
     portGroup.append("text")
       .attr("x",coords[0]).attr("y",labelY)
-      .attr("text-anchor","middle").attr("font-size","12px").attr("font-weight","500")
+      .attr("text-anchor","middle").attr("font-size","11px").attr("font-weight","500")
       .attr("fill",labelColor).attr("font-family","'Noto Sans KR',sans-serif")
       .attr("pointer-events","none").text(p.name_pinyin);
   });
 
+  // Zoom/pan behavior
+  var zoom=d3.zoom()
+    .scaleExtent([0.8,8])
+    .translateExtent([[-50,-50],[width+50,height+50]])
+    .on("zoom",function(event){mapGroup.attr("transform",event.transform)});
+  svg.call(zoom);
+  svg.on("dblclick.zoom",null);
+  window._mapZoom=zoom;
+  window._mapSvg=svg;
+
   updateRouteLegend(routeCounts,activeShipments);
   setTimeout(renderAllMiniMaps,50);
 }
+
+function mapZoomIn(){if(window._mapSvg&&window._mapZoom)window._mapSvg.transition().duration(300).call(window._mapZoom.scaleBy,1.5)}
+function mapZoomOut(){if(window._mapSvg&&window._mapZoom)window._mapSvg.transition().duration(300).call(window._mapZoom.scaleBy,1/1.5)}
+function mapZoomReset(){if(window._mapSvg&&window._mapZoom)window._mapSvg.transition().duration(400).call(window._mapZoom.transform,d3.zoomIdentity)}
 
 function updateRouteLegend(routeCounts,activeShipments){
   var legendH='<span class="route-legend-item"><span class="route-legend-dot" style="background:#E24B4A"></span>중국 / China</span>';
@@ -882,11 +968,17 @@ function renderMiniMap(container,pFrom,pTo){
   var svg=d3.select(container).append("svg")
     .attr("width",width).attr("height",height)
     .attr("viewBox","0 0 "+width+" "+height);
-  svg.append("rect").attr("width",width).attr("height",height).attr("fill","#EDF4F5");
+  svg.append("rect").attr("width",width).attr("height",height).attr("fill","#E8F4F8");
   var countries=topojson.feature(worldTopoJSON,worldTopoJSON.objects.countries);
   svg.append("g").selectAll("path").data(countries.features)
     .enter().append("path").attr("d",path)
-    .attr("fill","#F1EFE8").attr("stroke","#D3D1C7").attr("stroke-width",0.3);
+    .attr("fill",function(d){
+      var name=d.properties&&d.properties.name;
+      if(name==="China")return "#FBEAF0";
+      if(name==="Mexico")return "#E1F5EE";
+      return "#FBF5E9";
+    })
+    .attr("stroke","#E8D9C4").attr("stroke-width",0.3);
   var p1=projection([pFrom.lon,pFrom.lat]);
   var p2=projection([pTo.lon,pTo.lat]);
   if(!p1||!p2)return;
@@ -894,17 +986,17 @@ function renderMiniMap(container,pFrom,pTo){
   var my=Math.min(p1[1],p2[1])-18;
   svg.append("path")
     .attr("d","M "+p1[0]+","+p1[1]+" Q "+mx+","+my+" "+p2[0]+","+p2[1])
-    .attr("fill","none").attr("stroke","#C9A86E").attr("stroke-width",1.2).attr("stroke-dasharray","2 2");
+    .attr("fill","none").attr("stroke","#D4537E").attr("stroke-width",1.2).attr("stroke-dasharray","2 2");
   svg.append("circle").attr("cx",p1[0]).attr("cy",p1[1]).attr("r",3)
-    .attr("fill","#E24B4A").attr("stroke","#FFF").attr("stroke-width",1);
+    .attr("fill","#D4537E").attr("stroke","#FFF").attr("stroke-width",1);
   svg.append("circle").attr("cx",p2[0]).attr("cy",p2[1]).attr("r",3)
-    .attr("fill","#1D9E75").attr("stroke","#FFF").attr("stroke-width",1);
+    .attr("fill","#5DCAA5").attr("stroke","#FFF").attr("stroke-width",1);
   svg.append("text").attr("x",p1[0]).attr("y",p1[1]-5)
     .attr("text-anchor","middle").attr("font-size","8px")
-    .attr("fill","#A32D2D").attr("font-weight","500").text(pFrom.name_pinyin);
+    .attr("fill","#993556").attr("font-weight","500").text(pFrom.name_pinyin);
   svg.append("text").attr("x",p2[0]).attr("y",p2[1]+10)
     .attr("text-anchor","middle").attr("font-size","8px")
-    .attr("fill","#085041").attr("font-weight","500").text(pTo.name_pinyin);
+    .attr("fill","#0F6E56").attr("font-weight","500").text(pTo.name_pinyin);
 }
 
 function openPortInfo(code){
@@ -934,18 +1026,29 @@ function openPortManager(){
   body+='</div>';
   body+='<div style="font-size:9px;color:var(--text-mute);margin-top:6px;line-height:1.5">경도/위도 찾기: Google Maps에서 항구 우클릭 → 좌표 복사 (경도 먼저, 위도 나중) / 经纬度查询: Google Maps 右键港口 → 复制坐标 (先经后纬)</div>';
   body+='</div>';
+  body+='<div style="font-size:10px;color:var(--text-mute);background:var(--p-butter);padding:6px 10px;border-radius:6px;margin-bottom:10px;line-height:1.6">';
+  body+='💡 <b>숨김</b>: 지도에서 안 보이게 하기 (데이터 유지) / 在地图上隐藏 (数据保留)<br>';
+  body+='💡 <b>삭제</b>: 커스텀 항구 완전 제거 / 删除自定义港口';
+  body+='</div>';
   body+='<div style="display:flex;flex-direction:column;gap:4px">';
   ports.forEach(function(p){
     var isCustom=customPorts.some(function(cp){return cp.code===p.code});
-    body+='<div style="display:grid;grid-template-columns:60px 1fr 1fr 60px 140px auto;gap:8px;padding:6px 10px;background:#FFF;border:1px solid var(--border);border-radius:6px;font-size:11px;align-items:center">';
+    var isHidden=hiddenPorts.indexOf(p.code)>=0;
+    var rowBg=isHidden?"#F9F9F6":"#FFF";
+    var rowOpacity=isHidden?"0.55":"1";
+    body+='<div style="display:grid;grid-template-columns:50px 1fr 1fr 50px 120px 70px 60px;gap:6px;padding:6px 10px;background:'+rowBg+';border:1px solid var(--border);border-radius:6px;font-size:11px;align-items:center;opacity:'+rowOpacity+'">';
     body+='<span style="font-weight:500;color:var(--ship-primary)">'+escH(p.code)+'</span>';
     body+='<span>'+escH(p.name_kr)+'</span>';
     body+='<span>'+escH(p.name_pinyin||"")+'</span>';
     body+='<span style="font-size:9px;color:var(--text-mute)">'+p.country.toUpperCase()+'</span>';
     body+='<span style="font-size:9px;color:var(--text-mute);font-variant-numeric:tabular-nums">'+p.lon.toFixed(2)+", "+p.lat.toFixed(2)+'</span>';
+    var toggleBg=isHidden?"var(--p-mint)":"var(--p-butter)";
+    var toggleTxt=isHidden?"var(--p-mint-txt)":"var(--p-butter-txt)";
+    var toggleLbl=isHidden?"표시 / 显示":"숨김 / 隐藏";
+    body+='<button onclick="togglePortVisibility(\''+p.code+'\')" style="padding:3px 8px;background:'+toggleBg+';color:'+toggleTxt+';border:1px solid var(--border);border-radius:3px;font-size:9px;cursor:pointer;font-family:inherit">'+toggleLbl+'</button>';
     body+=isCustom
       ?'<button onclick="removeCustomPort(\''+p.code+'\')" style="padding:3px 8px;background:var(--st-danger-bg);color:var(--st-danger-txt);border:1px solid #F7C1C1;border-radius:3px;font-size:9px;cursor:pointer;font-family:inherit">삭제 / 删除</button>'
-      :'<span style="font-size:9px;color:var(--text-mute)">기본 / 默认</span>';
+      :'<span style="font-size:9px;color:var(--text-mute);text-align:center">기본 / 默认</span>';
     body+='</div>';
   });
   body+='</div></div>';
@@ -974,15 +1077,44 @@ function removeCustomPort(code){
   renderRouteMap();
 }
 
-/* ═══ TIER 3 — Monthly KPI ═══ */
+/* ═══ TIER 3 — Monthly KPI (compact, stacked in right column) ═══ */
 function renderShipmentKpiRow(){
   var months=getTopTwoDataMonths(shipmentGroupsByMonth);
-  var h='<div class="skpi-grid">';
-  months.forEach(function(key,i){h+=buildShipKpiCard(key,shipmentGroupsByMonth[key],i)});
-  for(var i=months.length;i<2;i++){h+='<div class="skpi-card skpi-card-empty"></div>'}
-  h+=buildShipDelayCard();
-  h+='</div>';
+  var h="";
+  months.forEach(function(key,i){h+=buildShipKpiCompact(key,shipmentGroupsByMonth[key],i)});
+  for(var i=months.length;i<2;i++){h+='<div class="mkpi-card-compact empty"></div>'}
   document.getElementById("shipmentKpiRow").innerHTML=h;
+}
+
+function buildShipKpiCompact(key,items,idx){
+  var ym=parseYM(key);
+  var yy=ym?ym.y.toString().slice(-2):"";
+  var mm=ym?(ym.m<10?"0"+ym.m:ym.m):"";
+  var label=ym?(yy+"."+mm):key;
+  var tot=items.length,complete=0,transit=0,delayed=0,totalQty=0;
+  items.forEach(function(r){
+    var stage=getShipStage(r);
+    if(stage==="Complete")complete++;
+    else if(stage==="Transit"||stage==="Shipping")transit++;
+    if(isCustomsDelayed(r))delayed++;
+    var lines=getSubformLines(r,"Container_Lines");
+    if(lines.length>0){lines.forEach(function(ln){totalQty+=parseInt(ln["Quantity"])||0})}
+    else{totalQty+=parseInt(g(r,"Total_Quantity"))||0}
+  });
+  var pct=tot>0?Math.round((complete/tot)*100):0;
+  var ke=encodeURIComponent(key);
+  var h='<div class="mkpi-card-compact" onclick="openShipKpiPop(\''+ke+'\',\'all\')">';
+  h+='<div class="mkpi-month-tag">📅 '+escH(label)+'</div>';
+  h+='<div class="mkpi-stats-row">';
+  h+='<span class="s"><b>'+tot+'</b>총/总</span>';
+  h+='<span class="s dv"><b>'+complete+'</b>완료/完成</span>';
+  h+='<span class="s"><b>'+transit+'</b>운송/运输</span>';
+  h+='<span class="s dl"><b>'+delayed+'</b>지연/延误</span>';
+  h+='<span class="s qty"><b>'+(totalQty>=1000?(totalQty/1000).toFixed(1)+"k":totalQty.toLocaleString())+'</b>pcs</span>';
+  h+='</div>';
+  h+='<div class="mkpi-percent">'+pct+'%</div>';
+  h+='</div>';
+  return h;
 }
 function buildShipKpiCard(key,items,idx){
   var ym=parseYM(key);
