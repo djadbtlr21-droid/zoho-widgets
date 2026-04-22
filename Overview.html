@@ -165,14 +165,11 @@ body{padding:16px;min-height:100vh}
 .skpi-ring svg{transform:rotate(-90deg)}
 .skpi-ring-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500}
 .skpi-stats{display:grid;grid-template-columns:1fr 1fr;gap:5px;flex:1;min-width:0}
-.skpi-stat{padding:5px 7px;border-radius:7px;cursor:pointer;transition:transform .12s;text-align:left;min-width:0}
-.skpi-stat:hover{transform:translateY(-1px)}
-.skpi-stat .num{font-size:16px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums}
-.skpi-stat .lbl{font-size:9px;color:var(--text-mute);line-height:1.25;margin-top:3px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.skpi-stat.all{background:var(--p-lav)} .skpi-stat.all .num{color:var(--p-lav-txt)}
-.skpi-stat.sm{background:var(--p-butter)} .skpi-stat.sm .num{color:var(--p-butter-txt)}
-.skpi-stat.ord{background:var(--p-sage)} .skpi-stat.ord .num{color:var(--p-sage-txt)}
-.skpi-stat.nord{background:var(--p-pink)} .skpi-stat.nord .num{color:var(--p-pink-txt)}
+.skpi-stat{padding:5px 4px;border-radius:6px;cursor:pointer;transition:background .15s,transform .12s;text-align:center;min-width:0;background:#FAFAF7;border:1px solid #F1EFE8}
+.skpi-stat:hover{background:var(--p-lav);transform:translateY(-1px)}
+.skpi-stat-n{font-size:16px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums}
+.skpi-stat-l{font-size:9px;font-weight:400;color:var(--text-mute);margin-top:3px;line-height:1.3}
+.skpi-stat .dot{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:3px;vertical-align:middle}
 .sdelay-card{background:var(--card);border:1px solid #FECACA;border-radius:var(--radius-card);padding:14px;display:flex;flex-direction:column;min-width:0;position:relative;overflow:hidden}
 .sdelay-card::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:#FCA5A5;border-radius:10px 10px 0 0}
 .sdelay-head{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:11.5px;font-weight:500;color:var(--st-danger-txt)}
@@ -1205,10 +1202,10 @@ function buildStyleKpiCard(key,items,idx){
   h+='<div class="skpi-head" style="margin-bottom:10px"><div class="skpi-month" style="font-size:13px">📅 '+escH(title)+'</div></div>';
   h+='<div class="skpi-body"><div class="skpi-ring"><svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="'+rr+'" fill="none" stroke="#F3F0EA" stroke-width="5"/><circle cx="32" cy="32" r="'+rr+'" fill="none" stroke="'+color+'" stroke-width="5" stroke-dasharray="'+circ+'" stroke-dashoffset="'+off+'" stroke-linecap="round"/></svg><div class="skpi-ring-pct" style="color:'+color+'">'+pct+'%</div></div>';
   h+='<div class="skpi-stats">';
-  h+='<div class="skpi-stat all" onclick="openStyleKpiPop(\''+ke+'\',\'all\')"><div class="num">'+tot+'</div><div class="lbl">총 스타일 / 总款式</div></div>';
-  h+='<div class="skpi-stat sm" onclick="openStyleKpiPop(\''+ke+'\',\'sm\')"><div class="num">'+sm+'</div><div class="lbl">샘플 / 样品</div></div>';
-  h+='<div class="skpi-stat ord" onclick="openStyleKpiPop(\''+ke+'\',\'ord\')"><div class="num">'+ord+'</div><div class="lbl">오더완료 / 已下单</div></div>';
-  h+='<div class="skpi-stat nord" onclick="openStyleKpiPop(\''+ke+'\',\'nord\')"><div class="num">'+nord+'</div><div class="lbl">미오더 / 未下单</div></div>';
+  h+='<div class="skpi-stat all" onclick="openStyleKpiPop(\''+ke+'\',\'all\')"><div class="skpi-stat-n" style="color:#6366F1">'+tot+'</div><div class="skpi-stat-l"><span class="dot" style="background:#A5B4FC"></span>총 스타일 / 总款式</div></div>';
+  h+='<div class="skpi-stat sm" onclick="openStyleKpiPop(\''+ke+'\',\'sm\')"><div class="skpi-stat-n" style="color:#854F0B">'+sm+'</div><div class="skpi-stat-l"><span class="dot" style="background:#FDE68A"></span>샘플 / 样品</div></div>';
+  h+='<div class="skpi-stat ord" onclick="openStyleKpiPop(\''+ke+'\',\'ord\')"><div class="skpi-stat-n" style="color:#065F46">'+ord+'</div><div class="skpi-stat-l"><span class="dot" style="background:#A7F3D0"></span>오더완료 / 已下单</div></div>';
+  h+='<div class="skpi-stat nord" onclick="openStyleKpiPop(\''+ke+'\',\'nord\')"><div class="skpi-stat-n" style="color:#A32D2D">'+nord+'</div><div class="skpi-stat-l"><span class="dot" style="background:#FECACA"></span>미오더 / 未下单</div></div>';
   h+='</div></div></div>';
   return h;
 }
