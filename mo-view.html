@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JERA ERP — MO View v31 / 생산현황 / 生产现况</title>
+<title>JERA ERP — MO View v32 / 생산현황 / 生产现况</title>
 <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css');
@@ -267,42 +267,36 @@ body{padding:16px;min-height:100vh}
 .csm-tbl tr.csm-grand .csm-td-color{color:var(--text)}
 .csm-empty{text-align:center;padding:20px;color:#B4B2A9;font-size:11px;background:#FAFAF7;border-radius:8px;border:1px dashed var(--border)}
 
-/* ── CSM Plan vs Actual Comparison KPI (NEW in v31) ── */
+/* ── CSM Plan vs Actual Comparison KPI (v32: readonly, auto-computed) ── */
 .csm-compare{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px;padding:12px;
   background:linear-gradient(180deg,#FFFFFF 0%,#FDFCF9 100%);border:1px solid var(--border);border-radius:10px}
-.csm-cmp-box{padding:10px 12px;border-radius:8px;text-align:center;border:1px solid;position:relative}
+.csm-cmp-box{padding:12px 14px;border-radius:8px;text-align:center;border:1px solid;position:relative;
+  transition:transform .15s,box-shadow .15s;min-height:92px;display:flex;flex-direction:column;justify-content:center}
+.csm-cmp-box:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.04)}
 .csm-cmp-box.plan{background:#F5F3FF;border-color:var(--plan-border)}
 .csm-cmp-box.actual{background:#ECFDF5;border-color:var(--actual-border)}
+.csm-cmp-box.actual.empty{background:#FAFAF7;border-color:var(--border)}
 .csm-cmp-box.rate{background:#FFFBEA;border-color:#FBEAA1}
-.csm-cmp-label{font-size:9px;font-weight:500;margin-bottom:5px;letter-spacing:.3px;display:flex;align-items:center;justify-content:center;gap:4px}
+.csm-cmp-box.rate.empty{background:#FAFAF7;border-color:var(--border)}
+.csm-cmp-label{font-size:9px;font-weight:500;margin-bottom:6px;letter-spacing:.3px;display:flex;align-items:center;justify-content:center;gap:4px}
 .csm-cmp-box.plan .csm-cmp-label{color:#7C3AED}
 .csm-cmp-box.actual .csm-cmp-label{color:#059669}
+.csm-cmp-box.actual.empty .csm-cmp-label{color:var(--text-mute)}
 .csm-cmp-box.rate .csm-cmp-label{color:#92400E}
-.csm-cmp-num{font-size:22px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums}
+.csm-cmp-box.rate.empty .csm-cmp-label{color:var(--text-mute)}
+.csm-cmp-num{font-size:24px;font-weight:500;line-height:1.1;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
 .csm-cmp-box.plan .csm-cmp-num{color:#6D28D9}
 .csm-cmp-box.actual .csm-cmp-num{color:#047857}
+.csm-cmp-box.actual.empty .csm-cmp-num{color:#B4B2A9}
 .csm-cmp-box.rate .csm-cmp-num{color:#92400E}
+.csm-cmp-box.rate.empty .csm-cmp-num{color:#B4B2A9}
 .csm-cmp-unit{font-size:10px;font-weight:400;color:var(--text-mute);margin-left:3px}
-.csm-cmp-sub{font-size:9px;color:var(--text-mute);margin-top:4px;font-variant-numeric:tabular-nums}
+.csm-cmp-sub{font-size:9px;color:var(--text-mute);margin-top:5px;font-variant-numeric:tabular-nums}
+.csm-cmp-src{font-size:8px;color:var(--text-mute);margin-top:5px;font-style:italic;letter-spacing:.02em;
+  padding:2px 6px;background:rgba(255,255,255,.55);border-radius:3px;display:inline-block;align-self:center}
 .csm-cmp-box.rate.over .csm-cmp-num{color:#059669}
 .csm-cmp-box.rate.under .csm-cmp-num{color:#DC2626}
 .csm-cmp-box.rate.full .csm-cmp-num{color:#047857}
-.csm-cmp-input-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:4px}
-.csm-cmp-input{width:90px;padding:5px 8px;border:1px solid var(--actual-border);border-radius:5px;font-size:13px;
-  font-family:inherit;text-align:center;background:#FFF;color:#047857;font-weight:500;outline:none;
-  font-variant-numeric:tabular-nums;transition:border-color .15s,box-shadow .15s}
-.csm-cmp-input:focus{border-color:#059669;box-shadow:0 0 0 2px rgba(5,150,105,.12)}
-.csm-cmp-input::-webkit-outer-spin-button,.csm-cmp-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-.csm-cmp-input[type=number]{-moz-appearance:textfield}
-.csm-cmp-hint{font-size:9px;color:var(--text-mute);margin-top:2px;font-style:italic}
-.csm-cmp-save-btn{padding:5px 10px;border:0;border-radius:5px;background:#047857;color:#FFF;font-size:10px;
-  font-weight:500;cursor:pointer;font-family:inherit;transition:background .15s,transform .12s;letter-spacing:.3px}
-.csm-cmp-save-btn:hover{background:#065F46;transform:translateY(-1px)}
-.csm-cmp-save-btn:disabled{background:#9CA3AF;cursor:not-allowed;transform:none}
-.csm-cmp-save-btn.saved{background:#10B981}
-.csm-cmp-save-msg{font-size:9px;margin-top:4px;font-weight:500;min-height:12px}
-.csm-cmp-save-msg.ok{color:#047857}
-.csm-cmp-save-msg.err{color:#DC2626}
 
 @media(max-width:700px){
   .csm-compare{grid-template-columns:1fr}
@@ -673,19 +667,22 @@ body{padding:16px;min-height:100vh}
 
 <script>
 /* ════════════════════════════════════════════════
-   JERA ERP — MO View v31
-   Changes from v30:
-   - Hero image boxes enlarged 10% (115px → 127px, mobile 100px → 110px)
-   - CSM section: added Plan vs Actual comparison KPI (3 boxes:
-     Plan qty / Actual qty [editable input] / Shipping rate [auto-calc])
-   - Actual qty input saves to Zoho Acture_Total_Quantity field via API
-   - Pack composition list: removed max-height scroll (all items visible)
+   JERA ERP — MO View v32
+   Changes from v31:
+   - CSM Actual qty: removed manual input/save button — now AUTO-COMPUTED from:
+       1) Acture_Order_Lines subform sum (highest priority)
+       2) Acture_Total_Quantity field
+       3) Acture_Notes multi-line parsing (same format as Plan_Notes)
+     Source label shown in small italic text under the number.
+     → Factory scan / office edits in All_MO auto-reflect here on next reload.
+   - Section order: Hero → Basic → Product Def → Fabric (moved up) → CSM → Inner Pack & Bulto → Production → Schedule → QC → Shipping
+   v31 baseline:
+   - Hero image boxes 10% larger (127px)
+   - Pack composition list: no scroll, all items visible
    v30 baseline:
-   - Hero image gallery at top (Style Image, Top Flat Sketch, Bottom Flat Sketch, Color Image) + QR_Code
+   - Hero image gallery at top + QR_Code
    - Color-matching dots based on color name (auto)
-   - Removed "Order vs Actual Shipment" summary section (redundant with CSM)
    - Schedule colors: Plan (gray→green), Actual (gray→green, red if overdue)
-   - Section order: Hero → Basic → Product Def → CSM → Inner Pack & Bulto → Fabric → Production → Schedule → QC → Shipping
 ═══════════════════════════════════════════════ */
 var APP = "eom", REP = "All_MO", STYLE_REP = "All_Styles";
 var allRec = [], allStyles = [];
@@ -966,154 +963,97 @@ function switchCsmTab(btn, which){
   if(pane) pane.classList.add('active');
 }
 
-/* ── CSM Plan vs Actual comparison KPI (NEW in v31) ── */
-function renderCsmCompare(r){
-  var planQty = parseInt(g(r,"Plan_Total_Quantity")) || 0;
-  var actQty = parseInt(g(r,"Acture_Total_Quantity")) || 0;
-  
-  // If Acture_Total_Quantity missing, try to compute from Acture_Order_Lines
-  if(actQty === 0){
-    var actLines = getSubformLines(r, "Acture_Order_Lines");
+/* ── CSM Plan vs Actual comparison KPI (v32: auto-computed from multiple sources) ── 
+   우선순위:
+   1) Acture_Order_Lines 서브폼 합계 (가장 정확)
+   2) Acture_Total_Quantity 필드값
+   3) Acture_Notes 멀티라인 텍스트 파싱 (Plan_Notes 동일 포맷)
+   → 공장 스캔 또는 사무실에서 All_MO 수정 시 자동 반영됨 (readonly 표시)
+*/
+function computeActualQtyFromRecord(r){
+  // Source 1: Acture_Order_Lines subform sum
+  var actLines = getSubformLines(r, "Acture_Order_Lines");
+  if(actLines && actLines.length > 0){
+    var sum1 = 0, hasData = false;
     actLines.forEach(function(line){
-      var q = parseInt(line["Acture_Quantity"] || line["Quantity"]) || 0;
-      actQty += q;
+      var q = parseInt(line["Acture_Quantity"] || line["Quantity"] || line["aQuantity"]) || 0;
+      if(q > 0) hasData = true;
+      sum1 += q;
     });
+    if(hasData) return { qty:sum1, source:"Subform" };
   }
   
+  // Source 2: Acture_Total_Quantity field directly
+  var totalField = parseInt(g(r,"Acture_Total_Quantity")) || 0;
+  if(totalField > 0) return { qty:totalField, source:"Total field" };
+  
+  // Source 3: Parse Acture_Notes (same format as Plan_Notes)
+  var notes = g(r, "Acture_Notes");
+  if(notes && notes !== "-"){
+    var sum3 = 0, matched = false;
+    notes.split(/\n+/).forEach(function(line){
+      var m = line.match(/Qty:\s*(\d+)/i);
+      if(m){ sum3 += parseInt(m[1]) || 0; matched = true; }
+    });
+    if(matched && sum3 > 0) return { qty:sum3, source:"Notes" };
+  }
+  
+  return { qty:0, source:"Empty" };
+}
+
+function renderCsmCompare(r){
+  var planQty = parseInt(g(r,"Plan_Total_Quantity")) || 0;
+  var actual = computeActualQtyFromRecord(r);
+  var actQty = actual.qty;
+
+  var sourceLabel = "";
+  switch(actual.source){
+    case "Subform":     sourceLabel = "서브폼 집계 / 子表汇总"; break;
+    case "Total field": sourceLabel = "Acture_Total_Quantity"; break;
+    case "Notes":       sourceLabel = "Acture_Notes 파싱 / 备注解析"; break;
+    default:            sourceLabel = "데이터 없음 / 暂无数据";
+  }
+
   var rate = planQty > 0 ? (actQty / planQty * 100) : 0;
   var rateStr = planQty > 0 ? rate.toFixed(1) + '%' : '-';
   var diff = actQty - planQty;
   var diffStr = planQty > 0 ? (diff > 0 ? '+' : '') + diff.toLocaleString() + ' pcs' : '-';
-  
+
   var rateClass = '';
-  if(planQty > 0){
+  if(planQty > 0 && actQty > 0){
     if(rate >= 100) rateClass = actQty > planQty ? 'over' : 'full';
     else rateClass = 'under';
+  } else {
+    rateClass = 'empty';
   }
-  
-  var recordId = r["ID"];
+
+  var actBoxClass = actQty === 0 ? 'actual empty' : 'actual';
+
   var h = '<div class="csm-compare">';
-  
+
   // Plan (오더 수량)
   h += '<div class="csm-cmp-box plan">';
   h += '<div class="csm-cmp-label">📋 PLAN 오더 수량 / 订单数量</div>';
   h += '<div class="csm-cmp-num">'+planQty.toLocaleString()+'<span class="csm-cmp-unit">pcs</span></div>';
-  h += '<div class="csm-cmp-sub">&nbsp;</div>';
+  h += '<div class="csm-cmp-src">Plan_Total_Quantity</div>';
   h += '</div>';
-  
-  // Actual (실출고 수량 - 입력 가능)
-  h += '<div class="csm-cmp-box actual">';
-  h += '<div class="csm-cmp-label">✅ ACTUAL 실출고 수량 / 实出货数量</div>';
-  h += '<div class="csm-cmp-input-row">';
-  h += '<input type="number" class="csm-cmp-input" id="actualQtyInput_'+recordId+'" value="'+actQty+'" min="0" step="1" />';
-  h += '<span class="csm-cmp-unit">pcs</span>';
-  h += '<button class="csm-cmp-save-btn" id="saveActualBtn_'+recordId+'" onclick="saveActualQty(\''+recordId+'\')">💾 저장</button>';
-  h += '</div>';
-  h += '<div class="csm-cmp-save-msg" id="saveActualMsg_'+recordId+'"></div>';
-  h += '</div>';
-  
-  // Rate (출고율)
-  h += '<div class="csm-cmp-box rate '+rateClass+'" id="rateBox_'+recordId+'">';
-  h += '<div class="csm-cmp-label">📊 출고율 / 出货率</div>';
-  h += '<div class="csm-cmp-num" id="rateNum_'+recordId+'">'+rateStr+'</div>';
-  h += '<div class="csm-cmp-sub" id="rateDiff_'+recordId+'">'+diffStr+'</div>';
-  h += '</div>';
-  
-  h += '</div>';
-  
-  // Auto-update rate when input changes (live preview before save)
-  setTimeout(function(){
-    var input = document.getElementById('actualQtyInput_'+recordId);
-    if(input){
-      input.addEventListener('input', function(){
-        var newAct = parseInt(this.value) || 0;
-        var newRate = planQty > 0 ? (newAct / planQty * 100) : 0;
-        var newRateStr = planQty > 0 ? newRate.toFixed(1) + '%' : '-';
-        var newDiff = newAct - planQty;
-        var newDiffStr = planQty > 0 ? (newDiff > 0 ? '+' : '') + newDiff.toLocaleString() + ' pcs' : '-';
-        
-        var rateNum = document.getElementById('rateNum_'+recordId);
-        var rateDiff = document.getElementById('rateDiff_'+recordId);
-        var rateBox = document.getElementById('rateBox_'+recordId);
-        if(rateNum) rateNum.textContent = newRateStr;
-        if(rateDiff) rateDiff.textContent = newDiffStr;
-        if(rateBox){
-          rateBox.classList.remove('over','under','full');
-          if(planQty > 0){
-            if(newRate >= 100) rateBox.classList.add(newAct > planQty ? 'over' : 'full');
-            else rateBox.classList.add('under');
-          }
-        }
-        
-        // Reset save button state
-        var btn = document.getElementById('saveActualBtn_'+recordId);
-        if(btn){ btn.classList.remove('saved'); btn.textContent = '💾 저장'; }
-        var msg = document.getElementById('saveActualMsg_'+recordId);
-        if(msg){ msg.textContent = ''; msg.classList.remove('ok','err'); }
-      });
-    }
-  }, 50);
-  
-  return h;
-}
 
-/* Save actual quantity to Zoho */
-function saveActualQty(recordId){
-  var input = document.getElementById('actualQtyInput_'+recordId);
-  var btn = document.getElementById('saveActualBtn_'+recordId);
-  var msg = document.getElementById('saveActualMsg_'+recordId);
-  if(!input || !btn || !msg) return;
-  
-  var newVal = parseInt(input.value);
-  if(isNaN(newVal) || newVal < 0){
-    msg.textContent = '⚠️ 유효한 숫자를 입력하세요';
-    msg.classList.remove('ok'); msg.classList.add('err');
-    return;
-  }
-  
-  btn.disabled = true;
-  btn.textContent = '저장 중...';
-  msg.textContent = '';
-  msg.classList.remove('ok','err');
-  
-  var payload = {
-    data: { "Acture_Total_Quantity": newVal }
-  };
-  
-  ZOHO.CREATOR.API.updateRecord({
-    appName: APP,
-    reportName: REP,
-    id: recordId,
-    data: payload
-  }).then(function(response){
-    if(response && response.code === 3000){
-      btn.textContent = '✓ 저장됨';
-      btn.classList.add('saved');
-      msg.textContent = '✓ Zoho에 저장 완료 / 已保存';
-      msg.classList.remove('err'); msg.classList.add('ok');
-      btn.disabled = false;
-      
-      // Update in-memory record
-      if(currentMO && currentMO["ID"] === recordId){
-        currentMO["Acture_Total_Quantity"] = newVal;
-      }
-      var rec = allRec.find(function(x){ return String(x["ID"]) === String(recordId); });
-      if(rec) rec["Acture_Total_Quantity"] = newVal;
-      
-      // Reset button label after 2s
-      setTimeout(function(){
-        if(btn){ btn.textContent = '💾 저장'; btn.classList.remove('saved'); }
-      }, 2500);
-    } else {
-      throw new Error('Zoho API returned: ' + JSON.stringify(response));
-    }
-  }).catch(function(err){
-    console.error('[saveActualQty] failed', err);
-    btn.textContent = '💾 저장';
-    btn.disabled = false;
-    msg.textContent = '⚠️ 저장 실패: ' + (err && err.message ? err.message : '알 수 없는 오류');
-    msg.classList.remove('ok'); msg.classList.add('err');
-  });
+  // Actual (실출고 수량 - 자동 집계, readonly)
+  h += '<div class="csm-cmp-box '+actBoxClass+'">';
+  h += '<div class="csm-cmp-label">✅ ACTUAL 실출고 수량 / 实出货数量</div>';
+  h += '<div class="csm-cmp-num">'+actQty.toLocaleString()+'<span class="csm-cmp-unit">pcs</span></div>';
+  h += '<div class="csm-cmp-src">'+escH(sourceLabel)+'</div>';
+  h += '</div>';
+
+  // Rate (출고율)
+  h += '<div class="csm-cmp-box rate '+rateClass+'">';
+  h += '<div class="csm-cmp-label">📊 출고율 / 出货率</div>';
+  h += '<div class="csm-cmp-num">'+rateStr+'</div>';
+  h += '<div class="csm-cmp-sub">'+diffStr+'</div>';
+  h += '</div>';
+
+  h += '</div>';
+  return h;
 }
 
 /* ── Inner Pack & Bulto helpers (NEW in v30) ── */
@@ -2002,7 +1942,14 @@ function openModal(r){
   h += it("하의 기장 / 下装长短", dv(mv("Bottom_Length", g(r,"Bottom_Length"))));
   h += '</div></div>';
 
-  /* ── (4) Color × Size × Price Matrix (with auto color dots) ── */
+  /* ── (4) Fabric info (v32: moved up under Product Definition) ── */
+  h += '<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料信息</div><div class="d-grid">';
+  h += it("원단 종류 / 面料种类", dv(mv("Material_Type", g(r,"Material_Type"))));
+  h += it("혼방 % / 混纺 %", dv(g(r,"blended_percentage")));
+  h += it("안감 / 里料类型", dv(mv("Lining_Type", g(r,"Lining_Type"))));
+  h += '</div></div>';
+
+  /* ── (5) Color × Size × Price Matrix (with auto color dots) ── */
   h += '<div class="m-sec csm-section">';
   h += '<div class="m-sec-t">🎨 색상 × 사이즈 × 단가 / 颜色 × 尺码 × 单价</div>';
   h += '<div class="csm-tabs">';
@@ -2011,22 +1958,15 @@ function openModal(r){
   h += '</div>';
   h += '<div class="csm-pane plan active">' + renderColorSizeMatrix(r, "Plan_") + '</div>';
   h += '<div class="csm-pane actual">' + renderColorSizeMatrix(r, "Acture_") + '</div>';
-  // v31 NEW: Plan vs Actual comparison KPI with editable actual input
+  // v32: Plan vs Actual comparison KPI (auto-computed, readonly)
   h += renderCsmCompare(r);
   h += '</div>';
 
-  /* ── (5) NEW: Inner Pack & Bulto ── */
+  /* ── (6) Inner Pack & Bulto ── */
   h += '<div class="m-sec pack-section">';
   h += '<div class="m-sec-t">📦 중간 포장 & Bulto / 中间包装 & 麻袋 / Inner Pack & Master Bag</div>';
   h += renderPackAndBulto(r);
   h += '</div>';
-
-  /* ── (6) Fabric info ── */
-  h += '<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料信息</div><div class="d-grid">';
-  h += it("원단 종류 / 面料种类", dv(mv("Material_Type", g(r,"Material_Type"))));
-  h += it("혼방 % / 混纺 %", dv(g(r,"blended_percentage")));
-  h += it("안감 / 里料类型", dv(mv("Lining_Type", g(r,"Lining_Type"))));
-  h += '</div></div>';
 
   /* ── (7) Production tracking ── */
   h += '<div class="m-sec"><div class="m-sec-t">🏭 생산 추적 / 生产跟踪</div><div class="d-grid">';
@@ -2035,7 +1975,7 @@ function openModal(r){
   h += it("진척률 / 进度", dv(g(r,"Progress")));
   h += '</div></div>';
 
-  /* ── (8) Schedule with color-coded status (UPDATED) ── */
+  /* ── (8) Schedule with color-coded status ── */
   h += '<div class="m-sec"><div class="m-sec-t">📅 생산 일정 / 生产日期</div><div class="schedule-compare">';
   // Plan side
   h += '<div class="schedule-col"><div class="schedule-col-title plan">📋 Plan 일정 / 计划日期</div>';
