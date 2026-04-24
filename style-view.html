@@ -1140,23 +1140,26 @@ function openModal(rec){
   document.getElementById("mThumb").innerHTML = '<div class="spinner-sm"></div>';
   document.getElementById("mBody").innerHTML = buildDetail(rec);
   document.getElementById("modalOv").classList.add("show");
+  var d = rec;
+  var iu = getImg1(d);
+  if(iu) qImg("mThumb", iu, false);
   var imgLoadQueue = [];
-  var iu = getImg1(rec);
-  if(iu) imgLoadQueue.push({id:"mThumb", url:iu, isQR:false, click:false});
-  var si  = getAllImgs(rec, "Style_Image").slice(0, 5);
-  var tfs = getAllImgs(rec, "Top_Flat_Sketch").slice(0, 5);
-  var bfs = getAllImgs(rec, "Bottom_Flat_Sketch").slice(0, 5);
-  var qrImgs = getAllImgs(rec, "QR_Code");
-  si.forEach(function(u, i){ imgLoadQueue.push({id:"mdl_si_"+i, url:u, isQR:false, click:true}); });
-  tfs.forEach(function(u, i){ imgLoadQueue.push({id:"mdl_tfs_"+i, url:u, isQR:false, click:true}); });
-  bfs.forEach(function(u, i){ imgLoadQueue.push({id:"mdl_bfs_"+i, url:u, isQR:false, click:true}); });
-  if(qrImgs.length > 0) imgLoadQueue.push({id:"mdl_qr_0", url:qrImgs[0], isQR:true, click:true});
+  var si  = getAllImgs(d, "Style_Image");
+  var tfs = getAllImgs(d, "Top_Flat_Sketch");
+  var bfs = getAllImgs(d, "Bottom_Flat_Sketch");
+  var ci  = getAllImgs(d, "Color_Image");
+  var qrImgs = getAllImgs(d, "QR_Code");
+  if(si.length  > 0) imgLoadQueue.push({id:"heroImg_0_0", url:si[0]});
+  if(tfs.length > 0) imgLoadQueue.push({id:"heroImg_1_0", url:tfs[0]});
+  if(bfs.length > 0) imgLoadQueue.push({id:"heroImg_2_0", url:bfs[0]});
+  if(ci.length  > 0) imgLoadQueue.push({id:"heroImg_3_0", url:ci[0]});
+  if(qrImgs.length > 0) imgLoadQueue.push({id:"mdl_qr_0", url:qrImgs[0], isQR:true});
   setTimeout(function(){
     imgLoadQueue.forEach(function(task){
       var css = task.isQR
         ? "max-width:100%;max-height:100%;object-fit:contain;padding:4px;cursor:pointer"
         : "width:100%;height:100%;object-fit:cover;cursor:pointer";
-      qImg(task.id, task.url, task.click, css);
+      qImg(task.id, task.url, true, css);
     });
   }, 100);
 }
@@ -1167,19 +1170,21 @@ function buildDetail(d){
   function it(l, v){ return '<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'; }
 
   /* ── Hero: images & flat sketches + QR code ── */
-  var si  = getAllImgs(d, "Style_Image").slice(0, 5);
-  var tfs = getAllImgs(d, "Top_Flat_Sketch").slice(0, 5);
-  var bfs = getAllImgs(d, "Bottom_Flat_Sketch").slice(0, 5);
+  var si  = getAllImgs(d, "Style_Image");
+  var tfs = getAllImgs(d, "Top_Flat_Sketch");
+  var bfs = getAllImgs(d, "Bottom_Flat_Sketch");
+  var ci  = getAllImgs(d, "Color_Image");
   var qrImgs = getAllImgs(d, "QR_Code");
   var qrSku = g(d, "QR_SKU");
-  if(si.length || tfs.length || bfs.length || qrImgs.length){
+  if(si.length || tfs.length || bfs.length || ci.length || qrImgs.length){
     p.push('<div class="m-sec">');
     p.push('<div class="m-sec-t">🖼️ 스타일 이미지 & 도식화 <span style="color:var(--text-mute);font-weight:400;font-size:11px">/ 款式图片 & 平面图</span></div>');
     p.push('<div class="m-hero">');
     p.push('<div class="m-hero-imgs">');
-    if(si.length){  p.push('<div class="mimg-label">스타일 이미지 / 款式图</div><div class="mimg-grid">'); si.forEach(function(u,i){ p.push('<div class="mimg" id="mdl_si_'+i+'"><div class="spinner-sm"></div></div>'); }); p.push('</div>'); }
-    if(tfs.length){ p.push('<div class="mimg-label">상의 도식화 / 上衣平面图</div><div class="mimg-grid">'); tfs.forEach(function(u,i){ p.push('<div class="mimg" id="mdl_tfs_'+i+'"><div class="spinner-sm"></div></div>'); }); p.push('</div>'); }
-    if(bfs.length){ p.push('<div class="mimg-label">하의 도식화 / 下衣平面图</div><div class="mimg-grid">'); bfs.forEach(function(u,i){ p.push('<div class="mimg" id="mdl_bfs_'+i+'"><div class="spinner-sm"></div></div>'); }); p.push('</div>'); }
+    if(si.length)  { p.push('<div class="mimg-label">스타일 이미지 / 款式图</div><div class="mimg-grid"><div class="mimg" id="heroImg_0_0"><div class="spinner-sm"></div></div></div>'); }
+    if(tfs.length) { p.push('<div class="mimg-label">상의 도식화 / 上衣平面图</div><div class="mimg-grid"><div class="mimg" id="heroImg_1_0"><div class="spinner-sm"></div></div></div>'); }
+    if(bfs.length) { p.push('<div class="mimg-label">하의 도식화 / 下衣平面图</div><div class="mimg-grid"><div class="mimg" id="heroImg_2_0"><div class="spinner-sm"></div></div></div>'); }
+    if(ci.length)  { p.push('<div class="mimg-label">색상 이미지 / 色卡</div><div class="mimg-grid"><div class="mimg" id="heroImg_3_0"><div class="spinner-sm"></div></div></div>'); }
     p.push('</div>');
     p.push('<div class="m-hero-qr">');
     p.push('<div class="m-hero-qr-label">QR CODE</div>');
