@@ -364,6 +364,39 @@ body{background:var(--bg);color:var(--text);padding:16px;min-height:100vh;
   font-size:11px;font-weight:500;cursor:pointer;transition:background .15s;font-family:inherit}
 .gcw-send:hover{background:#44443F}
 .gcw-send:disabled{background:#B4B2A9;cursor:not-allowed}
+
+/* ── MO-style modal layout (used by buildDetail) ── */
+.m-sec{margin-bottom:20px}
+.m-sec-t{font-size:12px;font-weight:500;color:var(--text);margin-bottom:12px;padding-bottom:10px;
+  border-bottom:2px solid var(--border);display:flex;align-items:center;gap:8px;letter-spacing:.01em}
+.d-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.d-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.d-item{display:flex;flex-direction:column;gap:3px;padding:8px 10px;background:#FAFAF7;border-radius:6px;border:1px solid var(--border)}
+.d-label{font-size:9px;font-weight:500;color:var(--text-mute);letter-spacing:.02em}
+.d-val{font-size:12px;font-weight:400;color:var(--text);word-break:break-all;line-height:1.35}
+.d-val.empty{color:#C4C1B9;font-style:italic;font-size:11px}
+.spec-toggle{display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;padding:9px 14px;background:#FAFAF7;border:1px solid var(--border);
+  border-radius:8px;transition:background .15s;user-select:none}
+.spec-toggle:hover{background:var(--p-lav)}
+.spec-toggle-label{font-size:12px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:7px}
+.spec-toggle-label .dim{color:var(--text-mute);font-weight:400;font-size:11px}
+.spec-toggle-icon{font-size:10px;color:var(--text-mute);transition:transform .2s;flex-shrink:0}
+.spec-toggle-icon.open{transform:rotate(180deg)}
+.spec-content{margin-top:10px;display:none}
+.spec-content.open{display:block}
+.spec-group{margin-bottom:14px}
+.spec-group-title{font-size:10px;font-weight:600;color:var(--text-mute);margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase}
+.spec-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.spec-tbl th,.spec-tbl td{border:1px solid var(--border);padding:5px 8px;text-align:center}
+.spec-tbl thead tr{background:#F5F3EF}
+.spec-th-pom{text-align:left;min-width:120px}
+.spec-th-notes{text-align:left}
+.spec-td-pom{text-align:left;font-weight:500}
+.spec-td-notes{text-align:left;color:var(--text-mute)}
+.spec-empty{color:var(--text-mute);font-size:11px;padding:12px 0;text-align:center}
+@media(max-width:720px){.d-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.d-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -1105,37 +1138,39 @@ function loadModalImgs(rec){
 }
 function buildDetail(d){
   var p = [];
-  var ordered = moSkus.has(g(d, "Style_SKU"));
-  function dv(v){ return v === "-" ? '<span class="v empty">미입력 / 未填写</span>' : escH(v); }
+  function dv(v){ return v === "-" ? '<span class="d-val empty">미입력 / 未填写</span>' : escH(v); }
   function dt(v){ return '<span class="'+tc(v)+'">'+escH(v)+'</span>'; }
-  function it(l, v){ return '<div class="mitem"><div class="l">'+l+'</div><div class="v">'+v+'</div></div>'; }
+  function it(l, v){ return '<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'; }
 
+  /* ── Hero: images & flat sketches ── */
   var si  = getAllImgs(d, "Style_Image").slice(0, 5);
   var tfs = getAllImgs(d, "Top_Flat_Sketch").slice(0, 5);
   var bfs = getAllImgs(d, "Bottom_Flat_Sketch").slice(0, 5);
   if(si.length || tfs.length || bfs.length){
-    p.push('<div class="msec"><div class="msec-head"><span class="msec-title">🖼️ 스타일 이미지 & 도식화<span class="dim"> / 款式图片 & 平面图</span></span></div>');
+    p.push('<div class="m-sec">');
+    p.push('<div class="m-sec-t">🖼️ 스타일 이미지 & 도식화 <span style="color:var(--text-mute);font-weight:400;font-size:11px">/ 款式图片 & 平面图</span></div>');
     if(si.length){  p.push('<div class="mimg-label">스타일 이미지 / 款式图</div><div class="mimg-grid">'); si.forEach(function(u,i){ p.push('<div class="mimg" id="mdl_si_'+i+'"><div class="spinner-sm"></div></div>'); }); p.push('</div>'); }
     if(tfs.length){ p.push('<div class="mimg-label">상의 도식화 / 上衣平面图</div><div class="mimg-grid">'); tfs.forEach(function(u,i){ p.push('<div class="mimg" id="mdl_tfs_'+i+'"><div class="spinner-sm"></div></div>'); }); p.push('</div>'); }
     if(bfs.length){ p.push('<div class="mimg-label">하의 도식화 / 下衣平面图</div><div class="mimg-grid">'); bfs.forEach(function(u,i){ p.push('<div class="mimg" id="mdl_bfs_'+i+'"><div class="spinner-sm"></div></div>'); }); p.push('</div>'); }
     p.push('</div>');
   }
 
-  p.push('<div class="msec"><div class="msec-head"><span class="msec-title">📌 기본 정보<span class="dim"> / 基本信息</span></span></div><div class="msec-grid">');
-  p.push(it("SKU", dv(g(d, "Style_SKU"))));
-  p.push(it("스타일명 / 款式名", dv(g(d, "Style_Name"))));
-  p.push(it("아이템번호 / 品号", dv(g(d, "Style_Number"))));
+  /* ── Section 1: 기본 정보 ── */
+  p.push('<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 基本信息</div><div class="d-grid">');
+  p.push(it("SKU / 款式SKU", dv(g(d, "Style_SKU"))));
+  p.push('<div class="d-item"><span class="d-label">영문 스타일명 / Eng Style Name</span><span class="d-val">'+dv(g(d, "Eng_Style_Name"))+'</span></div>');
+  p.push('<div class="d-item"><span class="d-label">중문 스타일명 / 中文款号</span><span class="d-val">'+dv(g(d, "Chi_Style_Name"))+'</span></div>');
   p.push(it("시즌 / 季节", dv(g(d, "Season"))));
-  p.push(it("계획 연도 / 计划年", dv(g(d, "Plan_Year"))));
-  p.push(it("계획 월 / 计划月", dv(g(d, "Plan_Month"))));
-  p.push(it("브랜드 / 品牌", dv(g(d, "Business_Entity"))));
-  p.push(it("스타일 상태 / 款式状态", dt(g(d, "Style_Status"))));
-  p.push(it("오더 상태 / 订单状态", ordered ? '<span class="bg bg-ok">✓ Ordered / 已下单</span>' : '<span class="bg bg-danger">✗ Not Ordered / 未下单</span>'));
-  p.push('</div></div>');
-
-  p.push('<div class="msec"><div class="msec-head"><span class="msec-title">👕 제품 정의<span class="dim"> / 产品定义</span></span></div><div class="msec-grid">');
   p.push(it("성별 / 性别", dv(mv("Gender", g(d, "Gender")))));
   p.push(it("카테고리 / 分类", dv(mv("Category", g(d, "Category")))));
+  p.push(it("스타일 상태 / 款式状态", dt(g(d, "Style_Status"))));
+  p.push(it("계획 연도 / 计划年", dv(g(d, "Plan_Year"))));
+  p.push(it("계획 월 / 计划月", dv(g(d, "Plan_Month"))));
+  p.push(it("QR SKU", dv(g(d, "QR_SKU"))));
+  p.push('</div></div>');
+
+  /* ── Section 2: 제품 정의 ── */
+  p.push('<div class="m-sec"><div class="m-sec-t">👕 제품 정의 / 产品定义</div><div class="d-grid">');
   p.push(it("상의 타입 / 上衣类型", dv(mv("Top_Type", g(d, "Top_Type")))));
   p.push(it("소매 / 袖子", dv(mv("Sleeve", g(d, "Sleeve")))));
   p.push(it("핏 / 版型", dv(mv("Fit", g(d, "Fit")))));
@@ -1144,28 +1179,28 @@ function buildDetail(d){
   p.push(it("하의 길이 / 下衣长度", dv(mv("Bottom_Length", g(d, "Bottom_Length")))));
   p.push('</div></div>');
 
-  p.push('<div class="msec"><div class="msec-head"><span class="msec-title">🧵 원단 정보<span class="dim"> / 面料</span></span></div><div class="msec-grid">');
+  /* ── Section 3: 원단 정보 ── */
+  p.push('<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料信息</div><div class="d-grid">');
   p.push(it("원단 / 面料", dv(mv("Material_Type", g(d, "Material_Type")))));
   p.push(it("혼방율 / 混纺率", dv(g(d, "blended_percentage"))));
   p.push(it("안감 / 内衬", dv(mv("Lining_Type", g(d, "Lining_Type")))));
   p.push('</div></div>');
 
-  p.push('<div class="msec"><div class="msec-head"><span class="msec-title">🎨 색상 & 사이즈<span class="dim"> / 颜色 & 尺寸</span></span></div><div class="msec-grid cols-2">');
-  p.push(it("사이즈 / 尺寸", dv(g(d, "Available_Sizes"))));
-  p.push(it("색상 / 颜色", dv(g(d, "Available_Colors"))));
-  p.push('</div></div>');
+  /* ── Section 4: 사이즈 스펙 (collapsible) ── */
+  p.push('<div class="m-sec">');
+  p.push('<div class="m-sec-t">📐 사이즈 스펙 / 尺寸规格 / Size Specs</div>');
+  p.push('<div class="spec-toggle" onclick="toggleSpec(this)">');
+  p.push('<span class="spec-toggle-label">펼쳐서 보기 <span class="dim">/ 展开查看 / Click to expand</span></span>');
+  p.push('<span class="spec-toggle-icon">&#9660;</span>');
+  p.push('</div>');
+  p.push('<div class="spec-content">'+renderSizeSpecs(d)+'</div>');
+  p.push('</div>');
 
-  p.push('<div class="msec"><div class="msec-head"><span class="msec-title">🧪 샘플 정보<span class="dim"> / 样品</span></span></div><div class="msec-grid">');
-  p.push(it("샘플 상태 / 样品状态", dt(g(d, "Sample_Status"))));
-  p.push(it("샘플 날짜 / 样品日期", dv(g(d, "Sample_Date"))));
-  p.push(it("샘플 메모 / 样品备注", dv(g(d, "Sample_Notes"))));
-  p.push('</div></div>');
-
-  p.push('<div class="msec"><div class="msec-head"><span class="msec-title">💰 원가 정보<span class="dim"> / 成本</span></span></div><div class="msec-grid">');
+  /* ── Section 5: 원가 정보 ── */
+  p.push('<div class="m-sec"><div class="m-sec-t">💰 원가 정보 / 成本信息</div><div class="d-grid">');
   p.push(it("목표 원가 / 目标成本", dv(g(d, "Target_Cost"))));
   p.push(it("확정 원가 / 确认成本", dv(g(d, "Final_Cost"))));
-  p.push(it("BOM 총원가 / BOM 总成本", dv(g(d, "Total_BOM_Cost"))));
-  p.push(it("원가 메모 / 成本备注", dv(g(d, "Cost_Notes"))));
+  p.push(it("BOM 총원가 / BOM 总成본", dv(g(d, "Total_BOM_Cost"))));
   p.push('</div></div>');
 
   return p.join("");
@@ -1279,6 +1314,71 @@ function generateLocalReply(userText){
     reply += "<span style='color:#B4B2A9;font-size:10px;'>* Gemini API 연동 예정 (현재는 로컬 집계 기반 답변)</span>";
   }
   return reply;
+}
+
+/* ── Size Spec helpers (used by buildDetail Section 4) ── */
+function parseSpecJSON(r, field){
+  var raw = r[field];
+  if(!raw || typeof raw !== "string") return [];
+  var s = raw.trim();
+  if(!s) return [];
+  if(!s.startsWith("[")) s = "[" + s + "]";
+  try{ return JSON.parse(s) || []; }catch(e){ return []; }
+}
+function renderSpecTable(items){
+  if(!items || items.length === 0)
+    return '<div class="spec-empty">데이터 없음 / 无数据</div>';
+  var sizeKeys = ['s','m','l','xl'];
+  var sizeLabels = {s:'S', m:'M', l:'L', xl:'XL'};
+  var activeSizes = sizeKeys.filter(function(k){
+    return items.some(function(row){ return row[k] && row[k] !== ""; });
+  });
+  var hasNotes = items.some(function(row){ return row.notes && row.notes !== ""; });
+  var h = '<table class="spec-tbl"><thead><tr>';
+  h += '<th class="spec-th-pom">POM / 측정부위 / 测量部位</th>';
+  activeSizes.forEach(function(k){ h += '<th>'+sizeLabels[k]+'</th>'; });
+  if(hasNotes) h += '<th class="spec-th-notes">비고 / 备注</th>';
+  h += '</tr></thead><tbody>';
+  items.forEach(function(row){
+    if(!row.pom) return;
+    h += '<tr><td class="spec-td-pom">'+escH(row.pom)+'</td>';
+    activeSizes.forEach(function(k){
+      var v = row[k];
+      h += '<td>'+(v && v !== '' ? escH(String(v)) : '<span style="color:#CDC9C0">-</span>')+'</td>';
+    });
+    if(hasNotes) h += '<td class="spec-td-notes">'+escH(row.notes||'')+'</td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table>';
+  return h;
+}
+function renderSizeSpecs(r){
+  var topItems = parseSpecJSON(r, "Top_Spec_JSON");
+  var botItems = parseSpecJSON(r, "Bottom_Spec_JSON");
+  if(topItems.length === 0 && botItems.length === 0)
+    return '<div class="spec-empty">사이즈 스펙 없음 / 无尺寸规格</div>';
+  var h = '';
+  if(topItems.length > 0){
+    h += '<div class="spec-group">';
+    h += '<div class="spec-group-title">TOP / 상의 / 上衣</div>';
+    h += renderSpecTable(topItems);
+    h += '</div>';
+  }
+  if(botItems.length > 0){
+    h += '<div class="spec-group">';
+    h += '<div class="spec-group-title">BOTTOM / 하의 / 下衣</div>';
+    h += renderSpecTable(botItems);
+    h += '</div>';
+  }
+  return h;
+}
+function toggleSpec(el){
+  var content = el.nextElementSibling;
+  var icon = el.querySelector('.spec-toggle-icon');
+  if(!content) return;
+  var isOpen = content.classList.contains('open');
+  content.classList.toggle('open', !isOpen);
+  if(icon) icon.classList.toggle('open', !isOpen);
 }
 
 /* ── Global handlers (static DOM only) ── */
