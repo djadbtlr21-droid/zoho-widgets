@@ -583,6 +583,75 @@ body{padding:16px;min-height:100vh}
 @media(max-width:1100px){
   .skpi-grid{grid-template-columns:1fr}
 }
+
+/* ── Hero image gallery + QR ── */
+.m-hero{display:grid;grid-template-columns:1fr auto;gap:16px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px dashed var(--border);align-items:flex-start}
+.m-hero-imgs{display:flex;gap:10px;flex-wrap:wrap;flex:1;min-width:0}
+.m-hero-img-group{display:flex;flex-direction:column;gap:6px}
+.m-hero-img-label{font-size:8px;font-weight:500;color:var(--text-mute);letter-spacing:.04em;text-transform:uppercase;text-align:center}
+.m-hero-img-box{width:127px;height:127px;background:var(--p-lav);border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;
+  transition:transform .15s,box-shadow .15s}
+.m-hero-img-box:hover{transform:scale(1.03);box-shadow:var(--shadow-md);border-color:var(--gold)}
+.m-hero-img-box img{width:100%;height:100%;object-fit:cover}
+.m-hero-img-box.empty{background:#FAFAF7;cursor:default}
+.m-hero-img-box.empty:hover{transform:none;box-shadow:none;border-color:var(--border)}
+.m-hero-img-box .empty-icon{font-size:24px;color:#CDC9C0}
+.m-hero-qr{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px;background:#FAFAF7;
+  border:1px dashed var(--border);border-radius:10px;flex-shrink:0}
+.m-hero-qr-label{font-size:8px;font-weight:500;color:var(--text-mute);letter-spacing:.04em}
+.m-hero-qr-box{width:85px;height:85px;background:#FFF;border:1px solid var(--border);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;transition:transform .15s}
+.m-hero-qr-box:hover{transform:scale(1.04);border-color:var(--gold)}
+.m-hero-qr-box img{max-width:100%;max-height:100%;object-fit:contain;padding:4px}
+.m-hero-qr-box.empty{cursor:default}
+.m-hero-qr-box.empty:hover{transform:none;border-color:var(--border)}
+.m-hero-qr-box.empty .empty-icon{font-size:24px;color:#CDC9C0}
+.m-hero-qr-sku{font-size:9px;color:var(--text-mute);font-family:ui-monospace,monospace;word-break:break-all;
+  text-align:center;max-width:85px;line-height:1.2}
+@media(max-width:700px){.m-hero{grid-template-columns:1fr}}
+@media(max-width:600px){.m-hero-img-box{width:110px;height:110px}}
+
+/* ── Schedule dot — plan / actual variants ── */
+.sch-dot.plan-wait{background:#E2E8F0;color:var(--text-mute)}
+.sch-dot.plan-done{background:#86EFAC;color:#065F46}
+.sch-dot.actual-wait{background:#E2E8F0;color:var(--text-mute)}
+.sch-dot.actual-done{background:#86EFAC;color:#065F46}
+.sch-dot.actual-overdue{background:#FCA5A5;color:#7F1D1D;animation:pulse-red 1.6s ease-in-out infinite}
+@keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.45)}50%{box-shadow:0 0 0 5px rgba(220,38,38,0)}}
+.sch-date.overdue{color:#DC2626;font-weight:500}
+.sch-warn{font-size:9px;font-weight:500;color:#DC2626;background:#FEF2F2;border:1px solid #FECACA;
+  border-radius:4px;padding:1px 6px;white-space:nowrap;align-self:center}
+
+/* ── CSM Plan vs Actual Comparison KPI ── */
+.csm-compare{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px;padding:12px;
+  background:linear-gradient(180deg,#FFFFFF 0%,#FDFCF9 100%);border:1px solid var(--border);border-radius:10px}
+.csm-cmp-box{padding:12px 14px;border-radius:8px;text-align:center;border:1px solid;position:relative;
+  transition:transform .15s,box-shadow .15s;min-height:92px;display:flex;flex-direction:column;justify-content:center}
+.csm-cmp-box:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.csm-cmp-box.plan{background:#F5F3FF;border-color:var(--plan-border)}
+.csm-cmp-box.actual{background:#ECFDF5;border-color:var(--actual-border)}
+.csm-cmp-box.actual.empty{background:#FAFAF7;border-color:var(--border)}
+.csm-cmp-box.rate{background:#FFFBEA;border-color:#FBEAA1}
+.csm-cmp-box.rate.empty{background:#FAFAF7;border-color:var(--border)}
+.csm-cmp-label{font-size:9px;font-weight:500;margin-bottom:6px;letter-spacing:.3px;display:flex;align-items:center;justify-content:center;gap:4px}
+.csm-cmp-box.plan .csm-cmp-label{color:#7C3AED}
+.csm-cmp-box.actual .csm-cmp-label{color:#059669}
+.csm-cmp-box.actual.empty .csm-cmp-label,.csm-cmp-box.rate.empty .csm-cmp-label{color:var(--text-mute)}
+.csm-cmp-box.rate .csm-cmp-label{color:#92400E}
+.csm-cmp-num{font-size:24px;font-weight:500;line-height:1.1;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
+.csm-cmp-box.plan .csm-cmp-num{color:#6D28D9}
+.csm-cmp-box.actual .csm-cmp-num{color:#047857}
+.csm-cmp-box.actual.empty .csm-cmp-num,.csm-cmp-box.rate.empty .csm-cmp-num{color:#B4B2A9}
+.csm-cmp-box.rate .csm-cmp-num{color:#92400E}
+.csm-cmp-unit{font-size:10px;font-weight:400;color:var(--text-mute);margin-left:3px}
+.csm-cmp-sub{font-size:9px;color:var(--text-mute);margin-top:5px;font-variant-numeric:tabular-nums}
+.csm-cmp-src{font-size:8px;color:var(--text-mute);margin-top:5px;font-style:italic;letter-spacing:.02em;
+  padding:2px 6px;background:rgba(255,255,255,.55);border-radius:3px;display:inline-block;align-self:center}
+.csm-cmp-box.rate.over .csm-cmp-num{color:#059669}
+.csm-cmp-box.rate.under .csm-cmp-num{color:#DC2626}
+.csm-cmp-box.rate.full .csm-cmp-num{color:#047857}
+@media(max-width:700px){.csm-compare{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -1848,7 +1917,8 @@ function renderColorSizeMatrix(r,prefix){
   h+='</tr></thead><tbody>';
   data.colors.forEach(function(color){
     var row=data.matrix[color];
-    h+='<tr><td class="csm-td-color"><span class="csm-color-dot"></span>'+escH(color)+'</td>';
+    var dotStyle=colorDotStyle(color);
+    h+='<tr><td class="csm-td-color"><span class="csm-color-dot" style="'+dotStyle+'"></span>'+escH(color)+'</td>';
     data.sizes.forEach(function(s){
       var q=row.sizes[s]||0;sizeTotals[s]+=q;
       h+='<td class="csm-td-qty">'+(q>0?q.toLocaleString():'<span class="csm-zero">-</span>')+'</td>';
@@ -1878,159 +1948,490 @@ function switchCsmTab(btn,which){
   if(pane)pane.classList.add('active');
 }
 
+/* ── Color dot matcher ── */
+var COLOR_MAP = {
+  "BLACK":"#1A1A1A","BLK":"#1A1A1A","블랙":"#1A1A1A","黑":"#1A1A1A","黑色":"#1A1A1A",
+  "WHITE":"#F5F5F0","WHT":"#F5F5F0","화이트":"#F5F5F0","白":"#F5F5F0","白色":"#F5F5F0",
+  "IVORY":"#F5E8C7","CREAM":"#F5E8C7","BEIGE":"#E8D5B7","베이지":"#E8D5B7","米":"#E8D5B7","米色":"#E8D5B7",
+  "GRAY":"#6B7280","GREY":"#6B7280","그레이":"#6B7280","灰":"#6B7280","灰色":"#6B7280",
+  "D/GRAY":"#4B5563","DGRAY":"#4B5563","DARK GRAY":"#4B5563","차콜":"#374151","CHARCOAL":"#374151",
+  "L/GRAY":"#9CA3AF","LGRAY":"#9CA3AF","LIGHT GRAY":"#9CA3AF","SILVER":"#B0B0B0",
+  "BLUE":"#2563EB","블루":"#2563EB","蓝":"#2563EB","蓝色":"#2563EB",
+  "NAVY":"#1E3A8A","네이비":"#1E3A8A","藏青":"#1E3A8A",
+  "O/BLUE":"#0369A1","OBLUE":"#0369A1","OCEAN BLUE":"#0369A1","OCEAN":"#0369A1",
+  "D/BLUE":"#1E40AF","DBLUE":"#1E40AF","DARK BLUE":"#1E40AF","DUSTY BLUE":"#7CA0BC",
+  "L/BLUE":"#7DD3FC","LBLUE":"#7DD3FC","SKY":"#7DD3FC","SKY BLUE":"#7DD3FC",
+  "INDIGO":"#4338CA","인디고":"#4338CA","靛":"#4338CA","靛蓝":"#4338CA",
+  "RED":"#DC2626","레드":"#DC2626","红":"#DC2626","红色":"#DC2626","ROJO":"#DC2626",
+  "PINK":"#EC4899","핑크":"#EC4899","粉":"#EC4899","粉色":"#EC4899",
+  "D/PINK":"#BE185D","DPINK":"#BE185D","D/ROSE":"#C2748D","ROSE":"#E89AB8","로즈":"#E89AB8","玫瑰":"#E89AB8",
+  "CORAL":"#FB7185","CRIMSON":"#991B1B","WINE":"#7C1D28","BURGUNDY":"#7C1D28","VINO":"#7C1D28",
+  "PURPLE":"#7C3AED","퍼플":"#7C3AED","紫":"#7C3AED","紫色":"#7C3AED",
+  "VIOLET":"#8B5CF6","LAVENDER":"#C4B5FD","LILAC":"#DDD6FE","MARINO":"#5F7DAF",
+  "GREEN":"#16A34A","그린":"#16A34A","绿":"#16A34A","绿色":"#16A34A",
+  "D/GREEN":"#14532D","DGREEN":"#14532D","DARK GREEN":"#14532D","FOREST":"#14532D",
+  "L/GREEN":"#86EFAC","LGREEN":"#86EFAC","MINT":"#86EFAC","민트":"#86EFAC",
+  "OLIVE":"#6B7A3A","올리브":"#6B7A3A","橄榄":"#6B7A3A","KHAKI":"#9B8A5C","카키":"#9B8A5C",
+  "SAGE":"#A7C4A0","TEAL":"#0F766E",
+  "YELLOW":"#FACC15","옐로우":"#FACC15","黄":"#FACC15","黄色":"#FACC15",
+  "MUSTARD":"#CA8A04","GOLD":"#D4AF37","골드":"#D4AF37","金":"#D4AF37",
+  "ORANGE":"#F97316","오렌지":"#F97316","橙":"#F97316","橙色":"#F97316",
+  "D/ORANGE":"#C2410C","PEACH":"#FDBA74","피치":"#FDBA74",
+  "BROWN":"#78350F","브라운":"#78350F","棕":"#78350F","棕色":"#78350F",
+  "D/BROWN":"#451A03","DBROWN":"#451A03","L/BROWN":"#B48754","LBROWN":"#B48754",
+  "D/MOCHA":"#6B4423","MOCHA":"#8B5A2B","모카":"#8B5A2B",
+  "CAMEL":"#C19A6B","카멜":"#C19A6B","驼色":"#C19A6B","TAN":"#D2B48C",
+  "CHOCOLATE":"#3E2723","COFFEE":"#5B3A29"
+};
+function colorToHex(name){
+  if(!name) return null;
+  var key = String(name).trim().toUpperCase();
+  if(COLOR_MAP[key]) return COLOR_MAP[key];
+  var k2 = key.replace(/[\s\-_\/]/g,"");
+  for(var k in COLOR_MAP){ if(k.replace(/[\s\-_\/]/g,"") === k2) return COLOR_MAP[k]; }
+  var first = key.split(/[\s\/\-_]+/)[0];
+  if(COLOR_MAP[first]) return COLOR_MAP[first];
+  return null;
+}
+function colorDotStyle(name){
+  var hex = colorToHex(name);
+  return hex ? 'background:'+hex : 'background:linear-gradient(135deg,var(--gold),#B8956A)';
+}
+
+/* ── CSM Plan vs Actual KPI (auto-computed) ── */
+function computeActualQtyFromRecord(r){
+  var actLines = getSubformLines(r, "Acture_Order_Lines");
+  if(actLines && actLines.length > 0){
+    var sum1 = 0, hasData = false;
+    actLines.forEach(function(line){
+      var q = parseInt(line["Acture_Quantity"] || line["Quantity"] || line["aQuantity"]) || 0;
+      if(q > 0) hasData = true;
+      sum1 += q;
+    });
+    if(hasData) return { qty:sum1, source:"Subform" };
+  }
+  var totalField = parseInt(g(r,"Acture_Total_Quantity")) || 0;
+  if(totalField > 0) return { qty:totalField, source:"Total field" };
+  var notes = g(r, "Acture_Notes");
+  if(notes && notes !== "-"){
+    var sum3 = 0, matched = false;
+    notes.split(/\n+/).forEach(function(line){
+      var m = line.match(/Qty:\s*(\d+)/i);
+      if(m){ sum3 += parseInt(m[1]) || 0; matched = true; }
+    });
+    if(matched && sum3 > 0) return { qty:sum3, source:"Notes" };
+  }
+  return { qty:0, source:"Empty" };
+}
+
+function renderCsmCompare(r){
+  var planQty = parseInt(g(r,"Plan_Total_Quantity")) || 0;
+  var actual = computeActualQtyFromRecord(r);
+  var actQty = actual.qty;
+  var sourceLabel = "";
+  switch(actual.source){
+    case "Subform":     sourceLabel = "서브폼 집계 / 子表汇总"; break;
+    case "Total field": sourceLabel = "Acture_Total_Quantity"; break;
+    case "Notes":       sourceLabel = "Acture_Notes 파싱 / 备注解析"; break;
+    default:            sourceLabel = "데이터 없음 / 暂无数据";
+  }
+  var rate = planQty > 0 ? (actQty / planQty * 100) : 0;
+  var rateStr = planQty > 0 ? rate.toFixed(1) + '%' : '-';
+  var diff = actQty - planQty;
+  var diffStr = planQty > 0 ? (diff > 0 ? '+' : '') + diff.toLocaleString() + ' pcs' : '-';
+  var rateClass = '';
+  if(planQty > 0 && actQty > 0){ rateClass = rate >= 100 ? (actQty > planQty ? 'over' : 'full') : 'under'; }
+  else { rateClass = 'empty'; }
+  var actBoxClass = actQty === 0 ? 'actual empty' : 'actual';
+  var h = '<div class="csm-compare">';
+  h += '<div class="csm-cmp-box plan"><div class="csm-cmp-label">📋 PLAN 오더 수량 / 订单数量</div>';
+  h += '<div class="csm-cmp-num">'+planQty.toLocaleString()+'<span class="csm-cmp-unit">pcs</span></div>';
+  h += '<div class="csm-cmp-src">Plan_Total_Quantity</div></div>';
+  h += '<div class="csm-cmp-box '+actBoxClass+'"><div class="csm-cmp-label">✅ ACTUAL 실출고 수량 / 实出货数量</div>';
+  h += '<div class="csm-cmp-num">'+actQty.toLocaleString()+'<span class="csm-cmp-unit">pcs</span></div>';
+  h += '<div class="csm-cmp-src">'+escH(sourceLabel)+'</div></div>';
+  h += '<div class="csm-cmp-box rate '+rateClass+'"><div class="csm-cmp-label">📊 출고율 / 出货率</div>';
+  h += '<div class="csm-cmp-num">'+rateStr+'</div>';
+  h += '<div class="csm-cmp-sub">'+diffStr+'</div></div>';
+  h += '</div>';
+  return h;
+}
+
+/* ── Inner Pack & Bulto helpers ── */
+var INNER_PACK_SIZE = 12;
+var MASTER_BAG_SIZE = 10;
+var MASTER_BAG_TOTAL = INNER_PACK_SIZE * MASTER_BAG_SIZE;
+
+function parseAssortmentJSON(r){
+  var raw = r["Standard_Assortment_JSON"];
+  if(!raw || typeof raw !== "string") return [];
+  var s = raw.trim();
+  if(!s) return [];
+  if(!s.startsWith("[")) s = "[" + s + "]";
+  try{ return JSON.parse(s) || []; }catch(e){ return []; }
+}
+
+function renderPackAndBulto(r){
+  var assortment = parseAssortmentJSON(r);
+  var comboCount = assortment.length;
+  var planTotalQty = parseInt(g(r,"Plan_Total_Quantity")) || 0;
+  var colorSet = {}, sizeSet = {};
+  assortment.forEach(function(item){ if(item.color) colorSet[item.color]=true; if(item.size) sizeSet[item.size]=true; });
+  var colors = Object.keys(colorSet), sizes = Object.keys(sizeSet);
+  var innerPackExpected=0,bultoExpected=0,remainderPcs=0,remainderPacks=0;
+  if(comboCount===INNER_PACK_SIZE && planTotalQty>0){
+    innerPackExpected = Math.floor(planTotalQty/INNER_PACK_SIZE);
+    remainderPcs = planTotalQty - (innerPackExpected*INNER_PACK_SIZE);
+    bultoExpected = Math.floor(innerPackExpected/MASTER_BAG_SIZE);
+    remainderPacks = innerPackExpected - (bultoExpected*MASTER_BAG_SIZE);
+  }
+  var h = '<div class="pack-grid">';
+  h += '<div class="pack-card inner"><div class="pack-card-hd"><div class="pack-card-icon">📦</div><div>';
+  h += '<div class="pack-card-title">중간 포장 / 中间包装 / Inner Pack</div>';
+  h += '<div class="pack-card-title-sub">1 포장 = '+INNER_PACK_SIZE+'장 (각 조합 1장씩 / 每组合 1 件)</div>';
+  h += '</div></div>';
+  if(comboCount===0){
+    h += '<div class="pack-empty">Standard Assortment 없음 / 无标配信息</div>';
+  } else {
+    h += '<div class="pack-kpi-row">';
+    h += '<div class="pack-kpi"><div class="pack-kpi-num">'+comboCount+'</div><div class="pack-kpi-lb">1포장 구성 / 组合数</div></div>';
+    h += '<div class="pack-kpi"><div class="pack-kpi-num">'+(innerPackExpected>0?innerPackExpected.toLocaleString():"-")+'</div><div class="pack-kpi-lb">예상 포장수 / 预计包数</div></div>';
+    h += '</div>';
+    if(comboCount===INNER_PACK_SIZE){
+      h += '<div class="pack-summary-bar">✓ 표준 구성 ('+colors.length+'색 × '+sizes.length+'사이즈 = '+INNER_PACK_SIZE+'장)</div>';
+    } else {
+      h += '<div class="pack-summary-bar" style="background:#FFF5F5;border-color:#FECACA;color:#B91C1C">⚠ 표준 '+INNER_PACK_SIZE+'조합이 아님 ('+comboCount+'조합) / 非标准</div>';
+    }
+    h += '<div class="pack-composition"><div class="pack-composition-label">구성 상세 / 组合明细</div><div class="pack-combo-list">';
+    var byColor = {};
+    assortment.forEach(function(item){ var c=item.color||"-"; if(!byColor[c]) byColor[c]=[]; byColor[c].push(item); });
+    Object.keys(byColor).forEach(function(color){
+      byColor[color].forEach(function(item){
+        var dotStyle = colorDotStyle(color);
+        h += '<div class="pack-combo-item"><span class="pack-combo-dot" style="'+dotStyle+'"></span>';
+        h += '<span class="pack-combo-color">'+escH(color)+'</span>';
+        h += '<span class="pack-combo-size">'+escH(item.size||"-")+'</span>';
+        h += '<span class="pack-combo-qty">× '+(item.qty||1)+'</span></div>';
+      });
+    });
+    h += '</div></div>';
+  }
+  h += '</div>';
+  h += '<div class="pack-card bulto"><div class="pack-card-hd"><div class="pack-card-icon">🎒</div><div>';
+  h += '<div class="pack-card-title">Bulto / 麻袋 / 마대</div>';
+  h += '<div class="pack-card-title-sub">1 Bulto = '+MASTER_BAG_SIZE+' 포장 = '+MASTER_BAG_TOTAL+'장</div>';
+  h += '</div></div>';
+  if(planTotalQty===0){
+    h += '<div class="pack-empty">Plan 수량 없음 / 无计划数量</div>';
+  } else {
+    h += '<div class="pack-kpi-row">';
+    h += '<div class="pack-kpi"><div class="pack-kpi-num">'+(bultoExpected>0?bultoExpected.toLocaleString():"-")+'</div><div class="pack-kpi-lb">예상 Bulto / 预计麻袋</div></div>';
+    h += '<div class="pack-kpi"><div class="pack-kpi-num">'+planTotalQty.toLocaleString()+'</div><div class="pack-kpi-lb">Plan 총수량 / 计划总数</div></div>';
+    h += '</div>';
+    var summary = bultoExpected+' Bulto × '+MASTER_BAG_TOTAL+'장 = '+(bultoExpected*MASTER_BAG_TOTAL).toLocaleString()+'장';
+    if(remainderPacks>0) summary += ' + 자투리 '+remainderPacks+'포장 ('+(remainderPacks*INNER_PACK_SIZE)+'장)';
+    if(remainderPcs>0) summary += ' + '+remainderPcs+'장';
+    h += '<div class="pack-summary-bar">📊 '+escH(summary)+'</div>';
+    h += '<div class="pack-composition"><div class="pack-composition-label">계산 내역 / 计算明细</div><div class="pack-combo-list">';
+    h += '<div class="pack-combo-item"><span class="pack-combo-color">Plan 총수량 / 计划总数</span><span class="pack-combo-qty">'+planTotalQty.toLocaleString()+' 장</span></div>';
+    h += '<div class="pack-combo-item"><span class="pack-combo-color">÷ 1 포장 ('+INNER_PACK_SIZE+'장)</span><span class="pack-combo-qty">'+(innerPackExpected+(remainderPcs>0?1:0)).toLocaleString()+' 포장</span></div>';
+    h += '<div class="pack-combo-item"><span class="pack-combo-color">÷ 1 Bulto ('+MASTER_BAG_SIZE+' 포장)</span><span class="pack-combo-qty">'+bultoExpected.toLocaleString()+' Bulto</span></div>';
+    if(remainderPacks>0||remainderPcs>0){
+      var rmText = "";
+      if(remainderPacks>0) rmText = remainderPacks+' 포장';
+      if(remainderPcs>0) rmText += (rmText?" + ":"")+remainderPcs+'장';
+      h += '<div class="pack-combo-item" style="background:#FEF9E7;border-color:#FDE68A"><span class="pack-combo-color" style="color:#92400E">자투리 / 剩余</span><span class="pack-combo-qty" style="color:#92400E">'+escH(rmText)+'</span></div>';
+    }
+    h += '</div></div>';
+  }
+  h += '</div></div>';
+  return h;
+}
+
+/* ── Schedule status helpers ── */
+function getPlanDotClass(dateStr){
+  var p = pd(dateStr);
+  if(!p) return 'plan-wait';
+  return p <= todayStr ? 'plan-done' : 'plan-wait';
+}
+function getActualDotClass(actualDate, planDate){
+  var a = pd(actualDate);
+  if(a) return 'actual-done';
+  var p = pd(planDate);
+  if(p && p < todayStr) return 'actual-overdue';
+  return 'actual-wait';
+}
+
+/* ── Size Spec helpers ── */
+function parseSpecJSON(r, field){
+  var raw = r[field];
+  if(!raw || typeof raw !== "string") return [];
+  var s = raw.trim();
+  if(!s) return [];
+  if(!s.startsWith("[")) s = "[" + s + "]";
+  try{ return JSON.parse(s) || []; }catch(e){ return []; }
+}
+function renderSpecTable(items){
+  if(!items || items.length === 0) return '<div class="spec-empty">데이터 없음 / 无数据</div>';
+  var sizeKeys = ['s','m','l','xl'];
+  var sizeLabels = {s:'S', m:'M', l:'L', xl:'XL'};
+  var activeSizes = sizeKeys.filter(function(k){ return items.some(function(row){ return row[k] && row[k] !== ""; }); });
+  var hasNotes = items.some(function(row){ return row.notes && row.notes !== ""; });
+  var h = '<table class="spec-tbl"><thead><tr><th class="spec-th-pom">POM / 측정부위 / 测量部位</th>';
+  activeSizes.forEach(function(k){ h += '<th>'+sizeLabels[k]+'</th>'; });
+  if(hasNotes) h += '<th class="spec-th-notes">비고 / 备注</th>';
+  h += '</tr></thead><tbody>';
+  items.forEach(function(row){
+    if(!row.pom) return;
+    h += '<tr><td class="spec-td-pom">'+escH(row.pom)+'</td>';
+    activeSizes.forEach(function(k){
+      var v = row[k];
+      h += '<td>'+(v && v !== '' ? escH(String(v)) : '<span style="color:#CDC9C0">-</span>')+'</td>';
+    });
+    if(hasNotes) h += '<td class="spec-td-notes">'+escH(row.notes||'')+'</td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table>';
+  return h;
+}
+function renderSizeSpecs(r){
+  var topItems = parseSpecJSON(r, "Top_Spec_JSON");
+  var botItems = parseSpecJSON(r, "Bottom_Spec_JSON");
+  if(topItems.length === 0 && botItems.length === 0) return '<div class="spec-empty">사이즈 스펙 없음 / 无尺寸规格</div>';
+  var h = '';
+  if(topItems.length > 0){ h += '<div class="spec-group"><div class="spec-group-title">TOP / 상의 / 上衣</div>'+renderSpecTable(topItems)+'</div>'; }
+  if(botItems.length > 0){ h += '<div class="spec-group"><div class="spec-group-title">BOTTOM / 하의 / 下衣</div>'+renderSpecTable(botItems)+'</div>'; }
+  return h;
+}
+function toggleSpec(el){
+  var content = el.nextElementSibling;
+  var icon = el.querySelector('.spec-toggle-icon');
+  if(!content) return;
+  var isOpen = content.classList.contains('open');
+  content.classList.toggle('open', !isOpen);
+  if(icon) icon.classList.toggle('open', !isOpen);
+}
+
 /* ── MO Modal ── */
 function openModal(r){
-  currentMO=r;
-  var modDt=getModDate(r);
-  document.getElementById("mTitle").textContent=g(r,"MO_Number");
-  document.getElementById("mSub").textContent=g(r,"Style_Name")+" — "+g(r,"Style_SKU");
-  document.getElementById("mModDate").textContent="최종수정일 / 最后修改日 : "+modDt;
-  var h='';
-  function dv(v){return v==="-"?'<span class="d-val empty">미입력 / 未填写</span>':escH(v)}
-  function it(l,v){return'<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'}
-  var imgs=getAllImgs(r,"Style_Image").slice(0,5);
-  if(imgs.length>0){h+='<div class="m-img-gallery">';imgs.forEach(function(u,i){h+='<div class="m-img-box" id="moImg'+i+'"><div class="spinner-sm"></div></div>'});h+='</div>'}
-  h+='<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 订单信息</div><div class="d-grid">';
-  h+=it("MO 번호 / 订单号",dv(g(r,"MO_Number")));
-  h+=it("스타일 SKU / 款式SKU",dv(g(r,"Style_SKU")));
-  h+=it("스타일명 / 款式名",dv(g(r,"Style_Name")));
-  h+=it("시즌 / 季节",dv(g(r,"Season")));
-  h+=it("카테고리 / 大类",dv(catName(g(r,"Category"))));
-  h+=it("공장 / 工厂",dv(cleanFactory(g(r,"Factory"))));
-  h+=it("주문일 / 订单日期",dv(g(r,"Order_Date")));
-  h+=it("주문상태 / 订单状态",'<span class="tag '+tc(g(r,"Order_Status"))+'">'+escH(g(r,"Order_Status"))+'</span>');
-  h+=it("예상납기 / 预计交货",dv(g(r,"Expected_Delivery")));
-  h+=it("납기상태 / 交期状态",isDelayed(r)?'<span class="tag t-dg">DELAYED / 지연 / 延误</span>':dv(g(r,"Delivery_Status")));
-  h+=it("성별 / 性别",dv(mv("Gender",g(r,"Gender"))));
-  h+=it("진행년월 / 进行年月",dv(g(r,"Plan_Year"))+"-"+dv(g(r,"Plan_Month")));
-  h+='</div></div>';
-  h+='<div class="m-sec"><div class="m-sec-t">👗 제품 정의 / 产品定义</div><div class="d-grid">';
-  h+=it("상의 유형 / 上衣类型",dv(mv("Top_Type",g(r,"Top_Type"))));
-  h+=it("소매 유형 / 衣袖类型",dv(mv("Sleeve",g(r,"Sleeve"))));
-  h+=it("핏 / 版型",dv(mv("Fit",g(r,"Fit"))));
-  h+=it("디테일 / 类型详情",dv(mv("Details",g(r,"Details"))));
-  h+=it("하의 유형 / 下装类型",dv(mv("Bottom_Type",g(r,"Bottom_Type"))));
-  h+=it("하의 기장 / 下装长短",dv(mv("Bottom_Length",g(r,"Bottom_Length"))));
-  h+='</div></div>';
-  h+='<div class="m-sec csm-section">';
-  h+='<div class="m-sec-t">🎨 색상 × 사이즈 × 단가 / 颜色 × 尺码 × 单价</div>';
-  h+='<div class="csm-tabs">';
-  h+='<button class="csm-tab plan active" onclick="switchCsmTab(this,\'plan\')">📋 PLAN / 주문 / 订单</button>';
-  h+='<button class="csm-tab actual" onclick="switchCsmTab(this,\'actual\')">✅ ACTUAL / 실출고 / 实际出货</button>';
-  h+='</div>';
-  h+='<div class="csm-pane plan active">'+renderColorSizeMatrix(r,"Plan_")+'</div>';
-  h+='<div class="csm-pane actual">'+renderColorSizeMatrix(r,"Acture_")+'</div>';
-  h+='</div>';
-  h+='<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料信息</div><div class="d-grid">';
-  h+=it("원단 종류 / 面料种类",dv(mv("Material_Type",g(r,"Material_Type"))));
-  h+=it("혼방 % / 混纺 %",dv(g(r,"blended_percentage")));
-  h+=it("안감 / 里料类型",dv(mv("Lining_Type",g(r,"Lining_Type"))));
-  h+='</div></div>';
-  h+='<div class="m-sec"><div class="m-sec-t">📦 오더 내용 vs 실출고 내역 / 订单内容 vs 实际出货</div>';
-  var planQty=parseInt(g(r,"Plan_Total_Quantity"))||0;
-  var actQty=parseInt(g(r,"Acture_Total_Quantity"))||0;
-  var planGrand=g(r,"Plan_Grand_Total"),actGrand=g(r,"Acture_Grand_Total");
-  var diffQty=actQty-planQty,diffSign=diffQty>0?"+":"";
-  h+='<div class="pa-totals">';
-  h+='<div class="pa-total-box plan"><div class="pa-total-label">📋 PLAN 오더수량 / 订单数量</div><div class="pa-total-qty">'+planQty.toLocaleString()+' <span style="font-size:11px">pcs</span></div><div class="pa-total-amt">총금액 / 总金额: '+escH(planGrand)+'</div></div>';
-  h+='<div class="pa-total-box actual"><div class="pa-total-label">✅ ACTUAL 출고수량 / 出货数量</div><div class="pa-total-qty">'+actQty.toLocaleString()+' <span style="font-size:11px">pcs</span></div><div class="pa-total-amt">총금액 / 总金额: '+escH(actGrand)+'</div></div>';
-  h+='</div>';
-  if(planQty>0){var pct2=Math.round((actQty/planQty)*100);h+='<div class="pa-diff">출고율 / 出货率: <b style="color:'+(actQty>=planQty?"#047857":"#DC2626")+'">'+diffSign+diffQty.toLocaleString()+' pcs ('+pct2+'%)</b></div>'}
-  var planLines=getSubformLines(r,"Plan_MO_Lines"),actLines=getSubformLines(r,"Acture_Order_Lines");
-  h+='<div class="pa-compare" style="margin-top:16px">';
-  h+='<div class="pa-col plan"><div class="pa-col-header"><span class="pa-badge plan">PLAN</span><span class="pa-col-title">주문 내용 / 订单明细</span></div>';
-  var planSummary=g(r,"Plan_Order_Lines_Summary");
-  if(planSummary!=="-")h+='<div class="pa-summary">'+escH(planSummary)+'</div>';
-  h+=buildSubformTable(planLines,"Plan_");
-  h+='<div style="margin-top:10px"><div class="d-item"><span class="d-label">오더 메모 / 订单备注</span><span class="d-val">'+(g(r,"Plan_Notes")!=="-"?escH(g(r,"Plan_Notes")):'<span class="empty">미입력 / 未填写</span>')+'</span></div></div>';
-  h+='</div>';
-  h+='<div class="pa-col actual"><div class="pa-col-header"><span class="pa-badge actual">ACTUAL</span><span class="pa-col-title">실출고 내역 / 实际出货内容</span></div>';
-  var actSummary=g(r,"Acture_Order_Lines_Summary");
-  if(actSummary!=="-")h+='<div class="pa-summary">'+escH(actSummary)+'</div>';
-  h+=buildSubformTable(actLines,"Acture_");
-  h+='<div style="margin-top:10px"><div class="d-item"><span class="d-label">출고 메모 / 出货备注</span><span class="d-val">'+(g(r,"Acture_Notes")!=="-"?escH(g(r,"Acture_Notes")):'<span class="empty">미입력 / 未填写</span>')+'</span></div></div>';
-  h+='</div></div></div>';
-  h+='<div class="m-sec"><div class="m-sec-t">🏭 생산 추적 / 生产跟踪</div><div class="d-grid">';
-  h+=it("생산상태 / 生产状态",'<span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span>');
-  h+=it("원단상태 / 面料进度",dv(g(r,"Fabric_Status")));
-  h+=it("진척률 / 进度",dv(g(r,"Progress")));
-  h+='</div></div>';
-  h+='<div class="m-sec"><div class="m-sec-t">📅 생산 일정 / 生产日期</div><div class="schedule-compare">';
-  h+='<div class="schedule-col"><div class="schedule-col-title plan">📋 Plan 일정 / 计划日期</div>';
-  [{l:"원단입고 / 面料入库",k:"Plan_Fabric_Date"},{l:"재단시작 / 裁剪开始",k:"Plan_Cutting_Start"},{l:"재단완료 / 裁剪完成",k:"Plan_Cutting_End"},{l:"봉제시작 / 车缝开始",k:"Plan_Sewing_Start"},{l:"봉제완료 / 车缝完成",k:"Plan_Sewing_End"},{l:"포장시작 / 包装开始",k:"Plan_Packing_Start"},{l:"포장완료 / 包装完成",k:"Plan_Packing_End"},{l:"예상납기 / 预计交货",k:"Expected_Delivery"}].forEach(function(t,i){
-    var v=g(r,t.k),p=pd(v),cls="wait";
-    if(p){cls=p<=todayStr?"done":"curr"}
-    h+='<div class="sch-item"><div class="sch-dot '+cls+'">'+(i+1)+'</div><div class="sch-info"><div class="sch-label">'+escH(t.l)+'</div><div class="sch-date">'+escH(v)+'</div></div></div>';
+  currentMO = r;
+  var modDt = getModDate(r);
+  document.getElementById("mTitle").textContent = g(r,"MO_Number");
+  document.getElementById("mSub").textContent = g(r,"Style_Name") + " — " + g(r,"Style_SKU");
+  document.getElementById("mModDate").textContent = "최종수정일 / 最后修改日 : " + modDt;
+
+  var h = '';
+  function dv(v){ return v==="-" ? '<span class="d-val empty">미입력 / 未填写</span>' : escH(v); }
+  function it(l, v){ return '<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'; }
+
+  /* ── HERO: 4 image slots + QR ── */
+  var imageGroups = [
+    { label: "Style Image / 스타일 / 款式", field: "Style_Image" },
+    { label: "Top Flat / 상의 도안 / 上衣图", field: "Top_Flat_Sketch" },
+    { label: "Bottom Flat / 하의 도안 / 下装图", field: "Bottom_Flat_Sketch" },
+    { label: "Color Image / 색상 / 色卡", field: "Color_Image" }
+  ];
+  var imgLoadQueue = [];
+
+  h += '<div class="m-hero">';
+  h += '<div class="m-hero-imgs">';
+  imageGroups.forEach(function(grp, gi){
+    var imgs = getAllImgs(r, grp.field);
+    h += '<div class="m-hero-img-group">';
+    h += '<div class="m-hero-img-label">'+escH(grp.label)+'</div>';
+    if(imgs.length === 0){
+      h += '<div class="m-hero-img-box empty"><span class="empty-icon">🖼️</span></div>';
+    } else if(imgs.length === 1){
+      var id = 'heroImg_'+gi+'_0';
+      h += '<div class="m-hero-img-box" id="'+id+'"><div class="spinner-sm"></div></div>';
+      imgLoadQueue.push({id:id, url:imgs[0]});
+    } else {
+      var id = 'heroImg_'+gi+'_0';
+      h += '<div class="m-hero-img-box" id="'+id+'" style="position:relative"><div class="spinner-sm"></div>';
+      h += '<span style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.6);color:#fff;font-size:9px;padding:2px 6px;border-radius:3px;font-weight:500">+'+(imgs.length-1)+'</span>';
+      h += '</div>';
+      imgLoadQueue.push({id:id, url:imgs[0]});
+    }
+    h += '</div>';
   });
-  h+='</div><div class="schedule-col"><div class="schedule-col-title actual">✅ Actual 일정 / 实际日期</div>';
-  [{l:"원단입고 / 面料入库",k:"Fabric_In_house_Date"},{l:"재단시작 / 裁剪开始",k:"Cutting_Start_Date"},{l:"재단완료 / 裁剪完成",k:"Cutting_End_Date"},{l:"봉제시작 / 车缝开始",k:"Sewing_Start_Date"},{l:"봉제완료 / 车缝完成",k:"Sewing_Completion_Date"},{l:"포장시작 / 包装开始",k:"Packing_Start_Date"},{l:"포장완료 / 包装完成",k:"Packing_End_Date"},{l:"선적일 / 出货日期",k:"Ship_Date"}].forEach(function(t,i){
-    var v=g(r,t.k),p=pd(v),cls="wait";
-    if(p){cls=p<=todayStr?"done":"curr"}
-    h+='<div class="sch-item"><div class="sch-dot '+cls+'">'+(i+1)+'</div><div class="sch-info"><div class="sch-label">'+escH(t.l)+'</div><div class="sch-date">'+escH(v)+'</div></div></div>';
+  h += '</div>';
+  var qrImgs = getAllImgs(r, "QR_Code");
+  var qrSku = g(r, "QR_SKU");
+  h += '<div class="m-hero-qr"><div class="m-hero-qr-label">QR CODE</div>';
+  if(qrImgs.length > 0){
+    h += '<div class="m-hero-qr-box" id="heroQR"><div class="spinner-sm"></div></div>';
+    imgLoadQueue.push({id:'heroQR', url:qrImgs[0], isQR:true});
+  } else {
+    h += '<div class="m-hero-qr-box empty"><span class="empty-icon">🔲</span></div>';
+  }
+  if(qrSku !== "-") h += '<div class="m-hero-qr-sku">'+escH(qrSku)+'</div>';
+  h += '</div></div>';
+
+  h += '<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 订单信息</div><div class="d-grid">';
+  h += it("MO 번호 / 订单号", dv(g(r,"MO_Number")));
+  h += it("스타일 SKU / 款式SKU", dv(g(r,"Style_SKU")));
+  h += '<div class="d-item"><span class="d-label">영문 스타일명 / Eng Style Name</span><span class="d-val">'+dv(g(r,"Eng_Style_Name"))+'</span></div>';
+  h += '<div class="d-item"><span class="d-label">중문 스타일명 / 中文款号</span><span class="d-val">'+dv(g(r,"Chi_Style_Name"))+'</span></div>';
+  h += it("시즌 / 季节", dv(g(r,"Season")));
+  h += it("카테고리 / 大类", dv(catName(g(r,"Category"))));
+  h += it("공장 / 工厂", dv(cleanFactory(g(r,"Factory"))));
+  h += it("주문일 / 订单日期", dv(g(r,"Order_Date")));
+  h += it("주문상태 / 订单状态", '<span class="tag '+tc(g(r,"Order_Status"))+'">'+escH(g(r,"Order_Status"))+'</span>');
+  h += it("예상납기 / 预计交货", dv(g(r,"Expected_Delivery")));
+  h += it("납기상태 / 交期状态", isDelayed(r) ? '<span class="tag t-dg">DELAYED / 지연 / 延误</span>' : dv(g(r,"Delivery_Status")));
+  h += it("성별 / 性别", dv(mv("Gender", g(r,"Gender"))));
+  h += it("진행년월 / 进行年月", dv(g(r,"Plan_Year")) + "-" + dv(g(r,"Plan_Month")));
+  h += '</div></div>';
+
+  h += '<div class="m-sec"><div class="m-sec-t">👗 제품 정의 / 产品定义</div><div class="d-grid">';
+  h += it("상의 유형 / 上衣类型", dv(mv("Top_Type", g(r,"Top_Type"))));
+  h += it("소매 유형 / 衣袖类型", dv(mv("Sleeve", g(r,"Sleeve"))));
+  h += it("핏 / 版型", dv(mv("Fit", g(r,"Fit"))));
+  h += it("디테일 / 类型详情", dv(mv("Details", g(r,"Details"))));
+  h += it("하의 유형 / 下装类型", dv(mv("Bottom_Type", g(r,"Bottom_Type"))));
+  h += it("하의 기장 / 下装长短", dv(mv("Bottom_Length", g(r,"Bottom_Length"))));
+  h += '</div></div>';
+
+  h += '<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料信息</div><div class="d-grid">';
+  h += it("원단 종류 / 面料种类", dv(mv("Material_Type", g(r,"Material_Type"))));
+  h += it("혼방 % / 混纺 %", dv(g(r,"blended_percentage")));
+  h += it("안감 / 里料类型", dv(mv("Lining_Type", g(r,"Lining_Type"))));
+  h += '</div></div>';
+
+  h += '<div class="m-sec"><div class="m-sec-t">&#128208; 사이즈 스펙 / 尺寸规格 / Size Specs</div>';
+  h += '<div class="spec-toggle" onclick="toggleSpec(this)">';
+  h += '<span class="spec-toggle-label">펼쳐서 보기 <span class="dim">/ 展开查看 / Click to expand</span></span>';
+  h += '<span class="spec-toggle-icon">&#9660;</span>';
+  h += '</div><div class="spec-content">'+renderSizeSpecs(r)+'</div></div>';
+
+  h += '<div class="m-sec csm-section"><div class="m-sec-t">🎨 색상 × 사이즈 × 단가 / 颜色 × 尺码 × 单价</div>';
+  h += '<div class="csm-tabs">';
+  h += '<button class="csm-tab plan active" onclick="switchCsmTab(this,\'plan\')">📋 PLAN / 주문 / 订单</button>';
+  h += '<button class="csm-tab actual" onclick="switchCsmTab(this,\'actual\')">✅ ACTUAL / 실출고 / 实际出货</button>';
+  h += '</div>';
+  h += '<div class="csm-pane plan active">' + renderColorSizeMatrix(r, "Plan_") + '</div>';
+  h += '<div class="csm-pane actual">' + renderColorSizeMatrix(r, "Acture_") + '</div>';
+  h += renderCsmCompare(r);
+  h += '</div>';
+
+  h += '<div class="m-sec pack-section"><div class="m-sec-t">📦 중간 포장 & Bulto / 中间包装 & 麻袋 / Inner Pack & Master Bag</div>';
+  h += renderPackAndBulto(r);
+  h += '</div>';
+
+  h += '<div class="m-sec"><div class="m-sec-t">🏭 생산 추적 / 生产跟踪</div><div class="d-grid">';
+  h += it("생산상태 / 生产状态", '<span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span>');
+  h += it("원단상태 / 面料进度", dv(g(r,"Fabric_Status")));
+  h += it("진척률 / 进度", dv(g(r,"Progress")));
+  h += '</div></div>';
+
+  h += '<div class="m-sec"><div class="m-sec-t">📅 생산 일정 / 生产日期</div><div class="schedule-compare">';
+  h += '<div class="schedule-col"><div class="schedule-col-title plan">📋 Plan 일정 / 计划日期</div>';
+  [{l:"원단입고 / 面料入库",k:"Plan_Fabric_Date"},{l:"재단시작 / 裁剪开始",k:"Plan_Cutting_Start"},{l:"재단완료 / 裁剪完成",k:"Plan_Cutting_End"},{l:"봉제시작 / 车缝开始",k:"Plan_Sewing_Start"},{l:"봉제완료 / 车缝完成",k:"Plan_Sewing_End"},{l:"포장시작 / 包装开始",k:"Plan_Packing_Start"},{l:"포장완료 / 包装完成",k:"Plan_Packing_End"},{l:"예상납기 / 预计交货",k:"Expected_Delivery"}].forEach(function(t, i){
+    var v = g(r, t.k);
+    var cls = getPlanDotClass(v);
+    h += '<div class="sch-item"><div class="sch-dot '+cls+'">'+(i+1)+'</div><div class="sch-info"><div class="sch-label">'+escH(t.l)+'</div><div class="sch-date">'+escH(v)+'</div></div></div>';
   });
-  h+='</div></div></div>';
-  h+='<div class="m-sec"><div class="m-sec-t">🚢 출고 / 出货信息</div><div class="d-grid">';
-  h+=it("출고준비 / 待出货",dv(g(r,"Ready_to_Ship")));
-  h+=it("최종QC / 最终QC",dv(g(r,"Final_QC_Passed")));
-  h+=it("선적일 / 出货日期",dv(g(r,"Ship_Date")));
-  h+=it("운송장번호 / 运单号",dv(g(r,"Tracking_Number")));
-  h+=it("운송사 / 承运商",dv(g(r,"Carrier")));
-  h+='</div></div>';
-  h+='<div class="m-sec"><div class="m-sec-t">🔍 QC 정보 / 质检信息</div><div class="d-grid">';
-  h+=it("QC 상태 / 质检状态",dv(g(r,"QC_Status")));
-  h+=it("QC 일자 / 质检日期",dv(g(r,"QC_Date")));
-  h+=it("QC 담당자 / 质检员",dv(g(r,"QC_Inspector")));
-  h+=it("불량률 (%) / 不良率",dv(g(r,"Defect_Rate")));
-  h+=it("QC 메모 / 质检备注",dv(g(r,"QC_Notes")));
-  h+=it("재작업수량 / 返工数量",dv(g(r,"Rework_Quantity")));
-  h+='</div></div>';
-  document.getElementById("mBody").innerHTML=h;
+  h += '</div><div class="schedule-col"><div class="schedule-col-title actual">✅ Actual 일정 / 实际日期</div>';
+  [{l:"원단입고 / 面料入库",k:"Fabric_In_house_Date",plan:"Plan_Fabric_Date"},{l:"재단시작 / 裁剪开始",k:"Cutting_Start_Date",plan:"Plan_Cutting_Start"},{l:"재단완료 / 裁剪完成",k:"Cutting_End_Date",plan:"Plan_Cutting_End"},{l:"봉제시작 / 车缝开始",k:"Sewing_Start_Date",plan:"Plan_Sewing_Start"},{l:"봉제완료 / 车缝完成",k:"Sewing_Completion_Date",plan:"Plan_Sewing_End"},{l:"포장시작 / 包装开始",k:"Packing_Start_Date",plan:"Plan_Packing_Start"},{l:"포장완료 / 包装完成",k:"Packing_End_Date",plan:"Plan_Packing_End"},{l:"선적일 / 出货日期",k:"Ship_Date",plan:"Expected_Delivery"}].forEach(function(t, i){
+    var v = g(r, t.k), planV = g(r, t.plan);
+    var cls = getActualDotClass(v, planV);
+    var isOverdue = (cls === 'actual-overdue');
+    var dateCls = isOverdue ? 'sch-date overdue' : 'sch-date';
+    var warn = isOverdue ? '<span class="sch-warn">지연 / 超期</span>' : '';
+    h += '<div class="sch-item"><div class="sch-dot '+cls+'">'+(i+1)+'</div><div class="sch-info"><div class="sch-label">'+escH(t.l)+'</div><div class="'+dateCls+'">'+(v==="-" && isOverdue ? "미입력 / 未填写" : escH(v))+'</div></div>'+warn+'</div>';
+  });
+  h += '</div></div></div>';
+
+  h += '<div class="m-sec"><div class="m-sec-t">🔍 QC 정보 / 质检信息</div><div class="d-grid">';
+  h += it("QC 상태 / 质检状态", dv(g(r,"QC_Status")));
+  h += it("QC 일자 / 质检日期", dv(g(r,"QC_Date")));
+  h += it("QC 담당자 / 质检员", dv(g(r,"QC_Inspector")));
+  h += it("불량률 (%) / 不良率", dv(g(r,"Defect_Rate")));
+  h += it("QC 메모 / 质检备注", dv(g(r,"QC_Notes")));
+  h += it("재작업수량 / 返工数量", dv(g(r,"Rework_Quantity")));
+  h += '</div></div>';
+
+  h += '<div class="m-sec"><div class="m-sec-t">🚢 출고 정보 / 出货信息</div><div class="d-grid">';
+  h += it("출고준비 / 待出货", dv(g(r,"Ready_to_Ship")));
+  h += it("최종QC / 最终QC", dv(g(r,"Final_QC_Passed")));
+  h += it("선적일 / 出货日期", dv(g(r,"Ship_Date")));
+  h += it("운송장번호 / 运单号", dv(g(r,"Tracking_Number")));
+  h += it("운송사 / 承运商", dv(g(r,"Carrier")));
+  h += '</div></div>';
+
+  document.getElementById("mBody").innerHTML = h;
   document.getElementById("modalOv").classList.add("active");
-  setTimeout(function(){imgs.forEach(function(u,i){qImg("moImg"+i,u,"width:100%;height:100%;object-fit:cover;cursor:pointer",true)})},100);
+
+  setTimeout(function(){
+    imgLoadQueue.forEach(function(task){
+      var css = task.isQR
+        ? "max-width:100%;max-height:100%;object-fit:contain;padding:4px;cursor:pointer"
+        : "width:100%;height:100%;object-fit:cover;cursor:pointer";
+      qImg(task.id, task.url, css, true);
+    });
+  }, 100);
 }
 function closeModal(){document.getElementById("modalOv").classList.remove("active");currentMO=null}
 
-/* ── Style Info Modal ── */
 function openStyleModal(s){
-  document.getElementById("smTitle").textContent=g(s,"Style_SKU");
-  document.getElementById("smSub").textContent=g(s,"Style_Name");
-  var h='';
-  function dv(v){return v==="-"?'<span class="d-val empty">미입력 / 未填写</span>':escH(v)}
-  function it(l,v){return'<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'}
-  var imgs=getAllImgs(s,"Style_Image").slice(0,5);
-  if(imgs.length>0){h+='<div class="m-img-gallery">';imgs.forEach(function(u,i){h+='<div class="m-img-box" id="styleImg'+i+'"><div class="spinner-sm"></div></div>'});h+='</div>'}
-  h+='<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 基本信息</div><div class="d-grid">';
-  h+=it("스타일 SKU / 款式SKU",dv(g(s,"Style_SKU")));
-  h+=it("스타일명 / 款式名",dv(g(s,"Style_Name")));
-  h+=it("QR SKU",dv(g(s,"QR_SKU")));
-  h+=it("진행 연도 / 进行年度",dv(g(s,"Plan_Year")));
-  h+=it("진행 월 / 进行月度",dv(g(s,"Plan_Month")));
-  h+=it("시즌 / 季节",dv(g(s,"Season")));
-  h+=it("성별 / 性别",dv(mv("Gender",g(s,"Gender"))));
-  h+=it("카테고리 / 大类",dv(mv("Category",g(s,"Category"))));
-  h+=it("상태 / 款式状态",dv(g(s,"Style_Status")));
-  h+='</div></div>';
-  h+='<div class="m-sec"><div class="m-sec-t">👗 제품 정의 / 产品定义</div><div class="d-grid">';
-  h+=it("상의 유형 / 上衣类型",dv(mv("Top_Type",g(s,"Top_Type"))));
-  h+=it("소매 유형 / 衣袖类型",dv(mv("Sleeve",g(s,"Sleeve"))));
-  h+=it("핏 / 版型",dv(mv("Fit",g(s,"Fit"))));
-  h+=it("디테일 / 类型详情",dv(mv("Details",g(s,"Details"))));
-  h+=it("하의 유형 / 下装类型",dv(mv("Bottom_Type",g(s,"Bottom_Type"))));
-  h+=it("하의 기장 / 下装长短",dv(mv("Bottom_Length",g(s,"Bottom_Length"))));
-  h+='</div></div>';
-  h+='<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料</div><div class="d-grid">';
-  h+=it("원단 종류 / 面料种类",dv(mv("Material_Type",g(s,"Material_Type"))));
-  h+=it("혼방 % / 混纺 %",dv(g(s,"blended_percentage")));
-  h+=it("안감 / 里料类型",dv(mv("Lining_Type",g(s,"Lining_Type"))));
-  h+='</div></div>';
-  h+='<div class="m-sec"><div class="m-sec-t">💰 원가 정보 / 成本信息</div><div class="d-grid">';
-  h+=it("목표원가 / 目标成本",dv(g(s,"Target_Cost")));
-  h+=it("최종원가 / 最终成本",dv(g(s,"Final_Cost")));
-  h+=it("총BOM원가 / BOM总成本",dv(g(s,"Total_BOM_Cost")));
-  h+='</div></div>';
-  document.getElementById("smBody").innerHTML=h;
+  document.getElementById("smTitle").textContent = g(s,"Style_SKU");
+  document.getElementById("smSub").textContent = g(s,"Style_Name");
+  var h = '';
+  function dv(v){ return v==="-" ? '<span class="d-val empty">미입력 / 未填写</span>' : escH(v); }
+  function it(l, v){ return '<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'; }
+
+  var imgs = getAllImgs(s, "Style_Image").slice(0, 5);
+  if(imgs.length > 0){
+    h += '<div class="m-img-gallery">';
+    imgs.forEach(function(u, i){ h += '<div class="m-img-box" id="styleImg'+i+'"><div class="spinner-sm"></div></div>'; });
+    h += '</div>';
+  }
+
+  h += '<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 基本信息</div><div class="d-grid">';
+  h += it("스타일 SKU / 款式SKU", dv(g(s,"Style_SKU")));
+  h += it("스타일명 / 款式名", dv(g(s,"Style_Name")));
+  h += it("QR SKU", dv(g(s,"QR_SKU")));
+  h += it("진행 연도 / 进行年度", dv(g(s,"Plan_Year")));
+  h += it("진행 월 / 进行月度", dv(g(s,"Plan_Month")));
+  h += it("시즌 / 季节", dv(g(s,"Season")));
+  h += it("성별 / 性别", dv(mv("Gender", g(s,"Gender"))));
+  h += it("카테고리 / 大类", dv(mv("Category", g(s,"Category"))));
+  h += it("상태 / 款式状态", dv(g(s,"Style_Status")));
+  h += '</div></div>';
+
+  h += '<div class="m-sec"><div class="m-sec-t">&#128208; 사이즈 스펙 / 尺寸规格 / Size Specs</div>';
+  h += '<div class="spec-toggle" onclick="toggleSpec(this)">';
+  h += '<span class="spec-toggle-label">펼쳐서 보기 <span class="dim">/ 展开查看 / Click to expand</span></span>';
+  h += '<span class="spec-toggle-icon">&#9660;</span>';
+  h += '</div><div class="spec-content">'+renderSizeSpecs(s)+'</div></div>';
+
+  h += '<div class="m-sec"><div class="m-sec-t">👗 제품 정의 / 产品定义</div><div class="d-grid">';
+  h += it("상의 유형 / 上衣类型", dv(mv("Top_Type", g(s,"Top_Type"))));
+  h += it("소매 유형 / 衣袖类型", dv(mv("Sleeve", g(s,"Sleeve"))));
+  h += it("핏 / 版型", dv(mv("Fit", g(s,"Fit"))));
+  h += it("디테일 / 类型详情", dv(mv("Details", g(s,"Details"))));
+  h += it("하의 유형 / 下装类型", dv(mv("Bottom_Type", g(s,"Bottom_Type"))));
+  h += it("하의 기장 / 下装长短", dv(mv("Bottom_Length", g(s,"Bottom_Length"))));
+  h += '</div></div>';
+
+  h += '<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料</div><div class="d-grid">';
+  h += it("원단 종류 / 面料种类", dv(mv("Material_Type", g(s,"Material_Type"))));
+  h += it("혼방 % / 混纺 %", dv(g(s,"blended_percentage")));
+  h += it("안감 / 里料类型", dv(mv("Lining_Type", g(s,"Lining_Type"))));
+  h += '</div></div>';
+
+  h += '<div class="m-sec"><div class="m-sec-t">💰 원가 정보 / 成本信息</div><div class="d-grid">';
+  h += it("목표원가 / 目标成本", dv(g(s,"Target_Cost")));
+  h += it("최종원가 / 最终成本", dv(g(s,"Final_Cost")));
+  h += it("총BOM원가 / BOM总成本", dv(g(s,"Total_BOM_Cost")));
+  h += '</div></div>';
+
+  document.getElementById("smBody").innerHTML = h;
   document.getElementById("styleModalOv").classList.add("active");
-  setTimeout(function(){imgs.forEach(function(u,i){qImg("styleImg"+i,u,"width:100%;height:100%;object-fit:cover;cursor:pointer",true)})},100);
+
+  setTimeout(function(){
+    imgs.forEach(function(u, i){ qImg("styleImg"+i, u, "width:100%;height:100%;object-fit:cover;cursor:pointer", true); });
+  }, 100);
 }
 
 /* ── Event bindings ── */
