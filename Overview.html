@@ -592,6 +592,11 @@ body{padding:16px;min-height:100vh}
 .m-hero-qr-box.empty .empty-icon{font-size:24px;color:#CDC9C0}
 .m-hero-qr-sku{font-size:9px;color:var(--text-mute);font-family:ui-monospace,monospace;word-break:break-all;
   text-align:center;max-width:85px;line-height:1.2}
+.mimg-grid{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.mimg{width:108px;height:108px;background:var(--p-sky);border:1px solid var(--border);border-radius:10px;overflow:hidden;
+  position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.mimg:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+.mimg-label{font-size:9px;color:var(--text-mute);margin-bottom:6px;letter-spacing:.02em;font-weight:400}
 
 /* Plan vs Actual compare (legacy — kept in CSS but section removed from modal) */
 .pa-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -2617,71 +2622,119 @@ function closeModal(){
 
 /* ── Style Info nested modal ── */
 function openStyleModal(s){
-  document.getElementById("smTitle").textContent = g(s,"Style_SKU");
-  document.getElementById("smSub").textContent = g(s,"Style_Name");
-  var h = '';
-  function dv(v){ return v==="-" ? '<span class="d-val empty">미입력 / 未填写</span>' : escH(v); }
-  function it(l, v){ return '<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'; }
-
-  var imgs = getAllImgs(s, "Style_Image").slice(0, 5);
-  if(imgs.length > 0){
-    h += '<div class="m-img-gallery">';
-    imgs.forEach(function(u, i){ h += '<div class="m-img-box" id="styleImg'+i+'"><div class="spinner-sm"></div></div>'; });
-    h += '</div>';
-  }
-
-  h += '<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 基本信息</div><div class="d-grid">';
-  h += it("스타일 SKU / 款式SKU", dv(g(s,"Style_SKU")));
-  h += it("스타일명 / 款式名", dv(g(s,"Style_Name")));
-  h += it("QR SKU", dv(g(s,"QR_SKU")));
-  h += it("진행 연도 / 进行年度", dv(g(s,"Plan_Year")));
-  h += it("진행 월 / 进行月度", dv(g(s,"Plan_Month")));
-  h += it("시즌 / 季节", dv(g(s,"Season")));
-  h += it("성별 / 性别", dv(mv("Gender", g(s,"Gender"))));
-  h += it("카테고리 / 大类", dv(mv("Category", g(s,"Category"))));
-  h += it("상태 / 款式状态", dv(g(s,"Style_Status")));
-  h += '</div></div>';
-
-  /* ── 사이즈 스펙 — 접힘/펼침 (NEW in v33) ── */
-  h += '<div class="m-sec">';
-  h += '<div class="m-sec-t">&#128208; 사이즈 스펙 / 尺寸规格 / Size Specs</div>';
-  h += '<div class="spec-toggle" onclick="toggleSpec(this)">';
-  h += '<span class="spec-toggle-label">펼쳐서 보기 <span class="dim">/ 展开查看 / Click to expand</span></span>';
-  h += '<span class="spec-toggle-icon">&#9660;</span>';
-  h += '</div>';
-  h += '<div class="spec-content">'+renderSizeSpecs(s)+'</div>';
-  h += '</div>';
-
-
-  h += '<div class="m-sec"><div class="m-sec-t">👗 제품 정의 / 产品定义</div><div class="d-grid">';
-  h += it("상의 유형 / 上衣类型", dv(mv("Top_Type", g(s,"Top_Type"))));
-  h += it("소매 유형 / 衣袖类型", dv(mv("Sleeve", g(s,"Sleeve"))));
-  h += it("핏 / 版型", dv(mv("Fit", g(s,"Fit"))));
-  h += it("디테일 / 类型详情", dv(mv("Details", g(s,"Details"))));
-  h += it("하의 유형 / 下装类型", dv(mv("Bottom_Type", g(s,"Bottom_Type"))));
-  h += it("하의 기장 / 下装长短", dv(mv("Bottom_Length", g(s,"Bottom_Length"))));
-  h += '</div></div>';
-
-  h += '<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料</div><div class="d-grid">';
-  h += it("원단 종류 / 面料种类", dv(mv("Material_Type", g(s,"Material_Type"))));
-  h += it("혼방 % / 混纺 %", dv(g(s,"blended_percentage")));
-  h += it("안감 / 里料类型", dv(mv("Lining_Type", g(s,"Lining_Type"))));
-  h += '</div></div>';
-
-  h += '<div class="m-sec"><div class="m-sec-t">💰 원가 정보 / 成本信息</div><div class="d-grid">';
-  h += it("목표원가 / 目标成本", dv(g(s,"Target_Cost")));
-  h += it("최종원가 / 最终成本", dv(g(s,"Final_Cost")));
-  h += it("총BOM원가 / BOM总成本", dv(g(s,"Total_BOM_Cost")));
-  h += '</div></div>';
-
-  document.getElementById("smBody").innerHTML = h;
+  var sku = g(s, "Style_SKU"); if(sku === "-") sku = g(s, "SKU");
+  document.getElementById("smTitle").textContent = sku;
+  document.getElementById("smSub").textContent = g(s, "Style_Name");
+  document.getElementById("smBody").innerHTML = buildDetail(s);
   document.getElementById("styleModalOv").classList.add("active");
-
+  var d = s;
+  var imgLoadQueue = [];
+  var si  = getAllImgs(d, "Style_Image");
+  var tfs = getAllImgs(d, "Top_Flat_Sketch");
+  var bfs = getAllImgs(d, "Bottom_Flat_Sketch");
+  var ci  = getAllImgs(d, "Color_Image");
+  var qrImgs = getAllImgs(d, "QR_Code");
+  if(si.length  > 0) imgLoadQueue.push({id:"heroImg_0_0", url:si[0]});
+  if(tfs.length > 0) imgLoadQueue.push({id:"heroImg_1_0", url:tfs[0]});
+  if(bfs.length > 0) imgLoadQueue.push({id:"heroImg_2_0", url:bfs[0]});
+  if(ci.length  > 0) imgLoadQueue.push({id:"heroImg_3_0", url:ci[0]});
+  if(qrImgs.length > 0) imgLoadQueue.push({id:"mdl_qr_0", url:qrImgs[0], isQR:true});
   setTimeout(function(){
-    imgs.forEach(function(u, i){ qImg("styleImg"+i, u, "width:100%;height:100%;object-fit:cover;cursor:pointer", true); });
+    imgLoadQueue.forEach(function(task){
+      var css = task.isQR
+        ? "max-width:100%;max-height:100%;object-fit:contain;padding:4px;cursor:pointer"
+        : "width:100%;height:100%;object-fit:cover;cursor:pointer";
+      qImg(task.id, task.url, css, true);
+    });
   }, 100);
 }
+function buildDetail(d){
+  var p = [];
+  function dv(v){ return v === "-" ? '<span class="d-val empty">미입력 / 未填写</span>' : escH(v); }
+  function dt(v){ return '<span class="'+tc(v)+'">'+escH(v)+'</span>'; }
+  function it(l, v){ return '<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'; }
 
+  /* ── Hero: images & flat sketches + QR code ── */
+  var si  = getAllImgs(d, "Style_Image");
+  var tfs = getAllImgs(d, "Top_Flat_Sketch");
+  var bfs = getAllImgs(d, "Bottom_Flat_Sketch");
+  var ci  = getAllImgs(d, "Color_Image");
+  var qrImgs = getAllImgs(d, "QR_Code");
+  var qrSku = g(d, "QR_SKU");
+  if(si.length || tfs.length || bfs.length || ci.length || qrImgs.length){
+    p.push('<div class="m-sec">');
+    p.push('<div class="m-sec-t">🖼️ 스타일 이미지 & 도식화 <span style="color:var(--text-mute);font-weight:400;font-size:11px">/ 款式图片 & 平面图</span></div>');
+    p.push('<div class="m-hero">');
+    p.push('<div class="m-hero-imgs">');
+    if(si.length)  { p.push('<div class="mimg-label">스타일 이미지 / 款式图</div><div class="mimg-grid"><div class="mimg" id="heroImg_0_0"><div class="spinner-sm"></div></div></div>'); }
+    if(tfs.length) { p.push('<div class="mimg-label">상의 도식화 / 上衣平面图</div><div class="mimg-grid"><div class="mimg" id="heroImg_1_0"><div class="spinner-sm"></div></div></div>'); }
+    if(bfs.length) { p.push('<div class="mimg-label">하의 도식화 / 下衣平面图</div><div class="mimg-grid"><div class="mimg" id="heroImg_2_0"><div class="spinner-sm"></div></div></div>'); }
+    if(ci.length)  { p.push('<div class="mimg-label">색상 이미지 / 色卡</div><div class="mimg-grid"><div class="mimg" id="heroImg_3_0"><div class="spinner-sm"></div></div></div>'); }
+    p.push('</div>');
+    p.push('<div class="m-hero-qr">');
+    p.push('<div class="m-hero-qr-label">QR CODE</div>');
+    if(qrImgs.length > 0){
+      p.push('<div class="m-hero-qr-box" id="mdl_qr_0"><div class="spinner-sm"></div></div>');
+    } else {
+      p.push('<div class="m-hero-qr-box empty"><span class="empty-icon">🔲</span></div>');
+    }
+    if(qrSku !== "-") p.push('<div class="m-hero-qr-sku">'+escH(qrSku)+'</div>');
+    p.push('</div>');
+    p.push('</div>');
+    p.push('</div>');
+  }
+
+  /* ── Section 1: 기본 정보 ── */
+  p.push('<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 基本信息</div><div class="d-grid">');
+  p.push(it("SKU / 款式SKU", dv(g(d, "Style_SKU"))));
+  p.push(it("사업 주체 / 业务主体", dv(g(d, "Business_Entity"))));
+  p.push('<div class="d-item"><span class="d-label">영문 스타일명 / Eng Style Name</span><span class="d-val">'+dv(g(d, "Eng_Style_Name"))+'</span></div>');
+  p.push('<div class="d-item"><span class="d-label">중문 스타일명 / 中文款号</span><span class="d-val">'+dv(g(d, "Chi_Style_Name"))+'</span></div>');
+  p.push(it("시즌 / 季节", dv(g(d, "Season"))));
+  p.push(it("성별 / 性别", dv(mv("Gender", g(d, "Gender")))));
+  p.push(it("카테고리 / 分类", dv(mv("Category", g(d, "Category")))));
+  p.push(it("스타일 상태 / 款式状态", dt(g(d, "Style_Status"))));
+  p.push(it("계획 연도 / 计划年", dv(g(d, "Plan_Year"))));
+  p.push(it("계획 월 / 计划月", dv(g(d, "Plan_Month"))));
+  p.push(it("QR SKU", dv(g(d, "QR_SKU"))));
+  p.push('</div></div>');
+
+  /* ── Section 2: 제품 정의 ── */
+  p.push('<div class="m-sec"><div class="m-sec-t">👕 제품 정의 / 产品定义</div><div class="d-grid">');
+  p.push(it("상의 타입 / 上衣类型", dv(mv("Top_Type", g(d, "Top_Type")))));
+  p.push(it("소매 / 袖子", dv(mv("Sleeve", g(d, "Sleeve")))));
+  p.push(it("핏 / 版型", dv(mv("Fit", g(d, "Fit")))));
+  p.push(it("디테일 / 细节", dv(mv("Details", g(d, "Details")))));
+  p.push(it("하의 타입 / 下衣类型", dv(mv("Bottom_Type", g(d, "Bottom_Type")))));
+  p.push(it("하의 길이 / 下衣长度", dv(mv("Bottom_Length", g(d, "Bottom_Length")))));
+  p.push('</div></div>');
+
+  /* ── Section 3: 원단 정보 ── */
+  p.push('<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料信息</div><div class="d-grid">');
+  p.push(it("원단 / 面料", dv(mv("Material_Type", g(d, "Material_Type")))));
+  p.push(it("혼방율 / 混纺率", dv(g(d, "blended_percentage"))));
+  p.push(it("안감 / 内衬", dv(mv("Lining_Type", g(d, "Lining_Type")))));
+  p.push('</div></div>');
+
+  /* ── Section 4: 사이즈 스펙 (collapsible) ── */
+  p.push('<div class="m-sec">');
+  p.push('<div class="m-sec-t">📐 사이즈 스펙 / 尺寸规格 / Size Specs</div>');
+  p.push('<div class="spec-toggle" onclick="toggleSpec(this)">');
+  p.push('<span class="spec-toggle-label">펼쳐서 보기 <span class="dim">/ 展开查看 / Click to expand</span></span>');
+  p.push('<span class="spec-toggle-icon">&#9660;</span>');
+  p.push('</div>');
+  p.push('<div class="spec-content">'+renderSizeSpecs(d)+'</div>');
+  p.push('</div>');
+
+  /* ── Section 5: 원가 정보 ── */
+  p.push('<div class="m-sec"><div class="m-sec-t">💰 원가 정보 / 成本信息</div><div class="d-grid">');
+  p.push(it("목표 원가 / 目标成本", dv(g(d, "Target_Cost"))));
+  p.push(it("확정 원가 / 确认成本", dv(g(d, "Final_Cost"))));
+  p.push(it("BOM 총원가 / BOM 总成본", dv(g(d, "Total_BOM_Cost"))));
+  p.push('</div></div>');
+
+  return p.join("");
+}
 
 /* ── Static event bindings ── */
 document.getElementById("urgPopClose").addEventListener("click",function(){document.getElementById("urgencyPopOv").classList.remove("active")});
