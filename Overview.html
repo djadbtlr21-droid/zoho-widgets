@@ -1996,6 +1996,74 @@ function buildColorSizePriceMatrix(r, prefix){
   return { colors:colors, sizes:sizes, matrix:matrix };
 }
 
+/* ── Color dot helpers (verbatim from mo-view.html) ── */
+var COLOR_MAP = {
+  // Basics
+  "BLACK":"#1A1A1A","BLK":"#1A1A1A","블랙":"#1A1A1A","黑":"#1A1A1A","黑色":"#1A1A1A",
+  "WHITE":"#F5F5F0","WHT":"#F5F5F0","화이트":"#F5F5F0","白":"#F5F5F0","白色":"#F5F5F0",
+  "IVORY":"#F5E8C7","CREAM":"#F5E8C7","BEIGE":"#E8D5B7","베이지":"#E8D5B7","米":"#E8D5B7","米色":"#E8D5B7",
+  "GRAY":"#6B7280","GREY":"#6B7280","그레이":"#6B7280","灰":"#6B7280","灰色":"#6B7280",
+  "D/GRAY":"#4B5563","DGRAY":"#4B5563","DARK GRAY":"#4B5563","차콜":"#374151","CHARCOAL":"#374151",
+  "L/GRAY":"#9CA3AF","LGRAY":"#9CA3AF","LIGHT GRAY":"#9CA3AF",
+  "SILVER":"#B0B0B0",
+  // Blues
+  "BLUE":"#2563EB","블루":"#2563EB","蓝":"#2563EB","蓝色":"#2563EB",
+  "NAVY":"#1E3A8A","네이비":"#1E3A8A","藏青":"#1E3A8A",
+  "O/BLUE":"#0369A1","OBLUE":"#0369A1","OCEAN BLUE":"#0369A1","OCEAN":"#0369A1",
+  "D/BLUE":"#1E40AF","DBLUE":"#1E40AF","DARK BLUE":"#1E40AF","DUSTY BLUE":"#7CA0BC",
+  "L/BLUE":"#7DD3FC","LBLUE":"#7DD3FC","SKY":"#7DD3FC","SKY BLUE":"#7DD3FC",
+  "INDIGO":"#4338CA","인디고":"#4338CA","靛":"#4338CA","靛蓝":"#4338CA",
+  // Reds / Pinks
+  "RED":"#DC2626","레드":"#DC2626","红":"#DC2626","红色":"#DC2626","ROJO":"#DC2626",
+  "PINK":"#EC4899","핑크":"#EC4899","粉":"#EC4899","粉色":"#EC4899",
+  "D/PINK":"#BE185D","DPINK":"#BE185D",
+  "D/ROSE":"#C2748D","ROSE":"#E89AB8","로즈":"#E89AB8","玫瑰":"#E89AB8",
+  "CORAL":"#FB7185","CRIMSON":"#991B1B","WINE":"#7C1D28","BURGUNDY":"#7C1D28","VINO":"#7C1D28",
+  // Purple
+  "PURPLE":"#7C3AED","퍼플":"#7C3AED","紫":"#7C3AED","紫色":"#7C3AED",
+  "VIOLET":"#8B5CF6","LAVENDER":"#C4B5FD","LILAC":"#DDD6FE",
+  "MARINO":"#5F7DAF",
+  // Greens
+  "GREEN":"#16A34A","그린":"#16A34A","绿":"#16A34A","绿色":"#16A34A",
+  "D/GREEN":"#14532D","DGREEN":"#14532D","DARK GREEN":"#14532D","FOREST":"#14532D",
+  "L/GREEN":"#86EFAC","LGREEN":"#86EFAC","MINT":"#86EFAC","민트":"#86EFAC",
+  "OLIVE":"#6B7A3A","올리브":"#6B7A3A","橄榄":"#6B7A3A","KHAKI":"#9B8A5C","카키":"#9B8A5C",
+  "SAGE":"#A7C4A0","TEAL":"#0F766E",
+  // Yellows / Oranges
+  "YELLOW":"#FACC15","옐로우":"#FACC15","黄":"#FACC15","黄色":"#FACC15",
+  "MUSTARD":"#CA8A04","GOLD":"#D4AF37","골드":"#D4AF37","金":"#D4AF37",
+  "ORANGE":"#F97316","오렌지":"#F97316","橙":"#F97316","橙色":"#F97316",
+  "D/ORANGE":"#C2410C","PEACH":"#FDBA74","피치":"#FDBA74",
+  // Browns
+  "BROWN":"#78350F","브라운":"#78350F","棕":"#78350F","棕色":"#78350F",
+  "D/BROWN":"#451A03","DBROWN":"#451A03","L/BROWN":"#B48754","LBROWN":"#B48754",
+  "D/MOCHA":"#6B4423","MOCHA":"#8B5A2B","모카":"#8B5A2B",
+  "CAMEL":"#C19A6B","카멜":"#C19A6B","驼色":"#C19A6B","TAN":"#D2B48C",
+  "CHOCOLATE":"#3E2723","COFFEE":"#5B3A29"
+};
+function colorToHex(name){
+  if(!name) return null;
+  var key = String(name).trim().toUpperCase();
+  if(COLOR_MAP[key]) return COLOR_MAP[key];
+  // Try removing slashes/spaces variants
+  var k2 = key.replace(/[\s\-_\/]/g,"");
+  for(var k in COLOR_MAP){
+    if(k.replace(/[\s\-_\/]/g,"") === k2) return COLOR_MAP[k];
+  }
+  // Try partial match (first word)
+  var first = key.split(/[\s\/\-_]+/)[0];
+  if(COLOR_MAP[first]) return COLOR_MAP[first];
+  return null;
+}
+function colorDotStyle(name){
+  var hex = colorToHex(name);
+  if(hex){
+    return 'background:'+hex;
+  }
+  // Fallback: gold gradient
+  return 'background:linear-gradient(135deg,var(--gold),#B8956A)';
+}
+
 function renderColorSizeMatrix(r, prefix){
   var data = buildColorSizePriceMatrix(r, prefix);
   if(data.colors.length === 0){
