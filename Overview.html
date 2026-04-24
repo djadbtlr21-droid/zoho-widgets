@@ -593,7 +593,7 @@ body{padding:16px;min-height:100vh}
 .m-hero-qr-sku{font-size:9px;color:var(--text-mute);font-family:ui-monospace,monospace;word-break:break-all;
   text-align:center;max-width:85px;line-height:1.2}
 .mimg-grid{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-.mimg{width:108px;height:108px;background:var(--p-sky);border:1px solid var(--border);border-radius:10px;overflow:hidden;
+.mimg{width:180px;height:320px;background:var(--p-sky);border:1px solid var(--border);border-radius:10px;overflow:hidden;
   position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .15s,box-shadow .15s}
 .mimg:hover{border-color:var(--accent);box-shadow:var(--shadow)}
 .mimg-label{font-size:9px;color:var(--text-mute);margin-bottom:6px;letter-spacing:.02em;font-weight:400}
@@ -2690,6 +2690,7 @@ function closeModal(){
 
 /* ── Style Info nested modal ── */
 function openStyleModal(s){
+  _safeQ = [];
   var sku = g(s, "Style_SKU"); if(sku === "-") sku = g(s, "SKU");
   document.getElementById("smTitle").textContent = sku;
   document.getElementById("smSub").textContent = g(s, "Style_Name");
@@ -2734,10 +2735,10 @@ function buildDetail(d){
     p.push('<div class="m-sec-t">🖼️ 스타일 이미지 & 도식화 <span style="color:var(--text-mute);font-weight:400;font-size:11px">/ 款式图片 & 平面图</span></div>');
     p.push('<div class="m-hero">');
     p.push('<div class="m-hero-imgs">');
-    if(si.length)  { p.push('<div class="mimg-label">스타일 이미지 / 款式图</div><div class="mimg-grid"><div class="mimg" id="heroImg_0_0"><div class="spinner-sm"></div></div></div>'); }
-    if(tfs.length) { p.push('<div class="mimg-label">상의 도식화 / 上衣平面图</div><div class="mimg-grid"><div class="mimg" id="heroImg_1_0"><div class="spinner-sm"></div></div></div>'); }
-    if(bfs.length) { p.push('<div class="mimg-label">하의 도식화 / 下衣平面图</div><div class="mimg-grid"><div class="mimg" id="heroImg_2_0"><div class="spinner-sm"></div></div></div>'); }
-    if(ci.length)  { p.push('<div class="mimg-label">색상 이미지 / 色卡</div><div class="mimg-grid"><div class="mimg" id="heroImg_3_0"><div class="spinner-sm"></div></div></div>'); }
+    if(si.length)  { p.push('<div class="m-hero-img-group"><div class="mimg-label">스타일 이미지 / 款式图</div><div class="mimg" id="heroImg_0_0"><div class="spinner-sm"></div></div></div>'); }
+    if(tfs.length) { p.push('<div class="m-hero-img-group"><div class="mimg-label">상의 도식화 / 上衣平面图</div><div class="mimg" id="heroImg_1_0"><div class="spinner-sm"></div></div></div>'); }
+    if(bfs.length) { p.push('<div class="m-hero-img-group"><div class="mimg-label">하의 도식화 / 下衣平面图</div><div class="mimg" id="heroImg_2_0"><div class="spinner-sm"></div></div></div>'); }
+    if(ci.length)  { p.push('<div class="m-hero-img-group"><div class="mimg-label">색상 이미지 / 色卡</div><div class="mimg" id="heroImg_3_0"><div class="spinner-sm"></div></div></div>'); }
     p.push('</div>');
     p.push('<div class="m-hero-qr">');
     p.push('<div class="m-hero-qr-label">QR CODE</div>');
@@ -2762,9 +2763,7 @@ function buildDetail(d){
   p.push(it("성별 / 性别", dv(mv("Gender", g(d, "Gender")))));
   p.push(it("카테고리 / 分类", dv(mv("Category", g(d, "Category")))));
   p.push(it("스타일 상태 / 款式状态", dt(g(d, "Style_Status"))));
-  p.push(it("계획 연도 / 计划年", dv(g(d, "Plan_Year"))));
-  p.push(it("계획 월 / 计划月", dv(g(d, "Plan_Month"))));
-  p.push(it("QR SKU", dv(g(d, "QR_SKU"))));
+  p.push(it("진행년월 / 进行年月", dv(g(d,"Plan_Year")) + "-" + dv(g(d,"Plan_Month"))));
   p.push('</div></div>');
 
   /* ── Section 2: 제품 정의 ── */
@@ -2780,7 +2779,7 @@ function buildDetail(d){
   /* ── Section 3: 원단 정보 ── */
   p.push('<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料信息</div><div class="d-grid">');
   p.push(it("원단 / 面料", dv(mv("Material_Type", g(d, "Material_Type")))));
-  p.push(it("혼방율 / 混纺率", dv(g(d, "blended_percentage"))));
+  p.push(it("혼방율 / 混纺率", dv(g(d, "blended"))));
   p.push(it("안감 / 内衬", dv(mv("Lining_Type", g(d, "Lining_Type")))));
   p.push('</div></div>');
 
