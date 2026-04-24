@@ -1140,19 +1140,25 @@ function openModal(rec){
   document.getElementById("mThumb").innerHTML = '<div class="spinner-sm"></div>';
   document.getElementById("mBody").innerHTML = buildDetail(rec);
   document.getElementById("modalOv").classList.add("show");
-  setTimeout(function(){ loadModalImgs(rec); }, 50);
-}
-function loadModalImgs(rec){
+  var imgLoadQueue = [];
   var iu = getImg1(rec);
-  if(iu) renderZohoImage("mThumb", iu, false);
+  if(iu) imgLoadQueue.push({id:"mThumb", url:iu, isQR:false, click:false});
   var si  = getAllImgs(rec, "Style_Image").slice(0, 5);
   var tfs = getAllImgs(rec, "Top_Flat_Sketch").slice(0, 5);
   var bfs = getAllImgs(rec, "Bottom_Flat_Sketch").slice(0, 5);
   var qrImgs = getAllImgs(rec, "QR_Code");
-  si.forEach(function(u, i){ renderZohoImage("mdl_si_"+i, u, true); });
-  tfs.forEach(function(u, i){ renderZohoImage("mdl_tfs_"+i, u, true); });
-  bfs.forEach(function(u, i){ renderZohoImage("mdl_bfs_"+i, u, true); });
-  if(qrImgs.length > 0) qImg("mdl_qr_0", qrImgs[0], true, "max-width:100%;max-height:100%;object-fit:contain;padding:4px;cursor:pointer");
+  si.forEach(function(u, i){ imgLoadQueue.push({id:"mdl_si_"+i, url:u, isQR:false, click:true}); });
+  tfs.forEach(function(u, i){ imgLoadQueue.push({id:"mdl_tfs_"+i, url:u, isQR:false, click:true}); });
+  bfs.forEach(function(u, i){ imgLoadQueue.push({id:"mdl_bfs_"+i, url:u, isQR:false, click:true}); });
+  if(qrImgs.length > 0) imgLoadQueue.push({id:"mdl_qr_0", url:qrImgs[0], isQR:true, click:true});
+  setTimeout(function(){
+    imgLoadQueue.forEach(function(task){
+      var css = task.isQR
+        ? "max-width:100%;max-height:100%;object-fit:contain;padding:4px;cursor:pointer"
+        : "width:100%;height:100%;object-fit:cover;cursor:pointer";
+      qImg(task.id, task.url, task.click, css);
+    });
+  }, 100);
 }
 function buildDetail(d){
   var p = [];
