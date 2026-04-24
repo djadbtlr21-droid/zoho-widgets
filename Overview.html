@@ -492,11 +492,9 @@ body{padding:16px;min-height:100vh}
 .schedule-col-title.actual{color:#059669}
 .sch-item{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #F1EFE8}
 .sch-item:last-child{border-bottom:none}
-.sch-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#fff;flex-shrink:0}
-.sch-dot.done{background:#86EFAC;color:#065F46}
-.sch-dot.curr{background:#93C5FD;color:#1E40AF}
-.sch-dot.wait{background:#E2E8F0;color:var(--text-mute)}
-.sch-info{flex:1}
+.sch-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:500;flex-shrink:0;transition:background .15s}
+.sch-info{flex:1;min-width:0}
 .sch-label{font-size:11px;font-weight:500;color:var(--text)}
 .sch-date{font-size:10px;color:var(--text-mute);margin-top:1px}
 
@@ -517,7 +515,8 @@ body{padding:16px;min-height:100vh}
 .csm-tbl .csm-th-amount{width:12%;background:var(--p-sage);color:var(--p-sage-txt)}
 .csm-tbl td{padding:8px;border-bottom:1px solid #F1EFE8;text-align:center;color:var(--text);font-size:11px}
 .csm-tbl .csm-td-color{text-align:left;padding-left:14px;font-weight:500;color:var(--text-soft);display:flex;align-items:center;gap:6px}
-.csm-color-dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#B8956A);display:inline-block;flex-shrink:0}
+.csm-color-dot{width:12px;height:12px;border-radius:50%;display:inline-block;flex-shrink:0;
+  border:1px solid rgba(0,0,0,.1);box-shadow:inset 0 1px 2px rgba(255,255,255,.25)}
 .csm-tbl .csm-td-qty{font-variant-numeric:tabular-nums}
 .csm-tbl .csm-td-total{font-weight:500;color:var(--p-lav-txt);background:#FAFAFD}
 .csm-tbl .csm-td-price{font-weight:400;color:var(--text-mute);font-size:10px}
@@ -551,8 +550,8 @@ body{padding:16px;min-height:100vh}
 .m-hd-btn:hover{transform:translateY(-1px);filter:brightness(.97)}
 .m-hd-btn.edit{background:var(--p-lav);color:var(--p-lav-txt);border-color:#C4B5FD}
 
-.spinner{width:40px;height:40px;border:4px solid var(--border);border-top-color:var(--ov-primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
-.spinner-sm{width:18px;height:18px;border:3px solid var(--border);border-top-color:var(--ov-primary);border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
+.spinner{width:40px;height:40px;border:4px solid var(--border);border-top-color:var(--mo-primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
+.spinner-sm{width:18px;height:18px;border:3px solid var(--border);border-top-color:var(--mo-primary);border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;gap:12px;color:var(--text-mute);font-size:13px;font-weight:400}
 
@@ -618,10 +617,12 @@ body{padding:16px;min-height:100vh}
 .sch-dot.actual-wait{background:#E2E8F0;color:var(--text-mute)}
 .sch-dot.actual-done{background:#86EFAC;color:#065F46}
 .sch-dot.actual-overdue{background:#FCA5A5;color:#7F1D1D;animation:pulse-red 1.6s ease-in-out infinite}
-@keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.45)}50%{box-shadow:0 0 0 5px rgba(220,38,38,0)}}
+@keyframes pulse-red{
+  0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.45)}
+  50%{box-shadow:0 0 0 5px rgba(220,38,38,0)}
+}
 .sch-date.overdue{color:#DC2626;font-weight:500}
-.sch-warn{font-size:9px;font-weight:500;color:#DC2626;background:#FEF2F2;border:1px solid #FECACA;
-  border-radius:4px;padding:1px 6px;white-space:nowrap;align-self:center}
+.sch-warn{font-size:9px;color:#DC2626;font-weight:500;margin-left:auto;padding:2px 6px;background:#FEE2E2;border-radius:3px;flex-shrink:0}
 
 /* ── CSM Plan vs Actual Comparison KPI ── */
 .csm-compare{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px;padding:12px;
@@ -775,7 +776,7 @@ body{padding:16px;min-height:100vh}
         <div class="m-sub" id="smSub">-</div>
       </div>
       <div style="display:flex;align-items:center;gap:6px">
-        <button class="m-hd-btn edit" onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Report:All_Styles','_blank')">✏️ Edit Style / 款式修改</button>
+        <button class="m-hd-btn edit" onclick="window.open('https://creatorapp.zoho.com/jeramoda/eom/#Report:All_Styles','_blank')">✏️ Edit Style / 스타일 수정</button>
         <div class="m-close" id="smClose">✕</div>
       </div>
     </div>
@@ -2325,14 +2326,38 @@ function openModal(r){
   h += '</div></div>';
 
   h += '<div class="m-sec"><div class="m-sec-t">📅 생산 일정 / 生产日期</div><div class="schedule-compare">';
+  // Plan side
   h += '<div class="schedule-col"><div class="schedule-col-title plan">📋 Plan 일정 / 计划日期</div>';
-  [{l:"원단입고 / 面料入库",k:"Plan_Fabric_Date"},{l:"재단시작 / 裁剪开始",k:"Plan_Cutting_Start"},{l:"재단완료 / 裁剪完成",k:"Plan_Cutting_End"},{l:"봉제시작 / 车缝开始",k:"Plan_Sewing_Start"},{l:"봉제완료 / 车缝完成",k:"Plan_Sewing_End"},{l:"포장시작 / 包装开始",k:"Plan_Packing_Start"},{l:"포장완료 / 包装完成",k:"Plan_Packing_End"},{l:"예상납기 / 预计交货",k:"Expected_Delivery"}].forEach(function(t, i){
+  var planItems = [
+    {l:"원단입고 / 面料入库", k:"Plan_Fabric_Date"},
+    {l:"재단시작 / 裁剪开始", k:"Plan_Cutting_Start"},
+    {l:"재단완료 / 裁剪完成", k:"Plan_Cutting_End"},
+    {l:"봉제시작 / 车缝开始", k:"Plan_Sewing_Start"},
+    {l:"봉제완료 / 车缝完成", k:"Plan_Sewing_End"},
+    {l:"포장시작 / 包装开始", k:"Plan_Packing_Start"},
+    {l:"포장완료 / 包装完成", k:"Plan_Packing_End"},
+    {l:"예상납기 / 预计交货", k:"Expected_Delivery"}
+  ];
+  planItems.forEach(function(t, i){
     var v = g(r, t.k);
     var cls = getPlanDotClass(v);
     h += '<div class="sch-item"><div class="sch-dot '+cls+'">'+(i+1)+'</div><div class="sch-info"><div class="sch-label">'+escH(t.l)+'</div><div class="sch-date">'+escH(v)+'</div></div></div>';
   });
-  h += '</div><div class="schedule-col"><div class="schedule-col-title actual">✅ Actual 일정 / 实际日期</div>';
-  [{l:"원단입고 / 面料入库",k:"Fabric_In_house_Date",plan:"Plan_Fabric_Date"},{l:"재단시작 / 裁剪开始",k:"Cutting_Start_Date",plan:"Plan_Cutting_Start"},{l:"재단완료 / 裁剪完成",k:"Cutting_End_Date",plan:"Plan_Cutting_End"},{l:"봉제시작 / 车缝开始",k:"Sewing_Start_Date",plan:"Plan_Sewing_Start"},{l:"봉제완료 / 车缝完成",k:"Sewing_Completion_Date",plan:"Plan_Sewing_End"},{l:"포장시작 / 包装开始",k:"Packing_Start_Date",plan:"Plan_Packing_Start"},{l:"포장완료 / 包装完成",k:"Packing_End_Date",plan:"Plan_Packing_End"},{l:"선적일 / 出货日期",k:"Ship_Date",plan:"Expected_Delivery"}].forEach(function(t, i){
+  h += '</div>';
+
+  // Actual side
+  h += '<div class="schedule-col"><div class="schedule-col-title actual">✅ Actual 일정 / 实际日期</div>';
+  var actualItems = [
+    {l:"원단입고 / 面料入库", k:"Fabric_In_house_Date", plan:"Plan_Fabric_Date"},
+    {l:"재단시작 / 裁剪开始", k:"Cutting_Start_Date", plan:"Plan_Cutting_Start"},
+    {l:"재단완료 / 裁剪完成", k:"Cutting_End_Date", plan:"Plan_Cutting_End"},
+    {l:"봉제시작 / 车缝开始", k:"Sewing_Start_Date", plan:"Plan_Sewing_Start"},
+    {l:"봉제완료 / 车缝完成", k:"Sewing_Completion_Date", plan:"Plan_Sewing_End"},
+    {l:"포장시작 / 包装开始", k:"Packing_Start_Date", plan:"Plan_Packing_Start"},
+    {l:"포장완료 / 包装完成", k:"Packing_End_Date", plan:"Plan_Packing_End"},
+    {l:"선적일 / 出货日期", k:"Ship_Date", plan:"Expected_Delivery"}
+  ];
+  actualItems.forEach(function(t, i){
     var v = g(r, t.k), planV = g(r, t.plan);
     var cls = getActualDotClass(v, planV);
     var isOverdue = (cls === 'actual-overdue');
@@ -2371,7 +2396,10 @@ function openModal(r){
     });
   }, 100);
 }
-function closeModal(){document.getElementById("modalOv").classList.remove("active");currentMO=null}
+function closeModal(){
+  document.getElementById("modalOv").classList.remove("active");
+  currentMO = null;
+}
 
 function openStyleModal(s){
   document.getElementById("smTitle").textContent = g(s,"Style_SKU");
