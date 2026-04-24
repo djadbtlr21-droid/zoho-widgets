@@ -3,8 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JERA ERP — MO View v32 / 생산현황 / 生产现况</title>
-<script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
+<title>JERA ERP — MO View v33 / 생산현황 / 生产现况</title>
+<script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js">
+/* ── Size Spec helpers (NEW in v33) ── */
+function parseSpecJSON(r, field){
+  var raw = r[field];
+  if(!raw || typeof raw !== "string") return [];
+  var s = raw.trim();
+  if(!s) return [];
+  if(!s.startsWith("[")) s = "[" + s + "]";
+  try{ return JSON.parse(s) || []; }catch(e){ return []; }
+}
+
+function renderSpecTable(items){
+  if(!items || items.length === 0)
+    return '<div class="spec-empty">데이터 없음 / 无数据</div>';
+  var sizeKeys = ['s','m','l','xl'];
+  var sizeLabels = {s:'S', m:'M', l:'L', xl:'XL'};
+  var activeSizes = sizeKeys.filter(function(k){
+    return items.some(function(row){ return row[k] && row[k] !== ""; });
+  });
+  var hasNotes = items.some(function(row){ return row.notes && row.notes !== ""; });
+  var h = '<table class="spec-tbl"><thead><tr>';
+  h += '<th class="spec-th-pom">POM / 측정부위 / 测量部位</th>';
+  activeSizes.forEach(function(k){ h += '<th>'+sizeLabels[k]+'</th>'; });
+  if(hasNotes) h += '<th class="spec-th-notes">비고 / 备注</th>';
+  h += '</tr></thead><tbody>';
+  items.forEach(function(row){
+    if(!row.pom) return;
+    h += '<tr><td class="spec-td-pom">'+escH(row.pom)+'</td>';
+    activeSizes.forEach(function(k){
+      var v = row[k];
+      h += '<td>'+(v && v !== '' ? escH(String(v)) : '<span style="color:#CDC9C0">-</span>')+'</td>';
+    });
+    if(hasNotes) h += '<td class="spec-td-notes">'+escH(row.notes||'')+'</td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table>';
+  return h;
+}
+
+function renderSizeSpecs(r){
+  var topItems = parseSpecJSON(r, "Top_Spec_JSON");
+  var botItems = parseSpecJSON(r, "Bottom_Spec_JSON");
+  if(topItems.length === 0 && botItems.length === 0)
+    return '<div class="spec-empty">사이즈 스펙 없음 / 无尺寸规格</div>';
+  var h = '';
+  if(topItems.length > 0){
+    h += '<div class="spec-group">';
+    h += '<div class="spec-group-title">TOP / 상의 / 上衣</div>';
+    h += renderSpecTable(topItems);
+    h += '</div>';
+  }
+  if(botItems.length > 0){
+    h += '<div class="spec-group">';
+    h += '<div class="spec-group-title">BOTTOM / 하의 / 下衣</div>';
+    h += renderSpecTable(botItems);
+    h += '</div>';
+  }
+  return h;
+}
+
+function toggleSpec(el){
+  var content = el.nextElementSibling;
+  var icon = el.querySelector('.spec-toggle-icon');
+  if(!content) return;
+  var isOpen = content.classList.contains('open');
+  content.classList.toggle('open', !isOpen);
+  if(icon) icon.classList.toggle('open', !isOpen);
+}
+
+</script>
 <style>
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css');
 
@@ -570,6 +639,37 @@ body{padding:16px;min-height:100vh}
   body{padding:12px}
   .m-hero-img-box{width:110px;height:110px}
 }
+
+/* ── Size Spec collapsible (NEW in v33) ── */
+.spec-toggle{display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;padding:9px 14px;background:#FAFAF7;border:1px solid var(--border);
+  border-radius:8px;transition:background .15s;user-select:none}
+.spec-toggle:hover{background:var(--p-lav)}
+.spec-toggle-label{font-size:12px;font-weight:500;color:var(--text);
+  display:flex;align-items:center;gap:7px}
+.spec-toggle-label .dim{color:var(--text-mute);font-weight:400;font-size:11px}
+.spec-toggle-icon{font-size:10px;color:var(--text-mute);transition:transform .2s;flex-shrink:0}
+.spec-toggle-icon.open{transform:rotate(180deg)}
+.spec-content{margin-top:10px;display:none}
+.spec-content.open{display:block}
+.spec-group{margin-bottom:14px}
+.spec-group:last-child{margin-bottom:0}
+.spec-group-title{font-size:11px;font-weight:500;color:var(--text-soft);
+  margin-bottom:8px;display:flex;align-items:center;gap:5px;letter-spacing:.02em}
+.spec-tbl{width:100%;border-collapse:collapse;font-size:11px;background:#FFF;
+  border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.spec-tbl th{padding:8px 10px;font-size:10px;font-weight:500;background:#FAFAF7;
+  color:var(--text-mute);text-align:center;border-bottom:1px solid var(--border);letter-spacing:.3px}
+.spec-tbl th.spec-th-pom{text-align:left;padding-left:14px;width:36%}
+.spec-tbl th.spec-th-notes{width:18%;text-align:left;padding-left:8px}
+.spec-tbl td{padding:7px 10px;border-bottom:1px solid #F1EFE8;text-align:center;
+  color:var(--text);font-size:11px;font-variant-numeric:tabular-nums}
+.spec-tbl td.spec-td-pom{text-align:left;padding-left:14px;font-weight:500;color:var(--text-soft)}
+.spec-tbl td.spec-td-notes{font-size:10px;color:var(--text-mute);text-align:left;padding-left:8px}
+.spec-tbl tr:last-child td{border-bottom:none}
+.spec-empty{text-align:center;padding:14px;color:#B4B2A9;font-size:10px;
+  background:#FAFAF7;border-radius:6px;border:1px dashed var(--border)}
+
 </style>
 </head>
 <body>
@@ -667,7 +767,7 @@ body{padding:16px;min-height:100vh}
 
 <script>
 /* ════════════════════════════════════════════════
-   JERA ERP — MO View v32
+   JERA ERP — MO View v33
    Changes from v31:
    - CSM Actual qty: removed manual input/save button — now AUTO-COMPUTED from:
        1) Acture_Order_Lines subform sum (highest priority)
@@ -1949,6 +2049,17 @@ function openModal(r){
   h += it("안감 / 里料类型", dv(mv("Lining_Type", g(r,"Lining_Type"))));
   h += '</div></div>';
 
+  /* ── (4.5) 사이즈 스펙 (NEW in v33) ── */
+  h += '<div class="m-sec">';
+  h += '<div class="m-sec-t">&#128208; 사이즈 스펙 / 尺寸规格 / Size Specs</div>';
+  h += '<div class="spec-toggle" onclick="toggleSpec(this)">';
+  h += '<span class="spec-toggle-label">펼쳐서 보기 <span class="dim">/ 展开查看 / Click to expand</span></span>';
+  h += '<span class="spec-toggle-icon">&#9660;</span>';
+  h += '</div>';
+  h += '<div class="spec-content">'+renderSizeSpecs(r)+'</div>';
+  h += '</div>';
+
+
   /* ── (5) Color × Size × Price Matrix (with auto color dots) ── */
   h += '<div class="m-sec csm-section">';
   h += '<div class="m-sec-t">🎨 색상 × 사이즈 × 단가 / 颜色 × 尺码 × 单价</div>';
@@ -2082,6 +2193,17 @@ function openStyleModal(s){
   h += it("카테고리 / 大类", dv(mv("Category", g(s,"Category"))));
   h += it("상태 / 款式状态", dv(g(s,"Style_Status")));
   h += '</div></div>';
+
+  /* ── 사이즈 스펙 — 접힘/펼침 (NEW in v33) ── */
+  h += '<div class="m-sec">';
+  h += '<div class="m-sec-t">&#128208; 사이즈 스펙 / 尺寸规格 / Size Specs</div>';
+  h += '<div class="spec-toggle" onclick="toggleSpec(this)">';
+  h += '<span class="spec-toggle-label">펼쳐서 보기 <span class="dim">/ 展开查看 / Click to expand</span></span>';
+  h += '<span class="spec-toggle-icon">&#9660;</span>';
+  h += '</div>';
+  h += '<div class="spec-content">'+renderSizeSpecs(s)+'</div>';
+  h += '</div>';
+
 
   h += '<div class="m-sec"><div class="m-sec-t">👗 제품 정의 / 产品定义</div><div class="d-grid">';
   h += it("상의 유형 / 上衣类型", dv(mv("Top_Type", g(s,"Top_Type"))));
