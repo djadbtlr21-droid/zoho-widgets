@@ -4,76 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JERA ERP — MO View v33 / 생산현황 / 生产现况</title>
-<script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js">
-/* ── Size Spec helpers (NEW in v33) ── */
-function parseSpecJSON(r, field){
-  var raw = r[field];
-  if(!raw || typeof raw !== "string") return [];
-  var s = raw.trim();
-  if(!s) return [];
-  if(!s.startsWith("[")) s = "[" + s + "]";
-  try{ return JSON.parse(s) || []; }catch(e){ return []; }
-}
-
-function renderSpecTable(items){
-  if(!items || items.length === 0)
-    return '<div class="spec-empty">데이터 없음 / 无数据</div>';
-  var sizeKeys = ['s','m','l','xl'];
-  var sizeLabels = {s:'S', m:'M', l:'L', xl:'XL'};
-  var activeSizes = sizeKeys.filter(function(k){
-    return items.some(function(row){ return row[k] && row[k] !== ""; });
-  });
-  var hasNotes = items.some(function(row){ return row.notes && row.notes !== ""; });
-  var h = '<table class="spec-tbl"><thead><tr>';
-  h += '<th class="spec-th-pom">POM / 측정부위 / 测量部位</th>';
-  activeSizes.forEach(function(k){ h += '<th>'+sizeLabels[k]+'</th>'; });
-  if(hasNotes) h += '<th class="spec-th-notes">비고 / 备注</th>';
-  h += '</tr></thead><tbody>';
-  items.forEach(function(row){
-    if(!row.pom) return;
-    h += '<tr><td class="spec-td-pom">'+escH(row.pom)+'</td>';
-    activeSizes.forEach(function(k){
-      var v = row[k];
-      h += '<td>'+(v && v !== '' ? escH(String(v)) : '<span style="color:#CDC9C0">-</span>')+'</td>';
-    });
-    if(hasNotes) h += '<td class="spec-td-notes">'+escH(row.notes||'')+'</td>';
-    h += '</tr>';
-  });
-  h += '</tbody></table>';
-  return h;
-}
-
-function renderSizeSpecs(r){
-  var topItems = parseSpecJSON(r, "Top_Spec_JSON");
-  var botItems = parseSpecJSON(r, "Bottom_Spec_JSON");
-  if(topItems.length === 0 && botItems.length === 0)
-    return '<div class="spec-empty">사이즈 스펙 없음 / 无尺寸规格</div>';
-  var h = '';
-  if(topItems.length > 0){
-    h += '<div class="spec-group">';
-    h += '<div class="spec-group-title">TOP / 상의 / 上衣</div>';
-    h += renderSpecTable(topItems);
-    h += '</div>';
-  }
-  if(botItems.length > 0){
-    h += '<div class="spec-group">';
-    h += '<div class="spec-group-title">BOTTOM / 하의 / 下衣</div>';
-    h += renderSpecTable(botItems);
-    h += '</div>';
-  }
-  return h;
-}
-
-function toggleSpec(el){
-  var content = el.nextElementSibling;
-  var icon = el.querySelector('.spec-toggle-icon');
-  if(!content) return;
-  var isOpen = content.classList.contains('open');
-  content.classList.toggle('open', !isOpen);
-  if(icon) icon.classList.toggle('open', !isOpen);
-}
-
-</script>
+<script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
 <style>
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css');
 
@@ -2258,6 +2189,75 @@ document.addEventListener("keydown", function(e){
   if(document.getElementById("pipePopOv").classList.contains("active")){ document.getElementById("pipePopOv").classList.remove("active"); return; }
   if(document.getElementById("modalOv").classList.contains("active")){ closeModal(); }
 });
+
+/* ── Size Spec helpers (NEW in v33) ── */
+function parseSpecJSON(r, field){
+  var raw = r[field];
+  if(!raw || typeof raw !== "string") return [];
+  var s = raw.trim();
+  if(!s) return [];
+  if(!s.startsWith("[")) s = "[" + s + "]";
+  try{ return JSON.parse(s) || []; }catch(e){ return []; }
+}
+
+function renderSpecTable(items){
+  if(!items || items.length === 0)
+    return '<div class="spec-empty">데이터 없음 / 无数据</div>';
+  var sizeKeys = ['s','m','l','xl'];
+  var sizeLabels = {s:'S', m:'M', l:'L', xl:'XL'};
+  var activeSizes = sizeKeys.filter(function(k){
+    return items.some(function(row){ return row[k] && row[k] !== ""; });
+  });
+  var hasNotes = items.some(function(row){ return row.notes && row.notes !== ""; });
+  var h = '<table class="spec-tbl"><thead><tr>';
+  h += '<th class="spec-th-pom">POM / 측정부위 / 测量部位</th>';
+  activeSizes.forEach(function(k){ h += '<th>'+sizeLabels[k]+'</th>'; });
+  if(hasNotes) h += '<th class="spec-th-notes">비고 / 备注</th>';
+  h += '</tr></thead><tbody>';
+  items.forEach(function(row){
+    if(!row.pom) return;
+    h += '<tr><td class="spec-td-pom">'+escH(row.pom)+'</td>';
+    activeSizes.forEach(function(k){
+      var v = row[k];
+      h += '<td>'+(v && v !== '' ? escH(String(v)) : '<span style="color:#CDC9C0">-</span>')+'</td>';
+    });
+    if(hasNotes) h += '<td class="spec-td-notes">'+escH(row.notes||'')+'</td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table>';
+  return h;
+}
+
+function renderSizeSpecs(r){
+  var topItems = parseSpecJSON(r, "Top_Spec_JSON");
+  var botItems = parseSpecJSON(r, "Bottom_Spec_JSON");
+  if(topItems.length === 0 && botItems.length === 0)
+    return '<div class="spec-empty">사이즈 스펙 없음 / 无尺寸规格</div>';
+  var h = '';
+  if(topItems.length > 0){
+    h += '<div class="spec-group">';
+    h += '<div class="spec-group-title">TOP / 상의 / 上衣</div>';
+    h += renderSpecTable(topItems);
+    h += '</div>';
+  }
+  if(botItems.length > 0){
+    h += '<div class="spec-group">';
+    h += '<div class="spec-group-title">BOTTOM / 하의 / 下衣</div>';
+    h += renderSpecTable(botItems);
+    h += '</div>';
+  }
+  return h;
+}
+
+function toggleSpec(el){
+  var content = el.nextElementSibling;
+  var icon = el.querySelector('.spec-toggle-icon');
+  if(!content) return;
+  var isOpen = content.classList.contains('open');
+  content.classList.toggle('open', !isOpen);
+  if(icon) icon.classList.toggle('open', !isOpen);
+}
+
 </script>
 </body>
 </html>
