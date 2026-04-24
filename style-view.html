@@ -646,11 +646,12 @@ function _runSafeQ(){
     setTimeout(next, 3000);
   }catch(e){ next(); }
 }
-function qImg(elOrId, url, click){
+function qImg(elOrId, url, click, css){
   var u = Array.isArray(url) ? url[0] : url;
   if(typeof u === "object" && u !== null) u = u.url || u.display_value || "";
   if(!u || u === "-") return;
   var task = { url: u, click: !!click };
+  if(css) task.css = css;
   if(typeof elOrId === "string") task.id = elOrId; else task.el = elOrId;
   _safeQ.push(task);
   if(!_safeBusy) _runSafeQ();
@@ -1151,7 +1152,7 @@ function loadModalImgs(rec){
   si.forEach(function(u, i){ renderZohoImage("mdl_si_"+i, u, true); });
   tfs.forEach(function(u, i){ renderZohoImage("mdl_tfs_"+i, u, true); });
   bfs.forEach(function(u, i){ renderZohoImage("mdl_bfs_"+i, u, true); });
-  if(qrImgs.length > 0) renderZohoImage("mdl_qr_0", qrImgs[0], true);
+  if(qrImgs.length > 0) qImg("mdl_qr_0", qrImgs[0], true, "max-width:100%;max-height:100%;object-fit:contain;padding:4px;cursor:pointer");
 }
 function buildDetail(d){
   var p = [];
