@@ -617,15 +617,15 @@ function tc(s){
   return "bg bg-draft";
 }
 function getAllImgs(r, field){
-  var v = r[field]; if(!v) return [];
-  var arr = Array.isArray(v) ? v : [v], res = [];
-  arr.forEach(function(it){
-    if(!it) return;
-    if(typeof it === "string" && it.length > 5) res.push(it);
-    else if(typeof it === "object" && it.url) res.push(it.url);
-    else if(typeof it === "object" && it.display_value) res.push(it.display_value);
-  });
-  return res;
+  var i = r[field]; if(!i) return [];
+  if(Array.isArray(i)) return i.filter(function(x){ return x && typeof x === "string" && x.length > 5; });
+  if(typeof i === "object" && !Array.isArray(i)){
+    var u = [];
+    Object.keys(i).forEach(function(k){ var v = i[k]; if(v && typeof v === "string" && v.length > 5) u.push(v); });
+    return u;
+  }
+  if(typeof i === "string" && i.length > 5) return [i];
+  return [];
 }
 function getImg1(r){ var imgs = getAllImgs(r, "Style_Image"); return imgs.length > 0 ? imgs[0] : null; }
 
