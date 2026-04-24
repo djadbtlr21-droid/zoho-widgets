@@ -431,17 +431,134 @@ body{padding:16px;min-height:100vh}
 .pop-empty{text-align:center;padding:30px;color:var(--text-mute);font-size:13px}
 .dly-badge{display:inline-block;font-size:7px;font-weight:500;padding:1px 5px;border-radius:3px;background:#FEE2E2;color:#DC2626;margin-left:5px;letter-spacing:.04em}
 
-.modal-ov{display:none;position:fixed;inset:0;background:rgba(20,19,17,.52);z-index:3000;justify-content:center;align-items:center;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:20px}
+/* ── Inner Pack & Bulto (NEW in v30) ── */
+.pack-section{margin-bottom:28px}
+.pack-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.pack-card{background:linear-gradient(180deg,#FFFFFF 0%,#FDFCF9 100%);border:1px solid var(--border);
+  border-radius:var(--radius-card);padding:16px;position:relative;overflow:hidden}
+.pack-card.inner{border-left:3px solid var(--gold)}
+.pack-card.bulto{border-left:3px solid #7C3AED}
+.pack-card-hd{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed var(--border)}
+.pack-card-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.pack-card.inner .pack-card-icon{background:linear-gradient(135deg,var(--gold),#B8956A);color:#fff}
+.pack-card.bulto .pack-card-icon{background:linear-gradient(135deg,#9F7AEA,#7C3AED);color:#fff}
+.pack-card-title{font-size:12px;font-weight:500;color:var(--text-soft);line-height:1.3}
+.pack-card-title-sub{font-size:9px;color:var(--text-mute);margin-top:1px;font-weight:400}
+.pack-kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.pack-kpi{background:#FAFAF7;border:1px solid #F1EFE8;border-radius:6px;padding:8px 10px;text-align:center}
+.pack-card.inner .pack-kpi{background:#FDFBF5;border-color:#F0E5C7}
+.pack-card.bulto .pack-kpi{background:#F8F5FD;border-color:#E2D4F9}
+.pack-kpi-num{font-size:17px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums}
+.pack-card.inner .pack-kpi-num{color:#8F6F2E}
+.pack-card.bulto .pack-kpi-num{color:#6D28D9}
+.pack-kpi-lb{font-size:9px;color:var(--text-mute);margin-top:4px;line-height:1.3}
+.pack-composition{margin-top:10px}
+.pack-composition-label{font-size:9px;color:var(--text-mute);font-weight:500;margin-bottom:6px;letter-spacing:.3px}
+.pack-combo-list{display:flex;flex-direction:column;gap:4px;padding-right:4px}
+.pack-combo-item{display:flex;align-items:center;gap:8px;padding:5px 8px;background:#FAFAF7;border:1px solid #F1EFE8;
+  border-radius:5px;font-size:10px}
+.pack-combo-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;border:1px solid rgba(0,0,0,.1)}
+.pack-combo-color{color:var(--text-soft);font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pack-combo-size{background:#FFF;border:1px solid var(--border);padding:1px 6px;border-radius:3px;font-size:9px;font-weight:500;color:var(--text);
+  font-variant-numeric:tabular-nums;flex-shrink:0}
+.pack-combo-qty{font-size:9px;color:var(--text-mute);font-variant-numeric:tabular-nums;flex-shrink:0;min-width:24px;text-align:right}
+.pack-empty{text-align:center;padding:16px;color:#B4B2A9;font-size:10px;background:#FAFAF7;border-radius:6px;border:1px dashed var(--border)}
+.pack-summary-bar{background:linear-gradient(90deg,#FFFBEA 0%,#FDF6D9 100%);border:1px solid #FBEAA1;border-radius:6px;
+  padding:8px 10px;margin-bottom:12px;font-size:10px;color:#7C5A10;display:flex;align-items:center;gap:6px}
+.pack-card.bulto .pack-summary-bar{background:linear-gradient(90deg,#F5F0FF 0%,#EAE1FB 100%);border-color:#CFBBF0;color:#5B2AA6}
+
+/* Timeline */
+.tl-card{background:var(--card);border-top:1px solid var(--border);padding:14px 20px}
+.tl-hd{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tl-title{font-size:11px;font-weight:500;color:var(--text-soft);letter-spacing:.02em}
+.tl-legend{display:flex;gap:8px;font-size:9px;color:var(--text-mute);align-items:center;flex-wrap:wrap}
+.tl-legend span{display:flex;align-items:center;gap:3px}
+.tl-type-badge{padding:2px 6px;border-radius:3px;font-size:8px;font-weight:500}
+.tl-dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+.tl-scroll{overflow-x:auto}
+.tl-tbl{width:100%;border-collapse:collapse;font-size:10px;table-layout:fixed;min-width:1000px}
+.tl-tbl th,.tl-tbl td{border:1px solid #EEF2F6}
+.tl-tbl th{background:#F8F8F5;color:var(--text-mute);font-weight:500;padding:6px 0;text-align:center}
+.tl-tbl th.wk{background:#FEF8F8;color:#E87979}
+.tl-tbl th.today{background:#FFF;color:#DC2626;font-weight:500;position:relative}
+.tl-tbl th.today::before{content:'';position:absolute;left:50%;top:0;width:2px;height:100%;
+  background:#DC2626;transform:translateX(-50%);z-index:3}
+.tl-tbl th.today::after{content:'▼';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);
+  font-size:8px;color:#DC2626;z-index:4}
+.tl-tbl .info-cell{width:200px;min-width:200px;text-align:left;background:#FAFAF7;padding:6px 10px;position:sticky;left:0;z-index:2;
+  border-right:2px solid var(--border)}
+.tl-tbl td{padding:0;vertical-align:middle;height:24px;background:#FEFEFC}
+.tl-tbl td.today-col{background:#FEFEFC;position:relative}
+.tl-tbl td.today-col::before{content:'';position:absolute;left:50%;top:0;width:2px;height:100%;
+  background:rgba(220,38,38,.55);transform:translateX(-50%);z-index:1;pointer-events:none}
+.tl-tbl tr.mo-gap td.today-col::before{background:rgba(220,38,38,.35)}
+.tl-tbl td.today-col .tl-bar{position:relative;z-index:2}
+.tl-tbl tr.mo-gap td{height:20px;background:#F8F8F5 !important;border-top:2px solid #E2E8F0}
+.tl-tbl tr.mo-gap .info-cell{background:#F8F8F5 !important}
+.tl-bar{height:100%;border-radius:3px;display:flex;align-items:center;justify-content:center;
+  font-size:7px;font-weight:500;white-space:nowrap;overflow:hidden;min-height:16px}
+.pb-fab{background:repeating-linear-gradient(45deg,var(--p-lav),var(--p-lav) 4px,transparent 4px,transparent 8px);border:1px dashed #C4B5FD;color:var(--p-lav-txt)}
+.pb-cut{background:repeating-linear-gradient(45deg,var(--p-butter),var(--p-butter) 4px,transparent 4px,transparent 8px);border:1px dashed #FAC775;color:var(--p-butter-txt)}
+.pb-sew{background:repeating-linear-gradient(45deg,var(--p-sky),var(--p-sky) 4px,transparent 4px,transparent 8px);border:1px dashed #93C5FD;color:var(--p-sky-txt)}
+.pb-pack{background:repeating-linear-gradient(45deg,var(--p-sage),var(--p-sage) 4px,transparent 4px,transparent 8px);border:1px dashed #86EFAC;color:var(--p-sage-txt)}
+.pb-ship{background:repeating-linear-gradient(45deg,var(--p-blue),var(--p-blue) 4px,transparent 4px,transparent 8px);border:1px dashed #93C5FD;color:var(--p-blue-txt)}
+.ab-fab{background:var(--p-lav);color:var(--p-lav-txt)}
+.ab-cut{background:var(--p-butter);color:var(--p-butter-txt)}
+.ab-sew{background:var(--p-sky);color:var(--p-sky-txt)}
+.ab-pack{background:var(--p-sage);color:var(--p-sage-txt)}
+.ab-ship{background:var(--p-blue);color:var(--p-blue-txt)}
+.tl-mo-info{cursor:pointer}
+.tl-mo-info:hover{background:var(--p-lav) !important}
+.tl-mo-wrap{display:flex;align-items:center;gap:8px}
+.tl-mo-thumb{width:38px;height:38px;background:var(--p-lav);border:1px solid var(--border);border-radius:5px;
+  display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-mute);flex-shrink:0;overflow:hidden;position:relative}
+.tl-mo-thumb img{width:100%;height:100%;object-fit:cover}
+.tl-mo-num{font-size:11px;font-weight:500;color:var(--mo-primary)}
+.tl-mo-name{font-size:9px;color:var(--text-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.tl-mo-meta{font-size:8px;color:var(--text-mute);margin-top:1px}
+
+/* Popups (KPI, Pipeline) */
+.pop-ov{display:none;position:fixed;inset:0;background:rgba(20,19,17,.45);z-index:2000;
+  justify-content:center;align-items:center;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:20px}
+.pop-ov.active{display:flex}
+.pop-box{background:#fff;border-radius:var(--radius);width:100%;max-width:700px;max-height:82vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .2s ease-out}
+@keyframes mIn{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.pop-hd{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;
+  position:sticky;top:0;background:#fff;z-index:10}
+.pop-title{font-size:14px;font-weight:500;color:var(--mo-primary);letter-spacing:-.01em}
+.pop-sub{font-size:11px;color:var(--text-mute);margin-top:2px;font-weight:400}
+.pop-close{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:#FAFAF7;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--text-mute);transition:background .15s,color .15s}
+.pop-close:hover{background:var(--st-danger-bg);color:var(--st-danger-txt)}
+.pop-body{padding:16px 20px}
+.pop-item{padding:10px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;gap:10px;transition:background .15s,border-color .15s}
+.pop-item:hover{background:var(--p-lav);border-color:#C4B5FD}
+.pop-item-left .pi-mo{font-size:12px;font-weight:500;color:var(--mo-primary)}
+.pop-item-left .pi-name{font-size:10px;color:var(--text-mute);margin-top:2px}
+.pop-item-left .pi-meta{font-size:9px;color:#94A3B8;margin-top:2px}
+.pop-empty{text-align:center;padding:30px;color:var(--text-mute);font-size:13px}
+.dly-badge{display:inline-block;font-size:7px;font-weight:500;padding:1px 5px;border-radius:3px;
+  background:#FEE2E2;color:#DC2626;margin-left:5px;letter-spacing:.04em}
+
+/* MO detail modal */
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(20,19,17,.52);z-index:3000;
+  justify-content:center;align-items:center;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:20px}
 .modal-ov.active{display:flex}
-.modal-box{background:#fff;border-radius:var(--radius);width:100%;max-width:1050px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.22);animation:mIn .25s ease-out}
-.m-hd{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:#fff;z-index:10;gap:14px;flex-wrap:wrap}
+.modal-box{background:#fff;border-radius:var(--radius);width:100%;max-width:1050px;max-height:90vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.22);animation:mIn .25s ease-out}
+.m-hd{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;
+  position:sticky;top:0;background:#fff;z-index:10;gap:14px;flex-wrap:wrap}
 .m-title{font-size:18px;font-weight:500;color:var(--mo-primary);letter-spacing:-.02em}
 .m-sub{font-size:12px;color:var(--text-mute);margin-top:2px;font-weight:400}
-.m-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:#FAFAF7;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--text-mute);transition:background .15s,color .15s}
+.m-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:#FAFAF7;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--text-mute);transition:background .15s,color .15s}
 .m-close:hover{background:var(--st-danger-bg);color:var(--st-danger-txt)}
 .m-body{padding:20px 24px 24px}
 .m-sec{margin-bottom:24px}
-.m-sec-t{font-size:12px;font-weight:500;color:var(--mo-primary);margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid var(--p-lav);display:flex;align-items:center;gap:8px;letter-spacing:.01em}
+.m-sec-t{font-size:12px;font-weight:500;color:var(--mo-primary);margin-bottom:12px;padding-bottom:10px;
+  border-bottom:2px solid var(--p-lav);display:flex;align-items:center;gap:8px;letter-spacing:.01em}
 .d-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 .d-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .d-item{display:flex;flex-direction:column;gap:3px;padding:8px 10px;background:#FAFAF7;border-radius:6px;border:1px solid var(--border)}
@@ -449,145 +566,7 @@ body{padding:16px;min-height:100vh}
 .d-val{font-size:12px;font-weight:400;color:var(--text);word-break:break-all;line-height:1.35}
 .d-val.empty{color:#B4B2A9;font-style:italic;font-weight:400}
 
-.pa-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.pa-col{border-radius:var(--radius-card);padding:14px;border:2px solid}
-.pa-col.plan{border-color:var(--plan-border);background:#FDFCFF}
-.pa-col.actual{border-color:var(--actual-border);background:#F0FDF9}
-.pa-col-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed}
-.pa-col.plan .pa-col-header{border-color:var(--plan-border)}
-.pa-col.actual .pa-col-header{border-color:var(--actual-border)}
-.pa-badge{font-size:9px;font-weight:500;padding:3px 8px;border-radius:4px;letter-spacing:.5px;color:#fff}
-.pa-badge.plan{background:#7C3AED} .pa-badge.actual{background:#059669}
-.pa-col-title{font-size:12px;font-weight:500}
-.pa-col.plan .pa-col-title{color:#6D28D9}
-.pa-col.actual .pa-col-title{color:#047857}
-.pa-summary{font-size:10px;color:var(--text-mute);margin-bottom:10px;padding:6px 8px;border-radius:5px;line-height:1.5;background:#FFF;border:1px solid var(--border)}
-.pa-totals{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-.pa-total-box{padding:10px;border-radius:8px;text-align:center}
-.pa-total-box.plan{background:#F5F3FF;border:1px solid var(--plan-border)}
-.pa-total-box.actual{background:#ECFDF5;border:1px solid var(--actual-border)}
-.pa-total-label{font-size:9px;font-weight:500;margin-bottom:4px}
-.pa-total-box.plan .pa-total-label{color:#7C3AED}
-.pa-total-box.actual .pa-total-label{color:#059669}
-.pa-total-qty{font-size:18px;font-weight:500}
-.pa-total-box.plan .pa-total-qty{color:#6D28D9}
-.pa-total-box.actual .pa-total-qty{color:#047857}
-.pa-total-amt{font-size:11px;font-weight:500;margin-top:2px}
-.pa-total-box.plan .pa-total-amt{color:#7C3AED}
-.pa-total-box.actual .pa-total-amt{color:#059669}
-.pa-diff{text-align:center;margin-top:8px;font-size:10px;color:var(--text-mute);padding:6px;background:#FAFAF7;border-radius:6px;border:1px solid var(--border)}
-.subform-tbl{width:100%;border-collapse:collapse;font-size:10px;margin-top:8px}
-.subform-tbl th{padding:6px 8px;font-weight:500;font-size:9px;border-bottom:1px solid;text-align:center}
-.pa-col.plan .subform-tbl th{background:#F5F3FF;color:#6D28D9;border-color:var(--plan-border)}
-.pa-col.actual .subform-tbl th{background:#ECFDF5;color:#047857;border-color:var(--actual-border)}
-.subform-tbl td{padding:6px 8px;border-bottom:1px solid #F1EFE8;text-align:center;color:var(--text)}
-.subform-tbl .tfoot-row td{font-weight:500;border-top:2px solid;padding-top:8px}
-.pa-col.plan .subform-tbl .tfoot-row td{border-color:var(--plan-border);color:#6D28D9;background:#F5F3FF}
-.pa-col.actual .subform-tbl .tfoot-row td{border-color:var(--actual-border);color:#047857;background:#ECFDF5}
-.subform-empty{text-align:center;padding:16px;color:#B4B2A9;font-size:10px}
-.schedule-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.schedule-col{background:#FAFAF7;border-radius:8px;padding:14px;border:1px solid var(--border)}
-.schedule-col-title{font-size:12px;font-weight:500;margin-bottom:12px;padding-bottom:8px;border-bottom:2px dashed var(--border)}
-.schedule-col-title.plan{color:#7C3AED}
-.schedule-col-title.actual{color:#059669}
-.sch-item{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #F1EFE8}
-.sch-item:last-child{border-bottom:none}
-.sch-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  font-size:10px;font-weight:500;flex-shrink:0;transition:background .15s}
-.sch-info{flex:1;min-width:0}
-.sch-label{font-size:11px;font-weight:500;color:var(--text)}
-.sch-date{font-size:10px;color:var(--text-mute);margin-top:1px}
-
-.csm-section{margin-bottom:28px}
-.csm-tabs{display:flex;gap:6px;margin-bottom:10px;border-bottom:1px solid var(--border)}
-.csm-tab{padding:8px 16px;font-size:11px;font-weight:500;cursor:pointer;border:0;background:transparent;color:var(--text-mute);border-bottom:2px solid transparent;margin-bottom:-1px;font-family:inherit;transition:color .15s,border-color .15s}
-.csm-tab:hover{color:var(--text)}
-.csm-tab.active.plan{color:var(--plan-txt);border-bottom-color:var(--plan-border)}
-.csm-tab.active.actual{color:var(--actual-txt);border-bottom-color:var(--actual-border)}
-.csm-pane{display:none}
-.csm-pane.active{display:block}
-.csm-tbl{width:100%;border-collapse:collapse;font-size:11px;background:#FFF;border:1px solid var(--border);border-radius:8px;overflow:hidden}
-.csm-tbl th{padding:10px 8px;font-weight:500;font-size:10px;background:#FAFAF7;color:var(--text-mute);text-align:center;border-bottom:1px solid var(--border);letter-spacing:.3px}
-.csm-tbl .csm-th-color{text-align:left;padding-left:14px;width:18%}
-.csm-tbl .csm-th-size{width:7%}
-.csm-tbl .csm-th-total{width:10%;background:var(--p-lav);color:var(--p-lav-txt)}
-.csm-tbl .csm-th-price{width:10%}
-.csm-tbl .csm-th-amount{width:12%;background:var(--p-sage);color:var(--p-sage-txt)}
-.csm-tbl td{padding:8px;border-bottom:1px solid #F1EFE8;text-align:center;color:var(--text);font-size:11px}
-.csm-tbl .csm-td-color{text-align:left;padding-left:14px;font-weight:500;color:var(--text-soft);display:flex;align-items:center;gap:8px}
-.csm-color-dot{width:12px;height:12px;border-radius:50%;display:inline-block;flex-shrink:0;
-  border:1px solid rgba(0,0,0,.1);box-shadow:inset 0 1px 2px rgba(255,255,255,.25)}
-.csm-tbl .csm-td-qty{font-variant-numeric:tabular-nums}
-.csm-tbl .csm-td-total{font-weight:500;color:var(--p-lav-txt);background:#FAFAFD}
-.csm-tbl .csm-td-price{font-weight:400;color:var(--text-mute);font-size:10px}
-.csm-tbl .csm-td-amount{font-weight:500;color:var(--p-sage-txt);background:#FAFDF7}
-.csm-zero{color:#CDC9C0}
-.csm-tbl tr.csm-grand td{background:#FDFCF9 !important;border-top:2px solid var(--border);padding-top:10px;padding-bottom:10px;font-size:12px}
-.csm-tbl tr.csm-grand .csm-td-color{color:var(--text)}
-.csm-empty{text-align:center;padding:20px;color:#B4B2A9;font-size:11px;background:#FAFAF7;border-radius:8px;border:1px dashed var(--border)}
-
-.tag{padding:3px 8px;border-radius:4px;font-size:9px;font-weight:500;display:inline-flex;align-items:center;white-space:nowrap;border:1px solid;letter-spacing:.02em}
-.t-ok{background:var(--st-ok-bg);color:var(--st-ok-txt);border-color:#A7F3D0}
-.t-wn{background:var(--st-warn-bg);color:var(--st-warn-txt);border-color:#FAC775}
-.t-dg{background:var(--st-danger-bg);color:var(--st-danger-txt);border-color:#F7C1C1}
-.t-dr{background:var(--st-draft-bg);color:var(--st-draft-txt);border-color:#D3D1C7}
-.t-bl{background:var(--st-info-bg);color:var(--st-info-txt);border-color:#93C5FD}
-
-#lightboxOv{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:5000;justify-content:center;align-items:center;cursor:pointer}
-#lightboxOv.active{display:flex}
-#lightboxOv img{max-width:90%;max-height:90%;object-fit:contain;border-radius:8px;box-shadow:0 20px 80px rgba(0,0,0,.5)}
-#lightboxOv .lb-close{position:absolute;top:20px;right:24px;color:#fff;font-size:18px;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.15);border-radius:50%;border:0;font-family:inherit}
-
-.style-modal-ov{display:none;position:fixed;inset:0;background:rgba(20,19,17,.5);z-index:4000;justify-content:center;align-items:center;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:20px}
-.style-modal-ov.active{display:flex}
-.style-modal-box{background:#fff;border-radius:var(--radius);width:100%;max-width:820px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .25s ease-out}
-
-.m-img-gallery{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
-.m-img-box{width:100px;height:100px;background:var(--p-lav);border:1px solid var(--border);border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:transform .15s,box-shadow .15s}
-.m-img-box:hover{transform:scale(1.05);box-shadow:var(--shadow-md)}
-.m-img-box img{width:100%;height:100%;object-fit:cover}
-.m-hd-btn{background:var(--p-sage);color:var(--p-sage-txt);border:1px solid #A7F3D0;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;transition:transform .12s,filter .15s}
-.m-hd-btn:hover{transform:translateY(-1px);filter:brightness(.97)}
-.m-hd-btn.edit{background:var(--p-lav);color:var(--p-lav-txt);border-color:#C4B5FD}
-
-.spinner{width:40px;height:40px;border:4px solid var(--border);border-top-color:var(--mo-primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
-.spinner-sm{width:18px;height:18px;border:3px solid var(--border);border-top-color:var(--mo-primary);border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;gap:12px;color:var(--text-mute);font-size:13px;font-weight:400}
-
-.err-box{background:var(--st-danger-bg);border:1px solid #F7C1C1;border-radius:8px;padding:20px;text-align:center;color:var(--st-danger-txt);max-width:420px;margin:60px auto}
-.err-box .t{font-weight:500;font-size:14px;margin-bottom:8px}
-.err-box .m{font-size:11px;word-break:break-all}
-
-.empty-state{background:#FAFAF7;border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center}
-.empty-icon{font-size:32px;margin-bottom:8px;opacity:.5}
-.empty-title{font-size:12px;font-weight:500;color:var(--text-soft);margin-bottom:4px}
-.empty-sub{font-size:10px;color:var(--text-mute);line-height:1.5}
-
-@media(max-width:1400px){
-  .tier2-charts-row{grid-template-columns:1fr 1fr}
-  .tier2-charts-row .chart-card:nth-child(3){grid-column:1/-1}
-}
-@media(max-width:900px){
-  .tier2-charts-row{grid-template-columns:1fr}
-  .skpi-grid,.mkpi-grid{grid-template-columns:1fr}
-  .d-grid{grid-template-columns:1fr 1fr}
-  .schedule-compare{grid-template-columns:1fr}
-  .pa-compare{grid-template-columns:1fr}
-}
-@media(max-width:600px){
-  .d-grid{grid-template-columns:1fr}
-  body{padding:12px}
-}
-@media(max-width:1100px){
-  .skpi-grid{grid-template-columns:1fr}
-  .d-grid{grid-template-columns:1fr 1fr}
-  .schedule-compare{grid-template-columns:1fr}
-  .pack-grid{grid-template-columns:1fr}
-  .m-hero{grid-template-columns:1fr}
-}
-
-/* ── Hero image gallery + QR ── */
+/* ── Hero image gallery + QR (NEW in v30) ── */
 .m-hero{display:grid;grid-template-columns:1fr auto;gap:16px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px dashed var(--border);align-items:flex-start}
 .m-hero-imgs{display:flex;gap:10px;flex-wrap:wrap;flex:1;min-width:0}
 .m-hero-img-group{display:flex;flex-direction:column;gap:6px}
@@ -600,6 +579,7 @@ body{padding:16px;min-height:100vh}
 .m-hero-img-box.empty{background:#FAFAF7;cursor:default}
 .m-hero-img-box.empty:hover{transform:none;box-shadow:none;border-color:var(--border)}
 .m-hero-img-box .empty-icon{font-size:24px;color:#CDC9C0}
+
 .m-hero-qr{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px;background:#FAFAF7;
   border:1px dashed var(--border);border-radius:10px;flex-shrink:0}
 .m-hero-qr-label{font-size:8px;font-weight:500;color:var(--text-mute);letter-spacing:.04em}
@@ -612,12 +592,33 @@ body{padding:16px;min-height:100vh}
 .m-hero-qr-box.empty .empty-icon{font-size:24px;color:#CDC9C0}
 .m-hero-qr-sku{font-size:9px;color:var(--text-mute);font-family:ui-monospace,monospace;word-break:break-all;
   text-align:center;max-width:85px;line-height:1.2}
-@media(max-width:700px){.m-hero{grid-template-columns:1fr}}
-@media(max-width:600px){.m-hero-img-box{width:110px;height:110px}}
 
-/* ── Schedule dot — plan / actual variants ── */
+/* Plan vs Actual compare (legacy — kept in CSS but section removed from modal) */
+.pa-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.pa-col{border-radius:var(--radius-card);padding:14px;border:2px solid}
+.pa-col.plan{border-color:var(--plan-border);background:#FDFCFF}
+.pa-col.actual{border-color:var(--actual-border);background:#F0FDF9}
+.pa-col-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed}
+.pa-col.plan .pa-col-header{border-color:var(--plan-border)}
+.pa-col.actual .pa-col-header{border-color:var(--actual-border)}
+.pa-badge{font-size:9px;font-weight:500;padding:3px 8px;border-radius:4px;letter-spacing:.5px;color:#fff}
+.pa-badge.plan{background:#7C3AED}
+.pa-badge.actual{background:#059669}
+
+/* Schedule compare — with status colors (UPDATED in v30) */
+.schedule-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.schedule-col{background:#FAFAF7;border-radius:8px;padding:14px;border:1px solid var(--border)}
+.schedule-col-title{font-size:12px;font-weight:500;margin-bottom:12px;padding-bottom:8px;border-bottom:2px dashed var(--border)}
+.schedule-col-title.plan{color:#7C3AED}
+.schedule-col-title.actual{color:#059669}
+.sch-item{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #F1EFE8}
+.sch-item:last-child{border-bottom:none}
+.sch-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:500;flex-shrink:0;transition:background .15s}
+/* Plan colors: gray (not yet reached) / green (reached) */
 .sch-dot.plan-wait{background:#E2E8F0;color:var(--text-mute)}
 .sch-dot.plan-done{background:#86EFAC;color:#065F46}
+/* Actual colors: gray (not yet reached), green (filled), red (overdue with empty) */
 .sch-dot.actual-wait{background:#E2E8F0;color:var(--text-mute)}
 .sch-dot.actual-done{background:#86EFAC;color:#065F46}
 .sch-dot.actual-overdue{background:#FCA5A5;color:#7F1D1D;animation:pulse-red 1.6s ease-in-out infinite}
@@ -625,40 +626,81 @@ body{padding:16px;min-height:100vh}
   0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.45)}
   50%{box-shadow:0 0 0 5px rgba(220,38,38,0)}
 }
+.sch-info{flex:1;min-width:0}
+.sch-label{font-size:11px;font-weight:500;color:var(--text)}
+.sch-date{font-size:10px;color:var(--text-mute);margin-top:1px}
 .sch-date.overdue{color:#DC2626;font-weight:500}
 .sch-warn{font-size:9px;color:#DC2626;font-weight:500;margin-left:auto;padding:2px 6px;background:#FEE2E2;border-radius:3px;flex-shrink:0}
 
-/* ── CSM Plan vs Actual Comparison KPI ── */
-.csm-compare{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px;padding:12px;
-  background:linear-gradient(180deg,#FFFFFF 0%,#FDFCF9 100%);border:1px solid var(--border);border-radius:10px}
-.csm-cmp-box{padding:12px 14px;border-radius:8px;text-align:center;border:1px solid;position:relative;
-  transition:transform .15s,box-shadow .15s;min-height:92px;display:flex;flex-direction:column;justify-content:center}
-.csm-cmp-box:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.04)}
-.csm-cmp-box.plan{background:#F5F3FF;border-color:var(--plan-border)}
-.csm-cmp-box.actual{background:#ECFDF5;border-color:var(--actual-border)}
-.csm-cmp-box.actual.empty{background:#FAFAF7;border-color:var(--border)}
-.csm-cmp-box.rate{background:#FFFBEA;border-color:#FBEAA1}
-.csm-cmp-box.rate.empty{background:#FAFAF7;border-color:var(--border)}
-.csm-cmp-label{font-size:9px;font-weight:500;margin-bottom:6px;letter-spacing:.3px;display:flex;align-items:center;justify-content:center;gap:4px}
-.csm-cmp-box.plan .csm-cmp-label{color:#7C3AED}
-.csm-cmp-box.actual .csm-cmp-label{color:#059669}
-.csm-cmp-box.actual.empty .csm-cmp-label,.csm-cmp-box.rate.empty .csm-cmp-label{color:var(--text-mute)}
-.csm-cmp-box.rate .csm-cmp-label{color:#92400E}
-.csm-cmp-num{font-size:24px;font-weight:500;line-height:1.1;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
-.csm-cmp-box.plan .csm-cmp-num{color:#6D28D9}
-.csm-cmp-box.actual .csm-cmp-num{color:#047857}
-.csm-cmp-box.actual.empty .csm-cmp-num,.csm-cmp-box.rate.empty .csm-cmp-num{color:#B4B2A9}
-.csm-cmp-box.rate .csm-cmp-num{color:#92400E}
-.csm-cmp-unit{font-size:10px;font-weight:400;color:var(--text-mute);margin-left:3px}
-.csm-cmp-sub{font-size:9px;color:var(--text-mute);margin-top:5px;font-variant-numeric:tabular-nums}
-.csm-cmp-src{font-size:8px;color:var(--text-mute);margin-top:5px;font-style:italic;letter-spacing:.02em;
-  padding:2px 6px;background:rgba(255,255,255,.55);border-radius:3px;display:inline-block;align-self:center}
-.csm-cmp-box.rate.over .csm-cmp-num{color:#059669}
-.csm-cmp-box.rate.under .csm-cmp-num{color:#DC2626}
-.csm-cmp-box.rate.full .csm-cmp-num{color:#047857}
-@media(max-width:700px){.csm-compare{grid-template-columns:1fr}}
+/* Tag / badge */
+.tag{padding:3px 8px;border-radius:4px;font-size:9px;font-weight:500;display:inline-flex;align-items:center;white-space:nowrap;border:1px solid;letter-spacing:.02em}
+.t-ok{background:var(--st-ok-bg);color:var(--st-ok-txt);border-color:#A7F3D0}
+.t-wn{background:var(--st-warn-bg);color:var(--st-warn-txt);border-color:#FAC775}
+.t-dg{background:var(--st-danger-bg);color:var(--st-danger-txt);border-color:#F7C1C1}
+.t-dr{background:var(--st-draft-bg);color:var(--st-draft-txt);border-color:#D3D1C7}
+.t-bl{background:var(--st-info-bg);color:var(--st-info-txt);border-color:#93C5FD}
 
-/* ── Size Spec collapsible ── */
+/* Lightbox */
+#lightboxOv{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:5000;justify-content:center;align-items:center;cursor:pointer}
+#lightboxOv.active{display:flex}
+#lightboxOv img{max-width:90%;max-height:90%;object-fit:contain;border-radius:8px;box-shadow:0 20px 80px rgba(0,0,0,.5)}
+#lightboxOv .lb-close{position:absolute;top:20px;right:24px;color:#fff;font-size:18px;cursor:pointer;width:40px;height:40px;
+  display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.15);border-radius:50%;border:0;font-family:inherit}
+
+/* Style info modal */
+.style-modal-ov{display:none;position:fixed;inset:0;background:rgba(20,19,17,.5);z-index:4000;justify-content:center;align-items:center;
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:20px}
+.style-modal-ov.active{display:flex}
+.style-modal-box{background:#fff;border-radius:var(--radius);width:100%;max-width:820px;max-height:88vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .25s ease-out}
+
+.m-img-gallery{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.m-img-box{width:100px;height:100px;background:var(--p-lav);border:1px solid var(--border);border-radius:8px;
+  overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;
+  transition:transform .15s,box-shadow .15s}
+.m-img-box:hover{transform:scale(1.05);box-shadow:var(--shadow-md)}
+.m-img-box img{width:100%;height:100%;object-fit:cover}
+
+/* Modal header buttons */
+.m-hd-btn{background:var(--p-sage);color:var(--p-sage-txt);border:1px solid #A7F3D0;padding:5px 12px;border-radius:6px;
+  font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;transition:transform .12s,filter .15s}
+.m-hd-btn:hover{transform:translateY(-1px);filter:brightness(.97)}
+.m-hd-btn.edit{background:var(--p-lav);color:var(--p-lav-txt);border-color:#C4B5FD}
+
+/* Spinner / loading */
+.spinner{width:40px;height:40px;border:4px solid var(--border);border-top-color:var(--mo-primary);border-radius:50%;
+  animation:spin .8s linear infinite;margin:0 auto}
+.spinner-sm{width:18px;height:18px;border:3px solid var(--border);border-top-color:var(--mo-primary);border-radius:50%;
+  animation:spin .6s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;gap:12px;
+  color:var(--text-mute);font-size:13px;font-weight:400}
+
+.err-box{background:var(--st-danger-bg);border:1px solid #F7C1C1;border-radius:8px;padding:20px;
+  text-align:center;color:var(--st-danger-txt);max-width:420px;margin:60px auto}
+.err-box .t{font-weight:500;font-size:14px;margin-bottom:8px}
+.err-box .m{font-size:11px;word-break:break-all}
+
+@media(max-width:1400px){
+  .mkpi-row{grid-template-columns:repeat(3,1fr) 280px}
+}
+@media(max-width:1100px){
+  .mkpi-row{grid-template-columns:1fr 1fr}
+  .mkpi-card-empty{display:none}
+  .d-grid{grid-template-columns:1fr 1fr}
+  .schedule-compare{grid-template-columns:1fr}
+  .pa-compare{grid-template-columns:1fr}
+  .pack-grid{grid-template-columns:1fr}
+  .m-hero{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .mkpi-row{grid-template-columns:1fr}
+  .d-grid{grid-template-columns:1fr}
+  body{padding:12px}
+  .m-hero-img-box{width:110px;height:110px}
+}
+
+/* ── Size Spec collapsible (NEW in v33) ── */
 .spec-toggle{display:flex;align-items:center;justify-content:space-between;
   cursor:pointer;padding:9px 14px;background:#FAFAF7;border:1px solid var(--border);
   border-radius:8px;transition:background .15s;user-select:none}
@@ -687,6 +729,7 @@ body{padding:16px;min-height:100vh}
 .spec-tbl tr:last-child td{border-bottom:none}
 .spec-empty{text-align:center;padding:14px;color:#B4B2A9;font-size:10px;
   background:#FAFAF7;border-radius:6px;border:1px dashed var(--border)}
+
 </style>
 </head>
 <body>
@@ -1985,33 +2028,43 @@ function switchCsmTab(btn,which){
 
 /* ── Color dot matcher ── */
 var COLOR_MAP = {
+  // Basics
   "BLACK":"#1A1A1A","BLK":"#1A1A1A","블랙":"#1A1A1A","黑":"#1A1A1A","黑色":"#1A1A1A",
   "WHITE":"#F5F5F0","WHT":"#F5F5F0","화이트":"#F5F5F0","白":"#F5F5F0","白色":"#F5F5F0",
   "IVORY":"#F5E8C7","CREAM":"#F5E8C7","BEIGE":"#E8D5B7","베이지":"#E8D5B7","米":"#E8D5B7","米色":"#E8D5B7",
   "GRAY":"#6B7280","GREY":"#6B7280","그레이":"#6B7280","灰":"#6B7280","灰色":"#6B7280",
   "D/GRAY":"#4B5563","DGRAY":"#4B5563","DARK GRAY":"#4B5563","차콜":"#374151","CHARCOAL":"#374151",
-  "L/GRAY":"#9CA3AF","LGRAY":"#9CA3AF","LIGHT GRAY":"#9CA3AF","SILVER":"#B0B0B0",
+  "L/GRAY":"#9CA3AF","LGRAY":"#9CA3AF","LIGHT GRAY":"#9CA3AF",
+  "SILVER":"#B0B0B0",
+  // Blues
   "BLUE":"#2563EB","블루":"#2563EB","蓝":"#2563EB","蓝色":"#2563EB",
   "NAVY":"#1E3A8A","네이비":"#1E3A8A","藏青":"#1E3A8A",
   "O/BLUE":"#0369A1","OBLUE":"#0369A1","OCEAN BLUE":"#0369A1","OCEAN":"#0369A1",
   "D/BLUE":"#1E40AF","DBLUE":"#1E40AF","DARK BLUE":"#1E40AF","DUSTY BLUE":"#7CA0BC",
   "L/BLUE":"#7DD3FC","LBLUE":"#7DD3FC","SKY":"#7DD3FC","SKY BLUE":"#7DD3FC",
   "INDIGO":"#4338CA","인디고":"#4338CA","靛":"#4338CA","靛蓝":"#4338CA",
+  // Reds / Pinks
   "RED":"#DC2626","레드":"#DC2626","红":"#DC2626","红色":"#DC2626","ROJO":"#DC2626",
   "PINK":"#EC4899","핑크":"#EC4899","粉":"#EC4899","粉色":"#EC4899",
-  "D/PINK":"#BE185D","DPINK":"#BE185D","D/ROSE":"#C2748D","ROSE":"#E89AB8","로즈":"#E89AB8","玫瑰":"#E89AB8",
+  "D/PINK":"#BE185D","DPINK":"#BE185D",
+  "D/ROSE":"#C2748D","ROSE":"#E89AB8","로즈":"#E89AB8","玫瑰":"#E89AB8",
   "CORAL":"#FB7185","CRIMSON":"#991B1B","WINE":"#7C1D28","BURGUNDY":"#7C1D28","VINO":"#7C1D28",
+  // Purple
   "PURPLE":"#7C3AED","퍼플":"#7C3AED","紫":"#7C3AED","紫色":"#7C3AED",
-  "VIOLET":"#8B5CF6","LAVENDER":"#C4B5FD","LILAC":"#DDD6FE","MARINO":"#5F7DAF",
+  "VIOLET":"#8B5CF6","LAVENDER":"#C4B5FD","LILAC":"#DDD6FE",
+  "MARINO":"#5F7DAF",
+  // Greens
   "GREEN":"#16A34A","그린":"#16A34A","绿":"#16A34A","绿色":"#16A34A",
   "D/GREEN":"#14532D","DGREEN":"#14532D","DARK GREEN":"#14532D","FOREST":"#14532D",
   "L/GREEN":"#86EFAC","LGREEN":"#86EFAC","MINT":"#86EFAC","민트":"#86EFAC",
   "OLIVE":"#6B7A3A","올리브":"#6B7A3A","橄榄":"#6B7A3A","KHAKI":"#9B8A5C","카키":"#9B8A5C",
   "SAGE":"#A7C4A0","TEAL":"#0F766E",
+  // Yellows / Oranges
   "YELLOW":"#FACC15","옐로우":"#FACC15","黄":"#FACC15","黄色":"#FACC15",
   "MUSTARD":"#CA8A04","GOLD":"#D4AF37","골드":"#D4AF37","金":"#D4AF37",
   "ORANGE":"#F97316","오렌지":"#F97316","橙":"#F97316","橙色":"#F97316",
   "D/ORANGE":"#C2410C","PEACH":"#FDBA74","피치":"#FDBA74",
+  // Browns
   "BROWN":"#78350F","브라운":"#78350F","棕":"#78350F","棕色":"#78350F",
   "D/BROWN":"#451A03","DBROWN":"#451A03","L/BROWN":"#B48754","LBROWN":"#B48754",
   "D/MOCHA":"#6B4423","MOCHA":"#8B5A2B","모카":"#8B5A2B",
@@ -2022,19 +2075,232 @@ function colorToHex(name){
   if(!name) return null;
   var key = String(name).trim().toUpperCase();
   if(COLOR_MAP[key]) return COLOR_MAP[key];
+  // Try removing slashes/spaces variants
   var k2 = key.replace(/[\s\-_\/]/g,"");
-  for(var k in COLOR_MAP){ if(k.replace(/[\s\-_\/]/g,"") === k2) return COLOR_MAP[k]; }
+  for(var k in COLOR_MAP){
+    if(k.replace(/[\s\-_\/]/g,"") === k2) return COLOR_MAP[k];
+  }
+  // Try partial match (first word)
   var first = key.split(/[\s\/\-_]+/)[0];
   if(COLOR_MAP[first]) return COLOR_MAP[first];
   return null;
 }
 function colorDotStyle(name){
   var hex = colorToHex(name);
-  return hex ? 'background:'+hex : 'background:linear-gradient(135deg,var(--gold),#B8956A)';
+  if(hex){
+    return 'background:'+hex;
+  }
+  // Fallback: gold gradient
+  return 'background:linear-gradient(135deg,var(--gold),#B8956A)';
 }
 
-/* ── CSM Plan vs Actual KPI (auto-computed) ── */
+/* ── KR/CN multi-lang maps ── */
+var CAT_MAP = {"S":"세트 / 套装","I":"단품 / 单品"};
+var S_MAP = {
+  Gender:{"W":"여성 / 女","M":"남성 / 男","U":"남녀공용 / 男女通用"},
+  Category:{"S":"세트 / 套装","I":"단품 / 单品"},
+  Top_Type:{"B":"브라탑 / 运动内衣","C":"크롭 / 露脐装","T":"탱크 / 背心"},
+  Sleeve:{"L":"긴팔 / 长袖","S":"반팔 / 短袖","N":"민소매 / 无袖"},
+  Fit:{"O":"루즈핏 / 宽松版","R":"레귤러핏 / 标准版","S":"슬림핏 / 修身版"},
+  Details:{"Z":"짚업 / 全开拉链","H":"반짚업 / 半拉链","N":"라운드넥 / 圆领","C":"끈나시 / 吊带","W":"와이드 / 宽肩带","D":"후드 / 连帽"},
+  Bottom_Type:{"L":"레깅스 / 紧身裤","W":"와이드 / 宽腿裤","J":"조거 / 束脚裤","F":"나팔 / 喇叭裤","P":"플리츠 / 褶皱","A":"A라인 / A字版","B":"반바지 / 短裤"},
+  Bottom_Length:{"3":"3부 / 三分","5":"5부 / 五分","7":"7부 / 七分","9":"9부 / 九分"},
+  Material_Type:{"P":"폴리에스터 / 涤纶","N":"나일론 / 尼龙","D":"폴리아미드 / 仿锦纶","C":"코튼 / 棉","H":"메쉬 / 网布","M":"모달 / 莫代尔","L":"라이크라 / 莱卡"},
+  Lining_Type:{"B":"기모 / 磨毛","F":"퍼 / 毛皮","N":"없음 / 无"}
+};
+
+/* ── Utilities ── */
+function catName(v){ return (!v||v==="-") ? "-" : (CAT_MAP[v]||v); }
+function mv(f,v){ return (!v||v==="-") ? "-" : (S_MAP[f]&&S_MAP[f][v]) ? S_MAP[f][v] : v; }
+function cleanFactory(v){ if(!v||v==="-") return "-"; return v.replace(/^[_\s]*\d+[_\s]*/,""); }
+function pd(v){
+  if(!v||v==="-") return null;
+  if(/^\d{4}-\d{2}-\d{2}/.test(v)) return v.substring(0,10);
+  var m = v.match(/^(\d{1,2})-([A-Za-z]+)-(\d{4})/);
+  if(m){
+    var mo = {Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};
+    return m[3]+"-"+(mo[m[2]]||"01")+"-"+(m[1].length===1?"0"+m[1]:m[1]);
+  }
+  return null;
+}
+function getModDate(r){
+  var v = r["Modified_Time"]||r["Modified_Time_field"]||"";
+  if(!v||v==="-") return "알 수 없음";
+  var m = v.match(/^(\d{1,2})-([A-Za-z]+)-(\d{4})/);
+  if(m){
+    var mo = {Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};
+    var day = m[1].length===1 ? "0"+m[1] : m[1];
+    return m[3]+"-"+(mo[m[2]]||"01")+"-"+day;
+  }
+  return v.split(" ")[0];
+}
+function g(r,f){ var v=r[f]; if(v==null||v==="") return "-"; if(typeof v==="object"&&v.display_value) return v.display_value; return String(v); }
+function escH(s){ var d=document.createElement("div"); d.textContent=String(s==null?"":s); return d.innerHTML; }
+function tc(s){
+  var l = (s||"").toLowerCase();
+  if(l.indexOf("confirmed")>=0||l.indexOf("delivered")>=0||l.indexOf("complete")>=0||l.indexOf("shipped")>=0||l.indexOf("done")>=0) return "t-ok";
+  if(l.indexOf("progress")>=0||l.indexOf("cutting")>=0||l.indexOf("sewing")>=0||l.indexOf("fabric")>=0||l.indexOf("packing")>=0) return "t-wn";
+  if(l.indexOf("delay")>=0||l.indexOf("cancel")>=0) return "t-dg";
+  if(l.indexOf("pending")>=0) return "t-bl";
+  return "t-dr";
+}
+function isDelayed(r){
+  var os = (g(r,"Order_Status")||"").toLowerCase();
+  if(os.indexOf("delivered")>=0||os.indexOf("shipped")>=0||os.indexOf("done")>=0) return false;
+  var ds = g(r,"Delivery_Status");
+  return ds.indexOf("Delay")>=0||ds.indexOf("지연")>=0;
+}
+function getProdStage(r){
+  var s = g(r,"Production_Status").toLowerCase();
+  if(s.indexOf("shipped")>=0) return "Shipped";
+  if(s.indexOf("complete")>=0||s.indexOf("done")>=0) return "Done";
+  if(s.indexOf("packing")>=0) return "Packing";
+  if(s.indexOf("sewing")>=0) return "Sewing";
+  if(s.indexOf("cutting")>=0) return "Cutting";
+  if(s.indexOf("fabric")>=0) return "Fabric";
+  return "Not Started";
+}
+function getAllImgs(r,field){
+  var i = r[field]; if(!i) return [];
+  if(Array.isArray(i)) return i.filter(function(x){ return x&&typeof x==="string"&&x.length>5; });
+  if(typeof i==="object"&&!Array.isArray(i)){
+    var u = [];
+    Object.keys(i).forEach(function(k){ var v=i[k]; if(v&&typeof v==="string"&&v.length>5) u.push(v); });
+    return u;
+  }
+  if(typeof i==="string"&&i.length>5) return [i];
+  return [];
+}
+function getImg1(r){ var imgs=getAllImgs(r,"Style_Image"); return imgs.length>0 ? imgs[0] : null; }
+
+function getSubformLines(r, fieldName){
+  var v = r[fieldName];
+  if(!v) return [];
+  if(Array.isArray(v)) return v;
+  if(typeof v==="object") return Object.values(v);
+  return [];
+}
+
+/* ── Color × Size × Price Matrix ── */
+function buildColorSizePriceMatrix(r, prefix){
+  var linesField = prefix + (prefix === "Plan_" ? "MO_Lines" : "Order_Lines");
+  var notesField = prefix + "Notes";
+  var lines = getSubformLines(r, linesField);
+  var matrix = {}, colors = [], sizeSet = {};
+
+  function addToMatrix(color, size, qty, price){
+    color = (color==null ? "-" : color).toString().trim() || "-";
+    size = (size==null ? "-" : size).toString().trim().toUpperCase() || "-";
+    qty = parseInt(qty) || 0;
+    price = parseFloat(price) || 0;
+    if(!matrix[color]){
+      matrix[color] = { sizes:{}, price:price, total:0, amount:0 };
+      colors.push(color);
+    }
+    if(price > 0 && matrix[color].price === 0) matrix[color].price = price;
+    if(!matrix[color].sizes[size]) matrix[color].sizes[size] = 0;
+    matrix[color].sizes[size] += qty;
+    matrix[color].total += qty;
+    matrix[color].amount += qty * price;
+    sizeSet[size] = true;
+  }
+
+  if(lines && lines.length > 0){
+    lines.forEach(function(line){
+      var c = line[prefix+'Color']   || line['Color']      || line['pColor'] || line['aColor'];
+      var s = line[prefix+'Sizes']   || line['Sizes']      || line['pSizes'] || line['aSizes'];
+      var q = line[prefix+'Quantity']|| line['Quantity'];
+      var p = line[prefix+'Unit_Price'] || line['Unit_Price'];
+      if(c || s || q) addToMatrix(c, s, q, p);
+    });
+  }
+
+  if(colors.length === 0){
+    var notes = g(r, notesField);
+    if(notes && notes !== "-"){
+      notes.split(/\n+/).forEach(function(line){
+        var m = line.match(/Color:\s*([^|]+)\|\s*Size:\s*([^|]+)\|\s*Qty:\s*(\d+)(?:\s*\|\s*Unit Price:\s*\$?([\d.]+))?/i);
+        if(m) addToMatrix(m[1], m[2], m[3], m[4]);
+      });
+    }
+  }
+
+  var sizeOrder = ["XS","S","M","L","XL","XXL","XXXL","FREE","F"];
+  var sizes = Object.keys(sizeSet).sort(function(a,b){
+    var ia = sizeOrder.indexOf(a), ib = sizeOrder.indexOf(b);
+    if(ia < 0) ia = 99;
+    if(ib < 0) ib = 99;
+    if(ia !== ib) return ia - ib;
+    return a < b ? -1 : (a > b ? 1 : 0);
+  });
+
+  return { colors:colors, sizes:sizes, matrix:matrix };
+}
+
+function renderColorSizeMatrix(r, prefix){
+  var data = buildColorSizePriceMatrix(r, prefix);
+  if(data.colors.length === 0){
+    return '<div class="csm-empty">입력된 내역이 없습니다 / 暂无数据</div>';
+  }
+
+  var grandQty = 0, grandAmount = 0, sizeTotals = {};
+  data.sizes.forEach(function(s){ sizeTotals[s] = 0; });
+
+  var h = '<table class="csm-tbl"><thead><tr>';
+  h += '<th class="csm-th-color">Color / 색상 / 颜色</th>';
+  data.sizes.forEach(function(s){ h += '<th class="csm-th-size">'+escH(s)+'</th>'; });
+  h += '<th class="csm-th-total">Qty / 수량 / 数量</th>';
+  h += '<th class="csm-th-price">Unit Price / 단가 / 单价</th>';
+  h += '<th class="csm-th-amount">Amount / 금액 / 金额</th>';
+  h += '</tr></thead><tbody>';
+
+  data.colors.forEach(function(color){
+    var row = data.matrix[color];
+    var dotStyle = colorDotStyle(color);
+    h += '<tr>';
+    h += '<td class="csm-td-color"><span class="csm-color-dot" style="'+dotStyle+'"></span>'+escH(color)+'</td>';
+    data.sizes.forEach(function(s){
+      var q = row.sizes[s] || 0;
+      sizeTotals[s] += q;
+      h += '<td class="csm-td-qty">'+(q > 0 ? q.toLocaleString() : '<span class="csm-zero">-</span>')+'</td>';
+    });
+    h += '<td class="csm-td-total">'+row.total.toLocaleString()+'</td>';
+    h += '<td class="csm-td-price">'+(row.price > 0 ? '$'+row.price.toFixed(2) : '-')+'</td>';
+    h += '<td class="csm-td-amount">'+(row.amount > 0 ? '$'+row.amount.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) : '-')+'</td>';
+    h += '</tr>';
+    grandQty += row.total;
+    grandAmount += row.amount;
+  });
+
+  h += '<tr class="csm-grand"><td class="csm-td-color"><b>TOTAL / 합계 / 合计</b></td>';
+  data.sizes.forEach(function(s){ h += '<td class="csm-td-qty"><b>'+sizeTotals[s].toLocaleString()+'</b></td>'; });
+  h += '<td class="csm-td-total"><b>'+grandQty.toLocaleString()+'</b></td>';
+  h += '<td class="csm-td-price">-</td>';
+  h += '<td class="csm-td-amount"><b>$'+grandAmount.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+'</b></td>';
+  h += '</tr>';
+  h += '</tbody></table>';
+  return h;
+}
+
+function switchCsmTab(btn, which){
+  var parent = btn.parentElement.parentElement;
+  parent.querySelectorAll('.csm-tab').forEach(function(t){ t.classList.remove('active'); });
+  btn.classList.add('active');
+  parent.querySelectorAll('.csm-pane').forEach(function(p){ p.classList.remove('active'); });
+  var paneClass = which === 'plan' ? '.csm-pane.plan' : '.csm-pane.actual';
+  var pane = parent.querySelector(paneClass);
+  if(pane) pane.classList.add('active');
+}
+
+/* ── CSM Plan vs Actual comparison KPI (v32: auto-computed from multiple sources) ── 
+   우선순위:
+   1) Acture_Order_Lines 서브폼 합계 (가장 정확)
+   2) Acture_Total_Quantity 필드값
+   3) Acture_Notes 멀티라인 텍스트 파싱 (Plan_Notes 동일 포맷)
+   → 공장 스캔 또는 사무실에서 All_MO 수정 시 자동 반영됨 (readonly 표시)
+*/
 function computeActualQtyFromRecord(r){
+  // Source 1: Acture_Order_Lines subform sum
   var actLines = getSubformLines(r, "Acture_Order_Lines");
   if(actLines && actLines.length > 0){
     var sum1 = 0, hasData = false;
@@ -2045,8 +2311,12 @@ function computeActualQtyFromRecord(r){
     });
     if(hasData) return { qty:sum1, source:"Subform" };
   }
+  
+  // Source 2: Acture_Total_Quantity field directly
   var totalField = parseInt(g(r,"Acture_Total_Quantity")) || 0;
   if(totalField > 0) return { qty:totalField, source:"Total field" };
+  
+  // Source 3: Parse Acture_Notes (same format as Plan_Notes)
   var notes = g(r, "Acture_Notes");
   if(notes && notes !== "-"){
     var sum3 = 0, matched = false;
@@ -2056,6 +2326,7 @@ function computeActualQtyFromRecord(r){
     });
     if(matched && sum3 > 0) return { qty:sum3, source:"Notes" };
   }
+  
   return { qty:0, source:"Empty" };
 }
 
@@ -2063,6 +2334,7 @@ function renderCsmCompare(r){
   var planQty = parseInt(g(r,"Plan_Total_Quantity")) || 0;
   var actual = computeActualQtyFromRecord(r);
   var actQty = actual.qty;
+
   var sourceLabel = "";
   switch(actual.source){
     case "Subform":     sourceLabel = "서브폼 집계 / 子表汇总"; break;
@@ -2070,126 +2342,201 @@ function renderCsmCompare(r){
     case "Notes":       sourceLabel = "Acture_Notes 파싱 / 备注解析"; break;
     default:            sourceLabel = "데이터 없음 / 暂无数据";
   }
+
   var rate = planQty > 0 ? (actQty / planQty * 100) : 0;
   var rateStr = planQty > 0 ? rate.toFixed(1) + '%' : '-';
   var diff = actQty - planQty;
   var diffStr = planQty > 0 ? (diff > 0 ? '+' : '') + diff.toLocaleString() + ' pcs' : '-';
+
   var rateClass = '';
-  if(planQty > 0 && actQty > 0){ rateClass = rate >= 100 ? (actQty > planQty ? 'over' : 'full') : 'under'; }
-  else { rateClass = 'empty'; }
+  if(planQty > 0 && actQty > 0){
+    if(rate >= 100) rateClass = actQty > planQty ? 'over' : 'full';
+    else rateClass = 'under';
+  } else {
+    rateClass = 'empty';
+  }
+
   var actBoxClass = actQty === 0 ? 'actual empty' : 'actual';
+
   var h = '<div class="csm-compare">';
-  h += '<div class="csm-cmp-box plan"><div class="csm-cmp-label">📋 PLAN 오더 수량 / 订单数量</div>';
+
+  // Plan (오더 수량)
+  h += '<div class="csm-cmp-box plan">';
+  h += '<div class="csm-cmp-label">📋 PLAN 오더 수량 / 订单数量</div>';
   h += '<div class="csm-cmp-num">'+planQty.toLocaleString()+'<span class="csm-cmp-unit">pcs</span></div>';
-  h += '<div class="csm-cmp-src">Plan_Total_Quantity</div></div>';
-  h += '<div class="csm-cmp-box '+actBoxClass+'"><div class="csm-cmp-label">✅ ACTUAL 실출고 수량 / 实出货数量</div>';
+  h += '<div class="csm-cmp-src">Plan_Total_Quantity</div>';
+  h += '</div>';
+
+  // Actual (실출고 수량 - 자동 집계, readonly)
+  h += '<div class="csm-cmp-box '+actBoxClass+'">';
+  h += '<div class="csm-cmp-label">✅ ACTUAL 실출고 수량 / 实出货数量</div>';
   h += '<div class="csm-cmp-num">'+actQty.toLocaleString()+'<span class="csm-cmp-unit">pcs</span></div>';
-  h += '<div class="csm-cmp-src">'+escH(sourceLabel)+'</div></div>';
-  h += '<div class="csm-cmp-box rate '+rateClass+'"><div class="csm-cmp-label">📊 출고율 / 出货率</div>';
+  h += '<div class="csm-cmp-src">'+escH(sourceLabel)+'</div>';
+  h += '</div>';
+
+  // Rate (출고율)
+  h += '<div class="csm-cmp-box rate '+rateClass+'">';
+  h += '<div class="csm-cmp-label">📊 출고율 / 出货率</div>';
   h += '<div class="csm-cmp-num">'+rateStr+'</div>';
-  h += '<div class="csm-cmp-sub">'+diffStr+'</div></div>';
+  h += '<div class="csm-cmp-sub">'+diffStr+'</div>';
+  h += '</div>';
+
   h += '</div>';
   return h;
 }
 
-/* ── Inner Pack & Bulto helpers ── */
+/* ── Inner Pack & Bulto helpers (NEW in v30) ── */
 var INNER_PACK_SIZE = 12;
 var MASTER_BAG_SIZE = 10;
-var MASTER_BAG_TOTAL = INNER_PACK_SIZE * MASTER_BAG_SIZE;
+var MASTER_BAG_TOTAL = INNER_PACK_SIZE * MASTER_BAG_SIZE; // 120
 
 function parseAssortmentJSON(r){
   var raw = r["Standard_Assortment_JSON"];
   if(!raw || typeof raw !== "string") return [];
   var s = raw.trim();
   if(!s) return [];
+  // Field may contain comma-separated objects without outer brackets
   if(!s.startsWith("[")) s = "[" + s + "]";
-  try{ return JSON.parse(s) || []; }catch(e){ return []; }
+  try { return JSON.parse(s) || []; } catch(e){ console.warn("Assortment JSON parse failed", e); return []; }
 }
 
 function renderPackAndBulto(r){
   var assortment = parseAssortmentJSON(r);
   var comboCount = assortment.length;
   var planTotalQty = parseInt(g(r,"Plan_Total_Quantity")) || 0;
+
+  // Derive unique colors / sizes
   var colorSet = {}, sizeSet = {};
-  assortment.forEach(function(item){ if(item.color) colorSet[item.color]=true; if(item.size) sizeSet[item.size]=true; });
-  var colors = Object.keys(colorSet), sizes = Object.keys(sizeSet);
-  var innerPackExpected=0,bultoExpected=0,remainderPcs=0,remainderPacks=0;
-  if(comboCount===INNER_PACK_SIZE && planTotalQty>0){
-    innerPackExpected = Math.floor(planTotalQty/INNER_PACK_SIZE);
-    remainderPcs = planTotalQty - (innerPackExpected*INNER_PACK_SIZE);
-    bultoExpected = Math.floor(innerPackExpected/MASTER_BAG_SIZE);
-    remainderPacks = innerPackExpected - (bultoExpected*MASTER_BAG_SIZE);
+  assortment.forEach(function(item){
+    if(item.color) colorSet[item.color] = true;
+    if(item.size) sizeSet[item.size] = true;
+  });
+  var colors = Object.keys(colorSet);
+  var sizes = Object.keys(sizeSet);
+
+  // Calculate pack counts
+  var innerPackExpected = 0, bultoExpected = 0;
+  var remainderPcs = 0, remainderPacks = 0;
+  if(comboCount === INNER_PACK_SIZE && planTotalQty > 0){
+    innerPackExpected = Math.floor(planTotalQty / INNER_PACK_SIZE);
+    remainderPcs = planTotalQty - (innerPackExpected * INNER_PACK_SIZE);
+    bultoExpected = Math.floor(innerPackExpected / MASTER_BAG_SIZE);
+    remainderPacks = innerPackExpected - (bultoExpected * MASTER_BAG_SIZE);
   }
+
   var h = '<div class="pack-grid">';
-  h += '<div class="pack-card inner"><div class="pack-card-hd"><div class="pack-card-icon">📦</div><div>';
+
+  // Left: Inner Pack
+  h += '<div class="pack-card inner">';
+  h += '<div class="pack-card-hd">';
+  h += '<div class="pack-card-icon">📦</div>';
+  h += '<div>';
   h += '<div class="pack-card-title">중간 포장 / 中间包装 / Inner Pack</div>';
   h += '<div class="pack-card-title-sub">1 포장 = '+INNER_PACK_SIZE+'장 (각 조합 1장씩 / 每组合 1 件)</div>';
   h += '</div></div>';
-  if(comboCount===0){
+
+  if(comboCount === 0){
     h += '<div class="pack-empty">Standard Assortment 없음 / 无标配信息</div>';
   } else {
+    // KPI row
     h += '<div class="pack-kpi-row">';
     h += '<div class="pack-kpi"><div class="pack-kpi-num">'+comboCount+'</div><div class="pack-kpi-lb">1포장 구성 / 组合数</div></div>';
-    h += '<div class="pack-kpi"><div class="pack-kpi-num">'+(innerPackExpected>0?innerPackExpected.toLocaleString():"-")+'</div><div class="pack-kpi-lb">예상 포장수 / 预计包数</div></div>';
+    h += '<div class="pack-kpi"><div class="pack-kpi-num">'+(innerPackExpected>0 ? innerPackExpected.toLocaleString() : "-")+'</div><div class="pack-kpi-lb">예상 포장수 / 预计包数</div></div>';
     h += '</div>';
-    if(comboCount===INNER_PACK_SIZE){
+
+    // Summary bar
+    if(comboCount === INNER_PACK_SIZE){
       h += '<div class="pack-summary-bar">✓ 표준 구성 ('+colors.length+'색 × '+sizes.length+'사이즈 = '+INNER_PACK_SIZE+'장)</div>';
     } else {
       h += '<div class="pack-summary-bar" style="background:#FFF5F5;border-color:#FECACA;color:#B91C1C">⚠ 표준 '+INNER_PACK_SIZE+'조합이 아님 ('+comboCount+'조합) / 非标准</div>';
     }
-    h += '<div class="pack-composition"><div class="pack-composition-label">구성 상세 / 组合明细</div><div class="pack-combo-list">';
+
+    // Composition list
+    h += '<div class="pack-composition">';
+    h += '<div class="pack-composition-label">구성 상세 / 组合明细</div>';
+    h += '<div class="pack-combo-list">';
+    // Group by color for cleaner display
     var byColor = {};
-    assortment.forEach(function(item){ var c=item.color||"-"; if(!byColor[c]) byColor[c]=[]; byColor[c].push(item); });
+    assortment.forEach(function(item){
+      var c = item.color || "-";
+      if(!byColor[c]) byColor[c] = [];
+      byColor[c].push(item);
+    });
     Object.keys(byColor).forEach(function(color){
       byColor[color].forEach(function(item){
         var dotStyle = colorDotStyle(color);
-        h += '<div class="pack-combo-item"><span class="pack-combo-dot" style="'+dotStyle+'"></span>';
+        h += '<div class="pack-combo-item">';
+        h += '<span class="pack-combo-dot" style="'+dotStyle+'"></span>';
         h += '<span class="pack-combo-color">'+escH(color)+'</span>';
         h += '<span class="pack-combo-size">'+escH(item.size||"-")+'</span>';
-        h += '<span class="pack-combo-qty">× '+(item.qty||1)+'</span></div>';
+        h += '<span class="pack-combo-qty">× '+(item.qty||1)+'</span>';
+        h += '</div>';
       });
     });
     h += '</div></div>';
   }
   h += '</div>';
-  h += '<div class="pack-card bulto"><div class="pack-card-hd"><div class="pack-card-icon">🎒</div><div>';
+
+  // Right: Bulto (Master Bag)
+  h += '<div class="pack-card bulto">';
+  h += '<div class="pack-card-hd">';
+  h += '<div class="pack-card-icon">🎒</div>';
+  h += '<div>';
   h += '<div class="pack-card-title">Bulto / 麻袋 / 마대</div>';
   h += '<div class="pack-card-title-sub">1 Bulto = '+MASTER_BAG_SIZE+' 포장 = '+MASTER_BAG_TOTAL+'장</div>';
   h += '</div></div>';
-  if(planTotalQty===0){
+
+  if(planTotalQty === 0){
     h += '<div class="pack-empty">Plan 수량 없음 / 无计划数量</div>';
   } else {
     h += '<div class="pack-kpi-row">';
-    h += '<div class="pack-kpi"><div class="pack-kpi-num">'+(bultoExpected>0?bultoExpected.toLocaleString():"-")+'</div><div class="pack-kpi-lb">예상 Bulto / 预计麻袋</div></div>';
+    h += '<div class="pack-kpi"><div class="pack-kpi-num">'+(bultoExpected>0 ? bultoExpected.toLocaleString() : "-")+'</div><div class="pack-kpi-lb">예상 Bulto / 预计麻袋</div></div>';
     h += '<div class="pack-kpi"><div class="pack-kpi-num">'+planTotalQty.toLocaleString()+'</div><div class="pack-kpi-lb">Plan 총수량 / 计划总数</div></div>';
     h += '</div>';
+
+    // Summary
     var summary = bultoExpected+' Bulto × '+MASTER_BAG_TOTAL+'장 = '+(bultoExpected*MASTER_BAG_TOTAL).toLocaleString()+'장';
-    if(remainderPacks>0) summary += ' + 자투리 '+remainderPacks+'포장 ('+(remainderPacks*INNER_PACK_SIZE)+'장)';
-    if(remainderPcs>0) summary += ' + '+remainderPcs+'장';
+    if(remainderPacks > 0){
+      summary += ' + 자투리 '+remainderPacks+'포장 ('+(remainderPacks * INNER_PACK_SIZE)+'장)';
+    }
+    if(remainderPcs > 0){
+      summary += ' + '+remainderPcs+'장';
+    }
     h += '<div class="pack-summary-bar">📊 '+escH(summary)+'</div>';
-    h += '<div class="pack-composition"><div class="pack-composition-label">계산 내역 / 计算明细</div><div class="pack-combo-list">';
+
+    // Breakdown
+    h += '<div class="pack-composition">';
+    h += '<div class="pack-composition-label">계산 내역 / 计算明细</div>';
+    h += '<div class="pack-combo-list">';
     h += '<div class="pack-combo-item"><span class="pack-combo-color">Plan 총수량 / 计划总数</span><span class="pack-combo-qty">'+planTotalQty.toLocaleString()+' 장</span></div>';
-    h += '<div class="pack-combo-item"><span class="pack-combo-color">÷ 1 포장 ('+INNER_PACK_SIZE+'장)</span><span class="pack-combo-qty">'+(innerPackExpected+(remainderPcs>0?1:0)).toLocaleString()+' 포장</span></div>';
+    h += '<div class="pack-combo-item"><span class="pack-combo-color">÷ 1 포장 ('+INNER_PACK_SIZE+'장)</span><span class="pack-combo-qty">'+(innerPackExpected + (remainderPcs>0?1:0)).toLocaleString()+' 포장</span></div>';
     h += '<div class="pack-combo-item"><span class="pack-combo-color">÷ 1 Bulto ('+MASTER_BAG_SIZE+' 포장)</span><span class="pack-combo-qty">'+bultoExpected.toLocaleString()+' Bulto</span></div>';
-    if(remainderPacks>0||remainderPcs>0){
+    if(remainderPacks > 0 || remainderPcs > 0){
       var rmText = "";
-      if(remainderPacks>0) rmText = remainderPacks+' 포장';
-      if(remainderPcs>0) rmText += (rmText?" + ":"")+remainderPcs+'장';
+      if(remainderPacks > 0) rmText = remainderPacks+' 포장';
+      if(remainderPcs > 0) rmText += (rmText?" + ":"")+remainderPcs+'장';
       h += '<div class="pack-combo-item" style="background:#FEF9E7;border-color:#FDE68A"><span class="pack-combo-color" style="color:#92400E">자투리 / 剩余</span><span class="pack-combo-qty" style="color:#92400E">'+escH(rmText)+'</span></div>';
     }
     h += '</div></div>';
   }
-  h += '</div></div>';
+  h += '</div>';
+
+  h += '</div>';
   return h;
 }
 
-/* ── Schedule status helpers ── */
+/* ── Schedule status helpers (NEW in v30) ── */
 function getPlanDotClass(dateStr){
+  // Plan: gray if date not reached yet, green if reached
   var p = pd(dateStr);
   if(!p) return 'plan-wait';
   return p <= todayStr ? 'plan-done' : 'plan-wait';
 }
 function getActualDotClass(actualDate, planDate){
+  // Actual:
+  //   - If actual filled → green (done)
+  //   - If actual empty AND plan date passed → red (overdue)
+  //   - If actual empty AND plan not yet reached → gray (wait)
   var a = pd(actualDate);
   if(a) return 'actual-done';
   var p = pd(planDate);
@@ -2197,57 +2544,645 @@ function getActualDotClass(actualDate, planDate){
   return 'actual-wait';
 }
 
-/* ── Size Spec helpers ── */
-function parseSpecJSON(r, field){
-  var raw = r[field];
-  if(!raw || typeof raw !== "string") return [];
-  var s = raw.trim();
-  if(!s) return [];
-  if(!s.startsWith("[")) s = "[" + s + "]";
-  try{ return JSON.parse(s) || []; }catch(e){ return []; }
+/* ── Stage + order status helpers ── */
+function stageClass(stage){
+  var map = {
+    "Not Started":"stage-notstart","Fabric":"stage-fabric","Cutting":"stage-cutting",
+    "Sewing":"stage-sewing","Packing":"stage-packing","Done":"stage-done","Shipped":"stage-shipped"
+  };
+  return map[stage] || "stage-notstart";
 }
-function renderSpecTable(items){
-  if(!items || items.length === 0) return '<div class="spec-empty">데이터 없음 / 无数据</div>';
-  var sizeKeys = ['s','m','l','xl'];
-  var sizeLabels = {s:'S', m:'M', l:'L', xl:'XL'};
-  var activeSizes = sizeKeys.filter(function(k){ return items.some(function(row){ return row[k] && row[k] !== ""; }); });
-  var hasNotes = items.some(function(row){ return row.notes && row.notes !== ""; });
-  var h = '<table class="spec-tbl"><thead><tr><th class="spec-th-pom">POM / 측정부위 / 测量部位</th>';
-  activeSizes.forEach(function(k){ h += '<th>'+sizeLabels[k]+'</th>'; });
-  if(hasNotes) h += '<th class="spec-th-notes">비고 / 备注</th>';
-  h += '</tr></thead><tbody>';
-  items.forEach(function(row){
-    if(!row.pom) return;
-    h += '<tr><td class="spec-td-pom">'+escH(row.pom)+'</td>';
-    activeSizes.forEach(function(k){
-      var v = row[k];
-      h += '<td>'+(v && v !== '' ? escH(String(v)) : '<span style="color:#CDC9C0">-</span>')+'</td>';
-    });
-    if(hasNotes) h += '<td class="spec-td-notes">'+escH(row.notes||'')+'</td>';
-    h += '</tr>';
-  });
-  h += '</tbody></table>';
-  return h;
+function stageLabel(stage){
+  var map = {
+    "Not Started":"⏳ 미시작 / 未开始","Fabric":"🧵 원단 / 面料","Cutting":"✂️ 재단 / 裁剪",
+    "Sewing":"🪡 봉제 / 车缝","Packing":"📦 포장 / 包装","Done":"✅ 완료 / 完成","Shipped":"🚚 출고 / 出货"
+  };
+  return map[stage] || "⏳ 미시작";
 }
-function renderSizeSpecs(r){
-  var topItems = parseSpecJSON(r, "Top_Spec_JSON");
-  var botItems = parseSpecJSON(r, "Bottom_Spec_JSON");
-  if(topItems.length === 0 && botItems.length === 0) return '<div class="spec-empty">사이즈 스펙 없음 / 无尺寸规格</div>';
-  var h = '';
-  if(topItems.length > 0){ h += '<div class="spec-group"><div class="spec-group-title">TOP / 상의 / 上衣</div>'+renderSpecTable(topItems)+'</div>'; }
-  if(botItems.length > 0){ h += '<div class="spec-group"><div class="spec-group-title">BOTTOM / 하의 / 下衣</div>'+renderSpecTable(botItems)+'</div>'; }
-  return h;
-}
-function toggleSpec(el){
-  var content = el.nextElementSibling;
-  var icon = el.querySelector('.spec-toggle-icon');
-  if(!content) return;
-  var isOpen = content.classList.contains('open');
-  content.classList.toggle('open', !isOpen);
-  if(icon) icon.classList.toggle('open', !isOpen);
+function orderStatusClass(status){
+  var s = (status||"").toLowerCase();
+  if(s.indexOf("confirmed")>=0) return "confirmed";
+  if(s.indexOf("delivered")>=0||s.indexOf("shipped")>=0) return "delivered";
+  if(s.indexOf("progress")>=0) return "progress";
+  if(s.indexOf("pending")>=0) return "pending";
+  if(s.indexOf("delay")>=0) return "delayed";
+  return "draft";
 }
 
-/* ── MO Modal ── */
+/* ── Month helpers ── */
+function parseYM(key){
+  var m = key.match(/(\d+)년\s*(\d+)월/);
+  if(!m) return null;
+  var y = parseInt(m[1]);
+  if(y<100) y += 2000;
+  return { y:y, m:parseInt(m[2]) };
+}
+function sortMonthKeys(keys){
+  return keys.slice().sort(function(a,b){
+    var pa = parseYM(a), pb = parseYM(b);
+    if(!pa && !pb) return a < b ? -1 : (a > b ? 1 : 0);
+    if(!pa) return 1;
+    if(!pb) return -1;
+    if(pa.y !== pb.y) return pa.y - pb.y;
+    return pa.m - pb.m;
+  });
+}
+function buildMonthGroups(){
+  monthGroups = {};
+  monthFiltered = {};
+  allRec.forEach(function(r){
+    var py = g(r,"Plan_Year"), pm = g(r,"Plan_Month");
+    var key = (py!=="-" && pm!=="-") ? (py+"년 "+pm+"월") : "미지정";
+    if(!monthGroups[key]) monthGroups[key] = [];
+    monthGroups[key].push(r);
+  });
+  Object.keys(monthGroups).forEach(function(k){ monthFiltered[k] = monthGroups[k].slice(); });
+}
+
+/* ── Safe image loader (Zoho SDK) ── */
+var _safeQ = [], _safeBusy = false;
+function _runSafeQ(){
+  if(_safeQ.length===0){ _safeBusy=false; return; }
+  _safeBusy = true;
+  var task = _safeQ.shift();
+  var el = task.id ? document.getElementById(task.id) : task.el;
+  if(!el){ setTimeout(_runSafeQ,50); return; }
+  var img = document.createElement("img");
+  img.style.cssText = task.css || "width:100%;height:100%;object-fit:cover";
+  if(task.clk) img.onclick = function(e){ e.stopPropagation(); openLightbox(this.src); };
+  var done = false;
+  function next(){ if(done) return; done=true; setTimeout(_runSafeQ,100); }
+  try{
+    ZOHO.CREATOR.UTIL.setImageData(img, task.url, function(){ el.innerHTML=""; el.appendChild(img); next(); });
+    setTimeout(next, 4000);
+  }catch(e){ next(); }
+}
+function qImg(elOrId, url, css, clk){
+  _safeQ.push({
+    id: typeof elOrId==="string" ? elOrId : null,
+    el: typeof elOrId==="object" ? elOrId : null,
+    url: url, css: css, clk: !!clk
+  });
+  if(!_safeBusy) _runSafeQ();
+}
+function loadTlImgs(){
+  var els = document.querySelectorAll("[data-tlimg]");
+  if(els.length===0) return;
+  if("IntersectionObserver" in window){
+    var obs = new IntersectionObserver(function(entries, o){
+      entries.forEach(function(ent){
+        if(ent.isIntersecting){
+          var el = ent.target, url = el.getAttribute("data-tlimg");
+          if(url) qImg(el, url, "width:100%;height:100%;object-fit:cover", false);
+          el.removeAttribute("data-tlimg");
+          o.unobserve(el);
+        }
+      });
+    }, { rootMargin: "300px" });
+    els.forEach(function(el){ obs.observe(el); });
+  } else {
+    els.forEach(function(el){
+      var url = el.getAttribute("data-tlimg");
+      if(url) qImg(el, url, "width:100%;height:100%;object-fit:cover", false);
+      el.removeAttribute("data-tlimg");
+    });
+  }
+}
+
+function openLightbox(src){
+  if(!src) return;
+  document.getElementById("lightboxImg").src = src;
+  document.getElementById("lightboxOv").classList.add("active");
+}
+function closeLightbox(){
+  document.getElementById("lightboxOv").classList.remove("active");
+  document.getElementById("lightboxImg").src = "";
+}
+
+/* ── Init ── */
+ZOHO.CREATOR.init().then(function(){
+  Promise.all([
+    ZOHO.CREATOR.API.getAllRecords({appName:APP, reportName:REP, page:1, pageSize:200}),
+    ZOHO.CREATOR.API.getAllRecords({appName:APP, reportName:STYLE_REP, page:1, pageSize:200})
+  ]).then(function(results){
+    if(results[0]&&results[0].code===3000&&results[0].data) allRec = results[0].data;
+    if(results[1]&&results[1].code===3000&&results[1].data) allStyles = results[1].data;
+    buildMonthGroups();
+    renderMKPI();
+    renderMonthly();
+    hide("loadingScreen"); show("mainContent");
+    setTimeout(loadTlImgs, 500);
+  }).catch(function(e){ showErr(JSON.stringify(e)); });
+}).catch(function(e){ showErr("ZOHO init failed: " + JSON.stringify(e)); });
+
+function show(i){ document.getElementById(i).style.display = "block"; }
+function hide(i){ document.getElementById(i).style.display = "none"; }
+function showErr(m){ hide("loadingScreen"); show("errorScreen"); document.getElementById("errorMsg").textContent = m; }
+
+/* ── KPI Row ── */
+function renderMKPI(){
+  var allKeys = sortMonthKeys(Object.keys(monthGroups)).filter(function(k){ return k !== "미지정"; });
+  var recentKeys = allKeys.slice(-3);
+  var emptySlots = 3 - recentKeys.length;
+  var parts = [];
+
+  for(var ei = 0; ei < emptySlots; ei++){
+    parts.push('<div class="mkpi-card mkpi-card-empty"></div>');
+  }
+  recentKeys.forEach(function(key, i){
+    parts.push(buildKpiCard(key, i));
+  });
+  parts.push(buildDelayCard());
+
+  document.getElementById("mkpiRow").innerHTML = parts.join("");
+}
+
+function buildKpiCard(key, stripeIdx){
+  var items = monthGroups[key];
+  var ym = parseYM(key);
+  var yy = ym ? ym.y.toString().slice(-2) : "";
+  var mm = ym ? (ym.m<10 ? "0"+ym.m : ym.m) : "";
+  var title = ym ? (yy+"."+mm+" 생산 KPI / "+yy+"年 "+ym.m+"月 生产 KPI") : "생산 KPI";
+
+  var tot = items.length, ip = 0, dl = 0, dv = 0, planQty = 0, actQty = 0;
+  items.forEach(function(r){
+    var os = (g(r,"Order_Status")||"").toLowerCase();
+    if(os.indexOf("progress")>=0) ip++;
+    if(isDelayed(r)) dl++;
+    if(os.indexOf("delivered")>=0||os.indexOf("shipped")>=0) dv++;
+    planQty += parseInt(g(r,"Plan_Total_Quantity")) || 0;
+    actQty  += parseInt(g(r,"Acture_Total_Quantity")) || 0;
+  });
+
+  var pct = planQty > 0 ? Math.round((actQty / planQty) * 100) : 0;
+  var color = KPI_RING_COLORS[stripeIdx % KPI_RING_COLORS.length];
+  var stripe = KPI_TOP_STRIPE_COLORS[stripeIdx % KPI_TOP_STRIPE_COLORS.length];
+  var r26 = 26, circ = 2 * Math.PI * r26;
+  var offset = circ - (pct/100) * circ;
+  var keyEnc = encodeURIComponent(key);
+
+  var h = '<div class="mkpi-card" style="--stripe:'+stripe+'">';
+  h += '<div class="mkpi-header"><div class="mkpi-title">📅 '+escH(title)+'</div></div>';
+  h += '<div class="mkpi-body">';
+  h += '<div class="mkpi-ring"><svg width="64" height="64" viewBox="0 0 64 64">';
+  h += '<circle cx="32" cy="32" r="'+r26+'" fill="none" stroke="#F1EFE8" stroke-width="5"/>';
+  h += '<circle cx="32" cy="32" r="'+r26+'" fill="none" stroke="'+color+'" stroke-width="5" stroke-dasharray="'+circ+'" stroke-dashoffset="'+offset+'" stroke-linecap="round"/>';
+  h += '</svg><div class="mkpi-ring-pct" style="color:'+color+'">'+pct+'%</div></div>';
+  h += '<div class="mkpi-stats">';
+  h += '<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'all\')"><div class="mkpi-stat-n" style="color:#6366F1">'+tot+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#A5B4FC"></span>총 오더 / 总订单</div></div>';
+  h += '<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'ip\')"><div class="mkpi-stat-n" style="color:#854F0B">'+ip+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#FAC775"></span>진행중 / 进行中</div></div>';
+  h += '<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'dv\')"><div class="mkpi-stat-n" style="color:#065F46">'+dv+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#9FE1CB"></span>출고완료 / 已出货</div></div>';
+  h += '<div class="mkpi-stat" onclick="openKpiPop(\''+keyEnc+'\',\'dl\')"><div class="mkpi-stat-n" style="color:#A32D2D">'+dl+'</div><div class="mkpi-stat-l"><span class="dot" style="background:#F7C1C1"></span>지연 / 延误</div></div>';
+  h += '</div></div>';
+  h += '<div class="mkpi-footer">';
+  h += '<div class="qty-plan"><span class="qty-badge plan">PLAN</span> 오더수량 <b>'+planQty.toLocaleString()+' pcs</b></div>';
+  h += '<div class="qty-act"><span class="qty-badge act">ACT</span> 출고수량 <b>'+actQty.toLocaleString()+' pcs</b></div>';
+  h += '</div></div>';
+  return h;
+}
+
+function buildDelayCard(){
+  var delayed = allRec.filter(function(r){ return isDelayed(r); });
+  var h = '<div class="delay-card">';
+  h += '<div class="delay-card-title">⚠️ 생산 지연 현황 / 生产延误现况</div>';
+  h += '<div class="delay-total">'+delayed.length+'<span>건 지연 / 件延误</span></div>';
+  h += '<div class="delay-list">';
+  if(delayed.length===0){
+    h += '<div style="text-align:center;padding:16px;color:#B4B2A9;font-size:11px">지연 없음 / 无延误 ✓</div>';
+  } else {
+    delayed.slice(0, 6).forEach(function(r){
+      h += '<div class="delay-item" onclick="openModalById(\''+r["ID"]+'\')">';
+      h += '<div class="delay-mo">'+escH(g(r,"MO_Number"))+' <span class="delay-badge">'+escH(getProdStage(r))+' 지연</span></div>';
+      h += '<div class="delay-style">'+escH(g(r,"Style_Name"))+'</div>';
+      h += '</div>';
+    });
+  }
+  h += '</div></div>';
+  return h;
+}
+
+function openModalById(id){
+  var r = allRec.find(function(x){ return String(x["ID"]) === String(id); });
+  if(r) openModal(r);
+}
+
+/* ── KPI popover ── */
+function openKpiPop(keyEnc, type){
+  var key = decodeURIComponent(keyEnc);
+  var items = monthGroups[key] || [];
+  var typeNames = { all:"총 오더 / 总订单", ip:"진행중 / 进行中", dl:"지연 / 延误", dv:"출고완료 / 已出货" };
+  var filtered = items.filter(function(r){
+    var os = (g(r,"Order_Status")||"").toLowerCase();
+    if(type==="all") return true;
+    if(type==="ip") return os.indexOf("progress")>=0;
+    if(type==="dl") return isDelayed(r);
+    if(type==="dv") return os.indexOf("delivered")>=0||os.indexOf("shipped")>=0;
+    return true;
+  });
+  document.getElementById("kpiPopTitle").textContent = key + " — " + typeNames[type];
+  document.getElementById("kpiPopSub").textContent = "총 " + filtered.length + "건 / 共 " + filtered.length + " 件";
+  var h = "";
+  if(filtered.length===0){
+    h = '<div class="pop-empty">해당 오더가 없습니다 / 无相关订单</div>';
+  } else {
+    filtered.forEach(function(r){
+      var dl = isDelayed(r);
+      var pq = parseInt(g(r,"Plan_Total_Quantity"))||0;
+      var aq = parseInt(g(r,"Acture_Total_Quantity"))||0;
+      h += '<div class="pop-item" onclick="openModalFromPop(\''+r["ID"]+'\')">';
+      h += '<div class="pop-item-left"><div class="pi-mo">'+escH(g(r,"MO_Number"))+(dl?'<span class="dly-badge">DELAYED</span>':'')+'</div>';
+      h += '<div class="pi-name">'+escH(g(r,"Style_Name"))+'</div>';
+      h += '<div class="pi-meta">공장 / 工厂: '+escH(cleanFactory(g(r,"Factory")))+' · <span style="color:#6D28D9;font-weight:500">P:'+pq.toLocaleString()+'</span> / <span style="color:#047857;font-weight:500">A:'+aq.toLocaleString()+'</span> pcs</div></div>';
+      h += '<span class="tag '+tc(g(r,"Order_Status"))+'">'+escH(g(r,"Order_Status"))+'</span></div>';
+    });
+  }
+  document.getElementById("kpiPopBody").innerHTML = h;
+  document.getElementById("kpiPopOv").classList.add("active");
+}
+function openModalFromPop(id){
+  var r = allRec.find(function(x){ return x["ID"] === id; });
+  if(r){ document.getElementById("kpiPopOv").classList.remove("active"); openModal(r); }
+}
+
+/* ── Pipeline ── */
+function renderLocalPipeline(idx, items){
+  var stages = ["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
+  var emojis = ["⏳","🧵","✂️","🪡","📦","✅","🚚"];
+  var colors = {
+    "Not Started":"var(--stage-notstart-txt)",
+    "Fabric":"var(--stage-fabric-txt)",
+    "Cutting":"var(--stage-cutting-txt)",
+    "Sewing":"var(--stage-sewing-txt)",
+    "Packing":"var(--stage-packing-txt)",
+    "Done":"var(--stage-done-txt)",
+    "Shipped":"var(--stage-shipped-txt)"
+  };
+  var labelsKR = ["미시작","원단","재단","봉제","포장","완료","출고"];
+  var labelsCN = ["未开始","面料","裁剪","车缝","包装","完成","出货"];
+  var counts = [0,0,0,0,0,0,0];
+  items.forEach(function(r){ var i = stages.indexOf(getProdStage(r)); if(i>=0) counts[i]++; });
+  var total = counts.reduce(function(s,n){ return s+n; }, 0);
+
+  var h = "";
+  stages.forEach(function(s, i){
+    if(i>0){
+      h += '<div class="pipe-connector"><div class="pipe-connector-diamond"></div></div>';
+    }
+    var isEmpty = counts[i] === 0;
+    var stateClass = isEmpty ? "empty" : "active";
+    h += '<div class="pipe-step '+stateClass+'" data-stage="'+s+'" onclick="openPipePop(\''+s+'\','+idx+')">';
+    h += '<div class="pipe-n" style="color:'+colors[s]+'">'+counts[i]+'</div>';
+    h += '<div class="pipe-lb"><span class="pipe-emoji">'+emojis[i]+'</span>'+labelsKR[i]+'</div>';
+    h += '<div class="pipe-sublabel">'+labelsCN[i]+'</div>';
+    h += '</div>';
+  });
+
+  var el = document.getElementById("pipeRow_"+idx);
+  if(el) el.innerHTML = h;
+
+  var summaryEl = document.querySelector('[data-pipe-summary="'+idx+'"]');
+  if(summaryEl){
+    var activeStages = counts.filter(function(n){ return n > 0; }).length;
+    summaryEl.textContent = '총 '+total+'건 · '+activeStages+'개 단계 진행 / 共 '+total+'件 · '+activeStages+'个阶段';
+  }
+}
+
+function openPipePop(stage, idx){
+  var baseItems = window['visible_mo_'+idx] || [];
+  var items = baseItems.filter(function(r){ return getProdStage(r) === stage; });
+  var stageNames = {
+    "Not Started":"⏳ 미시작 / 未开始","Fabric":"🧵 원단 / 面料","Cutting":"✂️ 재단 / 裁剪",
+    "Sewing":"🪡 봉제 / 车缝","Packing":"📦 포장 / 包装","Done":"✅ 완료 / 完成","Shipped":"🚚 출고 / 出货"
+  };
+  document.getElementById("pipePopTitle").textContent = stageNames[stage] || stage;
+  document.getElementById("pipePopSub").textContent = "총 "+items.length+"건 / 共 "+items.length+" 件";
+  var h = "";
+  if(items.length===0){
+    h = '<div class="pop-empty">해당 단계의 오더가 없습니다 / 此阶段无订单</div>';
+  } else {
+    items.forEach(function(r){
+      var dl = isDelayed(r);
+      var pq = parseInt(g(r,"Plan_Total_Quantity"))||0;
+      var aq = parseInt(g(r,"Acture_Total_Quantity"))||0;
+      h += '<div class="pop-item" onclick="openModalFromPipe(\''+r["ID"]+'\')">';
+      h += '<div class="pop-item-left"><div class="pi-mo">'+escH(g(r,"MO_Number"))+(dl?'<span class="dly-badge">DELAYED</span>':'')+'</div>';
+      h += '<div class="pi-name">'+escH(g(r,"Style_Name"))+'</div>';
+      h += '<div class="pi-meta">공장 / 工厂: '+escH(cleanFactory(g(r,"Factory")))+' · <span style="color:#6D28D9;font-weight:500">P:'+pq.toLocaleString()+'</span> / <span style="color:#047857;font-weight:500">A:'+aq.toLocaleString()+'</span> pcs</div></div>';
+      h += '<span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span></div>';
+    });
+  }
+  document.getElementById("pipePopBody").innerHTML = h;
+  document.getElementById("pipePopOv").classList.add("active");
+}
+function openModalFromPipe(id){
+  var r = allRec.find(function(x){ return x["ID"] === id; });
+  if(r){ document.getElementById("pipePopOv").classList.remove("active"); openModal(r); }
+}
+
+/* ── Monthly sections (cards + pipeline + timeline) ── */
+function renderMonthly(){
+  var sortedKeys = sortMonthKeys(Object.keys(monthGroups));
+  var html = "";
+  var mi = 0;
+
+  sortedKeys.forEach(function(key){
+    if(key === "미지정") return;
+    var items = monthGroups[key];
+    var ym = parseYM(key);
+    var idx = mi++;
+    var yy = ym ? ym.y.toString().slice(-2) : "";
+    var mm = ym ? (ym.m<10 ? "0"+ym.m : ym.m) : "";
+    var title = ym ? (yy+"."+mm+" 생산 스케줄 / "+yy+"年 "+ym.m+"月 生产安排") : "생산 스케줄";
+
+    var mCat = {}, mFac = {}, mProd = {}, mOrd = {};
+    items.forEach(function(r){
+      var c = g(r,"Category");          if(c !== "-") mCat[c] = catName(c);
+      var f = g(r,"Factory");            if(f !== "-") mFac[f] = cleanFactory(f);
+      var p = g(r,"Production_Status");  if(p !== "-") mProd[p] = p;
+      var o = g(r,"Order_Status");       if(o !== "-") mOrd[o] = o;
+    });
+
+    html += '<div class="mt-sec" id="ms'+idx+'" data-month="'+escH(key)+'"><div class="mt-card">';
+
+    html += '<div class="mt-hd"><div class="mt-title">📅 '+escH(title)+'</div>';
+    html += '<span class="mt-cnt" id="mc'+idx+'">'+items.length+' MOs</span></div>';
+
+    html += '<div class="mf-bar" data-m="'+idx+'">';
+    html += '<input type="text" class="mf-search" placeholder="🔍 MO# · SKU · 스타일 · 공장 / 搜索">';
+    html += '<select class="mf-category"><option value="">카테고리 / 分类</option>';
+    Object.keys(mCat).sort().forEach(function(k){ html += '<option value="'+escH(k)+'">'+escH(mCat[k])+'</option>'; });
+    html += '</select>';
+    html += '<select class="mf-factory"><option value="">공장 / 工厂</option>';
+    Object.keys(mFac).sort().forEach(function(k){ html += '<option value="'+escH(k)+'">'+escH(mFac[k])+'</option>'; });
+    html += '</select>';
+    html += '<select class="mf-prod"><option value="">생산 / 生产</option>';
+    Object.keys(mProd).sort().forEach(function(k){ html += '<option value="'+escH(k)+'">'+escH(k)+'</option>'; });
+    html += '</select>';
+    html += '<select class="mf-order"><option value="">오더 / 订单</option>';
+    Object.keys(mOrd).sort().forEach(function(k){ html += '<option value="'+escH(k)+'">'+escH(k)+'</option>'; });
+    html += '</select>';
+    html += '<span class="mf-count" data-mf-count="'+idx+'">'+items.length+' / '+items.length+'</span>';
+    html += '</div>';
+
+    html += '<div class="card-scroll" data-month-scroll="'+idx+'">';
+    html += '<div class="cards-flex" data-cards-m="'+idx+'">';
+    items.forEach(function(r){ html += buildMoCardHTML(r); });
+    html += '</div></div>';
+
+    html += '<div class="pipe-card">';
+    html += '<div class="pipe-header">';
+    html += '<div class="pipe-title"><span class="pipe-title-icon">⚙</span>생산 파이프라인 / 生产流水表</div>';
+    html += '<div class="pipe-summary" data-pipe-summary="'+idx+'">-</div>';
+    html += '</div>';
+    html += '<div class="pipe-row" id="pipeRow_'+idx+'"></div>';
+    html += '</div>';
+
+    if(ym) html += buildTimeline(items, ym.y, ym.m, key, idx);
+
+    html += '</div></div>';
+  });
+
+  document.getElementById("monthlyContent").innerHTML = html;
+
+  var mi2 = 0;
+  sortedKeys.forEach(function(key){
+    if(key === "미지정") return;
+    var idx = mi2++;
+    window['visible_mo_'+idx] = monthGroups[key];
+    renderLocalPipeline(idx, monthGroups[key]);
+  });
+
+  bindMonthFilters();
+
+  document.querySelectorAll(".tl-mo-info").forEach(function(el){
+    el.addEventListener("click", function(){
+      var id = this.getAttribute("data-id");
+      var r = allRec.find(function(x){ return x["ID"] === id; });
+      if(r) openModal(r);
+    });
+  });
+}
+
+/* ── MO Card ── */
+function buildMoCardHTML(r){
+  var sku = g(r,"Style_SKU");
+  var styleName = g(r,"Style_Name");
+  var itemName = g(r,"Style_Number");
+  var stage = getProdStage(r);
+  var stageCls = stageClass(stage);
+  var stageLbl = stageLabel(stage);
+  var orderCls = orderStatusClass(g(r,"Order_Status"));
+  var dl = isDelayed(r);
+  var planQty = parseInt(g(r,"Plan_Total_Quantity"))||0;
+  var actQty = parseInt(g(r,"Acture_Total_Quantity"))||0;
+  var iu = getImg1(r);
+  var ia = iu ? ' data-tlimg="'+escH(iu)+'"' : '';
+  var modDate = getModDate(r);
+
+  var p = [];
+  p.push('<div class="mo-card'+(dl?' delayed':'')+'" onclick="openModalById(\''+r["ID"]+'\')">');
+  p.push('<div class="mo-card-img"'+ia+'><span style="font-size:28px;color:#B4B2A9">👕</span></div>');
+  p.push('<div class="mo-stage-badge '+stageCls+'">'+escH(stageLbl)+'</div>');
+  p.push('<div class="mo-card-body">');
+  p.push('<div class="mo-card-identity">');
+  p.push('<div class="mo-card-label">MO#</div>');
+  p.push('<div class="mo-card-value mo-num'+(dl?' delayed-num':'')+'">'+escH(g(r,"MO_Number"))+'</div>');
+  p.push('<div class="mo-card-label">SKU</div>');
+  p.push('<div class="mo-card-value">'+escH(sku)+'</div>');
+  p.push('<div class="mo-card-label">스타일명 / 款式名</div>');
+  p.push('<div class="mo-card-value">'+escH(styleName)+'</div>');
+  p.push('<div class="mo-card-label">아이템명 / 款号</div>');
+  p.push('<div class="mo-card-value">'+escH(itemName)+'</div>');
+  p.push('</div>');
+  p.push('<div class="mo-card-meta">');
+  p.push('<div class="mo-card-meta-row"><span>카테고리 / 分类</span><span>'+escH(catName(g(r,"Category")))+'</span></div>');
+  p.push('<div class="mo-card-meta-row"><span>공장 / 工厂</span><span>'+escH(cleanFactory(g(r,"Factory")))+'</span></div>');
+  p.push('<div class="mo-card-qty-row plan"><span>PLAN</span><span>'+planQty.toLocaleString()+' pcs</span></div>');
+  p.push('<div class="mo-card-qty-row act"><span>ACT</span><span>'+actQty.toLocaleString()+' pcs</span></div>');
+  p.push('</div>');
+  p.push('<div class="mo-card-order-badge"><span class="order-badge '+orderCls+'">'+escH(g(r,"Order_Status"))+'</span></div>');
+  p.push('<div class="mo-card-dates">');
+  p.push('<div class="mo-card-dates-row'+(dl?' delayed':'')+'"><span>예상납기 / 预计</span><span>'+escH(g(r,"Expected_Delivery"))+(dl?' ⚠':'')+'</span></div>');
+  p.push('<div class="mo-card-dates-row"><span>선적일 / 出货</span><span>'+escH(g(r,"Ship_Date"))+'</span></div>');
+  p.push('<div class="mo-card-dates-row"><span>수정일 / 修改</span><span>'+escH(modDate)+'</span></div>');
+  p.push('</div>');
+  p.push('</div></div>');
+  return p.join("");
+}
+
+/* ── Filter binding ── */
+function bindMonthFilters(){
+  document.querySelectorAll('.mf-bar').forEach(function(bar){
+    var mi = bar.getAttribute('data-m');
+    var search = bar.querySelector('.mf-search');
+    if(search) search.addEventListener('input', function(){ applyMonthFilter(mi); });
+    ['.mf-category','.mf-factory','.mf-prod','.mf-order'].forEach(function(sel){
+      var el = bar.querySelector(sel);
+      if(el) el.addEventListener('change', function(){ applyMonthFilter(mi); });
+    });
+  });
+}
+
+function applyMonthFilter(mi){
+  var bar = document.querySelector('.mf-bar[data-m="'+mi+'"]');
+  if(!bar) return;
+  var q  = bar.querySelector('.mf-search').value.toLowerCase().trim();
+  var fc = bar.querySelector('.mf-category').value;
+  var ff = bar.querySelector('.mf-factory').value;
+  var fp = bar.querySelector('.mf-prod').value;
+  var fo = bar.querySelector('.mf-order').value;
+
+  var sec = document.getElementById('ms'+mi);
+  var monthKey = sec ? sec.getAttribute('data-month') : null;
+  if(!monthKey) return;
+  var source = monthGroups[monthKey] || [];
+
+  var filtered = source.filter(function(r){
+    if(q){
+      var hay = (g(r,"MO_Number")+" "+g(r,"Style_SKU")+" "+g(r,"Style_Name")+" "+g(r,"Factory")).toLowerCase();
+      if(hay.indexOf(q) < 0) return false;
+    }
+    if(fc && g(r,"Category")          !== fc) return false;
+    if(ff && g(r,"Factory")           !== ff) return false;
+    if(fp && g(r,"Production_Status") !== fp) return false;
+    if(fo && g(r,"Order_Status")      !== fo) return false;
+    return true;
+  });
+
+  var wrap = document.querySelector('[data-cards-m="'+mi+'"]');
+  if(wrap){
+    var html = "";
+    filtered.forEach(function(r){ html += buildMoCardHTML(r); });
+    wrap.innerHTML = html;
+  }
+
+  var cntEl = document.querySelector('[data-mf-count="'+mi+'"]');
+  if(cntEl) cntEl.textContent = filtered.length + ' / ' + source.length;
+  var mcEl = document.getElementById('mc'+mi);
+  if(mcEl) mcEl.textContent = filtered.length + ' MOs';
+
+  window['visible_mo_'+mi] = filtered;
+  renderLocalPipeline(mi, filtered);
+
+  setTimeout(loadTlImgs, 100);
+}
+
+/* ── Timeline ── */
+function buildTimeline(items, yr, mo, label, idx){
+  var daysInMonth = new Date(yr, mo, 0).getDate();
+  var curMM = yr + "-" + (mo<10?"0":"") + mo;
+  var todayD = (today.getFullYear()===yr && today.getMonth()+1===mo) ? today.getDate() : 0;
+  var yy = yr.toString().slice(-2);
+  var mm = mo<10 ? "0"+mo : mo;
+  var title = yy+"."+mm+" 생산 타임라인 / "+yy+"年 "+mo+"月 生产排期";
+  var h = '<div class="tl-card"><div class="tl-hd"><div class="tl-title">📊 '+escH(title)+'</div>';
+  h += '<div class="tl-legend">';
+  h += '<span class="tl-type-badge" style="background:#F5F3FF;color:#7C3AED;border:1px dashed #C4B5FD">P = Plan</span>';
+  h += '<span class="tl-type-badge" style="background:#ECFDF5;color:#047857">A = Actual</span>';
+  h += '<span><span class="tl-dot" style="background:#DDD6FE"></span>Fab</span>';
+  h += '<span><span class="tl-dot" style="background:#FEF3C7;border:1px solid #FDE68A"></span>Cut</span>';
+  h += '<span><span class="tl-dot" style="background:#E0F2FE;border:1px solid #BAE6FD"></span>Sew</span>';
+  h += '<span><span class="tl-dot" style="background:#D1FAE5;border:1px solid #A7F3D0"></span>Pack</span>';
+  h += '<span><span class="tl-dot" style="background:#BFDBFE"></span>Ship</span>';
+  h += '</div></div>';
+  h += '<div class="tl-scroll"><table class="tl-tbl"><thead><tr><th class="info-cell">MO / Style</th>';
+  for(var d=1; d<=daysInMonth; d++){
+    var dt = new Date(yr, mo-1, d), dow = dt.getDay();
+    var cls = (dow===0||dow===6) ? "wk" : "";
+    if(d === todayD) cls = "today";
+    h += '<th class="'+cls+'">'+d+'</th>';
+  }
+  h += '</tr></thead><tbody>';
+
+  var hasAny = false, first = true;
+  items.forEach(function(r){
+    var fields = ["Plan_Fabric_Date","Plan_Cutting_Start","Plan_Cutting_End","Plan_Sewing_Start","Plan_Sewing_End","Plan_Packing_Start","Plan_Packing_End","Fabric_In_house_Date","Cutting_Start_Date","Cutting_End_Date","Sewing_Start_Date","Sewing_Completion_Date","Packing_Start_Date","Packing_End_Date","Ship_Date"];
+    var inMonth = false;
+    fields.forEach(function(f){ var p = pd(g(r,f)); if(p && p.substring(0,7) === curMM) inMonth = true; });
+    var edp = pd(g(r,"Expected_Delivery"));
+    if(edp && edp.substring(0,7) === curMM) inMonth = true;
+    if(!inMonth) return;
+    hasAny = true;
+
+    var attr = ' data-m="'+idx+'" data-id="'+r["ID"]+'"';
+    if(!first){
+      h += '<tr class="mo-gap"'+attr+'><td class="info-cell"></td>';
+      for(var gd=1; gd<=daysInMonth; gd++){ h += '<td'+((gd===todayD)?' class="today-col"':'')+'></td>'; }
+      h += '</tr>';
+    }
+    first = false;
+
+    var pq = parseInt(g(r,"Plan_Total_Quantity"))||0;
+    var iu = getImg1(r);
+    var ia = iu ? ' data-tlimg="'+escH(iu)+'"' : '';
+    h += '<tr'+attr+'><td class="info-cell tl-mo-info" rowspan="2" data-id="'+r["ID"]+'">';
+    h += '<div class="tl-mo-wrap"><div class="tl-mo-thumb"'+ia+'>👕</div>';
+    h += '<div><div class="tl-mo-num">'+escH(g(r,"MO_Number"))+'</div>';
+    h += '<div class="tl-mo-name">'+escH(g(r,"Style_Name"))+'</div>';
+    h += '<div class="tl-mo-meta">'+escH(cleanFactory(g(r,"Factory")))+' · <span style="color:#6D28D9;font-weight:500">P:'+pq.toLocaleString()+'</span>pcs</div>';
+    h += '</div></div></td>';
+
+    var pF = dayInMo(g(r,"Plan_Fabric_Date"), curMM);
+    var pCS = dayInMo(g(r,"Plan_Cutting_Start"), curMM);
+    var pCE = dayInMo(g(r,"Plan_Cutting_End"), curMM);
+    var pSS = dayInMo(g(r,"Plan_Sewing_Start"), curMM);
+    var pSE = dayInMo(g(r,"Plan_Sewing_End"), curMM);
+    var pPS = dayInMo(g(r,"Plan_Packing_Start"), curMM);
+    var pPE = dayInMo(g(r,"Plan_Packing_End"), curMM);
+    var pSh = dayInMo(g(r,"Expected_Delivery"), curMM);
+    h += buildBarRow(daysInMonth, todayD, pF, pCS, pCE, pSS, pSE, pPS, pPE, pSh, true) + '</tr>';
+
+    var aF = dayInMo(g(r,"Fabric_In_house_Date"), curMM);
+    var aCS = dayInMo(g(r,"Cutting_Start_Date"), curMM);
+    var aCE = dayInMo(g(r,"Cutting_End_Date"), curMM);
+    var aSS = dayInMo(g(r,"Sewing_Start_Date"), curMM);
+    var aSE = dayInMo(g(r,"Sewing_Completion_Date"), curMM);
+    var aPS = dayInMo(g(r,"Packing_Start_Date"), curMM);
+    var aPE = dayInMo(g(r,"Packing_End_Date"), curMM);
+    var aSh = dayInMo(g(r,"Ship_Date"), curMM);
+    h += '<tr'+attr+'>' + buildBarRow(daysInMonth, todayD, aF, aCS, aCE, aSS, aSE, aPS, aPE, aSh, false) + '</tr>';
+  });
+  if(!hasAny){
+    h += '<tr><td class="info-cell" colspan="'+(daysInMonth+1)+'" style="text-align:center;padding:16px;color:#94A3B8;font-size:10px">이 달에 해당하는 일정이 없습니다 / 本月暂无日程</td></tr>';
+  }
+  h += '</tbody></table></div></div>';
+  return h;
+}
+
+function dayInMo(v, curMM){
+  var p = pd(v);
+  if(!p || p.substring(0,7) !== curMM) return 0;
+  return parseInt(p.substring(8,10)) || 0;
+}
+
+function buildBarRow(days, todayD, fab, cs, ce, ss, se, ps, pe, ship, isPlan){
+  var pf = isPlan ? "pb" : "ab";
+  var map = new Array(days+2);
+  for(var i=0; i<=days+1; i++) map[i] = null;
+  if(fab>0 && fab<=days) map[fab] = "fab";
+  if(cs>0){ for(var i=cs; i<=(ce||cs) && i<=days; i++) map[i] = "cut"; }
+  if(ss>0){ for(var i=ss; i<=(se||ss) && i<=days; i++) map[i] = "sew"; }
+  if(ps>0){ for(var i=ps; i<=(pe||ps) && i<=days; i++) map[i] = "pack"; }
+  if(ship>0 && ship<=days) map[ship] = "ship";
+  var lb = {fab:"FAB",cut:"CUT",sew:"SEW",pack:"PACK",ship:"SHIP"};
+  var h = "", d = 1;
+  while(d <= days){
+    var t = map[d];
+    var tc2 = (d === todayD) ? ' class="today-col"' : '';
+    if(!t){ h += '<td'+tc2+'></td>'; d++; }
+    else {
+      var sp = 1;
+      while(d+sp <= days && map[d+sp] === t) sp++;
+      h += '<td'+(sp>1?' colspan="'+sp+'"':'')+tc2+'><div class="tl-bar '+pf+'-'+t+'">'+lb[t]+'</div></td>';
+      d += sp;
+    }
+  }
+  return h;
+}
+
+/* ═══════════════════════════════════════════════
+   MO Detail Modal — v30 redesigned
+═══════════════════════════════════════════════ */
 function openModal(r){
   currentMO = r;
   var modDt = getModDate(r);
@@ -2259,14 +3194,14 @@ function openModal(r){
   function dv(v){ return v==="-" ? '<span class="d-val empty">미입력 / 未填写</span>' : escH(v); }
   function it(l, v){ return '<div class="d-item"><span class="d-label">'+l+'</span><span class="d-val">'+v+'</span></div>'; }
 
-  /* ── HERO: 4 image slots + QR ── */
+  /* ── (1) HERO: 4 image slots + QR ── */
   var imageGroups = [
     { label: "Style Image / 스타일 / 款式", field: "Style_Image" },
     { label: "Top Flat / 상의 도안 / 上衣图", field: "Top_Flat_Sketch" },
     { label: "Bottom Flat / 하의 도안 / 下装图", field: "Bottom_Flat_Sketch" },
     { label: "Color Image / 색상 / 色卡", field: "Color_Image" }
   ];
-  var imgLoadQueue = [];
+  var imgLoadQueue = []; // {elementId, url}
 
   h += '<div class="m-hero">';
   h += '<div class="m-hero-imgs">';
@@ -2281,27 +3216,36 @@ function openModal(r){
       h += '<div class="m-hero-img-box" id="'+id+'"><div class="spinner-sm"></div></div>';
       imgLoadQueue.push({id:id, url:imgs[0]});
     } else {
+      // Multiple images → show first, badge for count
       var id = 'heroImg_'+gi+'_0';
       h += '<div class="m-hero-img-box" id="'+id+'" style="position:relative"><div class="spinner-sm"></div>';
       h += '<span style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.6);color:#fff;font-size:9px;padding:2px 6px;border-radius:3px;font-weight:500">+'+(imgs.length-1)+'</span>';
       h += '</div>';
       imgLoadQueue.push({id:id, url:imgs[0]});
+      // Store extra images for lightbox navigation (simple approach: they all open first one)
+      // For v30 simplicity: click shows first image in lightbox. Can enhance later.
     }
     h += '</div>';
   });
   h += '</div>';
+
+  // QR_Code (right side)
   var qrImgs = getAllImgs(r, "QR_Code");
   var qrSku = g(r, "QR_SKU");
-  h += '<div class="m-hero-qr"><div class="m-hero-qr-label">QR CODE</div>';
+  h += '<div class="m-hero-qr">';
+  h += '<div class="m-hero-qr-label">QR CODE</div>';
   if(qrImgs.length > 0){
-    h += '<div class="m-hero-qr-box" id="heroQR"><div class="spinner-sm"></div></div>';
-    imgLoadQueue.push({id:'heroQR', url:qrImgs[0], isQR:true});
+    var qrId = 'heroQR';
+    h += '<div class="m-hero-qr-box" id="'+qrId+'"><div class="spinner-sm"></div></div>';
+    imgLoadQueue.push({id:qrId, url:qrImgs[0], isQR:true});
   } else {
     h += '<div class="m-hero-qr-box empty"><span class="empty-icon">🔲</span></div>';
   }
   if(qrSku !== "-") h += '<div class="m-hero-qr-sku">'+escH(qrSku)+'</div>';
-  h += '</div></div>';
+  h += '</div>';
+  h += '</div>';
 
+  /* ── (2) Basic info ── */
   h += '<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 订单信息</div><div class="d-grid">';
   h += it("MO 번호 / 订单号", dv(g(r,"MO_Number")));
   h += it("스타일 SKU / 款式SKU", dv(g(r,"Style_SKU")));
@@ -2318,6 +3262,7 @@ function openModal(r){
   h += it("진행년월 / 进行年月", dv(g(r,"Plan_Year")) + "-" + dv(g(r,"Plan_Month")));
   h += '</div></div>';
 
+  /* ── (3) Product definition ── */
   h += '<div class="m-sec"><div class="m-sec-t">👗 제품 정의 / 产品定义</div><div class="d-grid">';
   h += it("상의 유형 / 上衣类型", dv(mv("Top_Type", g(r,"Top_Type"))));
   h += it("소매 유형 / 衣袖类型", dv(mv("Sleeve", g(r,"Sleeve"))));
@@ -2327,38 +3272,51 @@ function openModal(r){
   h += it("하의 기장 / 下装长短", dv(mv("Bottom_Length", g(r,"Bottom_Length"))));
   h += '</div></div>';
 
+  /* ── (4) Fabric info (v32: moved up under Product Definition) ── */
   h += '<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料信息</div><div class="d-grid">';
   h += it("원단 종류 / 面料种类", dv(mv("Material_Type", g(r,"Material_Type"))));
   h += it("혼방 % / 混纺 %", dv(g(r,"blended_percentage")));
   h += it("안감 / 里料类型", dv(mv("Lining_Type", g(r,"Lining_Type"))));
   h += '</div></div>';
 
-  h += '<div class="m-sec"><div class="m-sec-t">&#128208; 사이즈 스펙 / 尺寸规格 / Size Specs</div>';
+  /* ── (4.5) 사이즈 스펙 (NEW in v33) ── */
+  h += '<div class="m-sec">';
+  h += '<div class="m-sec-t">&#128208; 사이즈 스펙 / 尺寸规格 / Size Specs</div>';
   h += '<div class="spec-toggle" onclick="toggleSpec(this)">';
   h += '<span class="spec-toggle-label">펼쳐서 보기 <span class="dim">/ 展开查看 / Click to expand</span></span>';
   h += '<span class="spec-toggle-icon">&#9660;</span>';
-  h += '</div><div class="spec-content">'+renderSizeSpecs(r)+'</div></div>';
+  h += '</div>';
+  h += '<div class="spec-content">'+renderSizeSpecs(r)+'</div>';
+  h += '</div>';
 
-  h += '<div class="m-sec csm-section"><div class="m-sec-t">🎨 색상 × 사이즈 × 단가 / 颜色 × 尺码 × 单价</div>';
+
+  /* ── (5) Color × Size × Price Matrix (with auto color dots) ── */
+  h += '<div class="m-sec csm-section">';
+  h += '<div class="m-sec-t">🎨 색상 × 사이즈 × 단가 / 颜色 × 尺码 × 单价</div>';
   h += '<div class="csm-tabs">';
   h += '<button class="csm-tab plan active" onclick="switchCsmTab(this,\'plan\')">📋 PLAN / 주문 / 订单</button>';
   h += '<button class="csm-tab actual" onclick="switchCsmTab(this,\'actual\')">✅ ACTUAL / 실출고 / 实际出货</button>';
   h += '</div>';
   h += '<div class="csm-pane plan active">' + renderColorSizeMatrix(r, "Plan_") + '</div>';
   h += '<div class="csm-pane actual">' + renderColorSizeMatrix(r, "Acture_") + '</div>';
+  // v32: Plan vs Actual comparison KPI (auto-computed, readonly)
   h += renderCsmCompare(r);
   h += '</div>';
 
-  h += '<div class="m-sec pack-section"><div class="m-sec-t">📦 중간 포장 & Bulto / 中间包装 & 麻袋 / Inner Pack & Master Bag</div>';
+  /* ── (6) Inner Pack & Bulto ── */
+  h += '<div class="m-sec pack-section">';
+  h += '<div class="m-sec-t">📦 중간 포장 & Bulto / 中间包装 & 麻袋 / Inner Pack & Master Bag</div>';
   h += renderPackAndBulto(r);
   h += '</div>';
 
+  /* ── (7) Production tracking ── */
   h += '<div class="m-sec"><div class="m-sec-t">🏭 생산 추적 / 生产跟踪</div><div class="d-grid">';
   h += it("생산상태 / 生产状态", '<span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span>');
   h += it("원단상태 / 面料进度", dv(g(r,"Fabric_Status")));
   h += it("진척률 / 进度", dv(g(r,"Progress")));
   h += '</div></div>';
 
+  /* ── (8) Schedule with color-coded status ── */
   h += '<div class="m-sec"><div class="m-sec-t">📅 생산 일정 / 生产日期</div><div class="schedule-compare">';
   // Plan side
   h += '<div class="schedule-col"><div class="schedule-col-title plan">📋 Plan 일정 / 计划日期</div>';
@@ -2401,6 +3359,7 @@ function openModal(r){
   });
   h += '</div></div></div>';
 
+  /* ── (9) QC (now before shipping) ── */
   h += '<div class="m-sec"><div class="m-sec-t">🔍 QC 정보 / 质检信息</div><div class="d-grid">';
   h += it("QC 상태 / 质检状态", dv(g(r,"QC_Status")));
   h += it("QC 일자 / 质检日期", dv(g(r,"QC_Date")));
@@ -2410,6 +3369,7 @@ function openModal(r){
   h += it("재작업수량 / 返工数量", dv(g(r,"Rework_Quantity")));
   h += '</div></div>';
 
+  /* ── (10) Shipping (moved to bottom) ── */
   h += '<div class="m-sec"><div class="m-sec-t">🚢 출고 정보 / 出货信息</div><div class="d-grid">';
   h += it("출고준비 / 待出货", dv(g(r,"Ready_to_Ship")));
   h += it("최종QC / 最终QC", dv(g(r,"Final_QC_Passed")));
@@ -2421,6 +3381,7 @@ function openModal(r){
   document.getElementById("mBody").innerHTML = h;
   document.getElementById("modalOv").classList.add("active");
 
+  // Load all queued images
   setTimeout(function(){
     imgLoadQueue.forEach(function(task){
       var css = task.isQR
@@ -2430,11 +3391,13 @@ function openModal(r){
     });
   }, 100);
 }
+
 function closeModal(){
   document.getElementById("modalOv").classList.remove("active");
   currentMO = null;
 }
 
+/* ── Style Info nested modal ── */
 function openStyleModal(s){
   document.getElementById("smTitle").textContent = g(s,"Style_SKU");
   document.getElementById("smSub").textContent = g(s,"Style_Name");
@@ -2461,11 +3424,16 @@ function openStyleModal(s){
   h += it("상태 / 款式状态", dv(g(s,"Style_Status")));
   h += '</div></div>';
 
-  h += '<div class="m-sec"><div class="m-sec-t">&#128208; 사이즈 스펙 / 尺寸规格 / Size Specs</div>';
+  /* ── 사이즈 스펙 — 접힘/펼침 (NEW in v33) ── */
+  h += '<div class="m-sec">';
+  h += '<div class="m-sec-t">&#128208; 사이즈 스펙 / 尺寸规格 / Size Specs</div>';
   h += '<div class="spec-toggle" onclick="toggleSpec(this)">';
   h += '<span class="spec-toggle-label">펼쳐서 보기 <span class="dim">/ 展开查看 / Click to expand</span></span>';
   h += '<span class="spec-toggle-icon">&#9660;</span>';
-  h += '</div><div class="spec-content">'+renderSizeSpecs(s)+'</div></div>';
+  h += '</div>';
+  h += '<div class="spec-content">'+renderSizeSpecs(s)+'</div>';
+  h += '</div>';
+
 
   h += '<div class="m-sec"><div class="m-sec-t">👗 제품 정의 / 产品定义</div><div class="d-grid">';
   h += it("상의 유형 / 上衣类型", dv(mv("Top_Type", g(s,"Top_Type"))));
@@ -2496,36 +3464,99 @@ function openStyleModal(s){
   }, 100);
 }
 
-/* ── Event bindings ── */
-document.getElementById("urgPopClose").addEventListener("click",function(){document.getElementById("urgencyPopOv").classList.remove("active")});
-document.getElementById("urgencyPopOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
-document.getElementById("skpiPopClose").addEventListener("click",closeSkpiPop);
-document.getElementById("styleKpiPopOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
-document.getElementById("mkpiPopClose").addEventListener("click",closeMkpiPop);
-document.getElementById("moKpiPopOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
-document.getElementById("pipePopClose").addEventListener("click",closePipePop);
-document.getElementById("pipePopOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
-document.getElementById("mClose").addEventListener("click",closeModal);
-document.getElementById("modalOv").addEventListener("click",function(e){if(e.target===this)closeModal()});
-document.getElementById("smClose").addEventListener("click",function(){document.getElementById("styleModalOv").classList.remove("active")});
-document.getElementById("styleModalOv").addEventListener("click",function(e){if(e.target===this)this.classList.remove("active")});
-document.getElementById("btnStyleInfo").addEventListener("click",function(){
-  if(!currentMO)return;
-  var sku=g(currentMO,"Style_SKU");
-  var style=allStyles.find(function(s){return g(s,"Style_SKU")===sku||g(s,"SKU")===sku});
-  if(style)openStyleModal(style);
-  else alert("해당 SKU의 스타일 정보를 찾을 수 없습니다 / 未找到对应款式: "+sku);
+/* ── Static event bindings ── */
+document.getElementById("kpiPopClose").addEventListener("click", function(){ document.getElementById("kpiPopOv").classList.remove("active"); });
+document.getElementById("kpiPopOv").addEventListener("click", function(e){ if(e.target === this) this.classList.remove("active"); });
+document.getElementById("pipePopClose").addEventListener("click", function(){ document.getElementById("pipePopOv").classList.remove("active"); });
+document.getElementById("pipePopOv").addEventListener("click", function(e){ if(e.target === this) this.classList.remove("active"); });
+document.getElementById("mClose").addEventListener("click", closeModal);
+document.getElementById("modalOv").addEventListener("click", function(e){ if(e.target === this) closeModal(); });
+document.getElementById("smClose").addEventListener("click", function(){ document.getElementById("styleModalOv").classList.remove("active"); });
+document.getElementById("styleModalOv").addEventListener("click", function(e){ if(e.target === this) this.classList.remove("active"); });
+document.getElementById("btnStyleInfo").addEventListener("click", function(){
+  if(!currentMO) return;
+  var sku = g(currentMO, "Style_SKU");
+  var style = allStyles.find(function(s){ return g(s,"Style_SKU") === sku || g(s,"SKU") === sku; });
+  if(style) openStyleModal(style);
+  else alert("해당 SKU의 스타일 정보를 찾을 수 없습니다 / 未找到对应款式: " + sku);
 });
-document.addEventListener("keydown",function(e){
-  if(e.key!=="Escape")return;
-  if(document.getElementById("lightboxOv").classList.contains("active")){closeLightbox();return}
-  if(document.getElementById("styleModalOv").classList.contains("active")){document.getElementById("styleModalOv").classList.remove("active");return}
-  if(document.getElementById("urgencyPopOv").classList.contains("active")){document.getElementById("urgencyPopOv").classList.remove("active");return}
-  if(document.getElementById("styleKpiPopOv").classList.contains("active")){closeSkpiPop();return}
-  if(document.getElementById("moKpiPopOv").classList.contains("active")){closeMkpiPop();return}
-  if(document.getElementById("pipePopOv").classList.contains("active")){closePipePop();return}
-  if(document.getElementById("modalOv").classList.contains("active")){closeModal()}
+document.addEventListener("keydown", function(e){
+  if(e.key !== "Escape") return;
+  if(document.getElementById("lightboxOv").classList.contains("active")){ closeLightbox(); return; }
+  if(document.getElementById("styleModalOv").classList.contains("active")){ document.getElementById("styleModalOv").classList.remove("active"); return; }
+  if(document.getElementById("kpiPopOv").classList.contains("active")){ document.getElementById("kpiPopOv").classList.remove("active"); return; }
+  if(document.getElementById("pipePopOv").classList.contains("active")){ document.getElementById("pipePopOv").classList.remove("active"); return; }
+  if(document.getElementById("modalOv").classList.contains("active")){ closeModal(); }
 });
+
+/* ── Size Spec helpers (NEW in v33) ── */
+function parseSpecJSON(r, field){
+  var raw = r[field];
+  if(!raw || typeof raw !== "string") return [];
+  var s = raw.trim();
+  if(!s) return [];
+  if(!s.startsWith("[")) s = "[" + s + "]";
+  try{ return JSON.parse(s) || []; }catch(e){ return []; }
+}
+
+function renderSpecTable(items){
+  if(!items || items.length === 0)
+    return '<div class="spec-empty">데이터 없음 / 无数据</div>';
+  var sizeKeys = ['s','m','l','xl'];
+  var sizeLabels = {s:'S', m:'M', l:'L', xl:'XL'};
+  var activeSizes = sizeKeys.filter(function(k){
+    return items.some(function(row){ return row[k] && row[k] !== ""; });
+  });
+  var hasNotes = items.some(function(row){ return row.notes && row.notes !== ""; });
+  var h = '<table class="spec-tbl"><thead><tr>';
+  h += '<th class="spec-th-pom">POM / 측정부위 / 测量部位</th>';
+  activeSizes.forEach(function(k){ h += '<th>'+sizeLabels[k]+'</th>'; });
+  if(hasNotes) h += '<th class="spec-th-notes">비고 / 备注</th>';
+  h += '</tr></thead><tbody>';
+  items.forEach(function(row){
+    if(!row.pom) return;
+    h += '<tr><td class="spec-td-pom">'+escH(row.pom)+'</td>';
+    activeSizes.forEach(function(k){
+      var v = row[k];
+      h += '<td>'+(v && v !== '' ? escH(String(v)) : '<span style="color:#CDC9C0">-</span>')+'</td>';
+    });
+    if(hasNotes) h += '<td class="spec-td-notes">'+escH(row.notes||'')+'</td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table>';
+  return h;
+}
+
+function renderSizeSpecs(r){
+  var topItems = parseSpecJSON(r, "Top_Spec_JSON");
+  var botItems = parseSpecJSON(r, "Bottom_Spec_JSON");
+  if(topItems.length === 0 && botItems.length === 0)
+    return '<div class="spec-empty">사이즈 스펙 없음 / 无尺寸规格</div>';
+  var h = '';
+  if(topItems.length > 0){
+    h += '<div class="spec-group">';
+    h += '<div class="spec-group-title">TOP / 상의 / 上衣</div>';
+    h += renderSpecTable(topItems);
+    h += '</div>';
+  }
+  if(botItems.length > 0){
+    h += '<div class="spec-group">';
+    h += '<div class="spec-group-title">BOTTOM / 하의 / 下衣</div>';
+    h += renderSpecTable(botItems);
+    h += '</div>';
+  }
+  return h;
+}
+
+function toggleSpec(el){
+  var content = el.nextElementSibling;
+  var icon = el.querySelector('.spec-toggle-icon');
+  if(!content) return;
+  var isOpen = content.classList.contains('open');
+  content.classList.toggle('open', !isOpen);
+  if(icon) icon.classList.toggle('open', !isOpen);
+}
+
 </script>
 </body>
 </html>
