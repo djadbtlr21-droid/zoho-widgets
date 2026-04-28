@@ -580,7 +580,7 @@ body{padding:16px;min-height:100vh}
 .prod-log-tbl{width:100%;border-collapse:collapse;font-size:10px}
 .prod-log-tbl th,.prod-log-tbl td{border:1px solid var(--border);padding:5px 8px;text-align:center;vertical-align:middle}
 .prod-log-tbl thead tr{background:#F5F3EF;font-weight:500}
-.prod-log-row-latest td{color:#DC2626 !important;font-weight:600}
+.prod-log-row-latest td{color:#2563EB !important;font-weight:600}
 
 /* ── Packing Status section ── */
 .pack-progress-wrap{background:#F8F7F3;border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px}
@@ -596,7 +596,7 @@ body{padding:16px;min-height:100vh}
 .pack-list-tbl{width:100%;border-collapse:collapse;font-size:10px}
 .pack-list-tbl th,.pack-list-tbl td{border:1px solid var(--border);padding:5px 8px;text-align:center;vertical-align:middle}
 .pack-list-tbl thead tr{background:#F5F3EF;font-weight:500}
-.pack-list-row-latest td{color:#DC2626 !important;font-weight:600}
+.pack-list-row-latest td{color:#2563EB !important;font-weight:600}
 .pack-sub-toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:7px 12px;background:#F5F3EF;border:1px solid var(--border);border-radius:6px;margin-top:10px;transition:background .15s;user-select:none}
 .pack-sub-toggle:hover{background:var(--p-lav)}
 .pack-sub-content{margin-top:8px;display:none}
@@ -2269,16 +2269,11 @@ function openModal(r){
 
   /* ── (7) Production tracking ── */
   h += '<div class="m-sec"><div class="m-sec-t">🏭 생산 추적 / 生产跟踪</div>';
-  h += '<div class="d-grid">';
-  h += it("생산상태 / 生产状态", '<span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span>');
-  h += '</div>';
-  h += '<div style="margin-top:10px">';
   h += '<div class="spec-toggle" onclick="toggleProdLog(this)">';
   h += '<span class="spec-toggle-label">📋 생산 로그 / 生产记录 <span class="dim">/ 展开查看</span></span>';
   h += '<span class="spec-toggle-icon">&#9660;</span>';
   h += '</div>';
   h += '<div class="spec-content" id="prodLogContent"></div>';
-  h += '</div>';
   h += '</div>';
 
   /* ── (7.5) Packing Status ── */
