@@ -789,6 +789,32 @@ body{padding:16px;min-height:100vh}
 .spec-toggle-icon.open{transform:rotate(180deg)}
 .spec-content{margin-top:10px;display:none}
 .spec-content.open{display:block}
+
+/* ── Production Log table ── */
+.prod-log-tbl{width:100%;border-collapse:collapse;font-size:10px}
+.prod-log-tbl th,.prod-log-tbl td{border:1px solid var(--border);padding:5px 8px;text-align:center;vertical-align:middle}
+.prod-log-tbl thead tr{background:#F5F3EF;font-weight:500}
+.prod-log-row-latest td{color:#DC2626 !important;font-weight:600}
+
+/* ── Packing Status section ── */
+.pack-progress-wrap{background:#F8F7F3;border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px}
+.pack-progress-title{font-size:11px;font-weight:500;color:var(--text-soft);margin-bottom:8px}
+.pack-progress-bar-bg{width:100%;height:10px;background:#E5E7EB;border-radius:5px;overflow:hidden}
+.pack-progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),#E8C37A);border-radius:5px;transition:width .3s ease}
+.pack-progress-label{display:flex;justify-content:space-between;font-size:10px;color:var(--text-mute);margin-top:5px}
+.pack-status-section{margin-top:10px}
+.pack-status-title{font-size:10px;font-weight:500;color:var(--text-mute);letter-spacing:.03em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.pack-status-tbl{width:100%;border-collapse:collapse;font-size:10px;margin-bottom:4px}
+.pack-status-tbl td{padding:3px 8px}
+.pack-status-tbl tr:nth-child(even) td{background:#FAFAF7}
+.pack-list-tbl{width:100%;border-collapse:collapse;font-size:10px}
+.pack-list-tbl th,.pack-list-tbl td{border:1px solid var(--border);padding:5px 8px;text-align:center;vertical-align:middle}
+.pack-list-tbl thead tr{background:#F5F3EF;font-weight:500}
+.pack-list-row-latest td{color:#DC2626 !important;font-weight:600}
+.pack-sub-toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:7px 12px;background:#F5F3EF;border:1px solid var(--border);border-radius:6px;margin-top:10px;transition:background .15s;user-select:none}
+.pack-sub-toggle:hover{background:var(--p-lav)}
+.pack-sub-content{margin-top:8px;display:none}
+.pack-sub-content.open{display:block}
 .spec-group{margin-bottom:14px}
 .spec-group:last-child{margin-bottom:0}
 .spec-group-title{font-size:11px;font-weight:500;color:var(--text-soft);
@@ -2673,11 +2699,28 @@ function openModal(r){
   h += '</div>';
 
   /* ── (7) Production tracking ── */
-  h += '<div class="m-sec"><div class="m-sec-t">🏭 생산 추적 / 生产跟踪</div><div class="d-grid">';
+  h += '<div class="m-sec"><div class="m-sec-t">🏭 생산 추적 / 生产跟踪</div>';
+  h += '<div class="d-grid">';
   h += it("생산상태 / 生产状态", '<span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span>');
-  h += it("원단상태 / 面料进度", dv(g(r,"Fabric_Status")));
-  h += it("진척률 / 进度", dv(g(r,"Progress")));
-  h += '</div></div>';
+  h += '</div>';
+  h += '<div style="margin-top:10px">';
+  h += '<div class="spec-toggle" onclick="toggleProdLog(this)">';
+  h += '<span class="spec-toggle-label">📋 생산 로그 / 生产记录 <span class="dim">/ 展开查看</span></span>';
+  h += '<span class="spec-toggle-icon">&#9660;</span>';
+  h += '</div>';
+  h += '<div class="spec-content" id="prodLogContent"></div>';
+  h += '</div>';
+  h += '</div>';
+
+  /* ── (7.5) Packing Status ── */
+  h += '<div class="m-sec">';
+  h += '<div class="m-sec-t">📦 포장 현황 / 包装现况</div>';
+  h += '<div class="spec-toggle" onclick="togglePackingSection(this)">';
+  h += '<span class="spec-toggle-label">포장 진행 현황 보기 <span class="dim">/ 查看包装进度</span></span>';
+  h += '<span class="spec-toggle-icon">&#9660;</span>';
+  h += '</div>';
+  h += '<div class="spec-content" id="packingContent"></div>';
+  h += '</div>';
 
   /* ── (8) Schedule with color-coded status ── */
   h += '<div class="m-sec"><div class="m-sec-t">📅 생산 일정 / 生产日期</div><div class="schedule-compare">';
@@ -2965,6 +3008,270 @@ function renderSizeSpecs(r){
 }
 
 function toggleSpec(el){
+  var content = el.nextElementSibling;
+  var icon = el.querySelector('.spec-toggle-icon');
+  if(!content) return;
+  var isOpen = content.classList.contains('open');
+  content.classList.toggle('open', !isOpen);
+  if(icon) icon.classList.toggle('open', !isOpen);
+}
+
+/* ── Production Log collapsible ── */
+var PROCESS_LABELS = {
+  'Fabric_In':     '面料入库 / 원단입고',
+  'Cutting_Start': '裁剪开始 / 재단 시작',
+  'Cutting_End':   '裁剪完成 / 재단 완료',
+  'Sewing_Start':  '车缝开始 / 봉제 시작',
+  'Sewing_End':    '车缝完成 / 봉제 완료',
+  'Packing_Start': '包装开始 / 포장 시작',
+  'Packing_End':   '包装完成 / 포장 완료',
+  'Shipped':       '出货 / 출고',
+  'Cutting':       '裁剪 / 재단',
+  'Sewing':        '车缝 / 봉제',
+  'Packing':       '包装 / 포장',
+  'Completed':     '完成 / 완료'
+};
+
+function toggleProdLog(el){
+  var content = el.nextElementSibling;
+  var icon = el.querySelector('.spec-toggle-icon');
+  if(!content) return;
+  var isOpen = content.classList.contains('open');
+  if(!isOpen){
+    content.classList.add('open');
+    if(icon) icon.classList.add('open');
+    if(!content.dataset.loaded){
+      content.dataset.loaded = '1';
+      content.innerHTML = '<div style="text-align:center;padding:20px"><div class="spinner-sm" style="display:inline-block"></div></div>';
+      var moNum = currentMO ? g(currentMO,'MO_Number') : '';
+      loadProductionLogs(moNum).then(function(logs){
+        content.innerHTML = renderProdLogTable(logs);
+      }).catch(function(){
+        content.innerHTML = '<div style="text-align:center;padding:16px;font-size:11px;color:#94A3B8">로그 로딩 실패 / 加载失败</div>';
+      });
+    }
+  } else {
+    content.classList.remove('open');
+    if(icon) icon.classList.remove('open');
+  }
+}
+
+function loadProductionLogs(moNumber){
+  return ZOHO.CREATOR.API.getAllRecords({
+    appName: APP,
+    reportName: 'Production_Log_Report',
+    criteria: 'MO_Number == "'+moNumber+'"',
+    page: 1,
+    pageSize: 200
+  }).then(function(result){
+    var logs = (result && result.data) ? result.data : [];
+    logs.sort(function(a,b){
+      var da = pd(g(a,'Log_Date'))||'', db = pd(g(b,'Log_Date'))||'';
+      return da < db ? -1 : da > db ? 1 : 0;
+    });
+    return logs;
+  }).catch(function(){ return []; });
+}
+
+function renderProdLogTable(logs){
+  if(!logs || logs.length === 0){
+    return '<div style="text-align:center;padding:16px;font-size:11px;color:#94A3B8">기록 없음 / 暂无记录</div>';
+  }
+  var h = '<div style="overflow-x:auto;margin-top:10px">';
+  h += '<table class="prod-log-tbl"><thead><tr>';
+  h += '<th>공정 / 工序</th>';
+  h += '<th>완성수량 / 完成数量</th>';
+  h += '<th>미완성수량 / 未完成数量</th>';
+  h += '<th>담당자 / 担当者</th>';
+  h += '<th>기록시간 / 记录时间</th>';
+  h += '<th>비고 / 备注</th>';
+  h += '</tr></thead><tbody>';
+  logs.forEach(function(log, idx){
+    var isLatest = (idx === logs.length-1);
+    var proc = g(log,'Process');
+    var procLabel = PROCESS_LABELS[proc] || proc;
+    var cQty = g(log,'Completed_Qty');
+    var iQty = g(log,'Incomplete_Qty');
+    var rowCls = isLatest ? ' class="prod-log-row-latest"' : '';
+    h += '<tr'+rowCls+'>';
+    h += '<td>'+escH(procLabel)+'</td>';
+    h += '<td>'+(cQty==='-'?'-':Number(cQty).toLocaleString())+'</td>';
+    h += '<td>'+(iQty==='-'?'-':Number(iQty).toLocaleString())+'</td>';
+    h += '<td>'+escH(g(log,'Worker'))+'</td>';
+    h += '<td>'+escH(g(log,'Log_Date'))+'</td>';
+    h += '<td>'+escH(g(log,'Notes'))+'</td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table></div>';
+  return h;
+}
+
+/* ── Packing Status collapsible ── */
+var PACK_STATUS_LABELS = {
+  'Created':          {emoji:'✅', label:'Created / 생성됨'},
+  'Bagged':           {emoji:'📦', label:'Bagged / 마대 포함'},
+  'Shipped':          {emoji:'🚚', label:'Shipped / 출고됨'},
+  'Received':         {emoji:'📥', label:'Received / 입고됨'},
+  'Out_For_Delivery': {emoji:'🏪', label:'Out For Delivery / 배송 중'},
+  'Delivered':        {emoji:'✓',  label:'Delivered / 도착 완료'}
+};
+var BAG_STATUS_LABELS = {
+  'Created':          {emoji:'✅', label:'Created / 생성됨'},
+  'Shipped':          {emoji:'🚚', label:'Shipped / 출고됨'},
+  'Received':         {emoji:'📥', label:'Received / 입고됨'},
+  'Out_For_Delivery': {emoji:'🏪', label:'Out For Delivery / 배송 중'},
+  'Delivered':        {emoji:'✓',  label:'Delivered / 도착 완료'}
+};
+
+function togglePackingSection(el){
+  var content = el.nextElementSibling;
+  var icon = el.querySelector('.spec-toggle-icon');
+  if(!content) return;
+  var isOpen = content.classList.contains('open');
+  if(!isOpen){
+    content.classList.add('open');
+    if(icon) icon.classList.add('open');
+    if(!content.dataset.loaded){
+      content.dataset.loaded = '1';
+      content.innerHTML = '<div style="text-align:center;padding:20px"><div class="spinner-sm" style="display:inline-block"></div></div>';
+      var moNum = currentMO ? g(currentMO,'MO_Number') : '';
+      var totalQty = currentMO ? (parseInt(g(currentMO,'Total_Quantity'))||0) : 0;
+      loadPackingData(moNum).then(function(data){
+        content.innerHTML = renderPackingSection(data, totalQty);
+      }).catch(function(){
+        content.innerHTML = '<div style="text-align:center;padding:16px;font-size:11px;color:#94A3B8">포장 데이터 로딩 실패 / 加载失败</div>';
+      });
+    }
+  } else {
+    content.classList.remove('open');
+    if(icon) icon.classList.remove('open');
+  }
+}
+
+function loadPackingData(moNumber){
+  return Promise.all([
+    ZOHO.CREATOR.API.getAllRecords({appName:APP, reportName:'All_Inner_Pack', criteria:'MO_Number == "'+moNumber+'"', page:1, pageSize:500}),
+    ZOHO.CREATOR.API.getAllRecords({appName:APP, reportName:'All_Master_Bag', criteria:'MO_Number == "'+moNumber+'"', page:1, pageSize:200})
+  ]).then(function(results){
+    var packs = (results[0]&&results[0].data) ? results[0].data : [];
+    var bags  = (results[1]&&results[1].data) ? results[1].data : [];
+    packs.sort(function(a,b){ return (parseInt(g(a,'Pack_Sequence'))||0)-(parseInt(g(b,'Pack_Sequence'))||0); });
+    bags.sort(function(a,b){  return (parseInt(g(a,'Bag_Sequence')) ||0)-(parseInt(g(b,'Bag_Sequence')) ||0); });
+    return {packs:packs, bags:bags};
+  }).catch(function(){ return {packs:[], bags:[]}; });
+}
+
+function renderPackingSection(data, totalQty){
+  var packs = data.packs, bags = data.bags;
+  var expectedPacks = totalQty > 0 ? Math.floor(totalQty/12) : 0;
+  var expectedBags  = expectedPacks > 0 ? Math.floor(expectedPacks/10) : 0;
+  var actualPacks = packs.length, actualBags = bags.length;
+
+  if(actualPacks === 0 && actualBags === 0){
+    return '<div style="text-align:center;padding:16px;font-size:11px;color:#94A3B8">'
+      +'포장 데이터 없음 / 暂无包装数据<br>'
+      +'0 / '+expectedPacks+' packs &nbsp;·&nbsp; 0 / '+expectedBags+' bags</div>';
+  }
+
+  var packPct = expectedPacks > 0 ? Math.min(100, Math.round(actualPacks/expectedPacks*100)) : (actualPacks>0?100:0);
+  var bagPct  = expectedBags  > 0 ? Math.min(100, Math.round(actualBags /expectedBags *100)) : (actualBags >0?100:0);
+  var h = '';
+
+  h += '<div class="pack-progress-wrap">';
+  h += '<div class="pack-progress-title">Inner Pack 진행률 / 中间包装进度</div>';
+  h += '<div class="pack-progress-bar-bg"><div class="pack-progress-bar-fill" style="width:'+packPct+'%"></div></div>';
+  h += '<div class="pack-progress-label"><span>'+actualPacks+' / '+expectedPacks+'</span><span>'+packPct+'%</span></div>';
+  h += '</div>';
+
+  h += '<div class="pack-progress-wrap">';
+  h += '<div class="pack-progress-title">Master Bag 진행률 / 麻袋进度</div>';
+  h += '<div class="pack-progress-bar-bg"><div class="pack-progress-bar-fill" style="width:'+bagPct+'%"></div></div>';
+  h += '<div class="pack-progress-label"><span>'+actualBags+' / '+expectedBags+'</span><span>'+bagPct+'%</span></div>';
+  h += '</div>';
+
+  var packCounts = {};
+  packs.forEach(function(p){ var s=g(p,'Pack_Status'); packCounts[s]=(packCounts[s]||0)+1; });
+  h += '<div class="pack-status-section">';
+  h += '<div class="pack-status-title">Inner Pack 상태별 / 包状态分布</div>';
+  h += '<table class="pack-status-tbl"><tbody>';
+  Object.keys(PACK_STATUS_LABELS).forEach(function(k){
+    var info = PACK_STATUS_LABELS[k];
+    h += '<tr><td>'+info.emoji+' '+escH(info.label)+'</td><td style="font-weight:500">'+((packCounts[k]||0).toLocaleString())+'</td></tr>';
+  });
+  h += '</tbody></table></div>';
+
+  var bagCounts = {};
+  bags.forEach(function(b){ var s=g(b,'Bag_Status'); bagCounts[s]=(bagCounts[s]||0)+1; });
+  h += '<div class="pack-status-section">';
+  h += '<div class="pack-status-title">Master Bag 상태별 / 麻袋状态分布</div>';
+  h += '<table class="pack-status-tbl"><tbody>';
+  Object.keys(BAG_STATUS_LABELS).forEach(function(k){
+    var info = BAG_STATUS_LABELS[k];
+    h += '<tr><td>'+info.emoji+' '+escH(info.label)+'</td><td style="font-weight:500">'+((bagCounts[k]||0).toLocaleString())+'</td></tr>';
+  });
+  h += '</tbody></table></div>';
+
+  h += '<div class="pack-sub-toggle" onclick="togglePackSub(this)">';
+  h += '<span style="font-size:11px;font-weight:500">📦 Pack 리스트 / 包装列표 ('+actualPacks+')</span>';
+  h += '<span class="spec-toggle-icon">&#9660;</span>';
+  h += '</div>';
+  h += '<div class="pack-sub-content">';
+  if(packs.length > 0){
+    h += '<div style="overflow-x:auto"><table class="pack-list-tbl"><thead><tr>';
+    h += '<th># / 包装编号</th><th>Status / 상태</th><th>Qty / 수량</th><th>Worker / 담당자</th><th>Created / 생성</th>';
+    h += '</tr></thead><tbody>';
+    packs.forEach(function(p, idx){
+      var isLatest = (idx === packs.length-1);
+      var rowCls = isLatest ? ' class="pack-list-row-latest"' : '';
+      var seq = g(p,'Pack_Sequence');
+      var isRem = g(p,'Is_Remainder');
+      var seqLabel = (isRem==='true'||isRem===true||isRem==='1') ? '🔸 자투리 #'+seq : '#'+seq;
+      h += '<tr'+rowCls+'>';
+      h += '<td>'+escH(seqLabel)+'</td>';
+      h += '<td>'+escH(g(p,'Pack_Status'))+'</td>';
+      var qty = g(p,'Quantity'); h += '<td>'+(qty==='-'?'-':Number(qty).toLocaleString())+'</td>';
+      h += '<td>'+escH(g(p,'Worker'))+'</td>';
+      h += '<td>'+escH(g(p,'Added_Time')||g(p,'Created_Time')||'-')+'</td>';
+      h += '</tr>';
+    });
+    h += '</tbody></table></div>';
+  } else {
+    h += '<div style="text-align:center;padding:12px;font-size:10px;color:#94A3B8">팩 없음 / 暂无包装</div>';
+  }
+  h += '</div>';
+
+  h += '<div class="pack-sub-toggle" onclick="togglePackSub(this)">';
+  h += '<span style="font-size:11px;font-weight:500">🏷️ Bag 리스트 / 麻袋列표 ('+actualBags+')</span>';
+  h += '<span class="spec-toggle-icon">&#9660;</span>';
+  h += '</div>';
+  h += '<div class="pack-sub-content">';
+  if(bags.length > 0){
+    h += '<div style="overflow-x:auto"><table class="pack-list-tbl"><thead><tr>';
+    h += '<th># / 麻袋编号</th><th>Status / 상태</th><th>Qty / 수량</th><th>Destination / 목적지</th><th>Worker / 담당자</th><th>Created / 생성</th>';
+    h += '</tr></thead><tbody>';
+    bags.forEach(function(b, idx){
+      var isLatest = (idx === bags.length-1);
+      var rowCls = isLatest ? ' class="pack-list-row-latest"' : '';
+      var seq = g(b,'Bag_Sequence');
+      h += '<tr'+rowCls+'>';
+      h += '<td>#'+escH(seq)+'</td>';
+      h += '<td>'+escH(g(b,'Bag_Status'))+'</td>';
+      var qty = g(b,'Total_Quantity'); h += '<td>'+(qty==='-'?'-':Number(qty).toLocaleString())+'</td>';
+      h += '<td>'+escH(g(b,'Destination'))+'</td>';
+      h += '<td>'+escH(g(b,'Worker'))+'</td>';
+      h += '<td>'+escH(g(b,'Added_Time')||g(b,'Created_Time')||'-')+'</td>';
+      h += '</tr>';
+    });
+    h += '</tbody></table></div>';
+  } else {
+    h += '<div style="text-align:center;padding:12px;font-size:10px;color:#94A3B8">백 없음 / 暂无麻袋</div>';
+  }
+  h += '</div>';
+
+  return h;
+}
+
+function togglePackSub(el){
   var content = el.nextElementSibling;
   var icon = el.querySelector('.spec-toggle-icon');
   if(!content) return;
