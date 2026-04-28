@@ -2577,7 +2577,7 @@ function loadProductionLogs(moNumber){
   }).then(function(result){
     var logs = (result && result.data) ? result.data : [];
     logs.sort(function(a, b){
-      var da = pd(g(a,'Log_Date')) || '', db = pd(g(b,'Log_Date')) || '';
+      var da = pd(g(a,'Added_Time')) || pd(g(a,'Log_Date')) || '', db = pd(g(b,'Added_Time')) || pd(g(b,'Log_Date')) || '';
       return da < db ? -1 : da > db ? 1 : 0;
     });
     return logs;
