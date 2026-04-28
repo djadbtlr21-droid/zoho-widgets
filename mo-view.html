@@ -154,8 +154,8 @@ body{padding:16px;min-height:100vh}
 .mo-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--border-hover)}
 .mo-card.delayed{background:#FFF5F5;border-color:#FECACA}
 .mo-card-img{aspect-ratio:9/16;background:var(--p-lav);display:flex;align-items:center;justify-content:center;
-  border-bottom:1px solid var(--border);overflow:hidden;position:relative}
-.mo-card-img img{width:100%;height:100%;object-fit:cover}
+  border-bottom:1px solid var(--border);overflow:hidden;position:relative;padding:12px 16px;box-sizing:border-box}
+.mo-card-img img{width:100%;height:100%;object-fit:contain !important}
 .mo-stage-badge{padding:6px 10px;border-bottom:1px solid var(--border);text-align:center;font-size:10px;font-weight:500;letter-spacing:.01em}
 .mo-card-body{padding:10px;display:flex;flex-direction:column;flex:1}
 .mo-card-identity{padding-bottom:8px;border-bottom:1px dashed var(--border);margin-bottom:8px}
@@ -387,6 +387,9 @@ body{padding:16px;min-height:100vh}
 .tl-mo-num{font-size:11px;font-weight:500;color:var(--mo-primary)}
 .tl-mo-name{font-size:9px;color:var(--text-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
 .tl-mo-meta{font-size:8px;color:var(--text-mute);margin-top:1px}
+.tl-mo-sep-col{width:6px;min-width:6px;background:rgba(99,102,241,.12);padding:0 !important;border:none !important}
+.tl-standalone-sec{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-card);margin-bottom:16px;overflow:hidden}
+.tl-standalone-sec .tl-card{border-top:none}
 
 /* Popups (KPI, Pipeline) */
 .pop-ov{display:none;position:fixed;inset:0;background:rgba(20,19,17,.45);z-index:2000;
@@ -618,6 +621,7 @@ body{padding:16px;min-height:100vh}
     </div>
   </div>
   <div class="mkpi-row" id="mkpiRow"></div>
+  <div id="standaloneTl"></div>
   <div id="monthlyContent"></div>
 </div>
 
@@ -1374,6 +1378,7 @@ ZOHO.CREATOR.init().then(function(){
     buildMonthGroups();
     renderMKPI();
     renderMonthly();
+    buildStandaloneTimeline(allRec);
     hide("loadingScreen"); show("mainContent");
     setTimeout(loadTlImgs, 500);
   }).catch(function(e){ showErr(JSON.stringify(e)); });
@@ -1641,8 +1646,6 @@ function renderMonthly(){
     html += '<div class="pipe-row" id="pipeRow_'+idx+'"></div>';
     html += '</div>';
 
-    if(ym) html += buildTimeline(items, ym.y, ym.m, key, idx);
-
     html += '</div></div>';
   });
 
@@ -1882,6 +1885,231 @@ function buildBarRow(days, todayD, fab, cs, ce, ss, se, ps, pe, ship, isPlan){
     }
   }
   return h;
+}
+
+/* ── Standalone 2-month Timeline ── */
+var _tlAllItems = [];
+var _tlCurY, _tlCurM, _tlNextY, _tlNextM, _tlCurMM, _tlNextMM, _tlCurDays, _tlNextDays, _tlTodayCurD, _tlTodayNxtD;
+
+function rangeInMo(sv, ev, moYM){
+  var sp = pd(sv), ep = pd(ev);
+  if(!sp && !ep) return {s:0,e:0};
+  if(!sp) sp = ep; if(!ep) ep = sp;
+  var yr = parseInt(moYM.substring(0,4)), mo = parseInt(moYM.substring(5,7));
+  var last = new Date(yr, mo, 0).getDate();
+  var sd = new Date(sp+"T00:00:00"), ed = new Date(ep+"T00:00:00");
+  var ms = new Date(yr, mo-1, 1), me = new Date(yr, mo-1, last);
+  if(sd > me || ed < ms) return {s:0,e:0};
+  return {s: sd < ms ? 1 : sd.getDate(), e: ed > me ? last : ed.getDate()};
+}
+
+function buildTlBar2Mo(r, isPlan){
+  var pf = isPlan ? "pb" : "ab";
+  var fabV = isPlan ? g(r,"Plan_Fabric_Date")   : g(r,"Fabric_In_house_Date");
+  var csV  = isPlan ? g(r,"Plan_Cutting_Start")  : g(r,"Cutting_Start_Date");
+  var ceV  = isPlan ? g(r,"Plan_Cutting_End")    : g(r,"Cutting_End_Date");
+  var ssV  = isPlan ? g(r,"Plan_Sewing_Start")   : g(r,"Sewing_Start_Date");
+  var seV  = isPlan ? g(r,"Plan_Sewing_End")     : g(r,"Sewing_Completion_Date");
+  var psV  = isPlan ? g(r,"Plan_Packing_Start")  : g(r,"Packing_Start_Date");
+  var peV  = isPlan ? g(r,"Plan_Packing_End")    : g(r,"Packing_End_Date");
+  var shV  = isPlan ? g(r,"Expected_Delivery")   : g(r,"Ship_Date");
+
+  var mc = [], mn = [], i;
+  for(i = 0; i <= _tlCurDays; i++) mc[i] = null;
+  for(i = 0; i <= _tlNextDays; i++) mn[i] = null;
+
+  var fc = dayInMo(fabV, _tlCurMM), fn = dayInMo(fabV, _tlNextMM);
+  if(fc > 0) mc[fc] = "fab";
+  if(fn > 0) mn[fn] = "fab";
+
+  var rcc = rangeInMo(csV, ceV, _tlCurMM);  for(i=rcc.s;i<=rcc.e;i++) mc[i]="cut";
+  var rcn = rangeInMo(csV, ceV, _tlNextMM); for(i=rcn.s;i<=rcn.e;i++) mn[i]="cut";
+  var rsc = rangeInMo(ssV, seV, _tlCurMM);  for(i=rsc.s;i<=rsc.e;i++) mc[i]="sew";
+  var rsn = rangeInMo(ssV, seV, _tlNextMM); for(i=rsn.s;i<=rsn.e;i++) mn[i]="sew";
+  var rpc = rangeInMo(psV, peV, _tlCurMM);  for(i=rpc.s;i<=rpc.e;i++) mc[i]="pack";
+  var rpn = rangeInMo(psV, peV, _tlNextMM); for(i=rpn.s;i<=rpn.e;i++) mn[i]="pack";
+
+  var sc = dayInMo(shV, _tlCurMM), sn = dayInMo(shV, _tlNextMM);
+  if(sc > 0) mc[sc] = "ship";
+  if(sn > 0) mn[sn] = "ship";
+
+  var lb = {fab:"FAB",cut:"CUT",sew:"SEW",pack:"PACK",ship:"SHIP"};
+  var h = "", d, t, sp2, tc;
+
+  d = 1;
+  while(d <= _tlCurDays){
+    t = mc[d]; tc = d === _tlTodayCurD ? ' class="today-col"' : '';
+    if(!t){ h += '<td'+tc+'></td>'; d++; }
+    else{ sp2=1; while(d+sp2<=_tlCurDays&&mc[d+sp2]===t)sp2++; h+='<td'+(sp2>1?' colspan="'+sp2+'"':'')+tc+'><div class="tl-bar '+pf+'-'+t+'">'+lb[t]+'</div></td>'; d+=sp2; }
+  }
+  h += '<td class="tl-mo-sep-col"></td>';
+  d = 1;
+  while(d <= _tlNextDays){
+    t = mn[d]; tc = d === _tlTodayNxtD ? ' class="today-col"' : '';
+    if(!t){ h += '<td'+tc+'></td>'; d++; }
+    else{ sp2=1; while(d+sp2<=_tlNextDays&&mn[d+sp2]===t)sp2++; h+='<td'+(sp2>1?' colspan="'+sp2+'"':'')+tc+'><div class="tl-bar '+pf+'-'+t+'">'+lb[t]+'</div></td>'; d+=sp2; }
+  }
+  return h;
+}
+
+function buildStandaloneTlTable(items){
+  var curY=_tlCurY, curM=_tlCurM, nextY=_tlNextY, nextM=_tlNextM;
+  var curDays=_tlCurDays, nextDays=_tlNextDays;
+  var yyCur=curY.toString().slice(-2), mmCur=curM<10?"0"+curM:""+curM;
+  var yyNxt=nextY.toString().slice(-2), mmNxt=nextM<10?"0"+nextM:""+nextM;
+
+  var h = '<div class="tl-scroll"><table class="tl-tbl"><thead>';
+  h += '<tr><th class="info-cell" rowspan="2">MO / Style</th>';
+  h += '<th colspan="'+curDays+'" style="text-align:center;background:#EEF6FF;border-bottom:2px solid #BFDBFE;font-size:9px;font-weight:500;padding:3px 0">'+yyCur+'.'+mmCur+'</th>';
+  h += '<th rowspan="2" style="width:6px;min-width:6px;background:#E0E7FF;padding:0;border:none"></th>';
+  h += '<th colspan="'+nextDays+'" style="text-align:center;background:#F0FFF4;border-bottom:2px solid #A7F3D0;font-size:9px;font-weight:500;padding:3px 0">'+yyNxt+'.'+mmNxt+'</th>';
+  h += '</tr><tr>';
+  for(var d=1; d<=curDays; d++){
+    var dow=new Date(curY,curM-1,d).getDay();
+    var cls=(dow===0||dow===6)?"wk":d===_tlTodayCurD?"today":"";
+    h+='<th class="'+cls+'" style="background:#F8FBFF">'+d+'</th>';
+  }
+  for(var d=1; d<=nextDays; d++){
+    var dow=new Date(nextY,nextM-1,d).getDay();
+    var cls=(dow===0||dow===6)?"wk":d===_tlTodayNxtD?"today":"";
+    h+='<th class="'+cls+'" style="background:#F5FFFB">'+d+'</th>';
+  }
+  h += '</tr></thead><tbody>';
+
+  var hasAny=false, first=true;
+  items.forEach(function(r){
+    hasAny = true;
+    if(!first){
+      h += '<tr class="mo-gap"><td class="info-cell"></td>';
+      for(var d=1; d<=curDays; d++) h += '<td></td>';
+      h += '<td class="tl-mo-sep-col"></td>';
+      for(var d=1; d<=nextDays; d++) h += '<td></td>';
+      h += '</tr>';
+    }
+    first = false;
+    var pq = parseInt(g(r,"Plan_Total_Quantity"))||0;
+    var iu = getImg1(r); var ia = iu ? ' data-tlimg="'+escH(iu)+'"' : '';
+    h += '<tr data-id="'+r["ID"]+'">';
+    h += '<td class="info-cell tl-mo-info" rowspan="2" data-id="'+r["ID"]+'">';
+    h += '<div class="tl-mo-wrap"><div class="tl-mo-thumb"'+ia+'>👕</div>';
+    h += '<div><div class="tl-mo-num">'+escH(g(r,"MO_Number"))+'</div>';
+    h += '<div class="tl-mo-name">'+escH(g(r,"Style_Name"))+'</div>';
+    h += '<div class="tl-mo-meta">'+escH(cleanFactory(g(r,"Factory")))+' · <span style="color:#6D28D9;font-weight:500">P:'+pq.toLocaleString()+'</span>pcs</div>';
+    h += '</div></div></td>';
+    h += buildTlBar2Mo(r, true) + '</tr>';
+    h += '<tr data-id="'+r["ID"]+'">' + buildTlBar2Mo(r, false) + '</tr>';
+  });
+  if(!hasAny){
+    h += '<tr><td class="info-cell" colspan="'+(curDays+nextDays+2)+'" style="text-align:center;padding:16px;color:#94A3B8;font-size:10px">이 기간에 해당하는 일정이 없습니다 / 本期暂无日程</td></tr>';
+  }
+  h += '</tbody></table></div>';
+  return h;
+}
+
+function buildStandaloneTimeline(allItems){
+  var now = today;
+  _tlCurY = now.getFullYear(); _tlCurM = now.getMonth()+1;
+  _tlNextM = _tlCurM===12 ? 1 : _tlCurM+1;
+  _tlNextY = _tlCurM===12 ? _tlCurY+1 : _tlCurY;
+  _tlCurMM  = _tlCurY +"-"+(_tlCurM <10?"0":"")+_tlCurM;
+  _tlNextMM = _tlNextY+"-"+(_tlNextM<10?"0":"")+_tlNextM;
+  _tlCurDays  = new Date(_tlCurY,  _tlCurM,  0).getDate();
+  _tlNextDays = new Date(_tlNextY, _tlNextM, 0).getDate();
+  _tlTodayCurD = (now.getFullYear()===_tlCurY  && now.getMonth()+1===_tlCurM)  ? now.getDate() : 0;
+  _tlTodayNxtD = (now.getFullYear()===_tlNextY && now.getMonth()+1===_tlNextM) ? now.getDate() : 0;
+
+  var dateFields = ["Plan_Fabric_Date","Plan_Cutting_Start","Plan_Cutting_End","Plan_Sewing_Start","Plan_Sewing_End","Plan_Packing_Start","Plan_Packing_End","Fabric_In_house_Date","Cutting_Start_Date","Cutting_End_Date","Sewing_Start_Date","Sewing_Completion_Date","Packing_Start_Date","Packing_End_Date","Ship_Date","Expected_Delivery"];
+  _tlAllItems = allItems.filter(function(r){
+    return dateFields.some(function(f){
+      var p = pd(g(r,f));
+      return p && (p.substring(0,7)===_tlCurMM || p.substring(0,7)===_tlNextMM);
+    });
+  });
+
+  var yyCur=_tlCurY.toString().slice(-2), mmCur=_tlCurM<10?"0"+_tlCurM:""+_tlCurM;
+  var yyNxt=_tlNextY.toString().slice(-2), mmNxt=_tlNextM<10?"0"+_tlNextM:""+_tlNextM;
+  var title = "📅 "+yyCur+"."+mmCur+" - "+yyNxt+"."+mmNxt+" 생산 타임라인 / "+yyCur+"年 "+_tlCurM+"-"+_tlNextM+"月 生产排期";
+
+  var tlCat={}, tlFac={}, tlProd={}, tlOrd={};
+  _tlAllItems.forEach(function(r){
+    var c=g(r,"Category");          if(c!=="-") tlCat[c]=catName(c);
+    var f=g(r,"Factory");           if(f!=="-") tlFac[f]=cleanFactory(f);
+    var p=g(r,"Production_Status"); if(p!=="-") tlProd[p]=p;
+    var o=g(r,"Order_Status");      if(o!=="-") tlOrd[o]=o;
+  });
+
+  var h = '<div class="tl-standalone-sec"><div class="tl-card">';
+  h += '<div class="tl-hd"><div class="tl-title">'+escH(title)+'</div>';
+  h += '<div class="tl-legend">';
+  h += '<span class="tl-type-badge" style="background:#F5F3FF;color:#7C3AED;border:1px dashed #C4B5FD">P = Plan</span>';
+  h += '<span class="tl-type-badge" style="background:#ECFDF5;color:#047857">A = Actual</span>';
+  h += '<span><span class="tl-dot" style="background:#DDD6FE"></span>Fab</span>';
+  h += '<span><span class="tl-dot" style="background:#FEF3C7;border:1px solid #FDE68A"></span>Cut</span>';
+  h += '<span><span class="tl-dot" style="background:#E0F2FE;border:1px solid #BAE6FD"></span>Sew</span>';
+  h += '<span><span class="tl-dot" style="background:#D1FAE5;border:1px solid #A7F3D0"></span>Pack</span>';
+  h += '<span><span class="tl-dot" style="background:#BFDBFE"></span>Ship</span>';
+  h += '</div></div>';
+  h += '<div class="mf-bar" id="tlFilterBar">';
+  h += '<input type="text" class="mf-search" id="tlSearch" placeholder="🔍 MO# · SKU · 스타일 · 공장 / 搜索">';
+  h += '<select id="tlCategory"><option value="">카테고리 / 分类</option>';
+  Object.keys(tlCat).sort().forEach(function(k){ h+='<option value="'+escH(k)+'">'+escH(tlCat[k])+'</option>'; });
+  h += '</select>';
+  h += '<select id="tlFactory"><option value="">공장 / 工厂</option>';
+  Object.keys(tlFac).sort().forEach(function(k){ h+='<option value="'+escH(k)+'">'+escH(tlFac[k])+'</option>'; });
+  h += '</select>';
+  h += '<select id="tlProd"><option value="">생산 / 生产</option>';
+  Object.keys(tlProd).sort().forEach(function(k){ h+='<option value="'+escH(k)+'">'+escH(k)+'</option>'; });
+  h += '</select>';
+  h += '<select id="tlOrder"><option value="">오더 / 订单</option>';
+  Object.keys(tlOrd).sort().forEach(function(k){ h+='<option value="'+escH(k)+'">'+escH(k)+'</option>'; });
+  h += '</select>';
+  h += '<span class="mf-count" id="tlCount">'+_tlAllItems.length+' / '+_tlAllItems.length+'</span>';
+  h += '</div>';
+  h += '<div id="tlTableWrap">'+buildStandaloneTlTable(_tlAllItems)+'</div>';
+  h += '</div></div>';
+
+  document.getElementById("standaloneTl").innerHTML = h;
+
+  function applyTlFilter(){
+    var sq = (document.getElementById("tlSearch").value||"").toLowerCase();
+    var cat = document.getElementById("tlCategory").value;
+    var fac = document.getElementById("tlFactory").value;
+    var prod = document.getElementById("tlProd").value;
+    var ord = document.getElementById("tlOrder").value;
+    var filtered = _tlAllItems.filter(function(r){
+      if(sq){
+        var st = (g(r,"MO_Number")+" "+g(r,"Style_Name")+" "+g(r,"SKU")+" "+g(r,"Factory")).toLowerCase();
+        if(st.indexOf(sq) < 0) return false;
+      }
+      if(cat  && g(r,"Category")          !== cat)  return false;
+      if(fac  && g(r,"Factory")           !== fac)  return false;
+      if(prod && g(r,"Production_Status") !== prod) return false;
+      if(ord  && g(r,"Order_Status")      !== ord)  return false;
+      return true;
+    });
+    document.getElementById("tlTableWrap").innerHTML = buildStandaloneTlTable(filtered);
+    document.getElementById("tlCount").textContent = filtered.length+" / "+_tlAllItems.length;
+    bindTlClickHandlers();
+    setTimeout(loadTlImgs, 50);
+  }
+
+  ["tlSearch","tlCategory","tlFactory","tlProd","tlOrder"].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.addEventListener(id==="tlSearch" ? "input" : "change", applyTlFilter);
+  });
+
+  bindTlClickHandlers();
+  setTimeout(loadTlImgs, 200);
+}
+
+function bindTlClickHandlers(){
+  document.querySelectorAll("#standaloneTl .tl-mo-info").forEach(function(el){
+    el.addEventListener("click", function(){
+      var id = this.getAttribute("data-id");
+      var r = allRec.find(function(x){ return x["ID"]===id; });
+      if(r) openModal(r);
+    });
+  });
 }
 
 /* ═══════════════════════════════════════════════
