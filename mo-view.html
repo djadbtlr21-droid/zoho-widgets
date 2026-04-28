@@ -576,6 +576,12 @@ body{padding:16px;min-height:100vh}
   .m-hero-imgs .m-hero-img-group:nth-child(4) .m-hero-img-box{width:160px;height:90px}
 }
 
+/* ── Production Log table ── */
+.prod-log-tbl{width:100%;border-collapse:collapse;font-size:10px}
+.prod-log-tbl th,.prod-log-tbl td{border:1px solid var(--border);padding:5px 8px;text-align:center;vertical-align:middle}
+.prod-log-tbl thead tr{background:#F5F3EF;font-weight:500}
+.prod-log-row-latest td{color:#DC2626 !important;font-weight:600}
+
 /* ── Size Spec collapsible (NEW in v33) ── */
 .spec-toggle{display:flex;align-items:center;justify-content:space-between;
   cursor:pointer;padding:9px 14px;background:#FAFAF7;border:1px solid var(--border);
@@ -2242,11 +2248,18 @@ function openModal(r){
   h += '</div>';
 
   /* ── (7) Production tracking ── */
-  h += '<div class="m-sec"><div class="m-sec-t">🏭 생산 추적 / 生产跟踪</div><div class="d-grid">';
+  h += '<div class="m-sec"><div class="m-sec-t">🏭 생산 추적 / 生产跟踪</div>';
+  h += '<div class="d-grid">';
   h += it("생산상태 / 生产状态", '<span class="tag '+tc(g(r,"Production_Status"))+'">'+escH(g(r,"Production_Status"))+'</span>');
-  h += it("원단상태 / 面料进度", dv(g(r,"Fabric_Status")));
-  h += it("진척률 / 进度", dv(g(r,"Progress")));
-  h += '</div></div>';
+  h += '</div>';
+  h += '<div style="margin-top:10px">';
+  h += '<div class="spec-toggle" onclick="toggleProdLog(this)">';
+  h += '<span class="spec-toggle-label">📋 생산 로그 / 生产记录 <span class="dim">/ 展开查看</span></span>';
+  h += '<span class="spec-toggle-icon">&#9660;</span>';
+  h += '</div>';
+  h += '<div class="spec-content" id="prodLogContent"></div>';
+  h += '</div>';
+  h += '</div>';
 
   /* ── (8) Schedule with color-coded status ── */
   h += '<div class="m-sec"><div class="m-sec-t">📅 생산 일정 / 生产日期</div><div class="schedule-compare">';
@@ -2487,6 +2500,96 @@ function toggleSpec(el){
   var isOpen = content.classList.contains('open');
   content.classList.toggle('open', !isOpen);
   if(icon) icon.classList.toggle('open', !isOpen);
+}
+
+/* ── Production Log collapsible ── */
+var PROCESS_LABELS = {
+  'Fabric_In':     '面料入库 / 원단입고',
+  'Cutting_Start': '裁剪开始 / 재단 시작',
+  'Cutting_End':   '裁剪完成 / 재단 완료',
+  'Sewing_Start':  '车缝开始 / 봉제 시작',
+  'Sewing_End':    '车缝完成 / 봉제 완료',
+  'Packing_Start': '包装开始 / 포장 시작',
+  'Packing_End':   '包装完成 / 포장 완료',
+  'Shipped':       '出货 / 출고',
+  'Cutting':       '裁剪 / 재단',
+  'Sewing':        '车缝 / 봉제',
+  'Packing':       '包装 / 포장',
+  'Completed':     '完成 / 완료'
+};
+
+function toggleProdLog(el){
+  var content = el.nextElementSibling;
+  var icon = el.querySelector('.spec-toggle-icon');
+  if(!content) return;
+  var isOpen = content.classList.contains('open');
+  if(!isOpen){
+    content.classList.add('open');
+    if(icon) icon.classList.add('open');
+    if(!content.dataset.loaded){
+      content.dataset.loaded = '1';
+      content.innerHTML = '<div style="text-align:center;padding:20px"><div class="spinner-sm" style="display:inline-block"></div></div>';
+      var moNum = currentMO ? g(currentMO, 'MO_Number') : '';
+      loadProductionLogs(moNum).then(function(logs){
+        content.innerHTML = renderProdLogTable(logs);
+      }).catch(function(){
+        content.innerHTML = '<div style="text-align:center;padding:16px;font-size:11px;color:#94A3B8">로그 로딩 실패 / 加载失败</div>';
+      });
+    }
+  } else {
+    content.classList.remove('open');
+    if(icon) icon.classList.remove('open');
+  }
+}
+
+function loadProductionLogs(moNumber){
+  return ZOHO.CREATOR.API.getAllRecords({
+    appName: APP,
+    reportName: 'Production_Log_Report',
+    criteria: 'MO_Number == "' + moNumber + '"',
+    page: 1,
+    pageSize: 200
+  }).then(function(result){
+    var logs = (result && result.data) ? result.data : [];
+    logs.sort(function(a, b){
+      var da = pd(g(a,'Log_Date')) || '', db = pd(g(b,'Log_Date')) || '';
+      return da < db ? -1 : da > db ? 1 : 0;
+    });
+    return logs;
+  }).catch(function(){ return []; });
+}
+
+function renderProdLogTable(logs){
+  if(!logs || logs.length === 0){
+    return '<div style="text-align:center;padding:16px;font-size:11px;color:#94A3B8">기록 없음 / 暂无记录</div>';
+  }
+  var h = '<div style="overflow-x:auto;margin-top:10px">';
+  h += '<table class="prod-log-tbl"><thead><tr>';
+  h += '<th>공정 / 工序</th>';
+  h += '<th>완성수량 / 完成数量</th>';
+  h += '<th>미완성수량 / 未完成数量</th>';
+  h += '<th>담당자 / 担当者</th>';
+  h += '<th>기록시간 / 记录时间</th>';
+  h += '<th>비고 / 备注</th>';
+  h += '</tr></thead><tbody>';
+  logs.forEach(function(log, idx){
+    var isLatest = (idx === logs.length - 1);
+    var proc = g(log, 'Process');
+    var procLabel = PROCESS_LABELS[proc] || proc;
+    var cQty = g(log, 'Completed_Qty');
+    var iQty = g(log, 'Incomplete_Qty');
+    var rowCls = isLatest ? ' class="prod-log-row-latest"' : '';
+    h += '<tr'+rowCls+'>';
+    h += '<td>'+escH(procLabel)+'</td>';
+    h += '<td>'+(cQty === '-' ? '-' : Number(cQty).toLocaleString())+'</td>';
+    h += '<td>'+(iQty === '-' ? '-' : Number(iQty).toLocaleString())+'</td>';
+    h += '<td>'+escH(g(log,'Worker'))+'</td>';
+    h += '<td>'+escH(g(log,'Log_Date'))+'</td>';
+    h += '<td>'+escH(g(log,'Notes'))+'</td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table></div>';
+  return h;
 }
 
 </script>
