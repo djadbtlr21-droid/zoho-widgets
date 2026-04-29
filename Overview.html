@@ -3268,7 +3268,10 @@ function renderPackingSection(data, totalQty){
   h += '<div class="pack-sub-content">';
   if(packs.length > 0){
     var latestPack = packs.reduce(function(best, p){
-      return new Date(g(p,'Added_Time')||0).getTime() > new Date(g(best,'Added_Time')||0).getTime() ? p : best;
+      var t1 = new Date(g(p,'Added_Time')||0).getTime(), t2 = new Date(g(best,'Added_Time')||0).getTime();
+      if(t1 > t2) return p;
+      if(t1 < t2) return best;
+      return ((parseInt(g(p,'Pack_Sequence'))||0) > (parseInt(g(best,'Pack_Sequence'))||0)) ? p : best;
     }, packs[0]);
     var latestPackId = g(latestPack,'ID');
     h += '<div style="overflow-x:auto"><table class="pack-list-tbl"><thead><tr>';
@@ -3302,7 +3305,10 @@ function renderPackingSection(data, totalQty){
   h += '<div class="pack-sub-content">';
   if(bags.length > 0){
     var latestBag = bags.reduce(function(best, b){
-      return new Date(g(b,'Added_Time')||0).getTime() > new Date(g(best,'Added_Time')||0).getTime() ? b : best;
+      var t1 = new Date(g(b,'Added_Time')||0).getTime(), t2 = new Date(g(best,'Added_Time')||0).getTime();
+      if(t1 > t2) return b;
+      if(t1 < t2) return best;
+      return ((parseInt(g(b,'Bag_Sequence'))||0) > (parseInt(g(best,'Bag_Sequence'))||0)) ? b : best;
     }, bags[0]);
     var latestBagId = g(latestBag,'ID');
     h += '<div style="overflow-x:auto"><table class="pack-list-tbl"><thead><tr>';
