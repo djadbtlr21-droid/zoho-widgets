@@ -3268,7 +3268,7 @@ function renderPackingSection(data, totalQty){
   h += '<div class="pack-sub-content">';
   if(packs.length > 0){
     h += '<div style="overflow-x:auto"><table class="pack-list-tbl"><thead><tr>';
-    h += '<th>포장순번 / 包装编号</th><th>Status / 상태</th><th>Qty / 수량</th><th>Worker / 담당자</th><th>Created / 생성</th>';
+    h += '<th>Pack # / 포장순번 / 包装编号</th><th>Status / 상태 / 状态</th><th>Qty / 수량 / 数量</th><th>Worker / 담당자 / 负责人</th><th>Created / 생성 / 创建</th>';
     h += '</tr></thead><tbody>';
     packs.forEach(function(p, idx){
       var isLatest = (idx === 0);
@@ -3278,7 +3278,8 @@ function renderPackingSection(data, totalQty){
       var seqLabel = (isRem==='true'||isRem===true||isRem==='1') ? '🔸 자투리 #'+seq : '#'+seq;
       h += '<tr'+rowCls+'>';
       h += '<td>'+escH(seqLabel)+'</td>';
-      h += '<td>'+escH(g(p,'Pack_Status'))+'</td>';
+      var ps = g(p,'Pack_Status'); var psi = PACK_STATUS_LABELS[ps];
+      h += '<td>'+escH(psi ? psi.label : ps)+'</td>';
       var qty = g(p,'Total_Qty'); h += '<td>'+(qty==='-'?'-':Number(qty).toLocaleString())+'</td>';
       h += '<td>'+escH(g(p,'Worker'))+'</td>';
       h += '<td>'+escH(g(p,'Added_Time')||g(p,'Created_Time')||'-')+'</td>';
@@ -3297,7 +3298,7 @@ function renderPackingSection(data, totalQty){
   h += '<div class="pack-sub-content">';
   if(bags.length > 0){
     h += '<div style="overflow-x:auto"><table class="pack-list-tbl"><thead><tr>';
-    h += '<th>마대순번 / 麻袋编号</th><th>Status / 상태</th><th>Qty / 수량</th><th>Destination / 목적지</th><th>Worker / 담당자</th><th>Created / 생성</th>';
+    h += '<th>Bag # / 마대순번 / 麻袋编号</th><th>Status / 상태 / 状态</th><th>Qty / 수량 / 数量</th><th>Destination / 목적지 / 目的地</th><th>Worker / 담당자 / 负责人</th><th>Created / 생성 / 创建</th>';
     h += '</tr></thead><tbody>';
     bags.forEach(function(b, idx){
       var isLatest = (idx === 0);
@@ -3305,7 +3306,8 @@ function renderPackingSection(data, totalQty){
       var seq = g(b,'Bag_Sequence');
       h += '<tr'+rowCls+'>';
       h += '<td>#'+escH(seq)+'</td>';
-      h += '<td>'+escH(g(b,'Bag_Status'))+'</td>';
+      var bs = g(b,'Bag_Status'); var bsi = BAG_STATUS_LABELS[bs];
+      h += '<td>'+escH(bsi ? bsi.label : bs)+'</td>';
       var qty = g(b,'Total_Quantity'); h += '<td>'+(qty==='-'?'-':Number(qty).toLocaleString())+'</td>';
       h += '<td>'+escH(g(b,'Destination'))+'</td>';
       h += '<td>'+escH(g(b,'Worker'))+'</td>';
