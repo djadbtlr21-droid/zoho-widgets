@@ -2636,19 +2636,19 @@ function renderProdLogTable(logs){
 
 /* ── Packing Status collapsible ── */
 var PACK_STATUS_LABELS = {
-  'Created':          {emoji:'✅', label:'Created / 생성됨'},
-  'Bagged':           {emoji:'📦', label:'Bagged / 마대 포함'},
-  'Shipped':          {emoji:'🚚', label:'Shipped / 출고됨'},
-  'Received':         {emoji:'📥', label:'Received / 입고됨'},
-  'Out_For_Delivery': {emoji:'🏪', label:'Out For Delivery / 배송 중'},
-  'Delivered':        {emoji:'✓',  label:'Delivered / 도착 완료'}
+  'Created':          {emoji:'✅', label:'Created / 생성됨 / 已创建'},
+  'Bagged':           {emoji:'📦', label:'Bagged / 마대 포장 / 已装袋'},
+  'Shipped':          {emoji:'🚚', label:'Shipped / 출고됨 / 已发货'},
+  'Received':         {emoji:'📥', label:'Received / 입고됨 / 已入仓'},
+  'Out_For_Delivery': {emoji:'🏪', label:'Out For Delivery / 배송 중 / 配送中'},
+  'Delivered':        {emoji:'✓',  label:'Delivered / 도착 완료 / 已交付'}
 };
 var BAG_STATUS_LABELS = {
-  'Created':          {emoji:'✅', label:'Created / 생성됨'},
-  'Shipped':          {emoji:'🚚', label:'Shipped / 출고됨'},
-  'Received':         {emoji:'📥', label:'Received / 입고됨'},
-  'Out_For_Delivery': {emoji:'🏪', label:'Out For Delivery / 배송 중'},
-  'Delivered':        {emoji:'✓',  label:'Delivered / 도착 완료'}
+  'Created':          {emoji:'✅', label:'Created / 생성됨 / 已创建'},
+  'Shipped':          {emoji:'🚚', label:'Shipped / 출고됨 / 已发货'},
+  'Received':         {emoji:'📥', label:'Received / 입고됨 / 已入仓'},
+  'Out_For_Delivery': {emoji:'🏪', label:'Out For Delivery / 배송 중 / 配送中'},
+  'Delivered':        {emoji:'✓',  label:'Delivered / 도착 완료 / 已交付'}
 };
 
 function togglePackingSection(el){
@@ -2678,18 +2678,23 @@ function togglePackingSection(el){
 
 function fetchAllPackRecords(reportName){
   var allRecords = [];
-  function fetchPage(cursor){
-    var params = { appName: APP, reportName: reportName, max_records: 200 };
-    if(cursor) params.record_cursor = cursor;
-    return ZOHO.CREATOR.API.getAllRecords(params).then(function(res){
+  var page = 1;
+  var pageSize = 200;
+  function fetchPage(){
+    return ZOHO.CREATOR.API.getAllRecords({
+      appName: APP, reportName: reportName, page: page, pageSize: pageSize
+    }).then(function(res){
       var rows = (res && res.data) ? res.data : [];
       allRecords = allRecords.concat(rows);
-      var next = res && res.record_cursor;
-      if(next && allRecords.length < 10000) return fetchPage(next);
-      return allRecords;
+      if(rows.length < pageSize || page >= 50) {
+        console.log('[Packing] Total records fetched:', allRecords.length, 'Pages traversed:', page);
+        return allRecords;
+      }
+      page++;
+      return fetchPage();
     });
   }
-  return fetchPage(null);
+  return fetchPage();
 }
 
 function loadPackingData(moNumber){
@@ -2773,7 +2778,7 @@ function renderPackingSection(data, totalQty){
   h += '<div class="pack-sub-content">';
   if(packs.length > 0){
     h += '<div style="overflow-x:auto"><table class="pack-list-tbl"><thead><tr>';
-    h += '<th># / 包装编号</th><th>Status / 상태</th><th>Qty / 수량</th><th>Worker / 담당자</th><th>Created / 생성</th>';
+    h += '<th>포장순번 / 包装编号</th><th>Status / 상태</th><th>Qty / 수량</th><th>Worker / 담당자</th><th>Created / 생성</th>';
     h += '</tr></thead><tbody>';
     packs.forEach(function(p, idx){
       var isLatest = (idx === 0);
@@ -2802,7 +2807,7 @@ function renderPackingSection(data, totalQty){
   h += '<div class="pack-sub-content">';
   if(bags.length > 0){
     h += '<div style="overflow-x:auto"><table class="pack-list-tbl"><thead><tr>';
-    h += '<th># / 麻袋编号</th><th>Status / 상태</th><th>Qty / 수량</th><th>Destination / 목적지</th><th>Worker / 담당자</th><th>Created / 생성</th>';
+    h += '<th>마대순번 / 麻袋编号</th><th>Status / 상태</th><th>Qty / 수량</th><th>Destination / 목적지</th><th>Worker / 담당자</th><th>Created / 생성</th>';
     h += '</tr></thead><tbody>';
     bags.forEach(function(b, idx){
       var isLatest = (idx === 0);
