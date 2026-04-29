@@ -2777,11 +2777,15 @@ function renderPackingSection(data, totalQty){
   h += '</div>';
   h += '<div class="pack-sub-content">';
   if(packs.length > 0){
+    var latestPack = packs.reduce(function(best, p){
+      return new Date(g(p,'Added_Time')||0).getTime() > new Date(g(best,'Added_Time')||0).getTime() ? p : best;
+    }, packs[0]);
+    var latestPackId = g(latestPack,'ID');
     h += '<div style="overflow-x:auto"><table class="pack-list-tbl"><thead><tr>';
     h += '<th>Pack # / 포장순번 / 包装编号</th><th>Status / 상태 / 状态</th><th>Qty / 수량 / 数量</th><th>Worker / 담당자 / 负责人</th><th>Created / 생성 / 创建</th>';
     h += '</tr></thead><tbody>';
     packs.forEach(function(p, idx){
-      var isLatest = (idx === 0);
+      var isLatest = (g(p,'ID') === latestPackId);
       var rowCls = isLatest ? ' class="pack-list-row-latest"' : '';
       var seq = g(p,'Pack_Sequence');
       var isRem = g(p,'Is_Remainder');
@@ -2807,11 +2811,15 @@ function renderPackingSection(data, totalQty){
   h += '</div>';
   h += '<div class="pack-sub-content">';
   if(bags.length > 0){
+    var latestBag = bags.reduce(function(best, b){
+      return new Date(g(b,'Added_Time')||0).getTime() > new Date(g(best,'Added_Time')||0).getTime() ? b : best;
+    }, bags[0]);
+    var latestBagId = g(latestBag,'ID');
     h += '<div style="overflow-x:auto"><table class="pack-list-tbl"><thead><tr>';
     h += '<th>Bag # / 마대순번 / 麻袋编号</th><th>Status / 상태 / 状态</th><th>Qty / 수량 / 数量</th><th>Destination / 목적지 / 目的地</th><th>Worker / 담당자 / 负责人</th><th>Created / 생성 / 创建</th>';
     h += '</tr></thead><tbody>';
     bags.forEach(function(b, idx){
-      var isLatest = (idx === 0);
+      var isLatest = (g(b,'ID') === latestBagId);
       var rowCls = isLatest ? ' class="pack-list-row-latest"' : '';
       var seq = g(b,'Bag_Sequence');
       h += '<tr'+rowCls+'>';
