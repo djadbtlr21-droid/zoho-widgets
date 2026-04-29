@@ -3060,10 +3060,14 @@ function loadProductionLogs(moNumber){
     pageSize: 200
   }).then(function(result){
     var logs = (result && result.data) ? result.data : [];
+    console.log('[ProdLog] Raw fetch order:', logs.map(function(l){ return {process:g(l,'Process'), added:g(l,'Added_Time'), logDate:g(l,'Log_Date')}; }));
+    // Use full datetime (not pd() which strips time) so same-day entries sort correctly
     logs.sort(function(a,b){
-      var da = pd(g(a,'Added_Time'))||pd(g(a,'Log_Date'))||'', db = pd(g(b,'Added_Time'))||pd(g(b,'Log_Date'))||'';
-      return da > db ? -1 : da < db ? 1 : 0;
+      var ta = new Date(g(a,'Added_Time') !== '-' ? g(a,'Added_Time') : (g(a,'Log_Date') !== '-' ? g(a,'Log_Date') : 0)).getTime();
+      var tb = new Date(g(b,'Added_Time') !== '-' ? g(b,'Added_Time') : (g(b,'Log_Date') !== '-' ? g(b,'Log_Date') : 0)).getTime();
+      return tb - ta; // descending: newest first
     });
+    console.log('[ProdLog] Sorted order:', logs.map(function(l){ return {process:g(l,'Process'), added:g(l,'Added_Time')}; }));
     return logs;
   }).catch(function(){ return []; });
 }
