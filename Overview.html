@@ -3314,6 +3314,7 @@ function renderPackingSection(data, totalQty){
     h += '<div style="overflow-x:auto"><table class="pack-list-tbl"><thead><tr>';
     h += '<th>Bag # / 마대순번 / 麻袋编号</th><th>Status / 상태 / 状态</th><th>Qty / 수량 / 数量</th><th>Destination / 목적지 / 目的地</th><th>Worker / 담당자 / 负责人</th><th>Created / 생성 / 创建</th>';
     h += '</tr></thead><tbody>';
+    if(bags[0]) console.log('[Bag List] Sample bag record:', bags[0], 'Keys:', Object.keys(bags[0]));
     bags.forEach(function(b, idx){
       var isLatest = (g(b,'ID') === latestBagId);
       var rowCls = isLatest ? ' class="pack-list-row-latest"' : '';
@@ -3322,7 +3323,7 @@ function renderPackingSection(data, totalQty){
       h += '<td>#'+escH(seq)+'</td>';
       var bs = g(b,'Bag_Status'); var bsi = BAG_STATUS_LABELS[bs];
       h += '<td>'+escH(bsi ? bsi.label : bs)+'</td>';
-      var qty = g(b,'Total_Quantity'); h += '<td>'+(qty==='-'?'-':Number(qty).toLocaleString())+'</td>';
+      var qty = g(b,'Total_Qty'); h += '<td>'+(qty==='-'?'-':Number(qty).toLocaleString())+'</td>';
       h += '<td>'+escH(g(b,'Destination'))+'</td>';
       h += '<td>'+escH(g(b,'Worker'))+'</td>';
       h += '<td>'+escH(g(b,'Added_Time')||g(b,'Created_Time')||'-')+'</td>';
