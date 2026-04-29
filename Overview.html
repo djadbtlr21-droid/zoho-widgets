@@ -3201,8 +3201,8 @@ function loadPackingData(moNumber){
   }).then(function(all){
     console.log('[Packing Status] Master Bag total fetched:', all.length);
     bags = all.filter(function(r){ return g(r,'MO_Number') === moNumber; });
-    packs.sort(function(a,b){ return (parseInt(g(b,'Pack_Sequence'))||0)-(parseInt(g(a,'Pack_Sequence'))||0); });
-    bags.sort(function(a,b){  return (parseInt(g(b,'Bag_Sequence')) ||0)-(parseInt(g(a,'Bag_Sequence')) ||0); });
+    packs.sort(function(a,b){ return (parseInt(g(a,'Pack_Sequence'))||0)-(parseInt(g(b,'Pack_Sequence'))||0); });
+    bags.sort(function(a,b){  return (parseInt(g(a,'Bag_Sequence')) ||0)-(parseInt(g(b,'Bag_Sequence')) ||0); });
     console.log('[Packing Status] Final: packs='+packs.length+', bags='+bags.length);
     return {packs:packs, bags:bags};
   }).catch(function(e){
