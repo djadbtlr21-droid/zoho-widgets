@@ -2676,34 +2676,38 @@ function togglePackingSection(el){
   }
 }
 
+function fetchAllPackRecords(reportName){
+  var allRecords = [];
+  function fetchPage(cursor){
+    var params = { appName: APP, reportName: reportName, max_records: 200 };
+    if(cursor) params.record_cursor = cursor;
+    return ZOHO.CREATOR.API.getAllRecords(params).then(function(res){
+      var rows = (res && res.data) ? res.data : [];
+      allRecords = allRecords.concat(rows);
+      var next = res && res.record_cursor;
+      if(next && allRecords.length < 10000) return fetchPage(next);
+      return allRecords;
+    });
+  }
+  return fetchPage(null);
+}
+
 function loadPackingData(moNumber){
   var packs = [], bags = [];
-  console.log('[Packing Status] Fetching Inner Packs for MO:', moNumber);
-  return ZOHO.CREATOR.API.getAllRecords({
-    appName: APP,
-    reportName: 'All_Inner_Pack',
-    page: 1,
-    pageSize: 200
-  }).then(function(res){
-    console.log('[Packing Status] Inner Pack result:', res && res.code, 'rows:', res && res.data && res.data.length);
-    var all = (res && res.data) ? res.data : [];
+  console.log('[Packing Status] Fetching ALL Inner Packs (paginated) for MO:', moNumber);
+  return fetchAllPackRecords('All_Inner_Pack').then(function(all){
+    console.log('[Packing Status] Inner Pack total fetched:', all.length);
     packs = all.filter(function(r){ return g(r,'MO_Number') === moNumber; });
   }).catch(function(e){
     console.error('[Packing Status] Inner Pack error:', e);
   }).then(function(){
-    console.log('[Packing Status] Fetching Master Bags for MO:', moNumber);
-    return ZOHO.CREATOR.API.getAllRecords({
-      appName: APP,
-      reportName: 'All_Master_Bags',
-      page: 1,
-      pageSize: 200
-    });
-  }).then(function(res){
-    console.log('[Packing Status] Master Bag result:', res && res.code, 'rows:', res && res.data && res.data.length);
-    var all = (res && res.data) ? res.data : [];
+    console.log('[Packing Status] Fetching ALL Master Bags (paginated) for MO:', moNumber);
+    return fetchAllPackRecords('All_Master_Bags');
+  }).then(function(all){
+    console.log('[Packing Status] Master Bag total fetched:', all.length);
     bags = all.filter(function(r){ return g(r,'MO_Number') === moNumber; });
-    packs.sort(function(a,b){ return (parseInt(g(a,'Pack_Sequence'))||0)-(parseInt(g(b,'Pack_Sequence'))||0); });
-    bags.sort(function(a,b){  return (parseInt(g(a,'Bag_Sequence')) ||0)-(parseInt(g(b,'Bag_Sequence')) ||0); });
+    packs.sort(function(a,b){ return (parseInt(g(b,'Pack_Sequence'))||0)-(parseInt(g(a,'Pack_Sequence'))||0); });
+    bags.sort(function(a,b){  return (parseInt(g(b,'Bag_Sequence')) ||0)-(parseInt(g(a,'Bag_Sequence')) ||0); });
     console.log('[Packing Status] Final: packs='+packs.length+', bags='+bags.length);
     return {packs:packs, bags:bags};
   }).catch(function(e){
@@ -2772,7 +2776,7 @@ function renderPackingSection(data, totalQty){
     h += '<th># / 包装编号</th><th>Status / 상태</th><th>Qty / 수량</th><th>Worker / 담당자</th><th>Created / 생성</th>';
     h += '</tr></thead><tbody>';
     packs.forEach(function(p, idx){
-      var isLatest = (idx === packs.length-1);
+      var isLatest = (idx === 0);
       var rowCls = isLatest ? ' class="pack-list-row-latest"' : '';
       var seq = g(p,'Pack_Sequence');
       var isRem = g(p,'Is_Remainder');
@@ -2780,7 +2784,7 @@ function renderPackingSection(data, totalQty){
       h += '<tr'+rowCls+'>';
       h += '<td>'+escH(seqLabel)+'</td>';
       h += '<td>'+escH(g(p,'Pack_Status'))+'</td>';
-      var qty = g(p,'Quantity'); h += '<td>'+(qty==='-'?'-':Number(qty).toLocaleString())+'</td>';
+      var qty = g(p,'Total_Qty'); h += '<td>'+(qty==='-'?'-':Number(qty).toLocaleString())+'</td>';
       h += '<td>'+escH(g(p,'Worker'))+'</td>';
       h += '<td>'+escH(g(p,'Added_Time')||g(p,'Created_Time')||'-')+'</td>';
       h += '</tr>';
@@ -2801,7 +2805,7 @@ function renderPackingSection(data, totalQty){
     h += '<th># / 麻袋编号</th><th>Status / 상태</th><th>Qty / 수량</th><th>Destination / 목적지</th><th>Worker / 담당자</th><th>Created / 생성</th>';
     h += '</tr></thead><tbody>';
     bags.forEach(function(b, idx){
-      var isLatest = (idx === bags.length-1);
+      var isLatest = (idx === 0);
       var rowCls = isLatest ? ' class="pack-list-row-latest"' : '';
       var seq = g(b,'Bag_Sequence');
       h += '<tr'+rowCls+'>';
