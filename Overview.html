@@ -794,7 +794,7 @@ body{padding:16px;min-height:100vh}
 .prod-log-tbl{width:100%;border-collapse:collapse;font-size:10px}
 .prod-log-tbl th,.prod-log-tbl td{border:1px solid var(--border);padding:5px 8px;text-align:center;vertical-align:middle}
 .prod-log-tbl thead tr{background:#F5F3EF;font-weight:500}
-.prod-log-row-latest td{color:#2563EB !important;font-weight:600}
+.prod-log-row-latest td{color:#2563EB !important;font-weight:700}
 
 /* ── Packing Status section ── */
 .pack-progress-wrap{background:#F8F7F3;border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px}
@@ -3062,7 +3062,7 @@ function loadProductionLogs(moNumber){
     var logs = (result && result.data) ? result.data : [];
     logs.sort(function(a,b){
       var da = pd(g(a,'Added_Time'))||pd(g(a,'Log_Date'))||'', db = pd(g(b,'Added_Time'))||pd(g(b,'Log_Date'))||'';
-      return da < db ? -1 : da > db ? 1 : 0;
+      return da > db ? -1 : da < db ? 1 : 0;
     });
     return logs;
   }).catch(function(){ return []; });
@@ -3082,7 +3082,7 @@ function renderProdLogTable(logs){
   h += '<th>비고 / 备注</th>';
   h += '</tr></thead><tbody>';
   logs.forEach(function(log, idx){
-    var isLatest = (idx === logs.length-1);
+    var isLatest = (idx === 0);
     var proc = g(log,'Process');
     var procLabel = PROCESS_LABELS[proc] || proc;
     var cQty = g(log,'Completed_Qty');
