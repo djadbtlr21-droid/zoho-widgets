@@ -2677,20 +2677,39 @@ function togglePackingSection(el){
 }
 
 function loadPackingData(moNumber){
-  console.log('[Packing] Fetching Inner Packs for', moNumber);
-  console.log('[Packing] Fetching Master Bags for', moNumber);
-  return Promise.all([
-    ZOHO.CREATOR.API.getAllRecords({appName:APP, reportName:'All_Inner_Pack', criteria:'MO_Number == "'+moNumber+'"', page:1, pageSize:500}),
-    ZOHO.CREATOR.API.getAllRecords({appName:APP, reportName:'All_Master_Bags', criteria:'MO_Number == "'+moNumber+'"', page:1, pageSize:200})
-  ]).then(function(results){
-    console.log('[Packing] Inner Pack response:', results[0]);
-    console.log('[Packing] Master Bag response:', results[1]);
-    var packs = (results[0]&&results[0].data) ? results[0].data : [];
-    var bags  = (results[1]&&results[1].data) ? results[1].data : [];
+  var packs = [], bags = [];
+  console.log('[Packing Status] Fetching Inner Packs for MO:', moNumber);
+  return ZOHO.CREATOR.API.getAllRecords({
+    appName: APP,
+    reportName: 'All_Inner_Pack',
+    page: 1,
+    pageSize: 200
+  }).then(function(res){
+    console.log('[Packing Status] Inner Pack result:', res && res.code, 'rows:', res && res.data && res.data.length);
+    var all = (res && res.data) ? res.data : [];
+    packs = all.filter(function(r){ return g(r,'MO_Number') === moNumber; });
+  }).catch(function(e){
+    console.error('[Packing Status] Inner Pack error:', e);
+  }).then(function(){
+    console.log('[Packing Status] Fetching Master Bags for MO:', moNumber);
+    return ZOHO.CREATOR.API.getAllRecords({
+      appName: APP,
+      reportName: 'All_Master_Bags',
+      page: 1,
+      pageSize: 200
+    });
+  }).then(function(res){
+    console.log('[Packing Status] Master Bag result:', res && res.code, 'rows:', res && res.data && res.data.length);
+    var all = (res && res.data) ? res.data : [];
+    bags = all.filter(function(r){ return g(r,'MO_Number') === moNumber; });
     packs.sort(function(a,b){ return (parseInt(g(a,'Pack_Sequence'))||0)-(parseInt(g(b,'Pack_Sequence'))||0); });
     bags.sort(function(a,b){  return (parseInt(g(a,'Bag_Sequence')) ||0)-(parseInt(g(b,'Bag_Sequence')) ||0); });
+    console.log('[Packing Status] Final: packs='+packs.length+', bags='+bags.length);
     return {packs:packs, bags:bags};
-  }).catch(function(e){ console.error('[Packing] fetch error', e); return {packs:[], bags:[]}; });
+  }).catch(function(e){
+    console.error('[Packing Status] Master Bag error:', e);
+    return {packs:packs, bags:bags};
+  });
 }
 
 function renderPackingSection(data, totalQty){
