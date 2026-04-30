@@ -798,6 +798,15 @@ body{padding:16px;min-height:100vh}
 .spec-toggle-icon.open{transform:rotate(180deg)}
 .spec-content{margin-top:10px;display:none}
 .spec-content.open{display:block}
+/* ── 중국창고보유 Section ── */
+.reserved-summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.reserved-stat{text-align:center;padding:10px 8px;background:#FAFAF7;border-radius:6px;border:1px solid var(--border)}
+.reserved-stat .rs-label{font-size:9px;font-weight:500;color:var(--text-mute);display:block;margin-bottom:4px;letter-spacing:.02em}
+.reserved-stat .rs-val{font-size:17px;font-weight:600;color:var(--text);display:block}
+.reserved-stat.highlight .rs-val{color:var(--gold)}
+.reserved-notes-label{font-size:9px;font-weight:500;color:var(--text-mute);letter-spacing:.02em;margin-bottom:4px}
+.reserved-notes{background:#F5F3EF;padding:12px;border-radius:6px;font-family:monospace;font-size:11px;white-space:pre-wrap;color:var(--text);max-height:200px;overflow-y:auto;border:1px solid var(--border);margin-top:4px}
+.reserved-empty{text-align:center;padding:16px;font-size:11px;color:var(--text-mute);font-style:italic}
 
 /* ── Production Log table ── */
 .prod-log-tbl{width:100%;border-collapse:collapse;font-size:10px}
@@ -2787,6 +2796,28 @@ function openModal(r){
   h += it("운송장번호 / 运单号", dv(g(r,"Tracking_Number")));
   h += it("운송사 / 承运商", dv(g(r,"Carrier")));
   h += '</div></div>';
+
+  /* ── (11) 中国仓库保留 / 중국창고보유 ── */
+  h += '<div class="m-sec">';
+  h += '<div class="m-sec-t">🏪 中国仓库保留 / 중국창고보유</div>';
+  var rsvQty = parseInt(g(r,'Reserved_Qty')) || 0;
+  var rsvNotes = g(r,'Reserved_Notes');
+  var rsvPlanQty = parseInt(g(r,'Plan_Total_Quantity')) || 0;
+  var rsvPackQty = parseInt(g(r,'Inner_Pack_Total_Qty')) || 0;
+  if(rsvQty === 0 && (!rsvNotes || rsvNotes === '-')){
+    h += '<div class="reserved-empty">尚无保留记录 / 보관 기록 없음</div>';
+  } else {
+    h += '<div class="reserved-summary">';
+    h += '<div class="reserved-stat"><span class="rs-label">计划数量 / 계획 수량</span><span class="rs-val">'+rsvPlanQty.toLocaleString()+' 件</span></div>';
+    h += '<div class="reserved-stat"><span class="rs-label">已包装 / 포장 완료</span><span class="rs-val">'+rsvPackQty.toLocaleString()+' 件</span></div>';
+    h += '<div class="reserved-stat highlight"><span class="rs-label">当前保留 / 현재 보관</span><span class="rs-val">'+rsvQty.toLocaleString()+' 件</span></div>';
+    h += '</div>';
+    if(rsvNotes && rsvNotes !== '-'){
+      h += '<div class="reserved-notes-label">保留记录 / 보관 기록</div>';
+      h += '<pre class="reserved-notes">'+escH(rsvNotes)+'</pre>';
+    }
+  }
+  h += '</div>';
 
   document.getElementById("mBody").innerHTML = h;
   document.getElementById("modalOv").classList.add("active");
