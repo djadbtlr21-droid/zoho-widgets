@@ -1809,7 +1809,7 @@ function buildMoMonthSection(key,items,idx){
 }
 
 function buildMoCardHTML(r){
-  var sku=g(r,"Style_SKU"),styleName=g(r,"Style_Name"),itemName=g(r,"Style_Number");
+  var sku=g(r,"Style_SKU"),styleName=g(r,"Eng_Style_Name"),itemName=g(r,"Chi_Style_Name");
   var stage=getProdStage(r),stageCls=stageClass(stage),stageLbl=stageLabel(stage);
   var orderCls=orderStatusClass(g(r,"Order_Status"));
   var dl=isDelayed(r);
@@ -1827,9 +1827,9 @@ function buildMoCardHTML(r){
   p.push('<div class="mo-card-value mo-num'+(dl?' delayed-num':'')+'">'+escH(g(r,"MO_Number"))+'</div>');
   p.push('<div class="mo-card-label">SKU</div>');
   p.push('<div class="mo-card-value">'+escH(sku)+'</div>');
-  p.push('<div class="mo-card-label">스타일명 / 款式名</div>');
+  p.push('<div class="mo-card-label">영문 스타일명 / Eng Style Name</div>');
   p.push('<div class="mo-card-value">'+escH(styleName)+'</div>');
-  p.push('<div class="mo-card-label">아이템명 / 款号</div>');
+  p.push('<div class="mo-card-label">중문 스타일명 / 中文款号</div>');
   p.push('<div class="mo-card-value">'+escH(itemName)+'</div></div>');
   p.push('<div class="mo-card-meta">');
   p.push('<div class="mo-card-meta-row"><span>카테고리 / 分类</span><span>'+escH(catName(g(r,"Category")))+'</span></div>');
@@ -1838,8 +1838,8 @@ function buildMoCardHTML(r){
   p.push('<div class="mo-card-qty-row act"><span>ACT</span><span>'+actQty.toLocaleString()+' pcs</span></div></div>');
   p.push('<div class="mo-card-order-badge"><span class="order-badge '+orderCls+'">'+escH(g(r,"Order_Status"))+'</span></div>');
   p.push('<div class="mo-card-dates">');
-  p.push('<div class="mo-card-dates-row'+(dl?' delayed':'')+'"><span>예상납기 / 预计</span><span>'+escH(g(r,"Expected_Delivery"))+(dl?' ⚠':'')+'</span></div>');
-  p.push('<div class="mo-card-dates-row"><span>선적일 / 出货</span><span>'+escH(g(r,"Ship_Date"))+'</span></div>');
+  p.push('<div class="mo-card-dates-row'+(dl?' delayed':'')+'"><span>예상납기 / 预计</span><span>'+escH(pd(g(r,"Expected_Delivery"))||g(r,"Expected_Delivery")||"-")+(dl?' ⚠':'')+'</span></div>');
+  p.push('<div class="mo-card-dates-row"><span>선적일 / 出货</span><span>'+escH(pd(g(r,"Ship_Date"))||g(r,"Ship_Date")||"-")+'</span></div>');
   p.push('<div class="mo-card-dates-row"><span>수정일 / 修改</span><span>'+escH(modDate)+'</span></div></div>');
   p.push('</div></div>');
   return p.join("");
