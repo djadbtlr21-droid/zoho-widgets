@@ -2785,7 +2785,7 @@ function openModal(r){
   planItems.forEach(function(t, i){
     var v = g(r, t.k);
     var cls = getPlanDotClass(v);
-    h += '<div class="sch-item"><div class="sch-dot '+cls+'">'+(i+1)+'</div><div class="sch-info"><div class="sch-label">'+escH(t.l)+'</div><div class="sch-date">'+escH(v)+'</div></div></div>';
+    h += '<div class="sch-item"><div class="sch-dot '+cls+'">'+(i+1)+'</div><div class="sch-info"><div class="sch-label">'+escH(t.l)+'</div><div class="sch-date">'+escH(fmtYMD(v))+'</div></div></div>';
   });
   h += '</div>';
 
@@ -2807,7 +2807,7 @@ function openModal(r){
     var isOverdue = (cls === 'actual-overdue');
     var dateCls = isOverdue ? 'sch-date overdue' : 'sch-date';
     var warn = isOverdue ? '<span class="sch-warn">지연 / 超期</span>' : '';
-    h += '<div class="sch-item"><div class="sch-dot '+cls+'">'+(i+1)+'</div><div class="sch-info"><div class="sch-label">'+escH(t.l)+'</div><div class="'+dateCls+'">'+(v==="-" && isOverdue ? "미입력 / 未填写" : escH(v))+'</div></div>'+warn+'</div>';
+    h += '<div class="sch-item"><div class="sch-dot '+cls+'">'+(i+1)+'</div><div class="sch-info"><div class="sch-label">'+escH(t.l)+'</div><div class="'+dateCls+'">'+(v==="-" && isOverdue ? "미입력 / 未填写" : escH(fmtYMD(v)))+'</div></div>'+warn+'</div>';
   });
   h += '</div></div></div>';
 
