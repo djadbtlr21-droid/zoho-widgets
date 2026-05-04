@@ -874,6 +874,17 @@ function pd(v){
   }
   return null;
 }
+function fmtYMDHMS(v){
+  if(!v||v==="-") return "-";
+  var MONTHS={Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};
+  var m=String(v).match(/^(\d{1,2})-([A-Za-z]{3})-(\d{4})\s+(\d{2}):(\d{2})(?::(\d{2}))?/);
+  if(m){var mm=MONTHS[m[2]];if(mm){var dd=m[1].length===1?"0"+m[1]:m[1];var ss=m[6]||"00";return m[3]+"-"+mm+"-"+dd+" "+m[4]+":"+m[5]+":"+ss;}}
+  var d=new Date(String(v));
+  if(isNaN(d.getTime()))return String(v);
+  var y=d.getFullYear(),mo=String(d.getMonth()+1).padStart(2,"0"),dy=String(d.getDate()).padStart(2,"0");
+  var hh=String(d.getHours()).padStart(2,"0"),mi=String(d.getMinutes()).padStart(2,"0"),ss=String(d.getSeconds()).padStart(2,"0");
+  return y+"-"+mo+"-"+dy+" "+hh+":"+mi+":"+ss;
+}
 function getModDate(r){
   var v = r["Modified_Time"]||r["Modified_Time_field"]||"";
   if(!v||v==="-") return "알 수 없음";
@@ -2657,7 +2668,7 @@ function renderProdLogTable(logs){
     h += '<td>'+(cQty === '-' ? '-' : Number(cQty).toLocaleString())+'</td>';
     h += '<td>'+(iQty === '-' ? '-' : Number(iQty).toLocaleString())+'</td>';
     h += '<td>'+escH(g(log,'Worker'))+'</td>';
-    h += '<td>'+escH(g(log,'Log_Date'))+'</td>';
+    h += '<td>'+fmtYMDHMS(g(log,'Log_Date'))+'</td>';
     h += '<td>'+escH(g(log,'Notes'))+'</td>';
     h += '</tr>';
   });
@@ -2833,7 +2844,7 @@ function renderPackingSection(data, totalQty){
       h += '<td>'+escH(psi ? psi.label : ps)+'</td>';
       var qty = g(p,'Total_Qty'); h += '<td>'+(qty==='-'?'-':Number(qty).toLocaleString())+'</td>';
       h += '<td>'+escH(g(p,'Worker'))+'</td>';
-      h += '<td>'+escH(g(p,'Added_Time')||g(p,'Created_Time')||'-')+'</td>';
+      h += '<td>'+fmtYMDHMS(g(p,'Added_Time')||g(p,'Created_Time'))+'</td>';
       h += '</tr>';
     });
     h += '</tbody></table></div>';
@@ -2870,7 +2881,7 @@ function renderPackingSection(data, totalQty){
       var qty = g(b,'Total_Qty'); h += '<td>'+(qty==='-'?'-':Number(qty).toLocaleString())+'</td>';
       h += '<td>'+escH(g(b,'Destination'))+'</td>';
       h += '<td>'+escH(g(b,'Worker'))+'</td>';
-      h += '<td>'+escH(g(b,'Added_Time')||g(b,'Created_Time')||'-')+'</td>';
+      h += '<td>'+fmtYMDHMS(g(b,'Added_Time')||g(b,'Created_Time'))+'</td>';
       h += '</tr>';
     });
     h += '</tbody></table></div>';
