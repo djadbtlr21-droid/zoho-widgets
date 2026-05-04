@@ -1291,7 +1291,7 @@ function buildShipCardHTML(r){
   p.push('<div class="ship-stat-box mo-count"><div class="lbl">MOs</div><div class="val">'+moCount+'건</div></div>');
   p.push('<div class="ship-stat-box qty"><div class="lbl">수량 / 数量</div><div class="val">'+(totalQty>=1000?(totalQty/1000).toFixed(1)+"k":totalQty.toLocaleString())+'</div></div>');
   p.push('</div>');
-  p.push('<div class="ship-amount-row"><span class="lbl">총 금액 / 总金额</span><span class="val">$'+totalAmount.toLocaleString(undefined,{maximumFractionDigits:0})+'</span></div>');
+  p.push('<div class="ship-amount-row"><span class="lbl">총 금액 / 总金额</span><span class="val">¥'+totalAmount.toLocaleString(undefined,{maximumFractionDigits:0})+'</span></div>');
   p.push('<button class="ship-invoice-btn" onclick="event.stopPropagation();openInvoice(\''+r["ID"]+'\')">📄 Invoice 보기 / 查看发票</button>');
   p.push('</div></div>');
   return p.join("");
