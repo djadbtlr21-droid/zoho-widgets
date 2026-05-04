@@ -2105,7 +2105,7 @@ function buildColorSizePriceMatrix(r, prefix){
     var notes = g(r, notesField);
     if(notes && notes !== "-"){
       notes.split(/\n+/).forEach(function(line){
-        var m = line.match(/Color:\s*([^|]+)\|\s*Size:\s*([^|]+)\|\s*Qty:\s*(\d+)(?:\s*\|\s*Unit Price:\s*\$?([\d.]+))?/i);
+        var m = line.match(/Color:\s*([^|]+)\|\s*Size:\s*([^|]+)\|\s*Qty:\s*(\d+)(?:\s*\|\s*Unit Price:\s*[¥$]?([\d.]+))?/i);
         if(m) addToMatrix(m[1], m[2], m[3], m[4]);
       });
     }
@@ -2197,6 +2197,14 @@ function renderColorSizeMatrix(r, prefix){
     return '<div class="csm-empty">입력된 내역이 없습니다 / 暂无数据</div>';
   }
 
+  // For ACTUAL tab: derive avg unit price from Plan fields as fallback
+  var avgUP = 0;
+  if(prefix !== "Plan_"){
+    var planQty = parseFloat(g(r,'Plan_Total_Quantity')) || 0;
+    var planAmt = parseFloat(g(r,'Plan_Grand_Total')) || 0;
+    if(planQty > 0 && planAmt > 0) avgUP = planAmt / planQty;
+  }
+
   var grandQty = 0, grandAmount = 0, sizeTotals = {};
   data.sizes.forEach(function(s){ sizeTotals[s] = 0; });
 
@@ -2211,6 +2219,8 @@ function renderColorSizeMatrix(r, prefix){
   data.colors.forEach(function(color){
     var row = data.matrix[color];
     var dotStyle = colorDotStyle(color);
+    var displayPrice = row.price > 0 ? row.price : avgUP;
+    var displayAmount = row.amount > 0 ? row.amount : (row.total * avgUP);
     h += '<tr>';
     h += '<td class="csm-td-color"><span class="csm-color-dot" style="'+dotStyle+'"></span>'+escH(color)+'</td>';
     data.sizes.forEach(function(s){
@@ -2219,18 +2229,25 @@ function renderColorSizeMatrix(r, prefix){
       h += '<td class="csm-td-qty">'+(q > 0 ? q.toLocaleString() : '<span class="csm-zero">-</span>')+'</td>';
     });
     h += '<td class="csm-td-total">'+row.total.toLocaleString()+'</td>';
-    h += '<td class="csm-td-price">'+(row.price > 0 ? '¥'+row.price.toFixed(2) : '-')+'</td>';
-    h += '<td class="csm-td-amount">'+(row.amount > 0 ? '¥'+row.amount.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) : '-')+'</td>';
+    h += '<td class="csm-td-price">'+(displayPrice > 0 ? '¥'+displayPrice.toFixed(2) : '-')+'</td>';
+    h += '<td class="csm-td-amount">'+(displayAmount > 0 ? '¥'+displayAmount.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) : '-')+'</td>';
     h += '</tr>';
     grandQty += row.total;
-    grandAmount += row.amount;
+    grandAmount += displayAmount;
   });
+
+  // For ACTUAL total: prefer Acture_Grand_Total if populated, else use computed sum
+  var displayGrandAmount = grandAmount;
+  if(prefix !== "Plan_"){
+    var actGT = parseFloat(g(r,'Acture_Grand_Total')) || 0;
+    if(actGT > 0) displayGrandAmount = actGT;
+  }
 
   h += '<tr class="csm-grand"><td class="csm-td-color"><b>TOTAL / 합계 / 合计</b></td>';
   data.sizes.forEach(function(s){ h += '<td class="csm-td-qty"><b>'+sizeTotals[s].toLocaleString()+'</b></td>'; });
   h += '<td class="csm-td-total"><b>'+grandQty.toLocaleString()+'</b></td>';
   h += '<td class="csm-td-price">-</td>';
-  h += '<td class="csm-td-amount"><b>¥'+grandAmount.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+'</b></td>';
+  h += '<td class="csm-td-amount"><b>¥'+displayGrandAmount.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+'</b></td>';
   h += '</tr>';
   h += '</tbody></table>';
   return h;
@@ -3158,7 +3175,7 @@ function renderProdLogTable(logs){
     h += '<td>'+(cQty==='-'?'-':Number(cQty).toLocaleString())+'</td>';
     h += '<td>'+(iQty==='-'?'-':Number(iQty).toLocaleString())+'</td>';
     h += '<td>'+escH(g(log,'Worker'))+'</td>';
-    h += '<td>'+fmtYMDHMS(g(log,'Log_Date'))+'</td>';
+    h += '<td>'+fmtYMDHMS(g(log,'Added_Time')||g(log,'Log_Date'))+'</td>';
     h += '<td>'+escH(g(log,'Notes'))+'</td>';
     h += '</tr>';
   });
