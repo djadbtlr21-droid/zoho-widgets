@@ -2709,23 +2709,26 @@ function togglePackingSection(el){
 
 function fetchAllPackRecords(reportName){
   var allRecords = [];
-  var page = 1;
-  var pageSize = 200;
-  function fetchPage(){
-    return ZOHO.CREATOR.API.getAllRecords({
-      appName: APP, reportName: reportName, page: page, pageSize: pageSize
-    }).then(function(res){
-      var rows = (res && res.data) ? res.data : [];
-      allRecords = allRecords.concat(rows);
-      if(rows.length < pageSize || page >= 50) {
-        console.log('[Packing] Total records fetched:', allRecords.length, 'Pages traversed:', page);
-        return allRecords;
+  var pageCount = 0;
+  function fetchPage(cursor){
+    var params = { appName: APP, reportName: reportName, pageSize: 200 };
+    if(cursor) params.record_cursor = cursor;
+    return ZOHO.CREATOR.API.getAllRecords(params).then(function(res){
+      pageCount++;
+      if(res && res.code === 3000 && res.data){
+        allRecords = allRecords.concat(res.data);
+        if(res.record_cursor && pageCount < 50){
+          return fetchPage(res.record_cursor);
+        }
       }
-      page++;
-      return fetchPage();
+      console.log('[Packing] Total records fetched:', allRecords.length, 'Pages traversed:', pageCount);
+      return allRecords;
+    }).catch(function(e){
+      console.warn('[Packing] Error on page ' + pageCount + ':', e);
+      return allRecords;
     });
   }
-  return fetchPage();
+  return fetchPage(null);
 }
 
 function loadPackingData(moNumber){
