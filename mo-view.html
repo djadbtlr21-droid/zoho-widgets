@@ -598,9 +598,14 @@ body{padding:16px;min-height:100vh}
 .pack-progress-label{display:flex;justify-content:space-between;font-size:10px;color:var(--text-mute);margin-top:5px}
 .pack-status-section{margin-top:10px}
 .pack-status-title{font-size:10px;font-weight:500;color:var(--text-mute);letter-spacing:.03em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border)}
-.pack-status-tbl{width:100%;border-collapse:collapse;font-size:10px;margin-bottom:4px}
-.pack-status-tbl td{padding:3px 8px}
-.pack-status-tbl tr:nth-child(even) td{background:#FAFAF7}
+.status-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid #F0EDE8}
+.status-row:last-child{border-bottom:none}
+.status-label{flex:1;font-size:10px}
+.status-meta{display:flex;gap:14px;align-items:center;font-size:10px}
+.status-count{font-weight:600;min-width:32px;text-align:right}
+.status-time{font-family:monospace;color:var(--text-mute);min-width:86px}
+.status-worker{color:var(--text);min-width:48px}
+@media(max-width:600px){.status-meta{flex-direction:column;gap:1px;align-items:flex-end}}
 .pack-list-tbl{width:100%;border-collapse:collapse;font-size:10px}
 .pack-list-tbl th,.pack-list-tbl td{border:1px solid var(--border);padding:5px 8px;text-align:center;vertical-align:middle}
 .pack-list-tbl thead tr{background:#F5F3EF;font-weight:500}
@@ -1177,6 +1182,33 @@ function parseAssortmentJSON(r){
   // Field may contain comma-separated objects without outer brackets
   if(!s.startsWith("[")) s = "[" + s + "]";
   try { return JSON.parse(s) || []; } catch(e){ console.warn("Assortment JSON parse failed", e); return []; }
+}
+
+function getLatestForStatus(records, statusField, statusValue){
+  var matching = records.filter(function(r){ return g(r, statusField) === statusValue; });
+  if(matching.length === 0) return { count:0, time:null, worker:null };
+  matching.sort(function(a, b){
+    var at = new Date(g(a,'Modified_Time')||g(a,'Added_Time')||0).getTime();
+    var bt = new Date(g(b,'Modified_Time')||g(b,'Added_Time')||0).getTime();
+    return bt - at;
+  });
+  var latest = matching[0];
+  return {
+    count: matching.length,
+    time: g(latest,'Modified_Time')||g(latest,'Added_Time'),
+    worker: g(latest,'Worker')||g(latest,'Updated_Worker')||g(latest,'Created_Worker')||'-'
+  };
+}
+
+function fmtYMD(v){
+  if(!v||v==="-") return "-";
+  var MONTHS={Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};
+  var m=String(v).match(/^(\d{1,2})-([A-Za-z]{3})-(\d{4})/);
+  if(m){var mm=MONTHS[m[2]];if(mm){var dd=m[1].length===1?"0"+m[1]:m[1];return m[3]+"-"+mm+"-"+dd;}}
+  var d=new Date(String(v));
+  if(isNaN(d.getTime()))return String(v).slice(0,10);
+  var y=d.getFullYear(),mo=String(d.getMonth()+1).padStart(2,"0"),dy=String(d.getDate()).padStart(2,"0");
+  return y+"-"+mo+"-"+dy;
 }
 
 function renderPackAndBulto(r){
@@ -2811,27 +2843,43 @@ function renderPackingSection(data, totalQty){
   h += '<div class="pack-progress-label"><span>'+actualBags+' / '+expectedBags+'</span><span>'+bagPct+'%</span></div>';
   h += '</div>';
 
-  var packCounts = {};
-  packs.forEach(function(p){ var s=g(p,'Pack_Status'); packCounts[s]=(packCounts[s]||0)+1; });
+  // Diagnostic: log field names of first pack/bag to confirm Worker/time field names
+  if(packs.length > 0) console.log('[DIAGNOSTIC] First pack keys:', Object.keys(packs[0]), 'sample:', packs[0]);
+  if(bags.length > 0) console.log('[DIAGNOSTIC] First bag keys:', Object.keys(bags[0]), 'sample:', bags[0]);
+
   h += '<div class="pack-status-section">';
   h += '<div class="pack-status-title">Inner Pack 상태별 / 包状态分布</div>';
-  h += '<table class="pack-status-tbl"><tbody>';
   Object.keys(PACK_STATUS_LABELS).forEach(function(k){
     var info = PACK_STATUS_LABELS[k];
-    h += '<tr><td>'+info.emoji+' '+escH(info.label)+'</td><td style="font-weight:500">'+((packCounts[k]||0).toLocaleString())+'</td></tr>';
+    var stat = getLatestForStatus(packs, 'Pack_Status', k);
+    h += '<div class="status-row">';
+    h += '<span class="status-label">'+info.emoji+' '+escH(info.label)+'</span>';
+    h += '<span class="status-meta">';
+    h += '<span class="status-count">'+stat.count.toLocaleString()+'</span>';
+    if(stat.count > 0){
+      h += '<span class="status-time">'+escH(fmtYMD(stat.time))+'</span>';
+      h += '<span class="status-worker">'+escH(stat.worker)+'</span>';
+    }
+    h += '</span></div>';
   });
-  h += '</tbody></table></div>';
+  h += '</div>';
 
-  var bagCounts = {};
-  bags.forEach(function(b){ var s=g(b,'Bag_Status'); bagCounts[s]=(bagCounts[s]||0)+1; });
   h += '<div class="pack-status-section">';
   h += '<div class="pack-status-title">Master Bag 상태별 / 麻袋状态分布</div>';
-  h += '<table class="pack-status-tbl"><tbody>';
   Object.keys(BAG_STATUS_LABELS).forEach(function(k){
     var info = BAG_STATUS_LABELS[k];
-    h += '<tr><td>'+info.emoji+' '+escH(info.label)+'</td><td style="font-weight:500">'+((bagCounts[k]||0).toLocaleString())+'</td></tr>';
+    var stat = getLatestForStatus(bags, 'Bag_Status', k);
+    h += '<div class="status-row">';
+    h += '<span class="status-label">'+info.emoji+' '+escH(info.label)+'</span>';
+    h += '<span class="status-meta">';
+    h += '<span class="status-count">'+stat.count.toLocaleString()+'</span>';
+    if(stat.count > 0){
+      h += '<span class="status-time">'+escH(fmtYMD(stat.time))+'</span>';
+      h += '<span class="status-worker">'+escH(stat.worker)+'</span>';
+    }
+    h += '</span></div>';
   });
-  h += '</tbody></table></div>';
+  h += '</div>';
 
   h += '<div class="pack-sub-toggle" onclick="togglePackSub(this)">';
   h += '<span style="font-size:11px;font-weight:500">📦 Pack 리스트 / 包装列表 ('+actualPacks+')</span>';
