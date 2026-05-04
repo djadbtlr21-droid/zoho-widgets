@@ -2208,8 +2208,8 @@ function renderColorSizeMatrix(r, prefix){
       h += '<td class="csm-td-qty">'+(q > 0 ? q.toLocaleString() : '<span class="csm-zero">-</span>')+'</td>';
     });
     h += '<td class="csm-td-total">'+row.total.toLocaleString()+'</td>';
-    h += '<td class="csm-td-price">'+(row.price > 0 ? '$'+row.price.toFixed(2) : '-')+'</td>';
-    h += '<td class="csm-td-amount">'+(row.amount > 0 ? '$'+row.amount.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) : '-')+'</td>';
+    h += '<td class="csm-td-price">'+(row.price > 0 ? '¥'+row.price.toFixed(2) : '-')+'</td>';
+    h += '<td class="csm-td-amount">'+(row.amount > 0 ? '¥'+row.amount.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) : '-')+'</td>';
     h += '</tr>';
     grandQty += row.total;
     grandAmount += row.amount;
