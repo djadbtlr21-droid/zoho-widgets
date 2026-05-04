@@ -2230,7 +2230,7 @@ function renderColorSizeMatrix(r, prefix){
   data.sizes.forEach(function(s){ h += '<td class="csm-td-qty"><b>'+sizeTotals[s].toLocaleString()+'</b></td>'; });
   h += '<td class="csm-td-total"><b>'+grandQty.toLocaleString()+'</b></td>';
   h += '<td class="csm-td-price">-</td>';
-  h += '<td class="csm-td-amount"><b>$'+grandAmount.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+'</b></td>';
+  h += '<td class="csm-td-amount"><b>¥'+grandAmount.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+'</b></td>';
   h += '</tr>';
   h += '</tbody></table>';
   return h;
