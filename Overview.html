@@ -1850,6 +1850,7 @@ function buildMoCardHTML(r){
   p.push('<div class="mo-card-meta">');
   p.push('<div class="mo-card-meta-row"><span>카테고리 / 分类</span><span>'+escH(catName(g(r,"Category")))+'</span></div>');
   p.push('<div class="mo-card-meta-row"><span>공장 / 工厂</span><span>'+escH(cleanFactory(g(r,"Factory")))+'</span></div>');
+  p.push('<div class="mo-card-meta-row"><span>원단 / 面料</span><span>'+escH(mv("Material_Type",g(r,"Material_Type")))+'</span></div>');
   p.push('<div class="mo-card-qty-row plan"><span>PLAN</span><span>'+planQty.toLocaleString()+' pcs</span></div>');
   p.push('<div class="mo-card-qty-row act"><span>ACT</span><span>'+actQty.toLocaleString()+' pcs</span></div></div>');
   p.push('<div class="mo-card-order-badge"><span class="order-badge '+orderCls+'">'+escH(g(r,"Order_Status"))+'</span></div>');
