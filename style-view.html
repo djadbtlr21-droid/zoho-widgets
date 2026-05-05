@@ -1119,8 +1119,8 @@ function buildStyleCardHTML(r){
   p.push('<div class="sc-main">');
   p.push('<div class="sc-lbl">SKU</div>');
   p.push('<div class="sc-val sku">'+escH(sku)+'</div>');
-  p.push('<div class="sc-mini"><div class="sc-lbl">스타일 설명 / 款式说明</div><div class="sc-val">'+escH(g(r,"Style_Name"))+'</div></div>');
-  p.push('<div class="sc-mini"><div class="sc-lbl">아이템명 / 品名</div><div class="sc-val">'+escH(g(r,"Style_Number"))+'</div></div>');
+  p.push('<div class="sc-mini"><div class="sc-lbl">영문 스타일명 / Eng Style Name</div><div class="sc-val">'+escH(g(r,"Eng_Style_Name"))+'</div></div>');
+  p.push('<div class="sc-mini"><div class="sc-lbl">중문 스타일명 / 中文款号</div><div class="sc-val">'+escH(g(r,"Chi_Style_Name"))+'</div></div>');
   p.push('</div>');
   p.push('<div class="sc-rows">');
   p.push('<div class="sc-row"><span class="k">브랜드 / 品牌</span><span class="v">'+escH(g(r,"Business_Entity"))+'</span></div>');
