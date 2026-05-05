@@ -1081,7 +1081,7 @@ function getAllImgs(r,field){
 function getImg1(r){var imgs=getAllImgs(r,"Style_Image");return imgs.length>0?imgs[0]:null}
 function getSubformLines(r,fn){var v=r[fn];if(!v)return[];if(Array.isArray(v))return v;if(typeof v==="object")return Object.values(v);return[]}
 function stageClass(s){var map={"Not Started":"stage-notstart","Fabric":"stage-fabric","Cutting":"stage-cutting","Sewing":"stage-sewing","Packing":"stage-packing","Done":"stage-done","Shipped":"stage-shipped"};return map[s]||"stage-notstart"}
-function stageLabel(s){var map={"Not Started":"⏳ 미시작 / 未开始","Fabric":"🧵 원단 / 面料","Cutting":"✂️ 재단 / 裁剪","Sewing":"🪡 봉제 / 车缝","Packing":"📦 포장 / 包装","Done":"✅ 완료 / 完成","Shipped":"🚚 출고 / 出货"};return map[s]||"⏳ 미시작"}
+function stageLabel(s){var map={"Not Started":"⏳ 미시작 / 未开始","Fabric":"🧵 원단 / 面料","Cutting":"✂️ 재단 / 裁剪","Sewing":"🪡 재봉 / 裁缝","Packing":"📦 포장 / 包装","Done":"✅ 완료 / 完成","Shipped":"🚚 출고 / 出货"};return map[s]||"⏳ 미시작"}
 function orderStatusClass(st){var s=(st||"").toLowerCase();if(s.indexOf("confirmed")>=0)return"confirmed";if(s.indexOf("delivered")>=0||s.indexOf("shipped")>=0)return"delivered";if(s.indexOf("progress")>=0)return"progress";if(s.indexOf("pending")>=0)return"pending";if(s.indexOf("delay")>=0)return"delayed";return"draft"}
 function parseYM(key){var m=key.match(/(\d+)년\s*(\d+)월/);if(!m)return null;var y=parseInt(m[1]);if(y<100)y+=2000;return{y:y,m:parseInt(m[2])}}
 function sortMonthKeys(keys){
@@ -1867,8 +1867,8 @@ function renderLocalPipeline(idx,items){
   var stages=["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
   var emojis=["⏳","🧵","✂️","🪡","📦","✅","🚚"];
   var colors={"Not Started":"var(--stage-notstart-txt)","Fabric":"var(--stage-fabric-txt)","Cutting":"var(--stage-cutting-txt)","Sewing":"var(--stage-sewing-txt)","Packing":"var(--stage-packing-txt)","Done":"var(--stage-done-txt)","Shipped":"var(--stage-shipped-txt)"};
-  var lbKR=["미시작","원단","재단","봉제","포장","완료","출고"];
-  var lbCN=["未开始","面料","裁剪","车缝","包装","完成","出货"];
+  var lbKR=["미시작","원단","재단","재봉","포장","완료","출고"];
+  var lbCN=["未开始","面料","裁剪","裁缝","包装","完成","出货"];
   var counts=[0,0,0,0,0,0,0];
   items.forEach(function(r){var i=stages.indexOf(getProdStage(r));if(i>=0)counts[i]++});
   var total=counts.reduce(function(s,n){return s+n},0);
@@ -1890,7 +1890,7 @@ function renderLocalPipeline(idx,items){
 function openPipePop(stage,idx){
   var base=window['visible_mo_'+idx]||[];
   var items=base.filter(function(r){return getProdStage(r)===stage});
-  var stageNames={"Not Started":"⏳ 미시작 / 未开始","Fabric":"🧵 원단 / 面料","Cutting":"✂️ 재단 / 裁剪","Sewing":"🪡 봉제 / 车缝","Packing":"📦 포장 / 包装","Done":"✅ 완료 / 完成","Shipped":"🚚 출고 / 出货"};
+  var stageNames={"Not Started":"⏳ 미시작 / 未开始","Fabric":"🧵 원단 / 面料","Cutting":"✂️ 재단 / 裁剪","Sewing":"🪡 재봉 / 裁缝","Packing":"📦 포장 / 包装","Done":"✅ 완료 / 完成","Shipped":"🚚 출고 / 出货"};
   document.getElementById("pipePopTitle").textContent=stageNames[stage]||stage;
   document.getElementById("pipePopSub").textContent="총 "+items.length+"건 / 共 "+items.length+" 件";
   var h="";
@@ -2531,7 +2531,7 @@ function stageClass(stage){
 function stageLabel(stage){
   var map = {
     "Not Started":"⏳ 미시작 / 未开始","Fabric":"🧵 원단 / 面料","Cutting":"✂️ 재단 / 裁剪",
-    "Sewing":"🪡 봉제 / 车缝","Packing":"📦 포장 / 包装","Done":"✅ 완료 / 完成","Shipped":"🚚 출고 / 出货"
+    "Sewing":"🪡 재봉 / 裁缝","Packing":"📦 포장 / 包装","Done":"✅ 완료 / 完成","Shipped":"🚚 출고 / 出货"
   };
   return map[stage] || "⏳ 미시작";
 }
@@ -2776,8 +2776,8 @@ function openModal(r){
     {l:"원단입고 / 面料入库", k:"Plan_Fabric_Date"},
     {l:"재단시작 / 裁剪开始", k:"Plan_Cutting_Start"},
     {l:"재단완료 / 裁剪完成", k:"Plan_Cutting_End"},
-    {l:"봉제시작 / 车缝开始", k:"Plan_Sewing_Start"},
-    {l:"봉제완료 / 车缝完成", k:"Plan_Sewing_End"},
+    {l:"재봉시작 / 裁缝开始", k:"Plan_Sewing_Start"},
+    {l:"재봉완료 / 裁缝完成", k:"Plan_Sewing_End"},
     {l:"포장시작 / 包装开始", k:"Plan_Packing_Start"},
     {l:"포장완료 / 包装完成", k:"Plan_Packing_End"},
     {l:"예상납기 / 预计交货", k:"Expected_Delivery"}
@@ -2795,8 +2795,8 @@ function openModal(r){
     {l:"원단입고 / 面料入库", k:"Fabric_In_house_Date", plan:"Plan_Fabric_Date"},
     {l:"재단시작 / 裁剪开始", k:"Cutting_Start_Date", plan:"Plan_Cutting_Start"},
     {l:"재단완료 / 裁剪完成", k:"Cutting_End_Date", plan:"Plan_Cutting_End"},
-    {l:"봉제시작 / 车缝开始", k:"Sewing_Start_Date", plan:"Plan_Sewing_Start"},
-    {l:"봉제완료 / 车缝完成", k:"Sewing_Completion_Date", plan:"Plan_Sewing_End"},
+    {l:"재봉시작 / 裁缝开始", k:"Sewing_Start_Date", plan:"Plan_Sewing_Start"},
+    {l:"재봉완료 / 裁缝完成", k:"Sewing_Completion_Date", plan:"Plan_Sewing_End"},
     {l:"포장시작 / 包装开始", k:"Packing_Start_Date", plan:"Plan_Packing_Start"},
     {l:"포장완료 / 包装完成", k:"Packing_End_Date", plan:"Plan_Packing_End"},
     {l:"선적일 / 出货日期", k:"Ship_Date", plan:"Expected_Delivery"}
@@ -3099,13 +3099,13 @@ var PROCESS_LABELS = {
   'Fabric_In':     '面料入库 / 원단입고',
   'Cutting_Start': '裁剪开始 / 재단 시작',
   'Cutting_End':   '裁剪完成 / 재단 완료',
-  'Sewing_Start':  '车缝开始 / 봉제 시작',
-  'Sewing_End':    '车缝完成 / 봉제 완료',
+  'Sewing_Start':  '裁缝开始 / 재봉 시작',
+  'Sewing_End':    '裁缝完成 / 재봉 완료',
   'Packing_Start': '包装开始 / 포장 시작',
   'Packing_End':   '包装完成 / 포장 완료',
   'Shipped':       '出货 / 출고',
   'Cutting':       '裁剪 / 재단',
-  'Sewing':        '车缝 / 봉제',
+  'Sewing':        '裁缝 / 재봉',
   'Packing':       '包装 / 포장',
   'Completed':     '完成 / 완료'
 };
