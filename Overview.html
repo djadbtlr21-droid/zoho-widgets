@@ -3312,20 +3312,37 @@ function renderPackingSection(data, totalQty){
   var expectedBags  = expectedPacks > 0 ? Math.floor(expectedPacks/10) : 0;
   var actualPacks = packs.length, actualBags = bags.length;
 
+  // New Inner Pack model: one standard record per MO (Is_Remainder=false, Pack_Sequence=0)
+  //   Total_Expected = 인쇄한 표준 팩 수 (분모)
+  //   sum of Master_Bags[*].Inner_Pack_Count = 마대에 들어간 팩 수 (분자)
+  var stdPack = null;
+  for (var i=0; i<packs.length; i++){
+    var ir = g(packs[i],'Is_Remainder');
+    var isStd = !(ir==='true'||ir===true||ir==='1');
+    if (isStd){ stdPack = packs[i]; break; }
+  }
+  var totalExpected = stdPack ? (parseInt(g(stdPack,'Total_Expected'))||0) : 0;
+  var bagInnerPackSum = 0;
+  bags.forEach(function(b){ bagInnerPackSum += (parseInt(g(b,'Inner_Pack_Count'))||0); });
+
   if(actualPacks === 0 && actualBags === 0){
     return '<div style="text-align:center;padding:16px;font-size:11px;color:#94A3B8">'
       +'포장 데이터 없음 / 暂无包装数据<br>'
       +'0 / '+expectedPacks+' packs &nbsp;·&nbsp; 0 / '+expectedBags+' bags</div>';
   }
 
-  var packPct = expectedPacks > 0 ? Math.min(100, Math.round(actualPacks/expectedPacks*100)) : (actualPacks>0?100:0);
+  var packPct = totalExpected > 0 ? Math.min(100, Math.round(bagInnerPackSum/totalExpected*100)) : 0;
   var bagPct  = expectedBags  > 0 ? Math.min(100, Math.round(actualBags /expectedBags *100)) : (actualBags >0?100:0);
   var h = '';
 
   h += '<div class="pack-progress-wrap">';
   h += '<div class="pack-progress-title">Inner Pack 진행률 / 中间包装进度</div>';
   h += '<div class="pack-progress-bar-bg"><div class="pack-progress-bar-fill" style="width:'+packPct+'%"></div></div>';
-  h += '<div class="pack-progress-label"><span>'+actualPacks+' / '+expectedPacks+'</span><span>'+packPct+'%</span></div>';
+  if (totalExpected > 0){
+    h += '<div class="pack-progress-label"><span>'+bagInnerPackSum+' / '+totalExpected+'</span><span>'+packPct+'%</span></div>';
+  } else {
+    h += '<div class="pack-progress-label"><span>미인쇄 / 未打印</span><span>0%</span></div>';
+  }
   h += '</div>';
 
   h += '<div class="pack-progress-wrap">';
@@ -3342,14 +3359,42 @@ function renderPackingSection(data, totalQty){
   h += '<div class="pack-status-title">Inner Pack 상태별 / 包状态分布</div>';
   Object.keys(PACK_STATUS_LABELS).forEach(function(k){
     var info = PACK_STATUS_LABELS[k];
-    var stat = getLatestForStatus(packs, 'Pack_Status', k);
+    var count, time = null, worker = '-';
+    if (k === 'Created'){
+      count = totalExpected;
+      if (stdPack){
+        time = g(stdPack,'Modified_Time')||g(stdPack,'Added_Time');
+        worker = g(stdPack,'Worker')||g(stdPack,'Updated_Worker')||g(stdPack,'Created_Worker')||'-';
+      }
+    } else if (k === 'Bagged'){
+      count = bagInnerPackSum;
+      if (bags.length > 0){
+        var latestB = bags.reduce(function(best,b){
+          var t1 = new Date(g(b,'Modified_Time')||g(b,'Added_Time')||0).getTime();
+          var t2 = new Date(g(best,'Modified_Time')||g(best,'Added_Time')||0).getTime();
+          return t1>t2 ? b : best;
+        }, bags[0]);
+        time = g(latestB,'Modified_Time')||g(latestB,'Added_Time');
+        worker = g(latestB,'Worker')||g(latestB,'Updated_Worker')||g(latestB,'Created_Worker')||'-';
+      }
+    } else {
+      // Shipped/Received/Out_For_Delivery/Delivered: derive from Master Bag status
+      var bagStat = getLatestForStatus(bags, 'Bag_Status', k);
+      var sum = 0;
+      bags.forEach(function(b){
+        if (g(b,'Bag_Status') === k) sum += (parseInt(g(b,'Inner_Pack_Count'))||0);
+      });
+      count = sum;
+      time = bagStat.time;
+      worker = bagStat.worker;
+    }
     h += '<div class="status-row">';
     h += '<span class="status-label">'+info.emoji+' '+escH(info.label)+'</span>';
     h += '<span class="status-meta">';
-    h += '<span class="status-count">'+stat.count.toLocaleString()+'</span>';
-    if(stat.count > 0){
-      h += '<span class="status-time">'+escH(fmtYMD(stat.time))+'</span>';
-      h += '<span class="status-worker">'+escH(stat.worker)+'</span>';
+    h += '<span class="status-count">'+(count||0).toLocaleString()+'</span>';
+    if(count > 0 && time){
+      h += '<span class="status-time">'+escH(fmtYMD(time))+'</span>';
+      h += '<span class="status-worker">'+escH(worker)+'</span>';
     }
     h += '</span></div>';
   });
@@ -3393,12 +3438,20 @@ function renderPackingSection(data, totalQty){
       var rowCls = isLatest ? ' class="pack-list-row-latest"' : '';
       var seq = g(p,'Pack_Sequence');
       var isRem = g(p,'Is_Remainder');
-      var seqLabel = (isRem==='true'||isRem===true||isRem==='1') ? '🔸 자투리 #'+seq : '#'+seq;
+      var isRemainder = (isRem==='true'||isRem===true||isRem==='1');
+      var isStdRow = !isRemainder;
+      var seqLabel = isRemainder ? ('🔸 자투리 #'+seq) : '标准中包袋 / 표준중간포장';
       h += '<tr'+rowCls+'>';
       h += '<td>'+escH(seqLabel)+'</td>';
       var ps = g(p,'Pack_Status'); var psi = PACK_STATUS_LABELS[ps];
       h += '<td>'+escH(psi ? psi.label : ps)+'</td>';
-      var qty = g(p,'Total_Qty'); h += '<td>'+(qty==='-'?'-':Number(qty).toLocaleString())+'</td>';
+      if (isStdRow){
+        var te = parseInt(g(p,'Total_Expected'))||0;
+        h += '<td>'+te.toLocaleString()+'개 인쇄 / '+te.toLocaleString()+'件已打印</td>';
+      } else {
+        var qty = g(p,'Total_Qty');
+        h += '<td>'+(qty==='-'?'-':Number(qty).toLocaleString())+'</td>';
+      }
       h += '<td>'+escH(g(p,'Worker'))+'</td>';
       h += '<td>'+fmtYMDHMS(g(p,'Added_Time')||g(p,'Created_Time'))+'</td>';
       h += '</tr>';
@@ -3434,7 +3487,23 @@ function renderPackingSection(data, totalQty){
       h += '<td>#'+escH(seq)+'</td>';
       var bs = g(b,'Bag_Status'); var bsi = BAG_STATUS_LABELS[bs];
       h += '<td>'+escH(bsi ? bsi.label : bs)+'</td>';
-      var qty = g(b,'Total_Qty'); h += '<td>'+(qty==='-'?'-':Number(qty).toLocaleString())+'</td>';
+      var qty = g(b,'Total_Qty');
+      var qtyCell;
+      if (qty === '-' || qty == null || qty === ''){
+        qtyCell = '-';
+      } else {
+        var qtyNum = Number(qty) || 0;
+        var ipcRaw = g(b,'Inner_Pack_Count');
+        var packCount = (ipcRaw != null && ipcRaw !== '' && ipcRaw !== '-')
+          ? (parseInt(ipcRaw)||0)
+          : Math.floor(qtyNum / 12);
+        var bagUnits = packCount / 10;
+        var bagUnitsStr = (Math.round(bagUnits*10) % 10 === 0)
+          ? String(Math.round(bagUnits))
+          : bagUnits.toFixed(1);
+        qtyCell = qtyNum.toLocaleString()+'件 · '+packCount.toLocaleString()+'팩 ('+bagUnitsStr+'마대분)';
+      }
+      h += '<td>'+qtyCell+'</td>';
       h += '<td>'+escH(g(b,'Destination'))+'</td>';
       h += '<td>'+escH(g(b,'Worker'))+'</td>';
       h += '<td>'+fmtYMDHMS(g(b,'Added_Time')||g(b,'Created_Time'))+'</td>';
