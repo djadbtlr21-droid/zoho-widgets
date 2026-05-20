@@ -2716,8 +2716,11 @@ function openModal(r){
   /* ── (4) Fabric info (v32: moved up under Product Definition) ── */
   h += '<div class="m-sec"><div class="m-sec-t">🧵 원단 정보 / 面料信息</div><div class="d-grid">';
   h += it("원단 종류 / 面料种类", dv(mv("Material_Type", g(r,"Material_Type"))));
-  h += it("혼방 % / 混纺 %", dv(g(r,"blended_percentage")));
+  h += it("혼방 % / 混纺 %", dv(g(r,"blended")));
+  h += it("원단 중량 / 面料克重", dv(g(r,"Fabric_Weight")));
   h += it("안감 / 里料类型", dv(mv("Lining_Type", g(r,"Lining_Type"))));
+  h += it("안감 중량 / 里料克重", dv(g(r,"Lining_Weight")));
+  h += it("안감 비고 / 里料备注", dv(g(r,"Lining_Notes")));
   h += '</div></div>';
 
   /* ── (4.5) 사이즈 스펙 (NEW in v33) ── */
