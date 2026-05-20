@@ -222,7 +222,7 @@ body{padding:16px;min-height:100vh}
 .pipe-lb{font-size:10px;font-weight:500;color:var(--text-soft);display:flex;align-items:center;gap:4px;margin-top:2px}
 .pipe-emoji{font-size:1.1em}
 .pipe-sublabel{font-size:8px;color:var(--text-mute);margin-top:1px;letter-spacing:.3px}
-.pipe-step[data-stage="Not Started"]::after{background:var(--stage-notstart-txt)}
+.pipe-step[data-stage="Sampling"]::after{background:var(--stage-notstart-txt)}
 .pipe-step[data-stage="Fabric"]::after    {background:var(--stage-fabric-txt)}
 .pipe-step[data-stage="Cutting"]::after   {background:var(--stage-cutting-txt)}
 .pipe-step[data-stage="Sewing"]::after    {background:var(--stage-sewing-txt)}
@@ -925,7 +925,7 @@ function getProdStage(r){
   if(s.indexOf("sewing")>=0) return "Sewing";
   if(s.indexOf("cutting")>=0) return "Cutting";
   if(s.indexOf("fabric")>=0) return "Fabric";
-  return "Not Started";
+  return "Sampling";
 }
 function getAllImgs(r,field){
   var i = r[field]; if(!i) return [];
@@ -1358,17 +1358,17 @@ function getActualDotClass(actualDate, planDate){
 /* ── Stage + order status helpers ── */
 function stageClass(stage){
   var map = {
-    "Not Started":"stage-notstart","Fabric":"stage-fabric","Cutting":"stage-cutting",
+    "Sampling":"stage-notstart","Fabric":"stage-fabric","Cutting":"stage-cutting",
     "Sewing":"stage-sewing","Packing":"stage-packing","Done":"stage-done","Shipped":"stage-shipped"
   };
   return map[stage] || "stage-notstart";
 }
 function stageLabel(stage){
   var map = {
-    "Not Started":"⏳ 미시작 / 未开始","Fabric":"🧵 원단 / 面料","Cutting":"✂️ 재단 / 裁剪",
+    "Sampling":"⏳ 샘플제작 / 产前样","Fabric":"🧵 원단 / 面料","Cutting":"✂️ 재단 / 裁剪",
     "Sewing":"🪡 재봉 / 裁缝","Packing":"📦 포장 / 包装","Done":"✅ 완료 / 完成","Shipped":"🚚 출고 / 出货"
   };
-  return map[stage] || "⏳ 미시작";
+  return map[stage] || "⏳ 샘플제작";
 }
 function orderStatusClass(status){
   var s = (status||"").toLowerCase();
@@ -1618,10 +1618,10 @@ function openModalFromPop(id){
 
 /* ── Pipeline ── */
 function renderLocalPipeline(idx, items){
-  var stages = ["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
+  var stages = ["Sampling","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
   var emojis = ["⏳","🧵","✂️","🪡","📦","✅","🚚"];
   var colors = {
-    "Not Started":"var(--stage-notstart-txt)",
+    "Sampling":"var(--stage-notstart-txt)",
     "Fabric":"var(--stage-fabric-txt)",
     "Cutting":"var(--stage-cutting-txt)",
     "Sewing":"var(--stage-sewing-txt)",
@@ -1629,8 +1629,8 @@ function renderLocalPipeline(idx, items){
     "Done":"var(--stage-done-txt)",
     "Shipped":"var(--stage-shipped-txt)"
   };
-  var labelsKR = ["미시작","원단","재단","재봉","포장","완료","출고"];
-  var labelsCN = ["未开始","面料","裁剪","裁缝","包装","完成","出货"];
+  var labelsKR = ["샘플제작","원단","재단","재봉","포장","완료","출고"];
+  var labelsCN = ["产前样","面料","裁剪","裁缝","包装","完成","出货"];
   var counts = [0,0,0,0,0,0,0];
   items.forEach(function(r){ var i = stages.indexOf(getProdStage(r)); if(i>=0) counts[i]++; });
   var total = counts.reduce(function(s,n){ return s+n; }, 0);
@@ -1663,7 +1663,7 @@ function openPipePop(stage, idx){
   var baseItems = window['visible_mo_'+idx] || [];
   var items = baseItems.filter(function(r){ return getProdStage(r) === stage; });
   var stageNames = {
-    "Not Started":"⏳ 미시작 / 未开始","Fabric":"🧵 원단 / 面料","Cutting":"✂️ 재단 / 裁剪",
+    "Sampling":"⏳ 샘플제작 / 产前样","Fabric":"🧵 원단 / 面料","Cutting":"✂️ 재단 / 裁剪",
     "Sewing":"🪡 재봉 / 裁缝","Packing":"📦 포장 / 包装","Done":"✅ 완료 / 完成","Shipped":"🚚 출고 / 出货"
   };
   document.getElementById("pipePopTitle").textContent = stageNames[stage] || stage;

@@ -357,7 +357,7 @@ body{padding:16px;min-height:100vh}
 .pipe-lb{font-size:10px;font-weight:500;color:var(--text-soft);display:flex;align-items:center;gap:4px;margin-top:2px}
 .pipe-emoji{font-size:1.1em}
 .pipe-sublabel{font-size:8px;color:var(--text-mute);margin-top:1px;letter-spacing:.3px}
-.pipe-step[data-stage="Not Started"]::after{background:var(--stage-notstart-txt)}
+.pipe-step[data-stage="Sampling"]::after{background:var(--stage-notstart-txt)}
 .pipe-step[data-stage="Fabric"]::after{background:var(--stage-fabric-txt)}
 .pipe-step[data-stage="Cutting"]::after{background:var(--stage-cutting-txt)}
 .pipe-step[data-stage="Sewing"]::after{background:var(--stage-sewing-txt)}
@@ -1069,7 +1069,7 @@ function getProdStage(r){
   if(s.indexOf("sewing")>=0)return"Sewing";
   if(s.indexOf("cutting")>=0)return"Cutting";
   if(s.indexOf("fabric")>=0)return"Fabric";
-  return"Not Started";
+  return"Sampling";
 }
 function getAllImgs(r,field){
   var i=r[field];if(!i)return[];
@@ -1080,8 +1080,8 @@ function getAllImgs(r,field){
 }
 function getImg1(r){var imgs=getAllImgs(r,"Style_Image");return imgs.length>0?imgs[0]:null}
 function getSubformLines(r,fn){var v=r[fn];if(!v)return[];if(Array.isArray(v))return v;if(typeof v==="object")return Object.values(v);return[]}
-function stageClass(s){var map={"Not Started":"stage-notstart","Fabric":"stage-fabric","Cutting":"stage-cutting","Sewing":"stage-sewing","Packing":"stage-packing","Done":"stage-done","Shipped":"stage-shipped"};return map[s]||"stage-notstart"}
-function stageLabel(s){var map={"Not Started":"⏳ 미시작 / 未开始","Fabric":"🧵 원단 / 面料","Cutting":"✂️ 재단 / 裁剪","Sewing":"🪡 재봉 / 裁缝","Packing":"📦 포장 / 包装","Done":"✅ 완료 / 完成","Shipped":"🚚 출고 / 出货"};return map[s]||"⏳ 미시작"}
+function stageClass(s){var map={"Sampling":"stage-notstart","Fabric":"stage-fabric","Cutting":"stage-cutting","Sewing":"stage-sewing","Packing":"stage-packing","Done":"stage-done","Shipped":"stage-shipped"};return map[s]||"stage-notstart"}
+function stageLabel(s){var map={"Sampling":"⏳ 샘플제작 / 产前样","Fabric":"🧵 원단 / 面料","Cutting":"✂️ 재단 / 裁剪","Sewing":"🪡 재봉 / 裁缝","Packing":"📦 포장 / 包装","Done":"✅ 완료 / 完成","Shipped":"🚚 출고 / 出货"};return map[s]||"⏳ 샘플제작"}
 function orderStatusClass(st){var s=(st||"").toLowerCase();if(s.indexOf("confirmed")>=0)return"confirmed";if(s.indexOf("delivered")>=0||s.indexOf("shipped")>=0)return"delivered";if(s.indexOf("progress")>=0)return"progress";if(s.indexOf("pending")>=0)return"pending";if(s.indexOf("delay")>=0)return"delayed";return"draft"}
 function parseYM(key){var m=key.match(/(\d+)년\s*(\d+)월/);if(!m)return null;var y=parseInt(m[1]);if(y<100)y+=2000;return{y:y,m:parseInt(m[2])}}
 function sortMonthKeys(keys){
@@ -1414,7 +1414,7 @@ function renderHealthChart(){
   items.forEach(function(r){
     if(isDelayed(r)){counts.delayed++;return}
     var stage=getProdStage(r);
-    if(stage==="Not Started")counts.notStarted++;
+    if(stage==="Sampling")counts.notStarted++;
     else if(stage==="Done"||stage==="Shipped")counts.complete++;
     else counts.inProgress++;
   });
@@ -1423,7 +1423,7 @@ function renderHealthChart(){
   var segs=[
     {label:"완료 / 完成",key:"complete",color:"#9FE1CB"},
     {label:"진행 / 进行中",key:"inProgress",color:"#B5D4F4"},
-    {label:"미시작 / 未开始",key:"notStarted",color:"#FAC775"},
+    {label:"샘플제작 / 产前样",key:"notStarted",color:"#FAC775"},
     {label:"지연 / 延误",key:"delayed",color:"#F7C1C1"}
   ];
   var r=30,circ=2*Math.PI*r,offset=0;
@@ -1865,11 +1865,11 @@ function buildMoCardHTML(r){
 function openModalById(id){var r=allMO.find(function(x){return String(x["ID"])===String(id)});if(r)openModal(r)}
 
 function renderLocalPipeline(idx,items){
-  var stages=["Not Started","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
+  var stages=["Sampling","Fabric","Cutting","Sewing","Packing","Done","Shipped"];
   var emojis=["⏳","🧵","✂️","🪡","📦","✅","🚚"];
-  var colors={"Not Started":"var(--stage-notstart-txt)","Fabric":"var(--stage-fabric-txt)","Cutting":"var(--stage-cutting-txt)","Sewing":"var(--stage-sewing-txt)","Packing":"var(--stage-packing-txt)","Done":"var(--stage-done-txt)","Shipped":"var(--stage-shipped-txt)"};
-  var lbKR=["미시작","원단","재단","재봉","포장","완료","출고"];
-  var lbCN=["未开始","面料","裁剪","裁缝","包装","完成","出货"];
+  var colors={"Sampling":"var(--stage-notstart-txt)","Fabric":"var(--stage-fabric-txt)","Cutting":"var(--stage-cutting-txt)","Sewing":"var(--stage-sewing-txt)","Packing":"var(--stage-packing-txt)","Done":"var(--stage-done-txt)","Shipped":"var(--stage-shipped-txt)"};
+  var lbKR=["샘플제작","원단","재단","재봉","포장","완료","출고"];
+  var lbCN=["产前样","面料","裁剪","裁缝","包装","完成","出货"];
   var counts=[0,0,0,0,0,0,0];
   items.forEach(function(r){var i=stages.indexOf(getProdStage(r));if(i>=0)counts[i]++});
   var total=counts.reduce(function(s,n){return s+n},0);
@@ -1891,7 +1891,7 @@ function renderLocalPipeline(idx,items){
 function openPipePop(stage,idx){
   var base=window['visible_mo_'+idx]||[];
   var items=base.filter(function(r){return getProdStage(r)===stage});
-  var stageNames={"Not Started":"⏳ 미시작 / 未开始","Fabric":"🧵 원단 / 面料","Cutting":"✂️ 재단 / 裁剪","Sewing":"🪡 재봉 / 裁缝","Packing":"📦 포장 / 包装","Done":"✅ 완료 / 完成","Shipped":"🚚 출고 / 出货"};
+  var stageNames={"Sampling":"⏳ 샘플제작 / 产前样","Fabric":"🧵 원단 / 面料","Cutting":"✂️ 재단 / 裁剪","Sewing":"🪡 재봉 / 裁缝","Packing":"📦 포장 / 包装","Done":"✅ 완료 / 完成","Shipped":"🚚 출고 / 出货"};
   document.getElementById("pipePopTitle").textContent=stageNames[stage]||stage;
   document.getElementById("pipePopSub").textContent="총 "+items.length+"건 / 共 "+items.length+" 件";
   var h="";
@@ -2524,17 +2524,17 @@ function getActualDotClass(actualDate, planDate){
 /* ── Stage + order status helpers ── */
 function stageClass(stage){
   var map = {
-    "Not Started":"stage-notstart","Fabric":"stage-fabric","Cutting":"stage-cutting",
+    "Sampling":"stage-notstart","Fabric":"stage-fabric","Cutting":"stage-cutting",
     "Sewing":"stage-sewing","Packing":"stage-packing","Done":"stage-done","Shipped":"stage-shipped"
   };
   return map[stage] || "stage-notstart";
 }
 function stageLabel(stage){
   var map = {
-    "Not Started":"⏳ 미시작 / 未开始","Fabric":"🧵 원단 / 面料","Cutting":"✂️ 재단 / 裁剪",
+    "Sampling":"⏳ 샘플제작 / 产前样","Fabric":"🧵 원단 / 面料","Cutting":"✂️ 재단 / 裁剪",
     "Sewing":"🪡 재봉 / 裁缝","Packing":"📦 포장 / 包装","Done":"✅ 완료 / 完成","Shipped":"🚚 출고 / 出货"
   };
-  return map[stage] || "⏳ 미시작";
+  return map[stage] || "⏳ 샘플제작";
 }
 function orderStatusClass(status){
   var s = (status||"").toLowerCase();
