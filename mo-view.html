@@ -3004,7 +3004,23 @@ function renderPackingSection(data, totalQty){
       h += '<td>#'+escH(seq)+'</td>';
       var bs = g(b,'Bag_Status'); var bsi = BAG_STATUS_LABELS[bs];
       h += '<td>'+escH(bsi ? bsi.label : bs)+'</td>';
-      var qty = g(b,'Total_Qty'); h += '<td>'+(qty==='-'?'-':Number(qty).toLocaleString())+'</td>';
+      var qty = g(b,'Total_Qty');
+      var qtyCell;
+      if (qty === '-' || qty == null || qty === ''){
+        qtyCell = '-';
+      } else {
+        var qtyNum = Number(qty) || 0;
+        var ipcRaw = g(b,'Inner_Pack_Count');
+        var packCount = (ipcRaw != null && ipcRaw !== '' && ipcRaw !== '-')
+          ? (parseInt(ipcRaw)||0)
+          : Math.floor(qtyNum / 12);
+        var bagUnits = packCount / 10;
+        var bagUnitsStr = (Math.round(bagUnits*10) % 10 === 0)
+          ? String(Math.round(bagUnits))
+          : bagUnits.toFixed(1);
+        qtyCell = qtyNum.toLocaleString()+'件 · '+packCount.toLocaleString()+'팩 ('+bagUnitsStr+'마대분)';
+      }
+      h += '<td>'+qtyCell+'</td>';
       h += '<td>'+escH(g(b,'Destination'))+'</td>';
       h += '<td>'+escH(g(b,'Worker'))+'</td>';
       h += '<td>'+fmtYMDHMS(g(b,'Added_Time')||g(b,'Created_Time'))+'</td>';
