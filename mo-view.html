@@ -596,6 +596,7 @@ body{padding:16px;min-height:100vh}
 .pack-progress-bar-bg{width:100%;height:10px;background:#E5E7EB;border-radius:5px;overflow:hidden}
 .pack-progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),#E8C37A);border-radius:5px;transition:width .3s ease}
 .pack-progress-label{display:flex;justify-content:space-between;font-size:10px;color:var(--text-mute);margin-top:5px}
+.pack-progress-sub{font-size:10px;color:#92400e;margin-top:3px;text-align:right}
 .pack-status-section{margin-top:10px}
 .pack-status-title{font-size:10px;font-weight:500;color:var(--text-mute);letter-spacing:.03em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border)}
 .status-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid #F0EDE8}
@@ -2762,8 +2763,9 @@ function togglePackingSection(el){
       content.innerHTML = '<div style="text-align:center;padding:20px"><div class="spinner-sm" style="display:inline-block"></div></div>';
       var moNum = currentMO ? g(currentMO,'MO_Number') : '';
       var totalQty = currentMO ? (parseInt(g(currentMO,'Total_Quantity'))||0) : 0;
+      var moSnap = currentMO || {};
       loadPackingData(moNum).then(function(data){
-        content.innerHTML = renderPackingSection(data, totalQty);
+        content.innerHTML = renderPackingSection(data, totalQty, moSnap);
       }).catch(function(){
         content.innerHTML = '<div style="text-align:center;padding:16px;font-size:11px;color:#94A3B8">포장 데이터 로딩 실패 / 加载失败</div>';
       });
@@ -2822,7 +2824,43 @@ function loadPackingData(moNumber){
   });
 }
 
-function renderPackingSection(data, totalQty){
+function calcPackagingProgress(packs, bags, mo) {
+  var actualInnerBoxes = (packs || []).length;
+  var totalInnerExpected =
+    (parseInt(g(mo,'Inner_Pack_Total_Qty'))||0) ||
+    (parseInt(g(mo,'Total_Expected'))||0) ||
+    (packs && packs[0] ? (parseInt(g(packs[0],'Total_Expected'))||0) : 0);
+  var innerPercent = totalInnerExpected > 0
+    ? Math.min(100, Math.round(actualInnerBoxes / totalInnerExpected * 100))
+    : 0;
+  var innerDiff = actualInnerBoxes - totalInnerExpected;
+  var innerDiffText = innerDiff > 0
+    ? '여유분 +' + innerDiff + '박스 · 余量 +' + innerDiff + '盒'
+    : (innerDiff < 0 && actualInnerBoxes > 0)
+      ? Math.abs(innerDiff) + '박스 미달 · 短缺 ' + Math.abs(innerDiff) + '盒'
+      : '';
+
+  var actualMasterBags = (bags || []).length;
+  var totalMasterExpected =
+    (parseInt(g(mo,'Master_Bag_Count'))||0) ||
+    (totalInnerExpected ? Math.ceil(totalInnerExpected / 10) : 0);
+  var masterPercent = totalMasterExpected > 0
+    ? Math.min(100, Math.round(actualMasterBags / totalMasterExpected * 100))
+    : (actualMasterBags > 0 ? 100 : 0);
+  var masterDiff = actualMasterBags - totalMasterExpected;
+  var masterDiffText = masterDiff > 0
+    ? '여유분 +' + masterDiff + '마대 · 余量 +' + masterDiff + '袋'
+    : (masterDiff < 0 && actualMasterBags > 0)
+      ? Math.abs(masterDiff) + '마대 미달 · 短缺 ' + Math.abs(masterDiff) + '袋'
+      : '';
+
+  return {
+    inner:  { actual: actualInnerBoxes,  total: totalInnerExpected,  percent: innerPercent,  diffText: innerDiffText  },
+    master: { actual: actualMasterBags, total: totalMasterExpected, percent: masterPercent, diffText: masterDiffText }
+  };
+}
+
+function renderPackingSection(data, totalQty, mo){
   var packs = data.packs, bags = data.bags;
   var expectedPacks = totalQty > 0 ? Math.floor(totalQty/12) : 0;
   var expectedBags  = expectedPacks > 0 ? Math.floor(expectedPacks/10) : 0;
@@ -2830,7 +2868,7 @@ function renderPackingSection(data, totalQty){
 
   // New Inner Pack model: one standard record per MO (Is_Remainder=false, Pack_Sequence=0)
   //   Total_Expected = 인쇄한 표준 팩 수 (분모)
-  //   sum of Master_Bags[*].Inner_Pack_Count = 마대에 들어간 팩 수 (분자)
+  //   sum of Master_Bags[*].Inner_Pack_Count = 마대에 들어간 팩 수 (used in status distribution)
   var stdPack = null;
   for (var i=0; i<packs.length; i++){
     var ir = g(packs[i],'Is_Remainder');
@@ -2847,24 +2885,21 @@ function renderPackingSection(data, totalQty){
       +'0 / '+expectedPacks+' packs &nbsp;·&nbsp; 0 / '+expectedBags+' bags</div>';
   }
 
-  var packPct = totalExpected > 0 ? Math.min(100, Math.round(bagInnerPackSum/totalExpected*100)) : 0;
-  var bagPct  = expectedBags  > 0 ? Math.min(100, Math.round(actualBags /expectedBags *100)) : (actualBags >0?100:0);
+  var prog = calcPackagingProgress(packs, bags, mo || {});
   var h = '';
 
   h += '<div class="pack-progress-wrap">';
   h += '<div class="pack-progress-title">Inner Pack 진행률 / 中间包装进度</div>';
-  h += '<div class="pack-progress-bar-bg"><div class="pack-progress-bar-fill" style="width:'+packPct+'%"></div></div>';
-  if (totalExpected > 0){
-    h += '<div class="pack-progress-label"><span>'+bagInnerPackSum+' / '+totalExpected+'</span><span>'+packPct+'%</span></div>';
-  } else {
-    h += '<div class="pack-progress-label"><span>미인쇄 / 未打印</span><span>0%</span></div>';
-  }
+  h += '<div class="pack-progress-bar-bg"><div class="pack-progress-bar-fill" style="width:'+prog.inner.percent+'%"></div></div>';
+  h += '<div class="pack-progress-label"><span>'+prog.inner.actual+' / '+prog.inner.total+' 박스 · 盒</span><span>'+prog.inner.percent+'%</span></div>';
+  if (prog.inner.diffText) h += '<div class="pack-progress-sub">'+prog.inner.diffText+'</div>';
   h += '</div>';
 
   h += '<div class="pack-progress-wrap">';
   h += '<div class="pack-progress-title">Master Bag 진행률 / 麻袋进度</div>';
-  h += '<div class="pack-progress-bar-bg"><div class="pack-progress-bar-fill" style="width:'+bagPct+'%"></div></div>';
-  h += '<div class="pack-progress-label"><span>'+actualBags+' / '+expectedBags+'</span><span>'+bagPct+'%</span></div>';
+  h += '<div class="pack-progress-bar-bg"><div class="pack-progress-bar-fill" style="width:'+prog.master.percent+'%"></div></div>';
+  h += '<div class="pack-progress-label"><span>'+prog.master.actual+' / '+prog.master.total+' 마대 · 袋</span><span>'+prog.master.percent+'%</span></div>';
+  if (prog.master.diffText) h += '<div class="pack-progress-sub">'+prog.master.diffText+'</div>';
   h += '</div>';
 
   // Diagnostic: log field names of first pack/bag to confirm Worker/time field names
