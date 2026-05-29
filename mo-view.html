@@ -2825,29 +2825,47 @@ function loadPackingData(moNumber){
 }
 
 function calcPackagingProgress(packs, bags, mo) {
-  var actualInnerBoxes = (packs || []).length;
-  var totalInnerExpected =
-    (parseInt(g(mo,'Inner_Pack_Total_Qty'))||0) ||
-    (parseInt(g(mo,'Total_Expected'))||0) ||
-    (packs && packs[0] ? (parseInt(g(packs[0],'Total_Expected'))||0) : 0);
-  var innerPercent = totalInnerExpected > 0
-    ? Math.min(100, Math.round(actualInnerBoxes / totalInnerExpected * 100))
+  // 1박스 표준 구성 = Standard_Assortment_JSON 길이 (기본값 12)
+  var standardBoxSize = 12;
+  try {
+    var assortment = g(mo, 'Standard_Assortment_JSON');
+    if (typeof assortment === 'string' && assortment) {
+      var parsed = JSON.parse(assortment);
+      if (Array.isArray(parsed) && parsed.length > 0) standardBoxSize = parsed.length;
+    } else if (Array.isArray(assortment) && assortment.length > 0) {
+      standardBoxSize = assortment.length;
+    }
+  } catch(e) {
+    console.warn('[calcPackagingProgress] Standard_Assortment_JSON parse failed, using 12');
+  }
+
+  var planTotalQty = parseInt(g(mo, 'Plan_Total_Quantity')) || 0;
+  var expectedInnerBoxes = (standardBoxSize > 0 && planTotalQty > 0)
+    ? Math.ceil(planTotalQty / standardBoxSize)
     : 0;
-  var innerDiff = actualInnerBoxes - totalInnerExpected;
+  var PACKS_PER_BULTO = 10;
+  var expectedMasterBags = expectedInnerBoxes > 0
+    ? Math.ceil(expectedInnerBoxes / PACKS_PER_BULTO)
+    : 0;
+
+  var actualInnerBoxes = (packs || []).length;
+  var actualMasterBags = (bags || []).length;
+
+  var innerPercent = expectedInnerBoxes > 0
+    ? Math.min(100, Math.round(actualInnerBoxes / expectedInnerBoxes * 100))
+    : 0;
+  var masterPercent = expectedMasterBags > 0
+    ? Math.min(100, Math.round(actualMasterBags / expectedMasterBags * 100))
+    : (actualMasterBags > 0 ? 100 : 0);
+
+  var innerDiff = actualInnerBoxes - expectedInnerBoxes;
   var innerDiffText = innerDiff > 0
     ? '여유분 +' + innerDiff + '박스 · 余量 +' + innerDiff + '盒'
     : (innerDiff < 0 && actualInnerBoxes > 0)
       ? Math.abs(innerDiff) + '박스 미달 · 短缺 ' + Math.abs(innerDiff) + '盒'
       : '';
 
-  var actualMasterBags = (bags || []).length;
-  var totalMasterExpected =
-    (parseInt(g(mo,'Master_Bag_Count'))||0) ||
-    (totalInnerExpected ? Math.ceil(totalInnerExpected / 10) : 0);
-  var masterPercent = totalMasterExpected > 0
-    ? Math.min(100, Math.round(actualMasterBags / totalMasterExpected * 100))
-    : (actualMasterBags > 0 ? 100 : 0);
-  var masterDiff = actualMasterBags - totalMasterExpected;
+  var masterDiff = actualMasterBags - expectedMasterBags;
   var masterDiffText = masterDiff > 0
     ? '여유분 +' + masterDiff + '마대 · 余量 +' + masterDiff + '袋'
     : (masterDiff < 0 && actualMasterBags > 0)
@@ -2855,8 +2873,9 @@ function calcPackagingProgress(packs, bags, mo) {
       : '';
 
   return {
-    inner:  { actual: actualInnerBoxes,  total: totalInnerExpected,  percent: innerPercent,  diffText: innerDiffText  },
-    master: { actual: actualMasterBags, total: totalMasterExpected, percent: masterPercent, diffText: masterDiffText }
+    inner:  { actual: actualInnerBoxes,  total: expectedInnerBoxes,  percent: innerPercent,  diffText: innerDiffText  },
+    master: { actual: actualMasterBags, total: expectedMasterBags, percent: masterPercent, diffText: masterDiffText },
+    meta:   { standardBoxSize: standardBoxSize, planTotalQty: planTotalQty, packsPerBulto: PACKS_PER_BULTO }
   };
 }
 
