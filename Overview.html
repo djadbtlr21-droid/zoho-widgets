@@ -3335,7 +3335,7 @@ function calcPackagingProgress(packs, bags, mo) {
     ? Math.ceil(expectedInnerBoxes / PACKS_PER_BULTO)
     : 0;
 
-  var actualInnerBoxes = (packs || []).length;
+  var actualInnerBoxes = (packs || []).reduce(function(sum, p){ return sum + (parseInt(g(p,'Total_Expected'))||0); }, 0);
   var actualMasterBags = (bags || []).length;
 
   var innerPercent = expectedInnerBoxes > 0
@@ -3372,16 +3372,12 @@ function renderPackingSection(data, totalQty, mo){
   var expectedBags  = expectedPacks > 0 ? Math.floor(expectedPacks/10) : 0;
   var actualPacks = packs.length, actualBags = bags.length;
 
-  // New Inner Pack model: one standard record per MO (Is_Remainder=false, Pack_Sequence=0)
-  //   Total_Expected = 인쇄한 표준 팩 수 (분모)
-  //   sum of Master_Bags[*].Inner_Pack_Count = 마대에 들어간 팩 수 (used in status distribution)
-  var stdPack = null;
-  for (var i=0; i<packs.length; i++){
-    var ir = g(packs[i],'Is_Remainder');
-    var isStd = !(ir==='true'||ir===true||ir==='1');
-    if (isStd){ stdPack = packs[i]; break; }
+  // sumByStatus: Total_Expected 합계 (Pack_Status 기준)
+  function sumPacksByStatus(packArr, status) {
+    return (packArr || []).reduce(function(sum, p){
+      return g(p,'Pack_Status') === status ? sum + (parseInt(g(p,'Total_Expected'))||0) : sum;
+    }, 0);
   }
-  var totalExpected = stdPack ? (parseInt(g(stdPack,'Total_Expected'))||0) : 0;
   var bagInnerPackSum = 0;
   bags.forEach(function(b){ bagInnerPackSum += (parseInt(g(b,'Inner_Pack_Count'))||0); });
 
@@ -3417,33 +3413,14 @@ function renderPackingSection(data, totalQty, mo){
   Object.keys(PACK_STATUS_LABELS).forEach(function(k){
     var info = PACK_STATUS_LABELS[k];
     var count, time = null, worker = '-';
-    if (k === 'Created'){
-      count = totalExpected;
-      if (stdPack){
-        time = g(stdPack,'Modified_Time')||g(stdPack,'Added_Time');
-        worker = g(stdPack,'Worker')||g(stdPack,'Updated_Worker')||g(stdPack,'Created_Worker')||'-';
-      }
-    } else if (k === 'Bagged'){
-      count = bagInnerPackSum;
-      if (bags.length > 0){
-        var latestB = bags.reduce(function(best,b){
-          var t1 = new Date(g(b,'Modified_Time')||g(b,'Added_Time')||0).getTime();
-          var t2 = new Date(g(best,'Modified_Time')||g(best,'Added_Time')||0).getTime();
-          return t1>t2 ? b : best;
-        }, bags[0]);
-        time = g(latestB,'Modified_Time')||g(latestB,'Added_Time');
-        worker = g(latestB,'Worker')||g(latestB,'Updated_Worker')||g(latestB,'Created_Worker')||'-';
-      }
-    } else {
-      // Shipped/Received/Out_For_Delivery/Delivered: derive from Master Bag status
-      var bagStat = getLatestForStatus(bags, 'Bag_Status', k);
-      var sum = 0;
-      bags.forEach(function(b){
-        if (g(b,'Bag_Status') === k) sum += (parseInt(g(b,'Inner_Pack_Count'))||0);
-      });
-      count = sum;
-      time = bagStat.time;
-      worker = bagStat.worker;
+    count = sumPacksByStatus(packs, k);
+    var matchPk = null;
+    for (var mi=0; mi<packs.length; mi++){
+      if (g(packs[mi],'Pack_Status') === k){ matchPk = packs[mi]; break; }
+    }
+    if (matchPk){
+      time = g(matchPk,'Modified_Time')||g(matchPk,'Added_Time');
+      worker = g(matchPk,'Worker')||g(matchPk,'Updated_Worker')||g(matchPk,'Created_Worker')||'-';
     }
     h += '<div class="status-row">';
     h += '<span class="status-label">'+info.emoji+' '+escH(info.label)+'</span>';
