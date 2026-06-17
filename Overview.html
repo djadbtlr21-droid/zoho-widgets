@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -1614,6 +1614,7 @@ function buildStyleCardHTML(r){
   p.push('<div class="sc-main">');
   p.push('<div class="sc-lbl">SKU</div>');
   p.push('<div class="sc-val sku">'+escH(sku)+'</div>');
+  p.push('<div class="sc-mini"><div class="sc-lbl">영문 스타일명 / Eng Style Name</div><div class="sc-val">'+escH(g(r,"Eng_Style_Name"))+'</div></div>');
   p.push('<div class="sc-mini"><div class="sc-lbl">중문 스타일명 / 中文款号</div><div class="sc-val">'+escH(g(r,"Chi_Style_Name"))+'</div></div>');
   p.push('</div>');
   p.push('<div class="sc-rows">');
@@ -1825,6 +1826,7 @@ function buildMoMonthSection(key,items,idx){
 }
 
 function buildMoCardHTML(r){
+  var sku=g(r,"Style_SKU"),styleName=g(r,"Eng_Style_Name"),itemName=g(r,"Chi_Style_Name");
   var stage=getProdStage(r),stageCls=stageClass(stage),stageLbl=stageLabel(stage);
   var orderCls=orderStatusClass(g(r,"Order_Status"));
   var dl=isDelayed(r);
@@ -2689,6 +2691,7 @@ function openModal(r){
   h += '<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 订单信息</div><div class="d-grid">';
   h += it("MO 번호 / 订单号", dv(g(r,"MO_Number")));
   h += it("스타일 SKU / 款式SKU", dv(g(r,"Style_SKU")));
+  h += '<div class="d-item"><span class="d-label">영문 스타일명 / Eng Style Name</span><span class="d-val">'+dv(g(r,"Eng_Style_Name"))+'</span></div>';
   h += '<div class="d-item"><span class="d-label">중문 스타일명 / 中文款号</span><span class="d-val">'+dv(g(r,"Chi_Style_Name"))+'</span></div>';
   h += it("시즌 / 季节", dv(g(r,"Season")));
   h += it("카테고리 / 大类", dv(catName(g(r,"Category"))));
@@ -2952,6 +2955,7 @@ function buildDetail(d){
   p.push('<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 基本信息</div><div class="d-grid">');
   p.push(it("SKU / 款式SKU", dv(g(d, "Style_SKU"))));
   p.push(it("사업 주체 / 业务主体", dv(g(d, "Business_Entity"))));
+  p.push('<div class="d-item"><span class="d-label">영문 스타일명 / Eng Style Name</span><span class="d-val">'+dv(g(d, "Eng_Style_Name"))+'</span></div>');
   p.push('<div class="d-item"><span class="d-label">중문 스타일명 / 中文款号</span><span class="d-val">'+dv(g(d, "Chi_Style_Name"))+'</span></div>');
   p.push(it("시즌 / 季节", dv(g(d, "Season"))));
   p.push(it("성별 / 性别", dv(mv("Gender", g(d, "Gender")))));
