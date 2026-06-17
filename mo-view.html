@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -1777,7 +1777,6 @@ function renderMonthly(){
 /* ── MO Card ── */
 function buildMoCardHTML(r){
   var sku = g(r,"Style_SKU");
-  var styleName = g(r,"Eng_Style_Name");
   var itemName = g(r,"Chi_Style_Name");
   var stage = getProdStage(r);
   var stageCls = stageClass(stage);
@@ -2286,7 +2285,6 @@ function openModal(r){
   h += '<div class="m-sec"><div class="m-sec-t">📌 기본 정보 / 订单信息</div><div class="d-grid">';
   h += it("MO 번호 / 订单号", dv(g(r,"MO_Number")));
   h += it("스타일 SKU / 款式SKU", dv(g(r,"Style_SKU")));
-  h += '<div class="d-item"><span class="d-label">영문 스타일명 / Eng Style Name</span><span class="d-val">'+dv(g(r,"Eng_Style_Name"))+'</span></div>';
   h += '<div class="d-item"><span class="d-label">중문 스타일명 / 中文款号</span><span class="d-val">'+dv(g(r,"Chi_Style_Name"))+'</span></div>';
   h += it("시즌 / 季节", dv(g(r,"Season")));
   h += it("카테고리 / 大类", dv(catName(g(r,"Category"))));
